@@ -1,0 +1,15 @@
+{
+    "name": "dhl/versenden-m1",
+    "license": "OSL-3.0",
+    "type": "magento-module",
+    "description": "DHL business customer shipping module for Magento",
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "^3.0.6"
+    },
+    "authors":[
+        {
+            "name":"Christoph Aßmann",
+            "email":"christoph.assmann@netresearch.de"
+        }
+    ]
+}
