@@ -105,7 +105,12 @@
 
 
     <!-- run tests -->
-    <target name="static-analysis" depends="pathlen, phpmd, phpcpd, phpcs" />
+    <target name="static-analysis">
+        <antcall target="pathlen"/>
+        <antcall target="phpmd"/>
+        <antcall target="phpcpd"/>
+        <antcall target="phpcs"/>
+    </target>
 
     <target name="component-analysis">
         <antcall target="install_magento"><param name="version" value="ce1700"/></antcall>
@@ -116,7 +121,10 @@
         <antcall target="phpunit-report"><param name="vendor" value="Dhl"/></antcall>
     </target>
 
-    <target name="test-release" depends="static-analysis, component-analysis" />
+    <target name="test-release">
+        <antcall target="static-analysis" />
+        <antcall target="component-analysis" />
+    </target>
 
     <!-- build artifacts -->
     <target name="create-package" depends="test-release">
@@ -143,7 +151,14 @@
     </target>
 
     <!-- entry points -->
-    <target name="build-dev" depends="test-release" />
-    <target name="build-rc" depends="test-release" />
-    <target name="build-release" depends="tag-check, create-package, tag-release" />
+    <target name="build-dev">
+        <antcall target="test-release" />
+    </target>
+    <target name="build-rc">
+        <antcall target="test-release" />
+    </target>
+    <target name="build-release" depends="tag-check">
+        <antcall target="create-package" />
+        <antcall target="tag-release" />
+    </target>
 </project>
