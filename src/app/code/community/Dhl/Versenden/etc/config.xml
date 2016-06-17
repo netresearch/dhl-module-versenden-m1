@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Dhl_Versenden>
+            <version>0.1.0</version>
+        </Dhl_Versenden>
+    </modules>
+    <global>
+        <blocks>
+            <dhl_versenden>
+                <class>Dhl_Versenden_Block</class>
+            </dhl_versenden>
+        </blocks>
+        <helpers>
+            <dhl_versenden>
+                <class>Dhl_Versenden_Helper</class>
+            </dhl_versenden>
+        </helpers>
+        <models>
+            <dhl_versenden>
+                <class>Dhl_Versenden_Model</class>
+            </dhl_versenden>
+        </models>
+        <resources>
+            <dhl_versenden_setup>
+                <setup>
+                    <module>Dhl_Versenden</module>
+                </setup>
+            </dhl_versenden_setup>
+        </resources>
+    </global>
+    <phpunit>
+        <suite>
+            <modules>
+                <Dhl_Versenden />
+            </modules>
+        </suite>
+    </phpunit>
+</config>
