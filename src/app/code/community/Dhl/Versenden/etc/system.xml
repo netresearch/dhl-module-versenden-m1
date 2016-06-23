@@ -1,0 +1,625 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 5
+ *
+ * @category  Dhl
+ * @package   Dhl_Versenden
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+-->
+<config>
+    <sections>
+        <carriers>
+            <groups>
+                <dhlversenden translate="label comment">
+                    <label>DHL Versenden</label>
+                    <comment>DHL Business Customer Shipping</comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>2500</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+
+                        <dhlversenden_fields_general translate="label">
+                            <label>General Settings</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dhlversenden_fields_general>
+                        <info translate="label">
+                            <label>Module</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_info</frontend_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </info>
+                        <title translate="label">
+                            <label>Title</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>120</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </title>
+                        <active translate="label">
+                            <label>Enabled for Checkout</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>130</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </active>
+                        <sandbox_mode translate="label">
+                            <label>Sandbox Mode</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>140</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </sandbox_mode>
+                        <logging_enabled translate="label comment">
+                            <label>Enable Logging</label>
+                            <comment><![CDATA[Please ensure that the Magento-Log is also activated. Data will be written to <em>dhlversenden.log</em>.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>150</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </logging_enabled>
+                        <log_level translate="label comment">
+                            <label>Log Level</label>
+                            <comment><![CDATA[Beware: Log level <em>Debug</em> will result in large log files.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_loglevel</source_model>
+                            <sort_order>160</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <logging_enabled>1</logging_enabled>
+                            </depends>
+                        </log_level>
+
+                        <dhlversenden_fields_account translate="label">
+                            <label>Account Data</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>200</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dhlversenden_fields_account>
+                        <account_user translate="label tooltip">
+                            <label>User</label>
+                            <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry</validate>
+                            <sort_order>210</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <sandbox_mode>0</sandbox_mode>
+                            </depends>
+                        </account_user>
+                        <account_signature translate="label tooltip">
+                            <label>Signature</label>
+                            <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry</validate>
+                            <sort_order>220</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <sandbox_mode>0</sandbox_mode>
+                            </depends>
+                        </account_signature>
+                        <account_ekp translate="label tooltip">
+                            <label>EKP</label>
+                            <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length minimum-length-10 maximum-length-10</validate>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <sandbox_mode>0</sandbox_mode>
+                            </depends>
+                        </account_ekp>
+                        <account_participation_dhlpaket translate="label tooltip">
+                            <label>Participation DHL Paket</label>
+                            <tooltip>The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length minimum-length-2 maximum-length-2</validate>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </account_participation_dhlpaket>
+                        <account_participation_returnshipment translate="label tooltip">
+                            <label>Participation Return Shipment</label>
+                            <tooltip>The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length minimum-length-2 maximum-length-2</validate>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </account_participation_returnshipment>
+                        <account_gogreen_enabled translate="label comment">
+                            <label>Enable GoGreen</label>
+                            <comment><![CDATA[Please ensure that your contract supports <em>GoGreen</em> environmentally-friendly shipping before changing this setting.]]></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>250</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </account_gogreen_enabled>
+
+                        <dhlversenden_fields_shipment translate="label">
+                            <label>Shipment Orders</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dhlversenden_fields_shipment>
+                        <shipment_printonlyifcodable translate="label tooltip">
+                            <label>Print Only If Codable</label>
+                            <tooltip><![CDATA[If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>310</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_printonlyifcodable>
+                        <shipment_unitofmeasure translate="label comment">
+                            <label>Weight Unit</label>
+                            <tooltip>Configure the product weight unit that is used in the Catalog.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhl_versenden/shipping_carrier_versenden_source_unitofmeasure</source_model>
+                            <sort_order>320</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_unitofmeasure>
+                        <shipment_defaultweight translate="label tooltip">
+                            <label>Default Product Weight</label>
+                            <tooltip>If the product weight is not configured in the catalog, use this value as fallback.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-digits</validate>
+                            <sort_order>330</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_defaultweight>
+                        <shipment_dhlmethods translate="label tooltip comment">
+                            <label>Shipping Methods for DHL Versenden</label>
+                            <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
+                            <comment>These shipping methods will be processed with DHL Versenden.</comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_shipping_allmethods</source_model>
+                            <sort_order>340</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_dhlmethods>
+                        <shipment_dhlcodmethods translate="label tooltip comment">
+                            <label>Cash On Delivery Shipping Methods for DHL Versenden</label>
+                            <tooltip>These shipping methods will be treated as COD methods during shipping order requests.</tooltip>
+                            <comment>These shipping methods will be processed with DHL Versenden.</comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_shipping_allmethods</source_model>
+                            <sort_order>350</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_dhlcodmethods>
+                        <shipment_codcharge translate="label tooltip">
+                            <label>COD Charge</label>
+                            <tooltip>Set the COD charge to be added to the total order amount during shipping order requests.</tooltip>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-not-negative-number</validate>
+                            <sort_order>360</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_codcharge>
+
+                        <dhlversenden_fields_service translate="label">
+                            <label>Additional Services</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>400</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dhlversenden_fields_service>
+                        <service_dayofdelivery_enabled>
+                            <label>Enable Day Of Delivery</label>
+                            <tooltip>Allow customers to choose a day of delivery during checkout.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>410</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_dayofdelivery_enabled>
+                        <service_deliverytimeframe_enabled>
+                            <label>Enable Delivery Timeframe</label>
+                            <tooltip>Allow customers to choose a delivery time frame during checkout.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>420</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_deliverytimeframe_enabled>
+                        <service_preferredlocation_enabled>
+                            <label>Enable Preferred Location</label>
+                            <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>420</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_preferredlocation_enabled>
+                        <service_preferredneighbour_enabled>
+                            <label>Enable Preferred Neighbour</label>
+                            <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>430</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_preferredneighbour_enabled>
+                        <service_packstation_enabled>
+                            <label>Enable Packstation</label>
+                            <tooltip>Allow customers have their parcels delivered to Packstation machines or parcel shops.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>440</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_packstation_enabled>
+                        <service_parcelannouncement_enabled>
+                            <label>Enable Parcel Announcement</label>
+                            <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_nooptreq</source_model>
+                            <sort_order>450</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_parcelannouncement_enabled>
+                        <service_visualcheckofage_enabled>
+                            <label>Enable Visual Check of Age</label>
+                            <tooltip>Display the age check service while creating shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>460</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_visualcheckofage_enabled>
+                        <service_returnshipment_enabled>
+                            <label>Enable Return Shipment</label>
+                            <tooltip>Display the return shipment service while creating shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>470</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_returnshipment_enabled>
+                        <service_insurance_enabled>
+                            <label>Enable Additional Insurance</label>
+                            <tooltip>Display the additional insurance service while creating shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>480</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_insurance_enabled>
+                        <service_bulkygoods_enabled>
+                            <label>Enable Bulky Goods</label>
+                            <tooltip>Display the bulky goods service while creating shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>490</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </service_bulkygoods_enabled>
+
+                        <dhlversenden_fields_contact translate="label">
+                            <label>Contact Data</label>
+                            <comment>bla</comment>
+                            <tooltip>blub</tooltip>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>500</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dhlversenden_fields_contact>
+                        <contact_name1 translate="label">
+                            <label>Name of Sender</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-50</validate>
+                            <sort_order>510</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_name1>
+                        <contact_name2 translate="label">
+                            <label>Name of Company</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-50</validate>
+                            <sort_order>511</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_name2>
+                        <contact_name3 translate="label">
+                            <label>Name of Company (2)</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-50</validate>
+                            <sort_order>512</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_name3>
+                        <contact_streetname translate="label">
+                            <label>Street Name</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-35</validate>
+                            <sort_order>520</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_streetname>
+                        <contact_streetnumber translate="label">
+                            <label>Street Number</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-5</validate>
+                            <sort_order>521</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_streetnumber>
+                        <contact_addition>
+                            <label>Address Addition</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-35</validate>
+                            <sort_order>522</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_addition>
+                        <contact_dispatchinfo>
+                            <label>Dispatching Information</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-35</validate>
+                            <sort_order>523</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_dispatchinfo>
+                        <contact_zip>
+                            <label>Zip Code</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-10</validate>
+                            <sort_order>530</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_zip>
+                        <contact_city>
+                            <label>City</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-35</validate>
+                            <sort_order>531</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_city>
+                        <contact_country>
+                            <label>Country</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_country</source_model>
+                            <validate>required-entry</validate>
+                            <sort_order>532</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_country>
+                        <contact_phone translate="label">
+                            <label>Phone Number</label>
+                            <validate>validate-length maximum-length-20</validate>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>540</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_phone>
+                        <contact_email translate="label">
+                            <label>Email Address</label>
+                            <validate>validate-email validate-length maximum-length-50</validate>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>541</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_email>
+                        <contact_person translate="label">
+                            <label>First Name and Last Name of Contact Person</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-50</validate>
+                            <sort_order>542</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </contact_person>
+
+                        <dhlversenden_fields_bankdata translate="label">
+                            <label>Bank Data</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>600</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dhlversenden_fields_bankdata>
+                        <bankdata_owner translate="label">
+                            <label>Account Owner</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-80</validate>
+                            <sort_order>610</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_owner>
+                        <bankdata_bankname translate="label">
+                            <label>Bank Name</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-80</validate>
+                            <sort_order>620</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_bankname>
+                        <bankdata_iban translate="label">
+                            <label>IBAN</label>
+                            <validate>required-entry validate-alphanum validate-length maximum-length-34</validate>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>630</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_iban>
+                        <bankdata_bic translate="label">
+                            <label>BIC</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-alphanum validate-length maximum-length-11</validate>
+                            <sort_order>640</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_bic>
+                        <bankdata_note1 translate="label">
+                            <label>Reason for Payment</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-35</validate>
+                            <sort_order>650</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_note1>
+                        <bankdata_note2 translate="label">
+                            <label>Reason for Payment (2)</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-35</validate>
+                            <sort_order>660</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_note2>
+                        <bankdata_accountreference translate="label">
+                            <label>Account Reference to Customer Profile</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-35</validate>
+                            <sort_order>670</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </bankdata_accountreference>
+
+                        <dhlversenden_fields_returnshipment translate="label">
+                            <label>Return Shipment</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>700</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </dhlversenden_fields_returnshipment>
+                        <returnshipment_use_shipper>
+                            <label>Use Shipper as Receiver</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>800</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </returnshipment_use_shipper>
+                        <returnshipment_name1 translate="label">
+                            <label>Name of Receiver</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-length maximum-length-50</validate>
+                            <sort_order>810</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <returnshipment_use_shipper>0</returnshipment_use_shipper>
+                            </depends>
+                        </returnshipment_name1>
+                        <returnshipment_name2 translate="label">
+                            <label>Name of Company</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-50</validate>
+                            <sort_order>820</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <returnshipment_use_shipper>0</returnshipment_use_shipper>
+                            </depends>
+                        </returnshipment_name2>
+                        <returnshipment_name3 translate="label">
+                            <label>Name of Company (2)</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-length maximum-length-50</validate>
+                            <sort_order>830</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <returnshipment_use_shipper>0</returnshipment_use_shipper>
+                            </depends>
+                        </returnshipment_name3>
+                    </fields>
+                </dhlversenden>
+            </groups>
+        </carriers>
+    </sections>
+</config>
