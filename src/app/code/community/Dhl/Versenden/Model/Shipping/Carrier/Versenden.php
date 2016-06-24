@@ -37,6 +37,17 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     extends Mage_Shipping_Model_Carrier_Abstract
     implements Mage_Shipping_Model_Carrier_Interface
 {
+    const CODE = 'dhlversenden';
+
+    /**
+     * Init carrier code
+     */
+    protected function _construct()
+    {
+        parent::_construct();
+        $this->_code = self::CODE;
+    }
+
     /**
      * The DHL Versenden carrier does not calculate rates.
      *
