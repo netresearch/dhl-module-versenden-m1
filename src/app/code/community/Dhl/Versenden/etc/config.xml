@@ -54,6 +54,17 @@
                 </setup>
             </dhl_versenden_setup>
         </resources>
+        <events>
+            <controller_front_init_before>
+                <observers>
+                    <register_autoload>
+                        <type>singleton</type>
+                        <class>dhl_versenden/observer</class>
+                        <method>registerAutoload</method>
+                    </register_autoload>
+                </observers>
+            </controller_front_init_before>
+        </events>
     </global>
     <adminhtml>
         <translate>
@@ -66,6 +77,50 @@
             </modules>
         </translate>
     </adminhtml>
+    <default>
+        <dhl_versenden>
+            <dev>
+                <autoload_enabled>1</autoload_enabled>
+            </dev>
+        </dhl_versenden>
+        <carriers>
+            <dhlversenden>
+                <model>dhl_versenden/shipping_carrier_versenden</model>
+
+                <title>DHL Versenden</title>
+                <active>1</active>
+                <sandbox_mode>1</sandbox_mode>
+                <logging_enabled>1</logging_enabled>
+                <log_level>3</log_level>
+                <account_participation_dhlpaket>01</account_participation_dhlpaket>
+                <account_participation_returnshipment>07</account_participation_returnshipment>
+                <account_gogreen_enabled>0</account_gogreen_enabled>
+                <shipment_printonlyifcodable>1</shipment_printonlyifcodable>
+                <shipment_unitofmeasure>G</shipment_unitofmeasure>
+                <shipment_defaultweight>200</shipment_defaultweight>
+                <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
+                <shipment_codcharge>2</shipment_codcharge>
+                <service_dayofdelivery_enabled>0</service_dayofdelivery_enabled>
+                <service_deliverytimeframe_enabled>0</service_deliverytimeframe_enabled>
+                <service_preferredlocation_enabled>0</service_preferredlocation_enabled>
+                <service_preferredneighbour_enabled>0</service_preferredneighbour_enabled>
+                <service_packstation_enabled>0</service_packstation_enabled>
+                <service_parcelannouncement_enabled>1</service_parcelannouncement_enabled>
+                <service_visualcheckofage_enabled>1</service_visualcheckofage_enabled>
+                <service_returnshipment_enabled>1</service_returnshipment_enabled>
+                <service_insurance_enabled>1</service_insurance_enabled>
+                <service_bulkygoods_enabled>1</service_bulkygoods_enabled>
+                <returnshipment_use_shipper>1</returnshipment_use_shipper>
+
+                <sandbox_account_user>2222222222_01</sandbox_account_user>
+                <sandbox_account_signature>pass</sandbox_account_signature>
+                <sandbox_account_ekp>2222222222</sandbox_account_ekp>
+                <sandbox_account_participation_dhlpaket>01</sandbox_account_participation_dhlpaket>
+                <sandbox_account_participation_returnshipment>01</sandbox_account_participation_returnshipment>
+                <sandbox_account_gogreen_enabled>1</sandbox_account_gogreen_enabled>
+            </dhlversenden>
+        </carriers>
+    </default>
     <phpunit>
         <suite>
             <modules>

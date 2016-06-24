@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Block_Adminhtml_System_Config_Heading
+ * Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -33,34 +33,35 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Block_Adminhtml_System_Config_Heading
-    extends Mage_Adminhtml_Block_System_Config_Form_Field
+class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
 {
     /**
-     * Render element html
+     * Options getter
      *
-     * @param Varien_Data_Form_Element_Abstract $element
-     * @return string
+     * @return array
      */
-    public function render(Varien_Data_Form_Element_Abstract $element)
+    public function toOptionArray()
     {
-        $comment = $element->getComment();
-        if ($comment) {
-            $comment = "<p>$comment</p>";
+        $options = $this->toArray();
+        $optionsArray = [];
+        foreach ([1, 2, 0] as $optionValue) {
+            $optionsArray[] = ['value' => $optionValue, 'label' => $options[$optionValue]];
         }
-        $html = sprintf('<td colspan="5"><h4>%s</h4>%s</td>', $element->getLabel(), $comment);
-        return $this->_decorateRowHtml($element, $html);
+
+        return $optionsArray;
     }
 
     /**
-     * Decorate field row html
+     * Get options in "key-value" format
      *
-     * @param Varien_Data_Form_Element_Abstract $element
-     * @param string $html
-     * @return string
+     * @return array
      */
-    protected function _decorateRowHtml($element, $html)
+    public function toArray()
     {
-        return '<tr class="system-fieldset-sub-head" id="row_' . $element->getHtmlId() . '">' . $html . '</tr>';
+        return [
+            Mage::helper('adminhtml')->__('No'),
+            Mage::helper('adminhtml')->__('Yes'),
+            Mage::helper('adminhtml')->__('Optional'),
+        ];
     }
 }
