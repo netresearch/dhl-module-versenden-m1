@@ -31,16 +31,4 @@ config:
   default/carriers/dhlversenden/logging_enabled:    "1"
   default/carriers/dhlversenden/log_level:          "7"
 
-  default/carriers/dhlversenden/account_user:                         "303"
-  default/carriers/dhlversenden/account_signature:                    "magento"
-  default/carriers/dhlversenden/account_ekp:                          "909"
-  default/carriers/dhlversenden/account_gogreen_enabled:              "0"
-  default/carriers/dhlversenden/account_participation_dhlpaket:       "98"
-  default/carriers/dhlversenden/account_participation_returnshipment: "99"
-
-  stores/store_two/carriers/dhlversenden/shipment_printonlyifcodable: "0"
-  stores/store_two/carriers/dhlversenden/shipment_unitofmeasure:      "KG"
-  stores/store_two/carriers/dhlversenden/shipment_defaultweight:      "0.2"
-  stores/store_two/carriers/dhlversenden/shipment_dhlcodmethods:      ""
-  stores/store_two/carriers/dhlversenden/shipment_dhlmethods:         "flatrate_flatrate,tablerate_bestway"
-  stores/store_two/carriers/dhlversenden/shipment_codcharge:          "11"
+  stores/store_two/carriers/dhlversenden/service_parcelannouncement_enabled: "2"

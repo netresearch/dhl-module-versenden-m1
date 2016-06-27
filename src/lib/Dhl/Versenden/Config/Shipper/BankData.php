@@ -27,9 +27,8 @@ namespace Dhl\Versenden\Config\Shipper;
 use Dhl\Versenden\Config as ConfigReader;
 use Dhl\Versenden\Config\Data as ConfigData;
 use Dhl\Versenden\Config\Exception as ConfigException;
-use Dhl\Versenden\Config\Shipper\Account\Participation;
 /**
- * Account
+ * BankData
  *
  * @category Dhl
  * @package  Dhl\Versenden\Config\Shipper
@@ -37,18 +36,22 @@ use Dhl\Versenden\Config\Shipper\Account\Participation;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Account extends ConfigData
+class BankData extends ConfigData
 {
     /** @var string */
-    public $user;
+    public $accountOwner;
     /** @var string */
-    public $signature;
+    public $bankName;
     /** @var string */
-    public $ekp;
-    /** @var bool */
-    public $goGreen;
-    /** @var Participation */
-    public $participation;
+    public $iban;
+    /** @var string */
+    public $bic;
+    /** @var string */
+    public $note1;
+    /** @var string */
+    public $note2;
+    /** @var string */
+    public $accountReference;
 
     /**
      * Shift data from config array to properties.
@@ -57,21 +60,13 @@ class Account extends ConfigData
      */
     public function loadValues(ConfigReader $reader)
     {
-        $sandBoxMode = $reader->getValue('sandbox_mode', '1');
-
-        if ($sandBoxMode) {
-            $this->user      = $reader->getValue('sandbox_account_user');
-            $this->signature = $reader->getValue('sandbox_account_signature');
-            $this->ekp       = $reader->getValue('sandbox_account_ekp');
-            $this->goGreen   = (bool)$reader->getValue('sandbox_account_gogreen_enabled');
-        } else {
-            $this->user      = $reader->getValue('account_user');
-            $this->signature = $reader->getValue('account_signature');
-            $this->ekp       = $reader->getValue('account_ekp');
-            $this->goGreen   = (bool)$reader->getValue('account_gogreen_enabled');
-        }
-
-        $this->participation = new Participation($reader);
+        $this->accountOwner     = $reader->getValue('bankdata_owner');
+        $this->bankName         = $reader->getValue('bankdata_bankname');
+        $this->iban             = $reader->getValue('bankdata_iban');
+        $this->bic              = $reader->getValue('bankdata_bic');
+        $this->note1            = $reader->getValue('bankdata_note1');
+        $this->note2            = $reader->getValue('bankdata_note2');
+        $this->accountReference = $reader->getValue('bankdata_accountreference');
     }
 
     /**
@@ -82,6 +77,12 @@ class Account extends ConfigData
      */
     public function validateValues(ConfigReader $reader)
     {
-        $reader->validateLength('EKP', $this->ekp, 10, 10);
+        $reader->validateLength('Account Owner', $this->accountOwner, 1, 80);
+        $reader->validateLength('Bank Name', $this->accountOwner, 1, 80);
+        $reader->validateLength('IBAN', $this->iban, 1, 34);
+        $reader->validateLength('BIC', $this->bic, 0, 11);
+        $reader->validateLength('Note1', $this->note1, 0, 35);
+        $reader->validateLength('Note2', $this->note2, 0, 35);
+        $reader->validateLength('Account Reference', $this->accountReference, 0, 35);
     }
 }
