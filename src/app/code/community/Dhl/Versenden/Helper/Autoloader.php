@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Autoloader
+ * Dhl_Versenden_Helper_Autoloader
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -33,7 +33,7 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Autoloader
+class Dhl_Versenden_Helper_Autoloader
 {
     protected $prefixes = [];
 

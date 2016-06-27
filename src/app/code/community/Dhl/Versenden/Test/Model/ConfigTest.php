@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Config;
+
 /**
  * Dhl_Versenden_Test_Model_ConfigTest
  *
@@ -96,65 +96,64 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
      * @test
      * @loadFixture ConfigTest
      */
-    public function getShipperAccount()
+    public function getServices()
     {
         $config = new Dhl_Versenden_Model_Config();
+        $defaultServices = $config->getServices();
+        $this->assertInstanceOf(\Dhl\Versenden\Config\Service::class, $defaultServices);
+        $this->assertEquals(1, $defaultServices->parcelAnnouncement);
 
-        $testAccount = $config->getShipperAccount();
-        $this->assertInstanceOf(Config\Shipper\Account::class, $testAccount);
-        $this->assertEquals('2222222222_01', $testAccount->user);
-        $this->assertEquals('pass', $testAccount->signature);
-        $this->assertEquals('2222222222', $testAccount->ekp);
-        $this->assertTrue($testAccount->goGreen);
-        $this->assertEquals('01', $testAccount->participation->dhlPaket);
-        $this->assertEquals('01', $testAccount->participation->dhlReturnShipment);
-
-        $prodAccount = $config->getShipperAccount('store_two');
-        $this->assertInstanceOf(Config\Shipper\Account::class, $prodAccount);
-        $this->assertEquals('303', $prodAccount->user);
-        $this->assertEquals('magento', $prodAccount->signature);
-        $this->assertEquals('909', $prodAccount->ekp);
-        $this->assertFalse($prodAccount->goGreen);
-        $this->assertEquals('98', $prodAccount->participation->dhlPaket);
-        $this->assertEquals('99', $prodAccount->participation->dhlReturnShipment);
+        $storeServices = $config->getServices('store_two');
+        $this->assertInstanceOf(\Dhl\Versenden\Config\Service::class, $storeServices);
+        $this->assertEquals(2, $storeServices->parcelAnnouncement);
     }
 
     /**
      * @test
-     * @loadFixture ConfigTest
      */
-    public function getShipmentSettings()
+    public function configSettingRequired()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $fieldName = "Foo";
+        $this->setExpectedException(
+            Dhl\Versenden\Config\Exception::class,
+            "$fieldName is a required value."
+        );
 
-        $globalSettings = $config->getShipmentSettings();
-        $this->assertInstanceOf(Config\Shipment\Settings::class, $globalSettings);
-        $this->assertTrue($globalSettings->printOnlyIfCodable);
-        $this->assertEquals('G', $globalSettings->unitOfMeasure);
-        $this->assertEquals(200, $globalSettings->productWeight);
-        $this->assertEquals(2, $globalSettings->codCharge);
+        $config = new \Dhl\Versenden\Config();
+        $config->validateLength($fieldName, "", 1, 1);
+    }
 
-        $this->assertInternalType('array', $globalSettings->shippingMethods);
-        $this->assertCount(0, $globalSettings->shippingMethods);
+    /**
+     * @test
+     */
+    public function configSettingTooShort()
+    {
+        $fieldName = "Foo";
+        $minLength = 5;
 
-        $this->assertInternalType('array', $globalSettings->codPaymentMethods);
-        $this->assertCount(1, $globalSettings->codPaymentMethods);
-        $this->assertContains('cashondelivery', $globalSettings->codPaymentMethods);
+        $this->setExpectedException(
+            Dhl\Versenden\Config\Exception::class,
+            "Please enter at least $minLength characters for $fieldName."
+        );
 
+        $config = new \Dhl\Versenden\Config();
+        $config->validateLength($fieldName, $fieldName, $minLength, INF);
+    }
 
-        $storeSettings = $config->getShipmentSettings('store_two');
-        $this->assertInstanceOf(Config\Shipment\Settings::class, $storeSettings);
-        $this->assertFalse($storeSettings->printOnlyIfCodable);
-        $this->assertEquals('KG', $storeSettings->unitOfMeasure);
-        $this->assertEquals(0.2, $storeSettings->productWeight);
-        $this->assertEquals(11, $storeSettings->codCharge);
+    /**
+     * @test
+     */
+    public function configSettingTooLong()
+    {
+        $fieldName = "FooBar";
+        $maxLength = 5;
 
-        $this->assertInternalType('array', $storeSettings->shippingMethods);
-        $this->assertCount(2, $storeSettings->shippingMethods);
-        $this->assertContains('flatrate_flatrate', $storeSettings->shippingMethods);
-        $this->assertContains('tablerate_bestway', $storeSettings->shippingMethods);
+        $this->setExpectedException(
+            Dhl\Versenden\Config\Exception::class,
+            "Please enter no more than $maxLength characters for $fieldName."
+        );
 
-        $this->assertInternalType('array', $storeSettings->codPaymentMethods);
-        $this->assertCount(0, $storeSettings->codPaymentMethods);
+        $config = new \Dhl\Versenden\Config();
+        $config->validateLength($fieldName, $fieldName, 0, $maxLength);
     }
 }

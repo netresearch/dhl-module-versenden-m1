@@ -22,6 +22,7 @@
     <filter>
         <whitelist>
             <directory suffix=".php">/var/data/jenkins/jobs/DHL-Versenden/workspace/magento/app/code/community/Dhl/Versenden</directory>
+            <directory suffix=".php">/var/data/jenkins/jobs/DHL-Versenden/workspace/magento/lib/Dhl/Versenden</directory>
             <exclude>
                 <directory suffix=".php">/var/data/jenkins/jobs/DHL-Versenden/workspace/magento/app/code/community/Dhl/Versenden/Test</directory>
                 <directory>/var/data/jenkins/jobs/DHL-Versenden/workspace/magento/app/code/community/Dhl/*/data</directory>

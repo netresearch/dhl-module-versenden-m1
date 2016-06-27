@@ -23,8 +23,15 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Config\Shipper\Account;
+use Dhl\Versenden\Config;
+use Dhl\Versenden\Config\Exception as ConfigException;
+use Dhl\Versenden\Config\Service as ServiceConfig;
 use Dhl\Versenden\Config\Shipment\Settings as ShipmentSettings;
+use Dhl\Versenden\Config\Shipper;
+use Dhl\Versenden\Config\Shipper\Account;
+use Dhl\Versenden\Config\Shipper\Contact as ShipperContact;
+use Dhl\Versenden\Config\Shipper\BankData;
+use Dhl\Versenden\Config\Shipper\ReturnReceiver;
 /**
  * Dhl_Versenden_Model_Config
  *
@@ -111,21 +118,64 @@ class Dhl_Versenden_Model_Config
      *
      * @param mixed $store
      * @return Account
+     * @throws ConfigException
      */
     public function getShipperAccount($store = null)
     {
         $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-        return new Account($carrierConfig);
+
+        $reader = new Config($carrierConfig);
+        return new Account($reader);
     }
 
-    public function getShipperContact()
+    /**
+     * @param mixed $store
+     * @return BankData
+     * @throws ConfigException
+     */
+    public function getShipperBankData($store = null)
     {
-        //TODO(nr): implement
+        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
+
+        $reader = new Config($carrierConfig);
+        return new BankData($reader);
     }
 
-    public function getShipperBankData()
+    /**
+     * @param mixed $store
+     * @return ShipperContact
+     * @throws ConfigException
+     */
+    public function getShipperContact($store = null)
     {
-        //TODO(nr): implement
+        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
+
+        $country = Mage::getSingleton('directory/country')->loadByCode($carrierConfig['contact_countryid']);
+        $carrierConfig['contact_country'] = $country->getName();
+        $carrierConfig['contact_countrycode'] = $country->getIso2Code();
+
+        $reader = new Config($carrierConfig);
+        return new ShipperContact($reader);
+    }
+
+    /**
+     * @param mixed $store
+     * @return ShipperContact
+     * @throws ConfigException
+     */
+    public function getReturnReceiver($store = null)
+    {
+        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
+        if ($carrierConfig['returnshipment_use_shipper']) {
+            return $this->getShipperContact($store);
+        }
+
+        $country = Mage::getSingleton('directory/country')->loadByCode($carrierConfig['returnshipment_countryid']);
+        $carrierConfig['returnshipment_country'] = $country->getName();
+        $carrierConfig['returnshipment_countrycode'] = $country->getIso2Code();
+
+        $reader = new Config($carrierConfig);
+        return new ReturnReceiver($reader);
     }
 
     /**
@@ -133,20 +183,43 @@ class Dhl_Versenden_Model_Config
      *
      * @param mixed $store
      * @return ShipmentSettings
+     * @throws ConfigException
      */
     public function getShipmentSettings($store = null)
     {
         $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-        return new ShipmentSettings($carrierConfig);
+
+        $reader = new Config($carrierConfig);
+        return new ShipmentSettings($reader);
     }
 
-    public function getServices()
+    /**
+     * Load the service configuration.
+     *
+     * @param mixed $store
+     * @return ServiceConfig
+     * @throws ConfigException
+     */
+    public function getServices($store = null)
     {
-        //TODO(nr): implement
+        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
+
+        $reader = new Config($carrierConfig);
+        return new ServiceConfig($reader);
     }
 
-    public function getReturnReceiver()
+    /**
+     * @param mixed $store
+     * @return Shipper
+     * @throws ConfigException
+     */
+    public function getShipper($store = null)
     {
-        //TODO(nr): implement
+        return new Shipper(
+            $this->getShipperAccount($store),
+            $this->getShipperBankData($store),
+            $this->getShipperContact($store),
+            $this->getReturnReceiver($store)
+        );
     }
 }
