@@ -17,57 +17,49 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Config
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config\Shipper\Account;
+namespace Dhl\Versenden\Config;
 use Dhl\Versenden\Config as ConfigReader;
-use Dhl\Versenden\Config\Data as ConfigData;
-use Dhl\Versenden\Config\Exception as ConfigException;
 /**
- * Account
+ * Data
  *
  * @category Dhl
- * @package  Dhl\Versenden\Shipper\Account
+ * @package  Dhl\Versenden\Config
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Participation extends ConfigData
+abstract class Data
 {
-    /** @var string */
-    public $dhlPaket;
-    /** @var string */
-    public $dhlReturnShipment;
+    /**
+     * Data constructor.
+     * @param ConfigReader $reader
+     */
+    public function __construct(ConfigReader $reader)
+    {
+        $this->loadValues($reader);
+        $this->validateValues($reader);
+    }
 
     /**
      * Shift data from config array to properties.
      *
      * @param ConfigReader $reader
      */
-    public function loadValues(ConfigReader $reader)
-    {
-        if ($reader->getValue('sandbox_mode', '1')) {
-            $this->dhlPaket          = $reader->getValue('sandbox_account_participation_dhlpaket');
-            $this->dhlReturnShipment = $reader->getValue('sandbox_account_participation_returnshipment');
-        } else {
-            $this->dhlPaket          = $reader->getValue('account_participation_dhlpaket');
-            $this->dhlReturnShipment = $reader->getValue('account_participation_returnshipment');
-        }
-    }
+    abstract public function loadValues(ConfigReader $reader);
 
     /**
      * Validate values in addition to system.xml frontend validation
      *
      * @param ConfigReader $reader
-     * @throws ConfigException
+     * @return void
      */
     public function validateValues(ConfigReader $reader)
     {
-        $reader->validateLength('Participation', $this->dhlPaket, 2, 2);
-        $reader->validateLength('Participation', $this->dhlReturnShipment, 2, 2);
     }
 }

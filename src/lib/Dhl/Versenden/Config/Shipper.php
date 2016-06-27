@@ -17,43 +17,46 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Config
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+namespace Dhl\Versenden\Config;
+use Dhl\Versenden\Config\Shipper\Account;
+use Dhl\Versenden\Config\Shipper\BankData;
+use Dhl\Versenden\Config\Shipper\Contact;
 
 /**
- * Dhl_Versenden_Model_Observer
+ * Service
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Config
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Observer
+class Shipper
 {
-    /**
-     * Register autoloader in order to locate the extension libraries.
-     */
-    public function registerAutoload()
+    /** @var Account */
+    public $account;
+    /** @var BankData */
+    public $bankData;
+    /** @var Contact */
+    public $contact;
+    /** @var Contact */
+    public $returnReceiver;
+
+    public function __construct(
+        Account $account,
+        BankData $bankData,
+        Contact $contact,
+        Contact $returnReceiver)
     {
-        if (!Mage::getModel('dhl_versenden/config')->isAutoloadEnabled()) {
-            return;
-        }
-
-        $autoloader = Mage::helper('dhl_versenden/autoloader');
-
-        $dhlLibs = ['Versenden', 'Gkp'];
-        array_walk($dhlLibs, function ($libDir) use ($autoloader) {
-            $autoloader->addNamespace(
-                "Dhl\\$libDir\\", // prefix
-                sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
-            );
-        });
-
-        $autoloader->register();
+        $this->account = $account;
+        $this->bankData = $bankData;
+        $this->contact = $contact;
+        $this->returnReceiver = $returnReceiver;
     }
 }

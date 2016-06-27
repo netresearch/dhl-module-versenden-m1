@@ -464,7 +464,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_city>
-                        <contact_country>
+                        <contact_countryid>
                             <label>Country</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_country</source_model>
@@ -473,7 +473,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </contact_country>
+                        </contact_countryid>
                         <contact_phone translate="label">
                             <label>Phone Number</label>
                             <validate>validate-length maximum-length-20</validate>
@@ -700,7 +700,7 @@
                                 <returnshipment_use_shipper>0</returnshipment_use_shipper>
                             </depends>
                         </returnshipment_city>
-                        <returnshipment_country>
+                        <returnshipment_countryid>
                             <label>Country</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_country</source_model>
@@ -712,7 +712,7 @@
                             <depends>
                                 <returnshipment_use_shipper>0</returnshipment_use_shipper>
                             </depends>
-                        </returnshipment_country>
+                        </returnshipment_countryid>
                     </fields>
                 </dhlversenden>
             </groups>
