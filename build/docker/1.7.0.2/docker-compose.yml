@@ -1,0 +1,30 @@
+version: '2'
+services:
+  db:
+    image: "couchi.nr:5001/magento-ci/db:${MAGENTO_VERSION}"
+    container_name: magento_dbms
+    environment:
+      MYSQL_ROOT_PASSWORD: MagEC1
+      MYSQL_DATABASE: magento
+    restart: always
+
+  env:
+    image: couchi.nr:5001/magento-ci/env:1.0.0
+    container_name: magento_env
+    ports:
+      - "80:80"
+    volumes_from:
+      - app
+    links:
+      - db:mysql
+    restart: always
+
+  app:
+    build: ./app
+    image: magento-ci/app
+    environment:
+      PACKAGE_PATH: "${PACKAGE_PATH}"
+      PACKAGE_NAME: "${PACKAGE_NAME}"
+    volumes:
+      - ${PACKAGE_HOST_PATH}:${PACKAGE_PATH}
+
