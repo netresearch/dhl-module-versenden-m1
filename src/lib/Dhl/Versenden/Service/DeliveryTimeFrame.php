@@ -17,55 +17,52 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Service
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+namespace Dhl\Versenden\Service;
+use Dhl\Versenden\Service as AbstractService;
 
 /**
- * Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
+ * DeliveryTimeFrame
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Service
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
+class DeliveryTimeFrame extends AbstractService
 {
-    const N   = 0;
-    const Y   = 1;
-    const OPT = 2;
-
     /**
-     * Options getter
-     *
-     * @return array
+     * DeliveryTimeFrame constructor.
+     * @param string $defaultValue
      */
-    public function toOptionArray()
+    public function __construct($defaultValue = '')
     {
-        $options = $this->toArray();
-        $optionsArray = [];
-        foreach ([self::Y, self::OPT, self::N] as $optionValue) {
-            $optionsArray[] = ['value' => $optionValue, 'label' => $options[$optionValue]];
-        }
+        parent::__construct($defaultValue);
 
-        return $optionsArray;
+        $this->name = 'Delivery Time Frame';
+        $this->isCustomerService = true;
+        $this->frontendInputType = self::INPUT_TYPE_SELECT;
     }
 
     /**
-     * Get options in "key-value" format
-     *
-     * @return array
+     * @return string[]
      */
-    public function toArray()
+    public function getOptions()
     {
+        //TODO(nr): How to realize translations in lib?
         return [
-            self::N => Mage::helper('adminhtml')->__('No'),
-            self::Y => Mage::helper('adminhtml')->__('Yes'),
-            self::OPT => Mage::helper('adminhtml')->__('Optional'),
+            '10001200' => '10:00 - 12:00',
+            '12001400' => '12:00 - 14:00',
+            '14001600' => '14:00 - 16:00',
+            '16001800' => '16:00 - 18:00',
+            '18002000' => '18:00 - 20:00',
+            '19002100' => '19:00 - 21:00',
         ];
     }
 }

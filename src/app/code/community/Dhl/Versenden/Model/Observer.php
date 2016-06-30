@@ -56,4 +56,31 @@ class Dhl_Versenden_Model_Observer
 
         $autoloader->register();
     }
+
+    /**
+     * Append the service selection form elements to the opc shipping method form.
+     * - event: core_block_abstract_to_html_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function appendServices(Varien_Event_Observer $observer)
+    {
+        $block = $observer->getBlock();
+        if (!$block instanceof Mage_Checkout_Block_Onepage_Shipping_Method_Available) {
+            return;
+        }
+
+        $serviceBlock = Mage::app()->getLayout()->createBlock(
+            'dhl_versenden/checkout_onepage_shipping_method_service',
+            'dhl_versenden_service',
+            [
+                'template' => 'dhl_versenden/checkout/onepage/shipping_method/service.phtml',
+                'module_name' => 'Dhl_Versenden',
+            ]
+        );
+
+        $transport = $observer->getTransport();
+        $html = $transport->getHtml() . $serviceBlock->toHtml();
+        $transport->setHtml($html);
+    }
 }

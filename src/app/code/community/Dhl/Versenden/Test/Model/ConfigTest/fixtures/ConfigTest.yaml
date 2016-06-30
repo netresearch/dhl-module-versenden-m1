@@ -16,6 +16,7 @@ scope:
       is_active: 1
 
 config:
+  default/dev/template/allow_symlink: 1
   default/dhl_versenden/dev/autoload_enabled: "0"
 
   default/carriers/dhlversenden/title:          "foo"
@@ -31,4 +32,6 @@ config:
   default/carriers/dhlversenden/logging_enabled:    "1"
   default/carriers/dhlversenden/log_level:          "7"
 
+  default/carriers/dhlversenden/service_bulkygoods_enabled: "0"
+  default/carriers/dhlversenden/service_parcelannouncement_enabled: "1"
   stores/store_two/carriers/dhlversenden/service_parcelannouncement_enabled: "2"

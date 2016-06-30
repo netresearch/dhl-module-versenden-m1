@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
+ * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -33,39 +33,22 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
+class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
+    extends Mage_Checkout_Block_Onepage_Abstract
 {
-    const N   = 0;
-    const Y   = 1;
-    const OPT = 2;
-
     /**
-     * Options getter
+     * Obtain the services that are enabled via config and can be chosen by customer.
      *
-     * @return array
+     * @return \Dhl\Versenden\Service[]
      */
-    public function toOptionArray()
+    public function getServices()
     {
-        $options = $this->toArray();
-        $optionsArray = [];
-        foreach ([self::Y, self::OPT, self::N] as $optionValue) {
-            $optionsArray[] = ['value' => $optionValue, 'label' => $options[$optionValue]];
-        }
+        $services = Mage::getModel('dhl_versenden/config')->getEnabledServices();
 
-        return $optionsArray;
-    }
+        $services = array_filter($services, function (\Dhl\Versenden\Service $service) {
+            return $service->isCustomerService;
+        });
 
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            self::N => Mage::helper('adminhtml')->__('No'),
-            self::Y => Mage::helper('adminhtml')->__('Yes'),
-            self::OPT => Mage::helper('adminhtml')->__('Optional'),
-        ];
+        return $services;
     }
 }

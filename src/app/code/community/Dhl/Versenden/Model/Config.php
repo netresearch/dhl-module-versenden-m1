@@ -32,6 +32,8 @@ use Dhl\Versenden\Config\Shipper\Account;
 use Dhl\Versenden\Config\Shipper\Contact as ShipperContact;
 use Dhl\Versenden\Config\Shipper\BankData;
 use Dhl\Versenden\Config\Shipper\ReturnReceiver;
+use Dhl\Versenden\Service;
+use Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno as ParcelAnnouncementOptions;
 /**
  * Dhl_Versenden_Model_Config
  *
@@ -221,5 +223,53 @@ class Dhl_Versenden_Model_Config
             $this->getShipperContact($store),
             $this->getReturnReceiver($store)
         );
+    }
+
+    /**
+     * Obtain the service objects that are enabled via module configuration.
+     *
+     * @param mixed $store
+     * @return Service[]
+     */
+    public function getEnabledServices($store = null)
+    {
+        $services = [];
+        $serviceConfig = $this->getServices($store);
+
+        //TODO(nr): there must be a better way to do this
+        $bgDefault = $serviceConfig->bulkyGoods;
+        if ($bgDefault) {
+            $services[]= new Service\BulkyGoods($bgDefault);
+        }
+
+        $plDefault = $serviceConfig->preferredLocation;
+        if ($plDefault) {
+            $services[]= new Service\PreferredLocation($plDefault);
+        }
+
+        $pnDefault = $serviceConfig->preferredNeighbour;
+        if ($pnDefault) {
+            $services[]= new Service\PreferredNeighbour($pnDefault);
+        }
+
+        $paDefault = $serviceConfig->parcelAnnouncement;
+        if ($paDefault) {
+            $paService = new Service\ParcelAnnouncement();
+
+            if ($paDefault === ParcelAnnouncementOptions::Y) {
+                $paService->setIsRequired();
+            } elseif ($paDefault === ParcelAnnouncementOptions::OPT) {
+                $paService->setIsOptional();
+            }
+
+            $services[]= $paService;
+        }
+
+        $dtDefault = $serviceConfig->deliveryTimeFrame;
+        if ($dtDefault) {
+            $services[]= new Service\DeliveryTimeFrame($dtDefault);
+        }
+
+        return $services;
     }
 }

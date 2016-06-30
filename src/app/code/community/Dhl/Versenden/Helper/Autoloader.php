@@ -76,6 +76,7 @@ class Dhl_Versenden_Helper_Autoloader
      */
     public function loadClass($class)
     {
+        reset($this->prefixes);
         while (list($prefix, $baseDir) = each($this->prefixes)) {
             $len = strlen($prefix);
             if (strncmp($prefix, $class, $len) !== 0) {
