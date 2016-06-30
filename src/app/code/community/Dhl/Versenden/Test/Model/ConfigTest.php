@@ -156,4 +156,46 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
         $config = new \Dhl\Versenden\Config();
         $config->validateLength($fieldName, $fieldName, 0, $maxLength);
     }
+
+    /**
+     * @test
+     * @loadFixture ConfigTest
+     */
+    public function getEnabledServices()
+    {
+        $config = new Dhl_Versenden_Model_Config();
+
+        // (1) parcel announcement is set to required via config fixture
+        // → should be in the list of enabled services
+        // → should have TRUE as default value
+        $defaultServices = $config->getEnabledServices();
+        $this->assertInternalType('array', $defaultServices);
+
+        /** @var \Dhl\Versenden\Service\ParcelAnnouncement[] $paServices */
+        $paServices = array_filter($defaultServices, function ($service) {
+            return ($service instanceof \Dhl\Versenden\Service\ParcelAnnouncement);
+        });
+        $this->assertNotEmpty($paServices);
+        $this->assertTrue($paServices[0]->defaultValue);
+
+        // (2) bulky goods is disabled via config fixture
+        // → should not be in the list of enabled services
+        $bgServices = array_filter($defaultServices, function ($service) {
+            return ($service instanceof \Dhl\Versenden\Service\BulkyGoods);
+        });
+        $this->assertEmpty($bgServices);
+
+        // (3) parcel announcement is set to optional via config fixture
+        // → should be in the list of enabled services
+        // → should have FALSE as default value
+        $storeServices = $config->getEnabledServices('store_two');
+        $this->assertInternalType('array', $storeServices);
+
+        /** @var \Dhl\Versenden\Service\ParcelAnnouncement[] $paServices */
+        $paServices = array_filter($storeServices, function ($service) {
+            return ($service instanceof \Dhl\Versenden\Service\ParcelAnnouncement);
+        });
+        $this->assertNotEmpty($paServices);
+        $this->assertFalse($paServices[0]->defaultValue);
+    }
 }

@@ -77,6 +77,28 @@
             </modules>
         </translate>
     </adminhtml>
+    <frontend>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <append_shipment_method_services>
+                        <class>dhl_versenden/observer</class>
+                        <method>appendServices</method>
+                        <type>singleton</type>
+                    </append_shipment_method_services>
+                </observers>
+            </core_block_abstract_to_html_after>
+        </events>
+        <translate>
+            <modules>
+                <dhl_versenden>
+                    <files>
+                        <default>Dhl_Versenden.csv</default>
+                    </files>
+                </dhl_versenden>
+            </modules>
+        </translate>
+    </frontend>
     <default>
         <dhl_versenden>
             <dev>

@@ -17,55 +17,35 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Service
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+namespace Dhl\Versenden\Service;
+use Dhl\Versenden\Service as AbstractService;
 
 /**
- * Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
+ * BulkyGoods
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Service
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
+class BulkyGoods extends AbstractService
 {
-    const N   = 0;
-    const Y   = 1;
-    const OPT = 2;
-
     /**
-     * Options getter
-     *
-     * @return array
+     * BulkyGoods constructor.
+     * @param string $defaultValue
      */
-    public function toOptionArray()
+    public function __construct($defaultValue = '')
     {
-        $options = $this->toArray();
-        $optionsArray = [];
-        foreach ([self::Y, self::OPT, self::N] as $optionValue) {
-            $optionsArray[] = ['value' => $optionValue, 'label' => $options[$optionValue]];
-        }
+        parent::__construct($defaultValue);
 
-        return $optionsArray;
-    }
-
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
-            self::N => Mage::helper('adminhtml')->__('No'),
-            self::Y => Mage::helper('adminhtml')->__('Yes'),
-            self::OPT => Mage::helper('adminhtml')->__('Optional'),
-        ];
+        $this->name = 'Bulky Goods';
+        $this->frontendInputType = self::INPUT_TYPE_BOOLEAN;
     }
 }

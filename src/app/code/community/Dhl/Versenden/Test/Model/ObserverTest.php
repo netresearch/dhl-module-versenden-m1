@@ -82,4 +82,28 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $observer = new Dhl_Versenden_Model_Observer();
         $observer->registerAutoload();
     }
+
+    /**
+     * @test
+     * @loadFixture ../../ConfigTest/fixtures/ConfigTest
+     */
+    public function appendServices()
+    {
+        $this->setCurrentStore('store_two');
+
+        $observer = new Varien_Event_Observer();
+        $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
+        $blockHtml = '<span>foo</span>';
+        $transport = new Varien_Object();
+        $transport->setHtml($blockHtml);
+
+        $observer->setBlock($block);
+        $observer->setTransport($transport);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->appendServices($observer);
+
+        $this->assertStringStartsWith($blockHtml, $transport->getHtml());
+        $this->assertContains('checkout-dhlversenden-services', $transport->getHtml());
+    }
 }
