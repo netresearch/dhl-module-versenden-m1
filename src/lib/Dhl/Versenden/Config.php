@@ -63,16 +63,18 @@ class Config
     }
 
     /**
-     * @param string $name
-     * @param string $value
-     * @param int $minLength
-     * @param int $maxLength
+     * Validate a config setting's string length.
+     *
+     * @param string $name The label/key
+     * @param string $value The value to be validated
+     * @param int $minLength The minimum allowed string length
+     * @param int $maxLength The maximum allowed string length
      * @return bool
      * @throws ConfigException
      */
     public function validateLength($name, $value, $minLength, $maxLength)
     {
-        if ($maxLength === 1 && !strlen($value)) {
+        if ( ($minLength > 0) && !strlen($value) ) {
             throw new ConfigException("$name is a required value.");
         }
 
