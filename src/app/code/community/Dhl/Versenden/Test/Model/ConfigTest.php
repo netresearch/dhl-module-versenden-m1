@@ -120,7 +120,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
         );
 
         $config = new \Dhl\Versenden\Config();
-        $config->validateLength($fieldName, "", 1, 1);
+        $config->validateLength($fieldName, "", 1, 3);
     }
 
     /**
