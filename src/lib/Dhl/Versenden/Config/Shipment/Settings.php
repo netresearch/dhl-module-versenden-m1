@@ -62,16 +62,18 @@ class Settings extends ConfigData
         $this->productWeight      = (float)$reader->getValue('shipment_defaultweight', '200');
         $this->codCharge          = (float)$reader->getValue('shipment_codcharge', '2');
 
-        if (empty($reader->getValue('shipment_dhlmethods'))) {
+        $shippingMethods = $reader->getValue('shipment_dhlmethods');
+        if (empty($shippingMethods)) {
             $this->shippingMethods = array();
         } else {
-            $this->shippingMethods = explode(',', $reader->getValue('shipment_dhlmethods'));
+            $this->shippingMethods = explode(',', $shippingMethods);
         }
 
-        if (empty($reader->getValue('shipment_dhlcodmethods'))) {
+        $codPaymentMethods = $reader->getValue('shipment_dhlcodmethods');
+        if (empty($codPaymentMethods)) {
             $this->codPaymentMethods = array();
         } else {
-            $this->codPaymentMethods = explode(',', $reader->getValue('shipment_dhlcodmethods'));
+            $this->codPaymentMethods = explode(',', $codPaymentMethods);
         }
     }
 }
