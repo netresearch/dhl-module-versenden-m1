@@ -37,17 +37,24 @@ use Dhl\Versenden\Service as AbstractService;
  */
 class ParcelAnnouncement extends AbstractService
 {
+    const DISPLAY_MODE_REQUIRED = 1;
+    const DISPLAY_MODE_OPTIONAL = 2;
+
+    /** @var string */
+    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
+
     /**
      * ParcelAnnouncement constructor.
-     * @param string $defaultValue
+     * @param string $value
      */
-    public function __construct($defaultValue = '')
+    public function __construct($value = '')
     {
-        parent::__construct($defaultValue);
+        parent::__construct($value);
 
         $this->name = 'Parcel Announcement';
         $this->isCustomerService = true;
-        $this->frontendInputType = self::INPUT_TYPE_BOOLEAN;
+
+        $this->setDisplayMode($value);
     }
 
     /**
@@ -56,7 +63,6 @@ class ParcelAnnouncement extends AbstractService
     public function setIsOptional()
     {
         $this->frontendInputType = self::INPUT_TYPE_BOOLEAN;
-        $this->defaultValue = false;
     }
 
     /**
@@ -65,6 +71,23 @@ class ParcelAnnouncement extends AbstractService
     public function setIsRequired()
     {
         $this->frontendInputType = self::INPUT_TYPE_HIDDEN;
-        $this->defaultValue = true;
+    }
+
+    /**
+     * Set whether to display/render this service or not.
+     *
+     * @param int $displayMode
+     */
+    public function setDisplayMode($displayMode)
+    {
+        switch ($displayMode) {
+            case self::DISPLAY_MODE_OPTIONAL:
+                $this->setIsOptional();
+                break;
+            case self::DISPLAY_MODE_REQUIRED:
+                $this->setIsRequired();
+                break;
+            default:
+        }
     }
 }

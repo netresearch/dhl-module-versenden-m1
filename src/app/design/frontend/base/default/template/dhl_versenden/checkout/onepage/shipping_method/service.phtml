@@ -36,9 +36,7 @@
             <tr>
                 <td>
                     <?php echo $serviceRenderer->getSelectorHtml() ?>
-                    <?php if ($service->frontendInputType != 'hidden'): ?>
-                        <?php echo $this->__($service->name) ?>
-                    <?php endif; ?>
+                    <?php echo $serviceRenderer->getLabelHtml($this->__($service->name)) ?>
                 </td>
                 <td><?php echo $serviceRenderer->getSettingsHtml() ?></td>
             </tr>

@@ -43,8 +43,9 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
      */
     public function getServices()
     {
-        $services = Mage::getModel('dhl_versenden/config')->getEnabledServices();
-
+        $collection = Mage::getModel('dhl_versenden/config')->getEnabledServices();
+        $services = $collection->getItems();
+        
         $services = array_filter($services, function (\Dhl\Versenden\Service $service) {
             return $service->isCustomerService;
         });

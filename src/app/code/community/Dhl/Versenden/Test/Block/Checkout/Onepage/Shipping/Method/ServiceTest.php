@@ -43,12 +43,15 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
     {
         $serviceOne = new \Dhl\Versenden\Service\BulkyGoods();
         $serviceTwo = new \Dhl\Versenden\Service\PreferredLocation();
+        $collection = new \Dhl\Versenden\Service\Collection([
+            $serviceOne, $serviceTwo
+        ]);
 
         $configMock = $this->getModelMock('dhl_versenden/config', ['getEnabledServices']);
         $configMock
             ->expects($this->once())
             ->method('getEnabledServices')
-            ->willReturn([$serviceOne, $serviceTwo]);
+            ->willReturn($collection);
         $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
 
         $block = Mage::app()->getLayout()->createBlock('dhl_versenden/checkout_onepage_shipping_method_service');
