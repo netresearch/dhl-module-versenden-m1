@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use Dhl\Versenden\ShippingInfo;
 /**
  * Dhl_Versenden_Model_Observer
  *
@@ -82,5 +82,39 @@ class Dhl_Versenden_Model_Observer
         $transport = $observer->getTransport();
         $html = $transport->getHtml() . $serviceBlock->toHtml();
         $transport->setHtml($html);
+    }
+
+    /**
+     * When the customer submits shipping method in OPC, then
+     * - persist service settings
+     * - process shipping address
+     * Event:
+     * - checkout_controller_onepage_save_shipping_method
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function saveShippingSettings(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = $observer->getQuote();
+
+        $shippingAddress = $quote->getShippingAddress();
+        $enabledMethods = Mage::getModel('dhl_versenden/config')->getShipmentSettings()->shippingMethods;
+        if (!in_array($shippingAddress->getShippingMethod(), $enabledMethods)) {
+            // customer selected a shipping method not to be processed via DHL Versenden
+            return;
+        }
+
+        /** @var Mage_Core_Controller_Request_Http $request */
+        $request = $observer->getRequest();
+
+        $serviceSettings = Mage::helper('dhl_versenden/data')->getServiceSettings(
+            $request->getPost('shipment_service', []),
+            $request->getPost('service_setting', [])
+        );
+        $receiver = Mage::helper('dhl_versenden/data')->getReceiver($shippingAddress);
+
+        $shippingInfo = new ShippingInfo($serviceSettings, $receiver);
+        $shippingAddress->setDhlVersendenInfo($shippingInfo->getJson());
     }
 }

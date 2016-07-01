@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Service;
 use Dhl\Versenden\Service as AbstractService;
 
 /**
- * PreferredNeighbour
+ * Insurance
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,20 +35,35 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour extends AbstractService
+class Insurance extends AbstractService
 {
+    const TYPE_A = 'A';
+    const TYPE_B = 'B';
+
     /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
+    public $frontendInputType = self::INPUT_TYPE_SELECT;
 
     /**
-     * PreferredNeighbour constructor.
+     * Insurance constructor.
      * @param string $value
      */
     public function __construct($value = '')
     {
         parent::__construct($value);
 
-        $this->name = 'Preferred Neighbour';
-        $this->isCustomerService = true;
+        $this->name = 'Insurance';
+        $this->isCustomerService = false;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOptions()
+    {
+        //TODO(nr): How to realize localization in lib?
+        return [
+            self::TYPE_A => '2.500',
+            self::TYPE_B => '25.000',
+        ];
     }
 }

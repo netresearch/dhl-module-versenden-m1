@@ -56,18 +56,38 @@ class Renderer
     public function getSelectorHtml()
     {
         $checkboxFormat = <<<'HTML'
-<input type="checkbox" id="shipment_service_%s" name="shipment_service_%s" value="%s" class="checkbox" />
+<input type="checkbox" id="shipment_service_%s" name="shipment_service[%s]" value="%s" class="checkbox" />
 HTML;
         $hiddenFormat = <<<'HTML'
-<input type="hidden" name="shipment_service_%s" value="%s">
+<input type="hidden" name="shipment_service[%s]" value="%s">
 HTML;
 
-        $serviceCode = strtolower($this->service->name);
+        $serviceCode = $this->service->getCode();
         switch ($this->service->frontendInputType) {
             case Service::INPUT_TYPE_HIDDEN:
-                return sprintf($hiddenFormat, $serviceCode, $this->service->defaultValue);
+                return sprintf($hiddenFormat, $serviceCode, $this->service->value);
             default:
                 return sprintf($checkboxFormat, $serviceCode, $serviceCode, $serviceCode);
+        }
+    }
+
+    /**
+     * Obtain the markup for the service selector label.
+     *
+     * @param string $serviceName Translated service name
+     * @return string
+     */
+    public function getLabelHtml($serviceName)
+    {
+        $labelFormat = <<<'HTML'
+<label for="shipment_service_%s">%s</label>
+HTML;
+        $serviceCode = $this->service->getCode();
+        switch ($this->service->frontendInputType) {
+            case Service::INPUT_TYPE_HIDDEN:
+                return '';
+            default:
+                return sprintf($labelFormat, $serviceCode, $serviceName);
         }
     }
 
@@ -78,14 +98,14 @@ HTML;
      */
     public function getSettingsHtml()
     {
-        $serviceCode = strtolower($this->service->name);
+        $serviceCode = $this->service->getCode();
         switch ($this->service->frontendInputType) {
             case Service::INPUT_TYPE_TEXT:
-                $format = '<input type="text" name="service_setting_%s" class="input-text" />';
+                $format = '<input type="text" name="service_setting[%s]" class="input-text" />';
                 return sprintf($format, $serviceCode);
                 break;
             case Service::INPUT_TYPE_SELECT:
-                $format = '<select name="service_setting_%s">%s</select>';
+                $format = '<select name="service_setting[%s]">%s</select>';
                 $options = $this->service->getOptions();
                 $values = array_keys($options);
 

@@ -25,7 +25,6 @@
  */
 namespace Dhl\Versenden\Service;
 use Dhl\Versenden\Service as AbstractService;
-
 /**
  * BulkyGoods
  *
@@ -37,15 +36,17 @@ use Dhl\Versenden\Service as AbstractService;
  */
 class BulkyGoods extends AbstractService
 {
+    /** @var string */
+    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
+
     /**
      * BulkyGoods constructor.
-     * @param string $defaultValue
+     * @param string $value
      */
-    public function __construct($defaultValue = '')
+    public function __construct($value = '')
     {
-        parent::__construct($defaultValue);
+        parent::__construct($value);
 
         $this->name = 'Bulky Goods';
-        $this->frontendInputType = self::INPUT_TYPE_BOOLEAN;
     }
 }

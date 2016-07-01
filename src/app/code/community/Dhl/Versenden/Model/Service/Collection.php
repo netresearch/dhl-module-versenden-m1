@@ -17,38 +17,23 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Service
+ * @package   Dhl_Versenden
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service as AbstractService;
 
 /**
- * PreferredNeighbour
+ * Dhl_Versenden_Model_Observer
  *
  * @category Dhl
- * @package  Dhl\Versenden\Service
+ * @package  Dhl_Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour extends AbstractService
+class Dhl_Versenden_Model_Service_Collection extends Varien_Data_Collection
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
-
-    /**
-     * PreferredNeighbour constructor.
-     * @param string $value
-     */
-    public function __construct($value = '')
-    {
-        parent::__construct($value);
-
-        $this->name = 'Preferred Neighbour';
-        $this->isCustomerService = true;
-    }
+    protected $_itemObjectClass = 'Dhl\Versenden\Service';
 }
