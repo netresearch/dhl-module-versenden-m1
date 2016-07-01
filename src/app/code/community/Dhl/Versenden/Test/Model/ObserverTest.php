@@ -44,15 +44,13 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $configMock
             ->expects($this->once())
             ->method('isAutoloadEnabled')
-            ->willReturnOnConsecutiveCalls(true)
-        ;
+            ->willReturnOnConsecutiveCalls(true);
         $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
 
         $autoloaderMock = $this->getHelperMock('dhl_versenden/autoloader', ['register']);
         $autoloaderMock
             ->expects($this->once())
-            ->method('register')
-        ;
+            ->method('register');
         $this->replaceByMock('helper', 'dhl_versenden/autoloader', $autoloaderMock);
 
         $observer = new Dhl_Versenden_Model_Observer();
@@ -68,15 +66,13 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $configMock
             ->expects($this->once())
             ->method('isAutoloadEnabled')
-            ->willReturnOnConsecutiveCalls(false)
-        ;
+            ->willReturnOnConsecutiveCalls(false);
         $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
 
         $autoloaderMock = $this->getHelperMock('dhl_versenden/autoloader', ['register']);
         $autoloaderMock
             ->expects($this->never())
-            ->method('register')
-        ;
+            ->method('register');
         $this->replaceByMock('helper', 'dhl_versenden/autoloader', $autoloaderMock);
 
         $observer = new Dhl_Versenden_Model_Observer();
@@ -105,5 +101,108 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
         $this->assertStringStartsWith($blockHtml, $transport->getHtml());
         $this->assertContains('checkout-dhlversenden-services', $transport->getHtml());
+    }
+
+    /**
+     * Assert early return.
+     *
+     * @test
+     * @loadFixture ../../ConfigTest/fixtures/ConfigTest
+     */
+    public function appendNoServices()
+    {
+        $this->setCurrentStore('store_two');
+
+        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+            ->setMethods(['getTransport'])
+            ->getMock();
+        $observerMock
+            ->expects($this->never())
+            ->method('getTransport');
+
+        $block = new Mage_Core_Block_Text();
+        $observerMock->setBlock($block);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->appendServices($observerMock);
+    }
+
+    /**
+     * @test
+     * @loadFixture Quotes
+     */
+    public function saveShippingSettings()
+    {
+        $this->setCurrentStore('store_two');
+
+        // SERVICE DEFINITION
+        $preferredLocationValue = 'Garage Location';
+        $preferredLocation = new \Dhl\Versenden\Service\PreferredLocation($preferredLocationValue);
+
+        $preferredNeighbourValue = 'Foo Neighbour';
+        $preferredNeighbour = new \Dhl\Versenden\Service\PreferredNeighbour($preferredNeighbourValue);
+
+        // two settings, only one actually enabled
+        $requestMock = $this->getMockBuilder(Mage_Core_Controller_Request_Http::class)
+            ->setMethods(['getPost'])
+            ->getMock();
+        $requestMock
+            ->expects($this->exactly(2))
+            ->method('getPost')
+            ->withConsecutive($this->equalTo('shipment_service'), $this->equalTo('service_setting'))
+            ->willReturnMap([
+                ['shipment_service', [], [$preferredLocation->getCode() => $preferredLocation->getCode()]],
+                ['service_setting', [], [
+                    $preferredLocation->getCode() => $preferredLocation->value,
+                    $preferredNeighbour->getCode() => $preferredNeighbour->value,
+                ]]
+            ]);
+
+        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+            ->setMethods(['getRequest'])
+            ->getMock();
+        $observerMock
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($requestMock);
+
+        // ADDRESS DEFINITION
+        $addressCompany = 'Dhl Foo Company';
+
+        $quote = Mage::getModel('sales/quote')->load(200);
+        $quote->getShippingAddress()->setCompany($addressCompany);
+        $observerMock->setQuote($quote);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->saveShippingSettings($observerMock);
+
+        $versendenInfo = $quote->getShippingAddress()->getDhlVersendenInfo();
+        $this->assertNotEmpty($versendenInfo);
+        $this->assertContains($preferredLocationValue, $versendenInfo);
+        $this->assertNotContains($preferredNeighbourValue, $versendenInfo);
+        $this->assertContains($addressCompany, $versendenInfo);
+    }
+
+    /**
+     * Assert early return (wrong shipping method).
+     *
+     * @test
+     * @loadFixture Quotes
+     */
+    public function saveNoShippingSettings()
+    {
+        $this->setCurrentStore('store_one');
+        $quote = Mage::getModel('sales/quote')->load(100);
+
+        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+            ->setMethods(['getRequest'])
+            ->getMock();
+        $observerMock
+            ->expects($this->never())
+            ->method('getRequest');
+        $observerMock->setQuote($quote);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->saveShippingSettings($observerMock);
     }
 }

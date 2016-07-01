@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\ShippingInfo;
 /**
  * Dhl_Versenden_Helper_Data
  *
@@ -81,5 +81,48 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
             'street_number' => '',
             'supplement'    => ''
         );
+    }
+
+    /**
+     * Prepare service settings from OPC form data.
+     *
+     * @param string[] $services
+     * @param string[] $settings
+     * @return ShippingInfo\ServiceSettings
+     */
+    public function getServiceSettings(array $services, array $settings)
+    {
+        $serviceSettings = new ShippingInfo\ServiceSettings();
+        foreach ($services as $service) {
+            $serviceSettings->{$service} = $settings[$service];
+        }
+        return $serviceSettings;
+    }
+
+    /**
+     * Prepare receiver from OPC shipping address.
+     *
+     * @param Mage_Sales_Model_Quote_Address $address
+     * @return ShippingInfo\Receiver
+     */
+    public function getReceiver(Mage_Sales_Model_Quote_Address $address)
+    {
+        $receiver = new ShippingInfo\Receiver();
+        $receiver->name1 = $address->getName();
+        $receiver->name2 = $address->getCompany();
+        //TODO(nr): splitStreet
+        $receiver->streetName = $address->getStreetFull();
+        $receiver->zip = $address->getPostcode();
+        $receiver->city = $address->getCity();
+
+        $country = Mage::getModel('directory/country')->loadByCode($address->getCountry());
+        $receiver->country = $country->getName();
+        $receiver->countryISOCode = $country->getIso2Code();
+        $receiver->state = $address->getRegion();
+
+        $receiver->phone = $address->getTelephone();
+        $receiver->email = $address->getEmail();
+        //TODO(nr): packstation
+        return $receiver;
     }
 }

@@ -37,17 +37,19 @@ use Dhl\Versenden\Service as AbstractService;
  */
 class DeliveryTimeFrame extends AbstractService
 {
+    /** @var string */
+    public $frontendInputType = self::INPUT_TYPE_SELECT;
+
     /**
      * DeliveryTimeFrame constructor.
-     * @param string $defaultValue
+     * @param string $value
      */
-    public function __construct($defaultValue = '')
+    public function __construct($value = '')
     {
-        parent::__construct($defaultValue);
+        parent::__construct($value);
 
         $this->name = 'Delivery Time Frame';
         $this->isCustomerService = true;
-        $this->frontendInputType = self::INPUT_TYPE_SELECT;
     }
 
     /**

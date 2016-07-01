@@ -17,25 +17,23 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Config
+ * @package   Dhl\Versenden\Service
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config;
-use Dhl\Versenden\Config as ConfigReader;
-use Dhl\Versenden\Config\Data as ConfigData;
+namespace Dhl\Versenden\ShippingInfo;
 /**
- * Service
+ * ServiceSettings
  *
  * @category Dhl
- * @package  Dhl\Versenden\Config
+ * @package  Dhl\Versenden\ShippingInfo
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Service extends ConfigData
+class ServiceSettings
 {
     /** @var bool */
     public $dayOfDelivery;
@@ -45,8 +43,6 @@ class Service extends ConfigData
     public $preferredLocation;
     /** @var bool */
     public $preferredNeighbour;
-    /** @var bool */
-    public $packstation;
     /** @var int */
     public $parcelAnnouncement;
     /** @var bool */
@@ -58,22 +54,18 @@ class Service extends ConfigData
     /** @var bool */
     public $bulkyGoods;
 
-    /**
-     * Shift data from config array to properties.
-     *
-     * @param ConfigReader $reader
-     */
-    public function loadValues(ConfigReader $reader)
+    public function __construct(\stdClass $object = null)
     {
-        $this->dayOfDelivery      = (bool)$reader->getValue('service_dayofdelivery_enabled');
-        $this->deliveryTimeFrame  = (bool)$reader->getValue('service_deliverytimeframe_enabled');
-        $this->preferredLocation  = (bool)$reader->getValue('service_preferredlocation_enabled');
-        $this->preferredNeighbour = (bool)$reader->getValue('service_preferredneighbour_enabled');
-        $this->packstation        = (bool)$reader->getValue('service_packstation_enabled');
-        $this->parcelAnnouncement = (int)$reader->getValue('service_parcelannouncement_enabled');
-        $this->visualCheckOfAge   = (bool)$reader->getValue('service_visualcheckofage_enabled');
-        $this->returnShipment     = (bool)$reader->getValue('service_returnshipment_enabled');
-        $this->insurance          = (bool)$reader->getValue('service_insurance_enabled');
-        $this->bulkyGoods         = (bool)$reader->getValue('service_bulkygoods_enabled');
+        if ($object) {
+            $this->dayOfDelivery = isset($object->dayOfDelivery) ? $object->dayOfDelivery : false;
+            $this->deliveryTimeFrame = isset($object->deliveryTimeFrame) ? $object->deliveryTimeFrame : false;
+            $this->preferredLocation = isset($object->preferredLocation) ? $object->preferredLocation : false;
+            $this->preferredNeighbour = isset($object->preferredNeighbour) ? $object->preferredNeighbour : false;
+            $this->parcelAnnouncement = isset($object->parcelAnnouncement) ? $object->parcelAnnouncement : 0;
+            $this->visualCheckOfAge = isset($object->visualCheckOfAge) ? $object->visualCheckOfAge : false;
+            $this->returnShipment = isset($object->returnShipment) ? $object->returnShipment : false;
+            $this->insurance = isset($object->insurance) ? $object->insurance : false;
+            $this->bulkyGoods = isset($object->bulkyGoods) ? $object->bulkyGoods : false;
+        }
     }
 }

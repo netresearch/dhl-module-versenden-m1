@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Service;
 use Dhl\Versenden\Service as AbstractService;
 
 /**
- * PreferredNeighbour
+ * DayOfDelivery
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,20 +35,20 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour extends AbstractService
+class DayOfDelivery extends AbstractService
 {
     /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
+    public $frontendInputType = self::INPUT_TYPE_DATE;
 
     /**
-     * PreferredNeighbour constructor.
+     * DayOfDelivery constructor.
      * @param string $value
      */
     public function __construct($value = '')
     {
         parent::__construct($value);
 
-        $this->name = 'Preferred Neighbour';
+        $this->name = 'Day Of Delivery';
         $this->isCustomerService = true;
     }
 }

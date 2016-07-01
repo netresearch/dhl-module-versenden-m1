@@ -25,9 +25,8 @@
  */
 namespace Dhl\Versenden\Service;
 use Dhl\Versenden\Service as AbstractService;
-
 /**
- * PreferredNeighbour
+ * VisualCheckOfAge
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,20 +34,34 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour extends AbstractService
+class VisualCheckOfAge extends AbstractService
 {
+    const A16 = 'A16';
+    const A18 = 'A18';
+
     /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
+    public $frontendInputType = self::INPUT_TYPE_SELECT;
 
     /**
-     * PreferredNeighbour constructor.
+     * VisualCheckOfAge constructor.
      * @param string $value
      */
     public function __construct($value = '')
     {
         parent::__construct($value);
 
-        $this->name = 'Preferred Neighbour';
-        $this->isCustomerService = true;
+        $this->name = 'Visual Check Of Age';
+        $this->isCustomerService = false;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOptions()
+    {
+        return [
+            self::A16 => self::A16,
+            self::A18 => self::A18,
+        ];
     }
 }

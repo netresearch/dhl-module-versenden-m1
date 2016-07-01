@@ -37,16 +37,18 @@ use Dhl\Versenden\Service as AbstractService;
  */
 class PreferredLocation extends AbstractService
 {
+    /** @var string */
+    public $frontendInputType = self::INPUT_TYPE_TEXT;
+
     /**
      * PreferredLocation constructor.
-     * @param string $defaultValue
+     * @param string $value
      */
-    public function __construct($defaultValue = '')
+    public function __construct($value = '')
     {
-        parent::__construct($defaultValue);
+        parent::__construct($value);
 
         $this->name = 'Preferred Location';
         $this->isCustomerService = true;
-        $this->frontendInputType = self::INPUT_TYPE_TEXT;
     }
 }

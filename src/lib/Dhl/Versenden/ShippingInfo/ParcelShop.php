@@ -1,0 +1,68 @@
+<?php
+/**
+* Dhl Versenden
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the Open Software License (OSL 3.0)
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://opensource.org/licenses/osl-3.0.php
+*
+* DISCLAIMER
+*
+* Do not edit or add to this file if you wish to upgrade this extension to
+* newer versions in the future.
+*
+* PHP version 5
+*
+* @category  Dhl
+* @package   Dhl\Versenden\Service
+* @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+* @copyright 2016 Netresearch GmbH & Co. KG
+* @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+* @link      http://www.netresearch.de/
+*/
+namespace Dhl\Versenden\ShippingInfo;
+/**
+* ParcelShop
+*
+* @category Dhl
+* @package  Dhl\Versenden\ShippingInfo
+* @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+* @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+* @link     http://www.netresearch.de/
+*/
+class ParcelShop
+{
+    /** @var string */
+    public $parcelShopNumber;
+    /** @var string */
+    public $streetName;
+    /** @var string */
+    public $streetNumber;
+    /** @var string */
+    public $zip;
+    /** @var string */
+    public $city;
+    /** @var string */
+    public $country;
+    /** @var string */
+    public $countryISOCode;
+    /** @var string */
+    public $state;
+
+    public function __construct(\stdClass $object = null)
+    {
+        if ($object) {
+            $this->parcelShopNumber = isset($object->parcelShopNumber) ? $object->parcelShopNumber : '';
+            $this->streetName = isset($object->streetName) ? $object->streetName : '';
+            $this->streetNumber = isset($object->streetNumber) ? $object->streetNumber : '';
+            $this->zip = isset($object->zip) ? $object->zip : '';
+            $this->city = isset($object->city) ? $object->city : '';
+            $this->country = isset($object->country) ? $object->country : '';
+            $this->countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : '';
+            $this->state = isset($object->state) ? $object->state : '';
+        }
+    }
+}

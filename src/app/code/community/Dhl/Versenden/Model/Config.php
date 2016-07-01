@@ -25,7 +25,6 @@
  */
 use Dhl\Versenden\Config;
 use Dhl\Versenden\Config\Exception as ConfigException;
-use Dhl\Versenden\Config\Service as ServiceConfig;
 use Dhl\Versenden\Config\Shipment\Settings as ShipmentSettings;
 use Dhl\Versenden\Config\Shipper;
 use Dhl\Versenden\Config\Shipper\Account;
@@ -33,6 +32,7 @@ use Dhl\Versenden\Config\Shipper\Contact as ShipperContact;
 use Dhl\Versenden\Config\Shipper\BankData;
 use Dhl\Versenden\Config\Shipper\ReturnReceiver;
 use Dhl\Versenden\Service;
+use Dhl\Versenden\Service\Collection as ServiceCollection;
 use Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno as ParcelAnnouncementOptions;
 /**
  * Dhl_Versenden_Model_Config
@@ -53,6 +53,17 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlversenden/sandbox_mode';
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlversenden/logging_enabled';
     const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlversenden/log_level';
+
+    const CONFIG_XML_PATH_SERVICE_DAYOFDELIVERY = 'carriers/dhlversenden/service_dayofdelivery_enabled';
+    const CONFIG_XML_PATH_SERVICE_DELIVERYTIMEFRAME = 'carriers/dhlversenden/service_deliverytimeframe_enabled';
+    const CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION = 'carriers/dhlversenden/service_preferredlocation_enabled';
+    const CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOUR = 'carriers/dhlversenden/service_preferredneighbour_enabled';
+    const CONFIG_XML_PATH_SERVICE_PACKSTATION = 'carriers/dhlversenden/service_packstation_enabled';
+    const CONFIG_XML_PATH_SERVICE_PARCELANNOUNCEMENT = 'carriers/dhlversenden/service_parcelannouncement_enabled';
+    const CONFIG_XML_PATH_SERVICE_VISUALCHECKOFAGE = 'carriers/dhlversenden/service_visualcheckofage_enabled';
+    const CONFIG_XML_PATH_SERVICE_RETURNSHIPMENT = 'carriers/dhlversenden/service_returnshipment_enabled';
+    const CONFIG_XML_PATH_SERVICE_INSURANCE = 'carriers/dhlversenden/service_insurance_enabled';
+    const CONFIG_XML_PATH_SERVICE_BULKYGOODS = 'carriers/dhlversenden/service_bulkygoods_enabled';
 
     /**
      * Check if custom autoloader should be registered.
@@ -196,21 +207,6 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
-     * Load the service configuration.
-     *
-     * @param mixed $store
-     * @return ServiceConfig
-     * @throws ConfigException
-     */
-    public function getServices($store = null)
-    {
-        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-
-        $reader = new Config($carrierConfig);
-        return new ServiceConfig($reader);
-    }
-
-    /**
      * @param mixed $store
      * @return Shipper
      * @throws ConfigException
@@ -226,50 +222,61 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
-     * Obtain the service objects that are enabled via module configuration.
+     * Load the service configuration.
      *
      * @param mixed $store
-     * @return Service[]
+     * @return ServiceCollection
+     */
+    public function getServices($store = null)
+    {
+        $collection = new ServiceCollection();
+
+        $dayOfDelivery = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_DAYOFDELIVERY, $store);
+        $collection->addItem(new Service\DayOfDelivery($dayOfDelivery));
+
+        $deliveryTimeFrame = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_DELIVERYTIMEFRAME, $store);
+        $collection->addItem(new Service\DeliveryTimeFrame($deliveryTimeFrame));
+
+        $preferredLocation = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION, $store);
+        $collection->addItem(new Service\PreferredLocation($preferredLocation));
+
+        $preferredNeighbour = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOUR, $store);
+        $collection->addItem(new Service\PreferredNeighbour($preferredNeighbour));
+
+        $parcelAnnouncement = Mage::getStoreConfig(self::CONFIG_XML_PATH_SERVICE_PARCELANNOUNCEMENT, $store);
+        $collection->addItem(new Service\ParcelAnnouncement($parcelAnnouncement));
+
+        $visualCheckOfAge = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_VISUALCHECKOFAGE, $store);
+        $collection->addItem(new Service\VisualCheckOfAge($visualCheckOfAge));
+
+        $returnShipment = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_RETURNSHIPMENT, $store);
+        $collection->addItem(new Service\ReturnShipment($returnShipment));
+
+        $insurance = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_INSURANCE, $store);
+        $collection->addItem(new Service\Insurance($insurance));
+
+        $bulkyGoods = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_BULKYGOODS, $store);
+        $collection->addItem(new Service\BulkyGoods($bulkyGoods));
+
+        return $collection;
+    }
+
+    /**
+     * Obtain the service objects that are enabled via module configuration.
+     * Services are initialized with their enabled status. Additionally, set
+     * the display mode for parcel announcement.
+     *
+     * @param mixed $store
+     * @return ServiceCollection
      */
     public function getEnabledServices($store = null)
     {
-        $services = [];
-        $serviceConfig = $this->getServices($store);
+        $services = $this->getServices($store)->getItems();
 
-        //TODO(nr): there must be a better way to do this
-        $bgDefault = $serviceConfig->bulkyGoods;
-        if ($bgDefault) {
-            $services[]= new Service\BulkyGoods($bgDefault);
-        }
+        $items = array_filter($services, function (Service $item) {
+            return (bool)$item->value;
+        });
 
-        $plDefault = $serviceConfig->preferredLocation;
-        if ($plDefault) {
-            $services[]= new Service\PreferredLocation($plDefault);
-        }
-
-        $pnDefault = $serviceConfig->preferredNeighbour;
-        if ($pnDefault) {
-            $services[]= new Service\PreferredNeighbour($pnDefault);
-        }
-
-        $paDefault = $serviceConfig->parcelAnnouncement;
-        if ($paDefault) {
-            $paService = new Service\ParcelAnnouncement();
-
-            if ($paDefault === ParcelAnnouncementOptions::Y) {
-                $paService->setIsRequired();
-            } elseif ($paDefault === ParcelAnnouncementOptions::OPT) {
-                $paService->setIsOptional();
-            }
-
-            $services[]= $paService;
-        }
-
-        $dtDefault = $serviceConfig->deliveryTimeFrame;
-        if ($dtDefault) {
-            $services[]= new Service\DeliveryTimeFrame($dtDefault);
-        }
-
-        return $services;
+        return new ServiceCollection($items);
     }
 }

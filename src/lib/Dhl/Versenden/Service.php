@@ -50,19 +50,33 @@ abstract class Service
     /** @var string */
     public $frontendInputType = self::INPUT_TYPE_TEXT;
     /** @var string */
-    public $defaultValue = '';
+    public $value = '';
 
     /**
      * Service constructor.
-     * @param string $defaultValue Service setting preselection.
+     * @param string $value Service setting preselection.
      */
-    public function __construct($defaultValue = '')
+    public function __construct($value = '')
     {
-        if (strpos($defaultValue, 'bool') === 0) {
-            $this->defaultValue = (bool)$defaultValue;
+        if (strpos($this->frontendInputType, 'bool') === 0) {
+            $this->value = (bool)$value;
         } else {
-            $this->defaultValue = $defaultValue;
+            $this->value = $value;
         }
+    }
+
+    /**
+     * Infer service code from class name.
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        $className = get_class($this);
+        if ($pos = strrpos($className, '\\')) {
+            $className = substr($className, $pos + 1);
+        }
+        return lcfirst($className);
     }
 
     /**
