@@ -1,0 +1,34 @@
+scope:
+  store: # Initializes store views
+# Store 1
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: store_one
+      name: Store One
+      is_active: 1
+# Store 2
+    - store_id: 2
+      website_id: 1
+      group_id: 1
+      code: store_two
+      name: Store Two
+      is_active: 1
+
+config:
+  default/dhl_versenden/dev/autoload_enabled: "0"
+
+  default/carriers/dhlversenden/title:          "foo"
+  stores/store_one/carriers/dhlversenden/title: "bar"
+  stores/store_two/carriers/dhlversenden/title: "baz"
+
+  default/carriers/dhlversenden/active:          "1"
+  stores/store_one/carriers/dhlversenden/active: "0"
+
+  default/carriers/dhlversenden/sandbox_mode:          "1"
+  stores/store_two/carriers/dhlversenden/sandbox_mode: "0"
+
+  default/carriers/dhlversenden/logging_enabled:    "1"
+  default/carriers/dhlversenden/log_level:          "7"
+
+  stores/store_two/carriers/dhlversenden/service_parcelannouncement_enabled: "2"
