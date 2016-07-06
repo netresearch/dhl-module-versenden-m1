@@ -25,7 +25,7 @@
  */
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
-<table id="checkout-dhlversenden-services">
+<table id="checkout-dhlversenden-services" style="display: none">
     <colgroup>
         <col />
         <col />
@@ -43,3 +43,10 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+<script type="text/javascript">
+    //<![CDATA[
+    var serviceContainer = new DhlServiceContainer('checkout-dhlversenden-services', '<?php echo $this->getDhlMethods() ?>');
+    serviceContainer.registerMethodChange('co-shipping-method-form');
+    serviceContainer.toggleServiceContainer('co-shipping-method-form');
+    //]]>
+</script>

@@ -78,6 +78,13 @@
         </translate>
     </adminhtml>
     <frontend>
+        <layout>
+            <updates>
+                <dhl_versenden>
+                    <file>dhl_versenden.xml</file>
+                </dhl_versenden>
+            </updates>
+        </layout>
         <events>
             <core_block_abstract_to_html_after>
                 <observers>
