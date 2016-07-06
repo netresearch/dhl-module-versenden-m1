@@ -45,11 +45,23 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     {
         $collection = Mage::getModel('dhl_versenden/config')->getEnabledServices();
         $services = $collection->getItems();
-        
+
         $services = array_filter($services, function (\Dhl\Versenden\Service $service) {
             return $service->isCustomerService;
         });
 
         return $services;
+    }
+
+    /**
+     * Obtain the shipping methods that should be processed with DHL Versenden.
+     *
+     * @return string json encoded methods array
+     */
+    public function getDhlMethods()
+    {
+        $config = Mage::getModel('dhl_versenden/config');
+        $dhlMethods = $config->getShipmentSettings()->shippingMethods;
+        return $this->helper('core/data')->jsonEncode($dhlMethods);
     }
 }
