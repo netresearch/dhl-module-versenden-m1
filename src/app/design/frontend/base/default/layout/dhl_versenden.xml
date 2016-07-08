@@ -32,6 +32,10 @@
                 <type>skin_js</type>
                 <script>js/dhl_versenden/opcheckout.js</script>
             </action>
+            <action method="addItem" ifconfig="carriers/dhlversenden/active">
+                <type>skin_css</type>
+                <script>css/dhl_versenden/styles.css</script>
+            </action>
         </reference>
     </checkout_onepage_index>
 </layout>
