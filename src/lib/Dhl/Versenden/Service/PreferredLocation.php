@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
+
 use Dhl\Versenden\Service as AbstractService;
 
 /**
@@ -35,20 +36,26 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredLocation extends AbstractService
+class PreferredLocation
+    extends AbstractService
 {
     /** @var string */
     public $frontendInputType = self::INPUT_TYPE_TEXT;
 
     /**
      * PreferredLocation constructor.
+     *
      * @param string $value
+     * @param string $placeholder
      */
-    public function __construct($value = '')
+    public function __construct($value = '', $placeholder = '')
     {
         parent::__construct($value);
 
-        $this->name = 'Preferred Location';
+        $this->name              = 'Preferred Location';
         $this->isCustomerService = true;
+        if ($placeholder != '') {
+            $this->placeholder = $placeholder;
+        }
     }
 }

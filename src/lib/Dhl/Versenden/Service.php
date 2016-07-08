@@ -51,6 +51,8 @@ abstract class Service
     public $frontendInputType = self::INPUT_TYPE_TEXT;
     /** @var string */
     public $value = '';
+    /** @var string */
+    public $placeholder = '';
 
     /**
      * Service constructor.
@@ -77,6 +79,16 @@ abstract class Service
             $className = substr($className, $pos + 1);
         }
         return lcfirst($className);
+    }
+
+    /**
+     * Get Placeholder from Service
+     *
+     * @return string
+     */
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
     }
 
     /**
