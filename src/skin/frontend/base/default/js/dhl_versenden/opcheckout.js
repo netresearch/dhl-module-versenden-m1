@@ -39,11 +39,11 @@ DhlServiceContainer.prototype = {
     initDhlMethods: function (dhlMethods) {
         if (dhlMethods) {
             this.dhlMethods = dhlMethods.evalJSON(true);
+            observeShippingEvents.call();
         }
     },
 
-    toggleServiceContainer: function (formId)
-    {
+    toggleServiceContainer: function (formId) {
         var inputs = $(formId).select("input:checked[name=shipping_method]");
         if (inputs.length) {
             var selectedMethod = inputs[0].value;
@@ -56,13 +56,30 @@ DhlServiceContainer.prototype = {
         }
     },
 
-    registerMethodChange: function (formId)
-    {
+    registerMethodChange: function (formId) {
         var methodInputs = Form.getInputs(formId, 'radio', 'shipping_method');
         methodInputs.each(function (input) {
-            input.observe('change', function (event) {
+            input.observe('change', function () {
                 this.toggleServiceContainer(formId);
             }.bind(this));
         }.bind(this));
     }
 };
+
+function observeShippingEvents() {
+
+    $$('.input-with-checkbox').each(function (element) {
+        var toggleSelect = 'unchecked';
+        var selectElement = $(element.readAttribute('data-select-id'));
+
+        element.observe('keyup', function () {
+            if (this.value != '' && toggleSelect == 'unchecked') {
+                selectElement.checked = true;
+                toggleSelect = 'checked';
+            } else if (this.value == '' && toggleSelect == 'checked') {
+                selectElement.checked = false;
+                toggleSelect = 'unchecked';
+            }
+        });
+    });
+}
