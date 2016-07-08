@@ -101,8 +101,11 @@ HTML;
         $serviceCode = $this->service->getCode();
         switch ($this->service->frontendInputType) {
             case Service::INPUT_TYPE_TEXT:
-                $format = '<input type="text" name="service_setting[%s]" class="input-text" />';
-                return sprintf($format, $serviceCode);
+                $format = <<<'HTML'
+<input type="text" name="service_setting[%s]" class="input-text" maxlength="100" placeholder="%s" />
+HTML;
+
+                return sprintf($format, $serviceCode, $this->service->getPlaceholder());
                 break;
             case Service::INPUT_TYPE_SELECT:
                 $format = '<select name="service_setting[%s]">%s</select>';

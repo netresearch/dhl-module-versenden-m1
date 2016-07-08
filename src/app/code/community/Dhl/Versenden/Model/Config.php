@@ -57,7 +57,9 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SERVICE_DAYOFDELIVERY = 'carriers/dhlversenden/service_dayofdelivery_enabled';
     const CONFIG_XML_PATH_SERVICE_DELIVERYTIMEFRAME = 'carriers/dhlversenden/service_deliverytimeframe_enabled';
     const CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION = 'carriers/dhlversenden/service_preferredlocation_enabled';
+    const CONFIG_XML_PATH_SERVICE_PREFERREDLOCATIONPLACEHOLDER = 'carriers/dhlversenden/service_preferredlocation_placeholder';
     const CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOUR = 'carriers/dhlversenden/service_preferredneighbour_enabled';
+    const CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOURPLACEHOLDER = 'carriers/dhlversenden/service_preferredneighbour_placeholder';
     const CONFIG_XML_PATH_SERVICE_PACKSTATION = 'carriers/dhlversenden/service_packstation_enabled';
     const CONFIG_XML_PATH_SERVICE_PARCELANNOUNCEMENT = 'carriers/dhlversenden/service_parcelannouncement_enabled';
     const CONFIG_XML_PATH_SERVICE_VISUALCHECKOFAGE = 'carriers/dhlversenden/service_visualcheckofage_enabled';
@@ -237,11 +239,17 @@ class Dhl_Versenden_Model_Config
         $deliveryTimeFrame = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_DELIVERYTIMEFRAME, $store);
         $collection->addItem(new Service\DeliveryTimeFrame($deliveryTimeFrame));
 
-        $preferredLocation = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION, $store);
-        $collection->addItem(new Service\PreferredLocation($preferredLocation));
+        $preferredLocation            =
+            Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION, $store);
+        $preferredLocationPlaceholder =
+            Mage::getStoreConfig(self::CONFIG_XML_PATH_SERVICE_PREFERREDLOCATIONPLACEHOLDER, $store);
+        $collection->addItem(new Service\PreferredLocation($preferredLocation, $preferredLocationPlaceholder));
 
-        $preferredNeighbour = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOUR, $store);
-        $collection->addItem(new Service\PreferredNeighbour($preferredNeighbour));
+        $preferredNeighbour            =
+            Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOUR, $store);
+        $preferredNeighbourPlaceholder =
+            Mage::getStoreConfig(self::CONFIG_XML_PATH_SERVICE_PREFERREDNEIGHBOURPLACEHOLDER, $store);
+        $collection->addItem(new Service\PreferredNeighbour($preferredNeighbour, $preferredNeighbourPlaceholder));
 
         $parcelAnnouncement = Mage::getStoreConfig(self::CONFIG_XML_PATH_SERVICE_PARCELANNOUNCEMENT, $store);
         $collection->addItem(new Service\ParcelAnnouncement($parcelAnnouncement));
