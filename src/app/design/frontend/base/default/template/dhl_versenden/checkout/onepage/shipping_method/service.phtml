@@ -25,28 +25,27 @@
  */
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
-<table id="checkout-dhlversenden-services" style="display: none">
-    <colgroup>
-        <col />
-        <col />
-    </colgroup>
-    <tbody>
+<div id="checkout-dhlversenden-services" style="display: none;">
+    <h4><?php echo $this->__('DHL Shipping Additional info'); ?></h4>
+    <dl>
         <?php foreach ($this->getServices() as $service): ?>
-            <?php $serviceRenderer = $service->getRenderer() ?>
-            <tr>
-                <td>
-                    <?php echo $serviceRenderer->getSelectorHtml() ?>
-                    <?php echo $serviceRenderer->getLabelHtml($this->__($service->name)) ?>
-                </td>
-                <td><?php echo $serviceRenderer->getSettingsHtml() ?></td>
-            </tr>
+            <?php $serviceRenderer = $service->getRenderer(); ?>
+            <?php $serviceSettings = $serviceRenderer->getSettingsHtml(); ?>
+            <dt<?php if($serviceSettings == ''){ echo ' class="no-settings"'; } ?>>
+                <?php echo $serviceRenderer->getSelectorHtml() ?>
+                <?php echo $serviceRenderer->getLabelHtml($this->__($service->name)) ?>
+            </dt>
+            <dd<?php if($serviceSettings == ''){ echo ' class="no-settings"'; } ?>>
+                <?php echo $serviceSettings; ?>
+            </dd>
         <?php endforeach; ?>
-    </tbody>
-</table>
-<script type="text/javascript">
-    //<![CDATA[
-    var serviceContainer = new DhlServiceContainer('checkout-dhlversenden-services', '<?php echo $this->getDhlMethods() ?>');
-    serviceContainer.registerMethodChange('co-shipping-method-form');
-    serviceContainer.toggleServiceContainer('co-shipping-method-form');
-    //]]>
-</script>
+    </dl>
+    <script type="text/javascript">
+        //<![CDATA[
+        var serviceContainer = new DhlServiceContainer('checkout-dhlversenden-services', '<?php echo $this->getDhlMethods(
+        ); ?>');
+        serviceContainer.registerMethodChange('co-shipping-method-form');
+        serviceContainer.toggleServiceContainer('co-shipping-method-form');
+        //]]>
+    </script>
+</div>
