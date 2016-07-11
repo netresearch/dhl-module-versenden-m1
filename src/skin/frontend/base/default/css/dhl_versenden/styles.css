@@ -6,6 +6,10 @@
     font-weight: 600;
 }
 
+#checkout-dhlversenden-services dd input {
+    min-width: 200px;
+}
+
 #checkout-dhlversenden-services dt.no-settings label {
     background-color: #f4f4f4;
     min-width: 250px;
@@ -19,6 +23,7 @@
     margin-right: -40px;
     margin-top: 10px;
     margin-left: 15px;
+    position: relative;
 }
 
 #checkout-dhlversenden-services dd.no-settings {

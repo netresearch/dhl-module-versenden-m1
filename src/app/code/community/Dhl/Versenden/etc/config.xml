@@ -122,6 +122,10 @@
             </dev>
         </dhl_versenden>
         <carriers>
+            <!-- This default value resolve a problem with CE 1.7 with missing value for the content type -->
+            <dhlint>
+                <content_type>D</content_type>
+            </dhlint>
             <dhlversenden>
                 <model>dhl_versenden/shipping_carrier_versenden</model>
 
