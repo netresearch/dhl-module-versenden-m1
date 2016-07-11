@@ -1,3 +1,34 @@
-#checkout-dhlversenden-services .checkbox {
+#checkout-dhlversenden-services dt label {
+    padding: 0;
+    margin-bottom: 5px;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+}
 
+#checkout-dhlversenden-services dt.no-settings label {
+    background-color: #f4f4f4;
+    min-width: 250px;
+    padding: 6px 10px 6px 40px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+#checkout-dhlversenden-services dt.no-settings .checkbox {
+    float: left;
+    margin-right: -40px;
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+#checkout-dhlversenden-services dd.no-settings {
+    display: none;
+}
+
+#checkout-dhlversenden-services dt.no-settings label:hover {
+    background-color: #ececec;
+}
+
+#checkout-dhlversenden-services dd {
+    margin-bottom: 10px;
 }
