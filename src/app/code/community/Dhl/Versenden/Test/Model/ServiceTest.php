@@ -153,7 +153,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         $this->assertContains('type="checkbox"', $boolService->getRenderer()->getSelectorHtml());
         $this->assertContains('label for', $boolService->getRenderer()->getLabelHtml($boolService->name));
-        $this->assertEquals('&nbsp;', $boolService->getRenderer()->getSettingsHtml());
+        $this->assertEquals('', $boolService->getRenderer()->getSettingsHtml());
     }
 
     /**
@@ -166,7 +166,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         $this->assertContains('type="hidden"', $hiddenService->getRenderer()->getSelectorHtml());
         $this->assertEmpty($hiddenService->getRenderer()->getLabelHtml($hiddenService->name));
-        $this->assertEquals('&nbsp;', $hiddenService->getRenderer()->getSettingsHtml());
+        $this->assertEquals('', $hiddenService->getRenderer()->getSettingsHtml());
     }
 
     /**
