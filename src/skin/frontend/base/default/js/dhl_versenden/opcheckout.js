@@ -71,6 +71,7 @@ function observeShippingEvents() {
     $$('.input-with-checkbox').each(function (element) {
         var toggleSelect = 'unchecked';
         var selectElement = $(element.readAttribute('data-select-id'));
+        selectElement.hide();
 
         element.observe('keyup', function () {
             if (this.value != '' && toggleSelect == 'unchecked') {

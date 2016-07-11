@@ -119,7 +119,7 @@ HTML;
 
                 return sprintf($format, $serviceCode, $optionsHtml);
             default:
-                return '&nbsp;';
+                return '';
         }
     }
 }
