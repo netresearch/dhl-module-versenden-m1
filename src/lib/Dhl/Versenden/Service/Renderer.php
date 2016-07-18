@@ -25,6 +25,9 @@
  */
 namespace Dhl\Versenden\Service;
 use Dhl\Versenden\Service;
+use Dhl\Versenden\ServiceWithDetails as DetailsService;
+use Dhl\Versenden\ServiceWithOptions as OptionsService;
+
 /**
  * Renderer
  *
@@ -86,40 +89,57 @@ HTML;
         switch ($this->service->frontendInputType) {
             case Service::INPUT_TYPE_HIDDEN:
                 return '';
+            case Service::INPUT_TYPE_TEXT:
+                return sprintf($labelFormat, $serviceCode . 'Details', $serviceName);
             default:
                 return sprintf($labelFormat, $serviceCode, $serviceName);
         }
     }
 
     /**
-     * Obtain the markup for service settings (input field or dropdown)
+     * Obtain the markup for service settings
      *
      * @return string
      */
     public function getSettingsHtml()
     {
         $serviceCode = $this->service->getCode();
-        switch ($this->service->frontendInputType) {
-            case Service::INPUT_TYPE_TEXT:
-                $format = <<<'HTML'
-<input type="text" name="service_setting[%s]" data-select-id="shipment_service_%s" class="input-text input-with-checkbox" maxlength="100" placeholder="%s" />
+
+        // text input fields
+        if ($this->service instanceof DetailsService) {
+            $format = <<<'HTML'
+<input type="text" name="service_setting[%s]" class="input-text input-with-checkbox"
+       maxlength="%d" id="shipment_service_%sDetails" data-select-id="shipment_service_%s" placeholder="%s" />
 HTML;
 
-                return sprintf($format, $serviceCode, $serviceCode, $this->service->getPlaceholder());
-                break;
-            case Service::INPUT_TYPE_SELECT:
-                $format = '<select name="service_setting[%s]">%s</select>';
-                $options = $this->service->getOptions();
-                $values = array_keys($options);
-
-                $optionsHtml = array_reduce($values, function ($carry, $value) use ($options) {
-                    $carry .= sprintf('<option value="%s">%s</option>', $value, $options[$value]);
-                    return $carry;
-                });
-
-                return sprintf($format, $serviceCode, $optionsHtml);
-            default:
-                return '';
+            return sprintf(
+                $format,
+                $serviceCode,
+                $this->service->getMaxLength(),
+                $serviceCode,
+                $serviceCode,
+                $this->service->getPlaceholder()
+            );
         }
+
+        // dropdowns
+        if ($this->service instanceof OptionsService) {
+            $format = '<select name="service_setting[%s]">%s</select>';
+            $options = $this->service->getOptions();
+            $values = array_keys($options);
+
+            $optionsHtml = array_reduce($values, function ($carry, $value) use ($options) {
+                $carry .= sprintf('<option value="%s">%s</option>', $value, $options[$value]);
+                return $carry;
+            });
+
+            return sprintf(
+                $format,
+                $serviceCode,
+                $optionsHtml
+            );
+        }
+
+        return '';
     }
 }

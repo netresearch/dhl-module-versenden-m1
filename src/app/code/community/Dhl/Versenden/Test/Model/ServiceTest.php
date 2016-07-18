@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Service;
+use \Dhl\Versenden\ServiceWithOptions;
 /**
  * Dhl_Versenden_Test_Model_ServiceTest
  *
@@ -42,7 +43,14 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         return [
             new Service\DayOfDelivery(),
-            new Service\DeliveryTimeFrame(),
+            new Service\DeliveryTimeFrame('', [
+                '10001200' => '10:00 - 12:00',
+                '12001400' => '12:00 - 14:00',
+                '14001600' => '14:00 - 16:00',
+                '16001800' => '16:00 - 18:00',
+                '18002000' => '18:00 - 20:00',
+                '19002100' => '19:00 - 21:00',
+            ]),
             new Service\ParcelAnnouncement(),
             new Service\PreferredLocation(),
             new Service\PreferredNeighbour(),
@@ -56,9 +64,15 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         return [
             new Service\BulkyGoods(),
-            new Service\Insurance(),
+            new Service\Insurance('', [
+                Service\Insurance::TYPE_A => '2.500',
+                Service\Insurance::TYPE_B => '25.000'
+            ]),
             new Service\ReturnShipment(),
-            new Service\VisualCheckOfAge(),
+            new Service\VisualCheckOfAge('', [
+                Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
+                Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
+            ]),
         ];
     }
 
@@ -97,12 +111,10 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         $services = $this->getServices();
         array_walk($services, function (Service $service) {
-            $serviceOptions = $service->getOptions();
-            $this->assertInternalType('array', $serviceOptions);
-            if ($service->getFrontendInput() === Service::INPUT_TYPE_SELECT) {
+            if ($service instanceof ServiceWithOptions) {
+                $serviceOptions = $service->getOptions();
+                $this->assertInternalType('array', $serviceOptions);
                 $this->assertNotEmpty($serviceOptions, get_class($service));
-            } else {
-                $this->assertEmpty($serviceOptions, get_class($service));
             }
         });
     }
@@ -174,7 +186,10 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputSelect()
     {
-        $selectService = new Service\VisualCheckOfAge();
+        $selectService = new Service\VisualCheckOfAge('', [
+            Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
+            Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
+        ]);
 
         $this->assertContains('type="checkbox"', $selectService->getRenderer()->getSelectorHtml());
         $this->assertContains('label for', $selectService->getRenderer()->getLabelHtml($selectService->name));

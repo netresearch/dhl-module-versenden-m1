@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service as AbstractService;
+use Dhl\Versenden\ServiceWithOptions as OptionsService;
 
 /**
  * DeliveryTimeFrame
@@ -35,18 +35,16 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class DeliveryTimeFrame extends AbstractService
+class DeliveryTimeFrame extends OptionsService
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_SELECT;
-
     /**
      * DeliveryTimeFrame constructor.
      * @param string $value
+     * @param array $options
      */
-    public function __construct($value = '')
+    public function __construct($value = '', $options = [])
     {
-        parent::__construct($value);
+        parent::__construct($value, $options);
 
         $this->name = 'Delivery Time Frame';
         $this->isCustomerService = true;
