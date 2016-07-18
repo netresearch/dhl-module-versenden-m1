@@ -8,5 +8,6 @@ src/app/locale/en_US/Dhl_Versenden.csv app/locale/en_US/Dhl_Versenden.csv
 
 src/lib/Dhl/Versenden/ lib/Dhl/Versenden/
 
-src/skin/frontend/base/default/js/dhl_versenden/ skin/frontend/base/default/js/dhl_versenden/
 src/skin/frontend/base/default/css/dhl_versenden/ skin/frontend/base/default/css/dhl_versenden/
+src/skin/frontend/base/default/images/dhl_versenden/ skin/frontend/base/default/images/dhl_versenden/
+src/skin/frontend/base/default/js/dhl_versenden/ skin/frontend/base/default/js/dhl_versenden/

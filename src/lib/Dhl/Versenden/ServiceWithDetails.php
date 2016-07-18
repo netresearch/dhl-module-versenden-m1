@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use Dhl\Versenden\ServiceWithOptions as OptionsService;
+namespace Dhl\Versenden;
+use Dhl\Versenden\Service as AbstractService;
 
 /**
- * Insurance
+ * ServiceWithDetails
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,20 +35,35 @@ use Dhl\Versenden\ServiceWithOptions as OptionsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Insurance extends OptionsService
+abstract class ServiceWithDetails extends AbstractService
 {
-    const TYPE_A = 'A';
-    const TYPE_B = 'B';
+    /** @var string */
+    public $frontendInputType = self::INPUT_TYPE_TEXT;
+    /** @var string */
+    public $placeholder = '';
+
+    public function __construct($value = '', $placeholder = '')
+    {
+        $this->placeholder = $placeholder;
+
+        parent::__construct($value);
+    }
 
     /**
-     * Insurance constructor.
-     * @param string $value
+     * Get Placeholder from Service
+     *
+     * @return string
      */
-    public function __construct($value = '', $options = [])
+    public function getPlaceholder()
     {
-        parent::__construct($value, $options);
+        return $this->placeholder;
+    }
 
-        $this->name = 'Insurance';
-        $this->isCustomerService = false;
+    /**
+     * @return int
+     */
+    public function getMaxLength()
+    {
+        return 100;
     }
 }

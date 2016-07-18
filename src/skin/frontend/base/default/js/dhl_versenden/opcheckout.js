@@ -18,6 +18,7 @@
  * @category  design
  * @package   base_default
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
@@ -30,57 +31,73 @@ DhlServiceContainer.prototype = {
         this.initDhlMethods(dhlMethods);
     },
 
+    /**
+     * Locate the service info container for future reuse.
+     * @param {string} elementId - The service container id.
+     */
     initServiceContainer: function (elementId) {
         if (elementId) {
             this.serviceContainer = $(elementId);
         }
     },
 
+    /**
+     * Set the DHL Versenden shipping methods for future reuse.
+     * @param {string} dhlMethods - JSON encoded method codes
+     */
     initDhlMethods: function (dhlMethods) {
         if (dhlMethods) {
             this.dhlMethods = dhlMethods.evalJSON(true);
-            observeShippingEvents.call();
         }
     },
 
-    toggleServiceContainer: function (formId) {
-        var inputs = $(formId).select("input:checked[name=shipping_method]");
-        if (inputs.length) {
-            var selectedMethod = inputs[0].value;
-            var canDisplayServices = (this.dhlMethods.indexOf(selectedMethod) != -1);
-            if (canDisplayServices) {
-                this.serviceContainer.show();
-            } else {
-                this.serviceContainer.hide();
+    /**
+     * Toggle service info container visibility based on currently selected shipping method.
+     */
+    toggleServiceContainer: function () {
+        if (this.serviceContainer instanceof Element) {
+            var inputs = this.serviceContainer.up('form').select("input:checked[name=shipping_method]");
+            if (inputs.length) {
+                var selectedMethod = inputs[0].value;
+                var canDisplayServices = (this.dhlMethods.indexOf(selectedMethod) != -1);
+                if (canDisplayServices) {
+                    this.serviceContainer.show();
+                } else {
+                    this.serviceContainer.hide();
+                }
             }
         }
     },
 
-    registerMethodChange: function (formId) {
-        var methodInputs = Form.getInputs(formId, 'radio', 'shipping_method');
-        methodInputs.each(function (input) {
-            input.observe('change', function () {
-                this.toggleServiceContainer(formId);
+    /**
+     * Perform action when user selects another shipping method.
+     */
+    registerMethodChange: function () {
+        if (this.serviceContainer instanceof Element) {
+            var methodInputs = this.serviceContainer.up('form').getInputs('radio', 'shipping_method');
+            methodInputs.each(function (input) {
+                input.observe('change', function () {
+                    this.toggleServiceContainer();
+                }.bind(this));
             }.bind(this));
-        }.bind(this));
+        }
+    },
+
+    /**
+     * Perform action when user changes service details.
+     */
+    registerServiceDetailsChange: function () {
+        if (this.serviceContainer instanceof Element) {
+            this.serviceContainer.select('input[data-select-id]').each(function (inputElm) {
+                // hide service selectors
+                var serviceCheckbox = $(inputElm.readAttribute('data-select-id'));
+                serviceCheckbox.hide();
+
+                // (un)check service selector based on user input
+                inputElm.observe('keyup', function (event) {
+                    serviceCheckbox.checked = (event.findElement().value != '');
+                });
+            });
+        }
     }
 };
-
-function observeShippingEvents() {
-
-    $$('.input-with-checkbox').each(function (element) {
-        var toggleSelect = 'unchecked';
-        var selectElement = $(element.readAttribute('data-select-id'));
-        selectElement.hide();
-
-        element.observe('keyup', function () {
-            if (this.value != '' && toggleSelect == 'unchecked') {
-                selectElement.checked = true;
-                toggleSelect = 'checked';
-            } else if (this.value == '' && toggleSelect == 'checked') {
-                selectElement.checked = false;
-                toggleSelect = 'unchecked';
-            }
-        });
-    });
-}

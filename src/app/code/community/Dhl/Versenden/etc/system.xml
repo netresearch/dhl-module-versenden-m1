@@ -301,16 +301,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </service_preferredlocation_enabled>
-                        <service_preferredlocation_placeholder>
-                            <label>Placeholder for the preferred Location</label>
-                            <tooltip>Show a custom placeholder for the preferred location field during checkout.</tooltip>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>426</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends><service_preferredlocation_enabled>1</service_preferredlocation_enabled></depends>
-                        </service_preferredlocation_placeholder>
                         <service_preferredneighbour_enabled>
                             <label>Enable Preferred Neighbour</label>
                             <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
@@ -321,16 +311,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </service_preferredneighbour_enabled>
-                        <service_preferredneighbour_placeholder>
-                            <label>Placeholder for the preferred Neighbour</label>
-                            <tooltip>Show a custom placeholder for the preferred neighbour field during checkout.</tooltip>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>435</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends><service_preferredneighbour_enabled>1</service_preferredneighbour_enabled></depends>
-                        </service_preferredneighbour_placeholder>
                         <service_packstation_enabled>
                             <label>Enable Packstation</label>
                             <tooltip>Allow customers have their parcels delivered to Packstation machines or parcel shops.</tooltip>
