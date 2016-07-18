@@ -25,8 +25,7 @@
  */
 namespace Dhl\Versenden\Service;
 
-use Dhl\Versenden\Service as AbstractService;
-
+use Dhl\Versenden\ServiceWithDetails as DetailsService;
 /**
  * PreferredNeighbour
  *
@@ -36,12 +35,8 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour
-    extends AbstractService
+class PreferredNeighbour extends DetailsService
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
-
     /**
      * PreferredNeighbour constructor.
      *
@@ -50,14 +45,9 @@ class PreferredNeighbour
      */
     public function __construct($value = '', $placeholder = '')
     {
-        parent::__construct($value);
+        parent::__construct($value, $placeholder);
 
         $this->name              = 'Preferred Neighbour';
         $this->isCustomerService = true;
-
-        if ($placeholder != '') {
-            $this->placeholder = $placeholder;
-        }
-
     }
 }

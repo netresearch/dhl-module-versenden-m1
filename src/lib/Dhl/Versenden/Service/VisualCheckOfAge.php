@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service as AbstractService;
+use Dhl\Versenden\ServiceWithOptions as OptionsService;
 /**
  * VisualCheckOfAge
  *
@@ -34,7 +34,7 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VisualCheckOfAge extends AbstractService
+class VisualCheckOfAge extends OptionsService
 {
     const A16 = 'A16';
     const A18 = 'A18';
@@ -46,22 +46,11 @@ class VisualCheckOfAge extends AbstractService
      * VisualCheckOfAge constructor.
      * @param string $value
      */
-    public function __construct($value = '')
+    public function __construct($value = '', $options = [])
     {
-        parent::__construct($value);
+        parent::__construct($value, $options);
 
         $this->name = 'Visual Check Of Age';
         $this->isCustomerService = false;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getOptions()
-    {
-        return [
-            self::A16 => self::A16,
-            self::A18 => self::A18,
-        ];
     }
 }

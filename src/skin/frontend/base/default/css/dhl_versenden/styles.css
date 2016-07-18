@@ -1,3 +1,13 @@
+#checkout-dhlversenden-services {
+    border: 1px solid rgb(255, 204, 0);
+    padding: 20px;
+    margin: 20px 0;
+}
+
+#checkout-dhlversenden-services > img {
+    margin-bottom: 10px;
+}
+
 #checkout-dhlversenden-services dt label {
     padding: 0;
     margin-bottom: 5px;
@@ -6,11 +16,7 @@
     font-weight: 600;
 }
 
-#checkout-dhlversenden-services dd input {
-    min-width: 200px;
-}
-
-#checkout-dhlversenden-services dt.no-settings label {
+#checkout-dhlversenden-services dt.service-boolean label {
     background-color: #f4f4f4;
     min-width: 250px;
     padding: 6px 10px 6px 40px;
@@ -18,7 +24,11 @@
     font-weight: normal;
 }
 
-#checkout-dhlversenden-services dt.no-settings .checkbox {
+#checkout-dhlversenden-services dt.service-boolean label:hover {
+    background-color: #ececec;
+}
+
+#checkout-dhlversenden-services dt.service-boolean input {
     float: left;
     margin-right: -40px;
     margin-top: 10px;
@@ -26,14 +36,14 @@
     position: relative;
 }
 
-#checkout-dhlversenden-services dd.no-settings {
+#checkout-dhlversenden-services dd {
+    margin-bottom: 10px;
+}
+
+#checkout-dhlversenden-services dd.service-boolean {
     display: none;
 }
 
-#checkout-dhlversenden-services dt.no-settings label:hover {
-    background-color: #ececec;
-}
-
-#checkout-dhlversenden-services dd {
-    margin-bottom: 10px;
+#checkout-dhlversenden-services dd input {
+    min-width: 200px;
 }

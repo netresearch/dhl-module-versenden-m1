@@ -26,26 +26,35 @@
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
 <div id="checkout-dhlversenden-services" style="display: none;">
-    <h4><?php echo $this->__('DHL Shipping Additional info'); ?></h4>
+    <img
+        src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
+        alt="<?php echo $this->__('DHL Additional Services') ?>"
+        title="<?php echo $this->__('DHL Additional Services') ?>"
+    />
     <dl>
         <?php foreach ($this->getServices() as $service): ?>
             <?php $serviceRenderer = $service->getRenderer(); ?>
-            <?php $serviceSettings = $serviceRenderer->getSettingsHtml(); ?>
-            <dt<?php if($serviceSettings == ''){ echo ' class="no-settings"'; } ?>>
+            <?php $serviceDetailsHtml = $serviceRenderer->getSettingsHtml(); ?>
+
+            <dt class="service-<?php echo $service->frontendInputType; ?>">
                 <?php echo $serviceRenderer->getSelectorHtml() ?>
                 <?php echo $serviceRenderer->getLabelHtml($this->__($service->name)) ?>
             </dt>
-            <dd<?php if($serviceSettings == ''){ echo ' class="no-settings"'; } ?>>
-                <?php echo $serviceSettings; ?>
+            <dd class="service-<?php echo $service->frontendInputType; ?>">
+                <?php echo $serviceDetailsHtml; ?>
             </dd>
         <?php endforeach; ?>
     </dl>
     <script type="text/javascript">
         //<![CDATA[
-        var serviceContainer = new DhlServiceContainer('checkout-dhlversenden-services', '<?php echo $this->getDhlMethods(
-        ); ?>');
-        serviceContainer.registerMethodChange('co-shipping-method-form');
-        serviceContainer.toggleServiceContainer('co-shipping-method-form');
+        var serviceContainer = new DhlServiceContainer(
+            'checkout-dhlversenden-services',
+            '<?php echo $this->getDhlMethods(); ?>'
+        );
+        serviceContainer.toggleServiceContainer();
+
+        serviceContainer.registerMethodChange();
+        serviceContainer.registerServiceDetailsChange();
         //]]>
     </script>
 </div>
