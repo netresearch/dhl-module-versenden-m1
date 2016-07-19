@@ -87,7 +87,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $receiver = new ShippingInfo\Receiver($receiverObj);
 
         // create and serialize shipping info
-        $shippingInfo = new ShippingInfo($serviceSettings, $receiver);
+        $shippingInfo = new ShippingInfo($receiver, $serviceSettings);
         $json = $shippingInfo->getJson();
 
         // create shipping info from serialized string

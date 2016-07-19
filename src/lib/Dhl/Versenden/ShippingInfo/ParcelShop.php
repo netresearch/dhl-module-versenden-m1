@@ -33,7 +33,7 @@ namespace Dhl\Versenden\ShippingInfo;
 * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 * @link     http://www.netresearch.de/
 */
-class ParcelShop
+class ParcelShop extends PostalFacility
 {
     /** @var string */
     public $parcelShopNumber;
@@ -41,28 +41,15 @@ class ParcelShop
     public $streetName;
     /** @var string */
     public $streetNumber;
-    /** @var string */
-    public $zip;
-    /** @var string */
-    public $city;
-    /** @var string */
-    public $country;
-    /** @var string */
-    public $countryISOCode;
-    /** @var string */
-    public $state;
 
     public function __construct(\stdClass $object = null)
     {
+        parent::__construct($object);
+
         if ($object) {
             $this->parcelShopNumber = isset($object->parcelShopNumber) ? $object->parcelShopNumber : '';
             $this->streetName = isset($object->streetName) ? $object->streetName : '';
             $this->streetNumber = isset($object->streetNumber) ? $object->streetNumber : '';
-            $this->zip = isset($object->zip) ? $object->zip : '';
-            $this->city = isset($object->city) ? $object->city : '';
-            $this->country = isset($object->country) ? $object->country : '';
-            $this->countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : '';
-            $this->state = isset($object->state) ? $object->state : '';
         }
     }
 }

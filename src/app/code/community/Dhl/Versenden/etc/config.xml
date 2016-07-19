@@ -58,13 +58,38 @@
             <controller_front_init_before>
                 <observers>
                     <register_autoload>
-                        <type>singleton</type>
                         <class>dhl_versenden/observer</class>
                         <method>registerAutoload</method>
+                        <type>singleton</type>
                     </register_autoload>
                 </observers>
             </controller_front_init_before>
+            <sales_order_place_after>
+                <observers>
+                    <update_carrier>
+                        <class>dhl_versenden/observer</class>
+                        <method>updateCarrier</method>
+                        <type>singleton</type>
+                    </update_carrier>
+                </observers>
+            </sales_order_place_after>
+            <dhl_versenden_set_postal_facility>
+                <observers>
+                    <prepare_postal_facility>
+                        <class>dhl_versenden/observer</class>
+                        <method>preparePostalFacility</method>
+                        <type>singleton</type>
+                    </prepare_postal_facility>
+                </observers>
+            </dhl_versenden_set_postal_facility>
         </events>
+        <fieldsets>
+            <sales_convert_quote_address>
+                <dhl_versenden_info>
+                    <to_order_address>*</to_order_address>
+                </dhl_versenden_info>
+            </sales_convert_quote_address>
+        </fieldsets>
     </global>
     <adminhtml>
         <translate>

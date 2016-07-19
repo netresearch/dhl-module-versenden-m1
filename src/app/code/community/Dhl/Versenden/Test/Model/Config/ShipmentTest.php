@@ -73,4 +73,27 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
         $this->assertInternalType('array', $storeSettings->codPaymentMethods);
         $this->assertCount(0, $storeSettings->codPaymentMethods);
     }
+
+    /**
+     * @test
+     */
+    public function canProcessMethod()
+    {
+        $dhlMethod = 'dhl_ftw';
+        $fooMethod = 'foo_bar';
+
+        $settings = new stdClass();
+        $settings->shippingMethods = array($dhlMethod);
+
+        $configMock = $this->getModelMock('dhl_versenden/config', array('getShipmentSettings'));
+        $configMock
+            ->expects($this->any())
+            ->method('getShipmentSettings')
+            ->willReturn($settings);
+        $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
+
+        $config = Mage::getModel('dhl_versenden/config');
+        $this->assertTrue($config->canProcessMethod($dhlMethod));
+        $this->assertFalse($config->canProcessMethod($fooMethod));
+    }
 }
