@@ -33,33 +33,20 @@ namespace Dhl\Versenden\ShippingInfo;
 * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 * @link     http://www.netresearch.de/
 */
-class Postfiliale
+class Postfiliale extends PostalFacility
 {
     /** @var string */
     public $postfilialNumber;
     /** @var string */
     public $postNumber;
-    /** @var string */
-    public $zip;
-    /** @var string */
-    public $city;
-    /** @var string */
-    public $country;
-    /** @var string */
-    public $countryISOCode;
-    /** @var string */
-    public $state;
 
     public function __construct(\stdClass $object = null)
     {
+        parent::__construct($object);
+
         if ($object) {
             $this->postfilialNumber = isset($object->postfilialNumber) ? $object->postfilialNumber : '';
             $this->postNumber = isset($object->postNumber) ? $object->postNumber : '';
-            $this->zip = isset($object->zip) ? $object->zip : '';
-            $this->city = isset($object->city) ? $object->city : '';
-            $this->country = isset($object->country) ? $object->country : '';
-            $this->countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : '';
-            $this->state = isset($object->state) ? $object->state : '';
         }
     }
 }

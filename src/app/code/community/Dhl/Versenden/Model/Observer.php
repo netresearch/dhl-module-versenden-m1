@@ -46,7 +46,7 @@ class Dhl_Versenden_Model_Observer
 
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
-        $dhlLibs = ['Versenden', 'Gkp'];
+        $dhlLibs = array('Versenden', 'Gkp');
         array_walk($dhlLibs, function ($libDir) use ($autoloader) {
             $autoloader->addNamespace(
                 "Dhl\\$libDir\\", // prefix
@@ -73,10 +73,10 @@ class Dhl_Versenden_Model_Observer
         $serviceBlock = Mage::app()->getLayout()->createBlock(
             'dhl_versenden/checkout_onepage_shipping_method_service',
             'dhl_versenden_service',
-            [
+            array(
                 'template' => 'dhl_versenden/checkout/onepage/shipping_method/service.phtml',
                 'module_name' => 'Dhl_Versenden',
-            ]
+            )
         );
 
         $transport = $observer->getTransport();
@@ -108,13 +108,85 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
 
-        $serviceSettings = Mage::helper('dhl_versenden/data')->getServiceSettings(
-            $request->getPost('shipment_service', []),
-            $request->getPost('service_setting', [])
-        );
         $receiver = Mage::helper('dhl_versenden/data')->getReceiver($shippingAddress);
+        $serviceSettings = Mage::helper('dhl_versenden/data')->getServiceSettings(
+            $request->getPost('shipment_service', array()),
+            $request->getPost('service_setting', array())
+        );
 
-        $shippingInfo = new ShippingInfo($serviceSettings, $receiver);
+        $shippingInfo = new ShippingInfo($receiver, $serviceSettings);
         $shippingAddress->setDhlVersendenInfo($shippingInfo->getJson());
+    }
+
+    /**
+     * When a new order is placed, set the DHL Versenden carrier if applicable.
+     * Event:
+     * - sales_order_place_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function updateCarrier(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Order $order */
+        $order = $observer->getOrder();
+        $shippingMethod = $order->getShippingMethod();
+        $config = Mage::getModel('dhl_versenden/config');
+
+        if ($config->canProcessMethod($shippingMethod)) {
+            $parts = explode('_', $shippingMethod);
+            $parts[0] = Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE;
+            $shippingMethod = implode('_', $parts);
+            $order->setShippingMethod($shippingMethod);
+        }
+    }
+
+    /**
+     * Read postal facility data from quote address.
+     *
+     * Dhl_Versenden comes with very basic facilities support, check out the
+     * separate Dhl_LocationFinder extension for better integration.
+     *
+     * Facility properties:
+     * - shop_type: [Packstation|Postfiliale|ParcelShop]
+     * - shop_number: int(3)
+     * - post_number: text(10)
+     *
+     * Event:
+     * - dhl_versenden_set_postal_facility
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function preparePostalFacility(Varien_Event_Observer $observer)
+    {
+        /** @var Varien_Object $facility */
+        $facility = $observer->getPostalFacility();
+        if ($facility->hasData()) {
+            // someone else set a facility, we assume they know what they did.
+            return;
+        }
+
+        /** @var Mage_Sales_Model_Quote_Address $address */
+        $address = $observer->getQuoteAddress();
+        $station = $address->getStreetFull();
+        $postNumber = $address->getCompany();
+
+        if (!is_numeric($postNumber) || (strlen($postNumber) > 10)) {
+            // not a valid DHL account number
+            return;
+        }
+
+        if (strpos($station, 'Packstation') === 0) {
+            $facility->setData(array(
+                'shop_type' => 'Packstation',
+                'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                'post_number' => $postNumber,
+            ));
+        } elseif (strpos($station, 'Postfiliale') === 0) {
+            $facility->setData(array(
+                'shop_type' => 'Postfiliale',
+                'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                'post_number' => $postNumber,
+            ));
+        }
     }
 }
