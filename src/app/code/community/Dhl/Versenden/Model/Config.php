@@ -210,6 +210,19 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
+     * Check if the given shipping method should be processed with DHL Versenden.
+     *
+     * @param string $shippingMethod
+     * @return bool
+     */
+    public function canProcessMethod($shippingMethod)
+    {
+        $enabledMethods = $this->getShipmentSettings()->shippingMethods;
+
+        return in_array($shippingMethod, $enabledMethods);
+    }
+
+    /**
      * @param mixed $store
      * @return Shipper
      * @throws ConfigException

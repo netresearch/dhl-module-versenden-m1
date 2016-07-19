@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Config\Shipment;
 use Dhl\Versenden\Config\Data as ConfigData;
 use Dhl\Versenden\Config as ConfigReader;
 /**
- * Account
+ * Settings
  *
  * @category Dhl
  * @package  Dhl\Versenden\Config\Shipment

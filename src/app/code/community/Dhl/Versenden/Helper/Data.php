@@ -94,7 +94,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     {
         $serviceSettings = new ShippingInfo\ServiceSettings();
         foreach ($services as $service) {
-            $serviceSettings->{$service} = $settings[$service];
+            $serviceSettings->{$service} = isset($settings[$service]) ? $settings[$service] : true;
         }
         return $serviceSettings;
     }
@@ -110,8 +110,12 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         $receiver = new ShippingInfo\Receiver();
         $receiver->name1 = $address->getName();
         $receiver->name2 = $address->getCompany();
-        //TODO(nr): splitStreet
-        $receiver->streetName = $address->getStreetFull();
+
+        $street = $this->splitStreet($address->getStreetFull());
+        $receiver->streetName      = $street['street_name'];
+        $receiver->streetNumber    = $street['street_number'];
+        $receiver->addressAddition = $street['supplement'];
+
         $receiver->zip = $address->getPostcode();
         $receiver->city = $address->getCity();
 
@@ -122,7 +126,60 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
 
         $receiver->phone = $address->getTelephone();
         $receiver->email = $address->getEmail();
-        //TODO(nr): packstation
+
+        $facility = new Varien_Object();
+        Mage::dispatchEvent('dhl_versenden_set_postal_facility', array(
+            'quote_address' => $address,
+            'postal_facility' => $facility,
+        ));
+
+        if ($facility->hasData()) {
+            // someone added facility info, shift it to receiver
+            $station = $this->preparePostalFacility($facility, $receiver);
+            if ($station instanceof ShippingInfo\Packstation) {
+                $receiver->packstation = $station;
+            } elseif ($station instanceof ShippingInfo\Postfiliale) {
+                $receiver->postfiliale = $station;
+            } elseif ($station instanceof ShippingInfo\ParcelShop) {
+                $receiver->parcelShop = $station;
+            }
+        }
+
         return $receiver;
+    }
+
+    /**
+     * Obtain an instance of PostalFacility with properties loaded from given arguments.
+     *
+     * @param Varien_Object $facility
+     * @param ShippingInfo\Receiver $receiver
+     * @return ShippingInfo\PostalFacility
+     */
+    public function preparePostalFacility(Varien_Object $facility, ShippingInfo\Receiver $receiver)
+    {
+        $stationData = new stdClass();
+        $stationData->zip = $receiver->zip;
+        $stationData->city = $receiver->city;
+        $stationData->country = $receiver->country;
+        $stationData->countryISOCode = $receiver->countryISOCode;
+        $stationData->state = $receiver->state;
+
+        switch ($facility->getData('shop_type')) {
+            case 'Packstation':
+                $stationData->packstationNumber = $facility->getData('shop_number');
+                $stationData->postNumber = $facility->getData('post_number');
+                return new ShippingInfo\Packstation($stationData);
+            case 'Postfiliale':
+                $stationData->postfilialNumber = $facility->getData('shop_number');
+                $stationData->postNumber = $facility->getData('post_number');
+                return new ShippingInfo\Postfiliale($stationData);
+            case 'ParcelShop':
+                $stationData->parcelShopNumber = $facility->getData('shop_number');
+                $stationData->streetName = $receiver->streetName;
+                $stationData->streetNumber = $receiver->streetNumber;
+                return new ShippingInfo\ParcelShop($stationData);
+        }
+
+        return null;
     }
 }

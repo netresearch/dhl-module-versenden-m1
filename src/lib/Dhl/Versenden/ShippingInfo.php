@@ -38,15 +38,15 @@ use Dhl\Versenden\ShippingInfo\ServiceSettings;
  */
 class ShippingInfo
 {
-    /** @var ServiceSettings */
-    public $serviceSettings;
     /** @var Receiver */
     public $shippingAddress;
+    /** @var ServiceSettings */
+    public $serviceSettings;
 
-    public function __construct(ServiceSettings $settings = null, Receiver $receiver = null)
+    public function __construct(Receiver $receiver = null, ServiceSettings $settings = null)
     {
-        $this->serviceSettings = $settings;
         $this->shippingAddress = $receiver;
+        $this->serviceSettings = $settings;
     }
 
     /**
@@ -68,7 +68,7 @@ class ShippingInfo
     {
         $stdObject = \Zend_Json::decode($json, \Zend_Json::TYPE_OBJECT);
 
-        $this->serviceSettings = new ServiceSettings($stdObject->serviceSettings);
         $this->shippingAddress = new Receiver($stdObject->shippingAddress);
+        $this->serviceSettings = new ServiceSettings($stdObject->serviceSettings);
     }
 }
