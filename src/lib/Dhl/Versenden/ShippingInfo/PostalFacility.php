@@ -35,6 +35,10 @@ namespace Dhl\Versenden\ShippingInfo;
  */
 abstract class PostalFacility
 {
+    const TYPE_PACKSTATION = 'packStation';
+    const TYPE_PAKETSHOP   = 'parcelShop';
+    const TYPE_POSTFILIALE = 'postOffice';
+
     /** @var string */
     public $zip;
     /** @var string */
