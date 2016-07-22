@@ -165,15 +165,15 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         $stationData->state = $receiver->state;
 
         switch ($facility->getData('shop_type')) {
-            case 'Packstation':
+            case ShippingInfo\PostalFacility::TYPE_PACKSTATION:
                 $stationData->packstationNumber = $facility->getData('shop_number');
                 $stationData->postNumber = $facility->getData('post_number');
                 return new ShippingInfo\Packstation($stationData);
-            case 'Postfiliale':
+            case ShippingInfo\PostalFacility::TYPE_POSTFILIALE:
                 $stationData->postfilialNumber = $facility->getData('shop_number');
                 $stationData->postNumber = $facility->getData('post_number');
                 return new ShippingInfo\Postfiliale($stationData);
-            case 'ParcelShop':
+            case ShippingInfo\PostalFacility::TYPE_PAKETSHOP:
                 $stationData->parcelShopNumber = $facility->getData('shop_number');
                 $stationData->streetName = $receiver->streetName;
                 $stationData->streetNumber = $receiver->streetNumber;
