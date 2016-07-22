@@ -53,8 +53,7 @@ class Dhl_Versenden_Model_Observer
                 "Dhl\\$libDir\\", // prefix
                 sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
             );
-        }
-        );
+        });
 
         $autoloader->register();
     }
@@ -180,7 +179,7 @@ class Dhl_Versenden_Model_Observer
         if (strpos($station, 'Packstation') === 0) {
             $facility->setData(
                 array(
-                    'shop_type'   => 'packStation',
+                    'shop_type'   => ShippingInfo\PostalFacility::TYPE_PACKSTATION,
                     'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
                     'post_number' => $postNumber,
                 )
@@ -188,7 +187,7 @@ class Dhl_Versenden_Model_Observer
         } elseif (strpos($station, 'Postfiliale') === 0) {
             $facility->setData(
                 array(
-                    'shop_type'   => 'postOffice',
+                    'shop_type'   => ShippingInfo\PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
                     'post_number' => $postNumber,
                 )
