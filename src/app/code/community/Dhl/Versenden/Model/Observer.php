@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use Dhl\Versenden\ShippingInfo;
+
 /**
  * Dhl_Versenden_Model_Observer
  *
@@ -47,12 +48,13 @@ class Dhl_Versenden_Model_Observer
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
         $dhlLibs = array('Versenden', 'Gkp');
-        array_walk($dhlLibs, function ($libDir) use ($autoloader) {
+        array_walk($dhlLibs, function($libDir) use ($autoloader) {
             $autoloader->addNamespace(
                 "Dhl\\$libDir\\", // prefix
                 sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
             );
-        });
+        }
+        );
 
         $autoloader->register();
     }
@@ -74,13 +76,13 @@ class Dhl_Versenden_Model_Observer
             'dhl_versenden/checkout_onepage_shipping_method_service',
             'dhl_versenden_service',
             array(
-                'template' => 'dhl_versenden/checkout/onepage/shipping_method/service.phtml',
+                'template'    => 'dhl_versenden/checkout/onepage/shipping_method/service.phtml',
                 'module_name' => 'Dhl_Versenden',
             )
         );
 
         $transport = $observer->getTransport();
-        $html = $transport->getHtml() . $serviceBlock->toHtml();
+        $html      = $transport->getHtml() . $serviceBlock->toHtml();
         $transport->setHtml($html);
     }
 
@@ -99,7 +101,7 @@ class Dhl_Versenden_Model_Observer
         $quote = $observer->getQuote();
 
         $shippingAddress = $quote->getShippingAddress();
-        $enabledMethods = Mage::getModel('dhl_versenden/config')->getShipmentSettings()->shippingMethods;
+        $enabledMethods  = Mage::getModel('dhl_versenden/config')->getShipmentSettings()->shippingMethods;
         if (!in_array($shippingAddress->getShippingMethod(), $enabledMethods)) {
             // customer selected a shipping method not to be processed via DHL Versenden
             return;
@@ -108,7 +110,7 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
 
-        $receiver = Mage::helper('dhl_versenden/data')->getReceiver($shippingAddress);
+        $receiver        = Mage::helper('dhl_versenden/data')->getReceiver($shippingAddress);
         $serviceSettings = Mage::helper('dhl_versenden/data')->getServiceSettings(
             $request->getPost('shipment_service', array()),
             $request->getPost('service_setting', array())
@@ -128,13 +130,13 @@ class Dhl_Versenden_Model_Observer
     public function updateCarrier(Varien_Event_Observer $observer)
     {
         /** @var Mage_Sales_Model_Order $order */
-        $order = $observer->getOrder();
+        $order          = $observer->getOrder();
         $shippingMethod = $order->getShippingMethod();
-        $config = Mage::getModel('dhl_versenden/config');
+        $config         = Mage::getModel('dhl_versenden/config');
 
         if ($config->canProcessMethod($shippingMethod)) {
-            $parts = explode('_', $shippingMethod);
-            $parts[0] = Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE;
+            $parts          = explode('_', $shippingMethod);
+            $parts[0]       = Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE;
             $shippingMethod = implode('_', $parts);
             $order->setShippingMethod($shippingMethod);
         }
@@ -147,7 +149,7 @@ class Dhl_Versenden_Model_Observer
      * separate Dhl_LocationFinder extension for better integration.
      *
      * Facility properties:
-     * - shop_type: [Packstation|Postfiliale|ParcelShop]
+     * - shop_type: [packStation|postOffice|parcelShop]
      * - shop_number: int(3)
      * - post_number: text(10)
      *
@@ -166,27 +168,31 @@ class Dhl_Versenden_Model_Observer
         }
 
         /** @var Mage_Sales_Model_Quote_Address $address */
-        $address = $observer->getQuoteAddress();
-        $station = $address->getStreetFull();
+        $address    = $observer->getQuoteAddress();
+        $station    = $address->getStreetFull();
         $postNumber = $address->getCompany();
 
-        if (!is_numeric($postNumber) || (strlen($postNumber) > 10)) {
+        if ($postNumber != '' && !is_numeric($postNumber)) {
             // not a valid DHL account number
             return;
         }
 
         if (strpos($station, 'Packstation') === 0) {
-            $facility->setData(array(
-                'shop_type' => 'Packstation',
-                'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
-                'post_number' => $postNumber,
-            ));
+            $facility->setData(
+                array(
+                    'shop_type'   => 'packStation',
+                    'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                    'post_number' => $postNumber,
+                )
+            );
         } elseif (strpos($station, 'Postfiliale') === 0) {
-            $facility->setData(array(
-                'shop_type' => 'Postfiliale',
-                'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
-                'post_number' => $postNumber,
-            ));
+            $facility->setData(
+                array(
+                    'shop_type'   => 'postOffice',
+                    'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                    'post_number' => $postNumber,
+                )
+            );
         }
     }
 }
