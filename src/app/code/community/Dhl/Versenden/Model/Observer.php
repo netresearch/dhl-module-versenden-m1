@@ -47,7 +47,7 @@ class Dhl_Versenden_Model_Observer
 
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
-        $dhlLibs = array('Versenden', 'Gkp');
+        $dhlLibs = array('Versenden', 'Bcs');
         array_walk($dhlLibs, function($libDir) use ($autoloader) {
             $autoloader->addNamespace(
                 "Dhl\\$libDir\\", // prefix
