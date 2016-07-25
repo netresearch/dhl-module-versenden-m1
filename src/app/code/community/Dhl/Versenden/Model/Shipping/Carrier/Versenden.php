@@ -66,7 +66,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function getAllowedMethods()
     {
-        return [];
+        return array();
     }
 
     /**
@@ -76,12 +76,12 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function getCode($type, $code = '')
     {
-        $codes = [
-            'unit_of_measure' => [
+        $codes = array(
+            'unit_of_measure' => array(
                 'G'   =>  Mage::helper('dhl_versenden')->__('Grams'),
                 'KG'   =>  Mage::helper('dhl_versenden')->__('Kilograms'),
-            ],
-        ];
+            ),
+        );
 
         if (!isset($codes[$type])) {
             return false;
