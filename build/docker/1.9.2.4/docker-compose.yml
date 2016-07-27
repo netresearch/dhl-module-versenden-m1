@@ -11,12 +11,14 @@ services:
   env:
     image: "couchi.nr:5001/magento-ci/php-apache:${PHP_VERSION}"
     container_name: magento_env
-    volumes_from:
-      - app
     ports:
       - "80:80"
     links:
       - db:mysql
+    volumes:
+      - ../../../reports:/opt/reports
+    volumes_from:
+      - app
 
   app:
     build: ./app
