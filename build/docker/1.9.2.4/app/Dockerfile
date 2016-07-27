@@ -3,7 +3,7 @@ MAINTAINER Christoph Aßmann <christoph.assmann@netresearch.de>
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-VOLUME ["/var/www/htdocs"]
+VOLUME ["/var/www/html", "/var/www/vendor"]
 
 COPY run.sh /run.sh
 RUN chmod u+rwx /run.sh

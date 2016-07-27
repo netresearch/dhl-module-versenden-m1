@@ -9,19 +9,19 @@ services:
     restart: always
 
   env:
-    image: couchi.nr:5001/magento-ci/env:1.0.0
+    image: "couchi.nr:5001/magento-ci/php-apache:${PHP_VERSION}"
     container_name: magento_env
-    ports:
-      - "80:80"
     volumes_from:
       - app
+    ports:
+      - "80:80"
     links:
       - db:mysql
-    restart: always
 
   app:
     build: ./app
     image: magento-ci/app
+    container_name: magento_app
     environment:
       PACKAGE_PATH: "${PACKAGE_PATH}"
       PACKAGE_NAME: "${PACKAGE_NAME}"
