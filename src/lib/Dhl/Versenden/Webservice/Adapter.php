@@ -35,13 +35,13 @@ namespace Dhl\Versenden\Webservice;
  */
 interface Adapter
 {
-    public function getVersion($requestData, $versionParser);
-    public function createShipmentOrder($requestData, $shipmentOrderParser);
-    public function deleteShipmentOrder($requestData, $statusParser);
-    public function getLabel($requestData, $shipmentOrderParser);
-    public function getExportDoc($requestData, $exportDocParser);
-    public function doManifest($requestData, $manifestStateParser);
-    public function getManifest($requestData, $manifestParser);
-    public function updateShipmentOrder($requestData, $shipmentOrderParser);
-    public function validateShipment($requestData, $statusParser);
+    public function getVersion(RequestData $requestData, Parser $versionParser);
+    public function createShipmentOrder(RequestData $requestData, Parser $shipmentOrderParser);
+    public function deleteShipmentOrder(RequestData $requestData, Parser $statusParser);
+    public function getLabel(RequestData $requestData, Parser $shipmentOrderParser);
+    public function getExportDoc(RequestData $requestData, Parser $exportDocParser);
+    public function doManifest(RequestData $requestData, Parser $manifestStateParser);
+    public function getManifest(RequestData $requestData, Parser $manifestParser);
+    public function updateShipmentOrder(RequestData $requestData, Parser $shipmentOrderParser);
+    public function validateShipment(RequestData $requestData, Parser $statusParser);
 }

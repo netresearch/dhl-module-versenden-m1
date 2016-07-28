@@ -17,46 +17,45 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Versenden\Webservice\Parser
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config;
-use Dhl\Versenden\Config\Shipper\Account;
-use Dhl\Versenden\Config\Shipper\BankData;
-use Dhl\Versenden\Config\Shipper\Contact;
+namespace Dhl\Versenden\Webservice\Parser\Soap;
+use Dhl\Bcs\Api as VersendenApi;
+use \Dhl\Versenden\Webservice\Parser;
+use Dhl\Versenden\Webservice\ResponseData;
 
 /**
- * Service
+ * ShipmentParser
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Versenden\Webservice\Parser
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Shipper
+abstract class Shipment implements Parser
 {
-    /** @var Account */
-    public $account;
-    /** @var BankData */
-    public $bankData;
-    /** @var Contact */
-    public $contact;
-    /** @var Contact */
-    public $returnReceiver;
+    /**
+     * @param \stdClass $response
+     * @return \stdClass
+     */
+    abstract public function parse($response);
 
-    public function __construct(
-        Account $account,
-        BankData $bankData,
-        Contact $contact,
-        Contact $returnReceiver)
+    /**
+     * @param VersendenApi\Statusinformation $statusInfo
+     * @return ResponseData\Status
+     */
+    protected function parseResponseStatus(VersendenApi\Statusinformation $statusInfo)
     {
-        $this->account = $account;
-        $this->bankData = $bankData;
-        $this->contact = $contact;
-        $this->returnReceiver = $returnReceiver;
+        $status = new ResponseData\Status(
+            $statusInfo->getStatusCode(),
+            $statusInfo->getStatusText(),
+            $statusInfo->getStatusMessage()
+        );
+        return $status;
     }
 }

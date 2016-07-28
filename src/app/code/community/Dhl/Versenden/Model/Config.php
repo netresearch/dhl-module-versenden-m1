@@ -68,6 +68,17 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SERVICE_INSURANCE = 'carriers/dhlversenden/service_insurance_enabled';
     const CONFIG_XML_PATH_SERVICE_BULKYGOODS = 'carriers/dhlversenden/service_bulkygoods_enabled';
 
+    const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'carriers/dhlversenden/webservice_auth_username';
+    const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'carriers/dhlversenden/webservice_auth_password';
+
+    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'carriers/dhlversenden/sandbox_endpoint';
+    const CONFIG_XML_PATH_SANDBOX_USER = 'carriers/dhlversenden/sandbox_account_user';
+    const CONFIG_XML_PATH_SANDBOX_SIGNATURE = 'carriers/dhlversenden/sandbox_account_signature';
+    const CONFIG_XML_PATH_SANDBOX_EKP = 'carriers/dhlversenden/sandbox_account_ekp';
+    const CONFIG_XML_PATH_SANDBOX_DHLPAKET = 'carriers/dhlversenden/sandbox_account_participation_dhlpaket';
+    const CONFIG_XML_PATH_SANDBOX_RETURNSHIPMENT = 'carriers/dhlversenden/sandbox_account_participation_returnshipment';
+    const CONFIG_XML_PATH_SANDBOX_GOGREEN_ENABLED = 'sandbox_account_gogreen_enabled';
+
     /**
      * Check if custom autoloader should be registered.
      *
@@ -311,5 +322,72 @@ class Dhl_Versenden_Model_Config
         });
 
         return new ServiceCollection($items);
+    }
+
+    /**
+     * Obtain username for CIG authentication.
+     *
+     * @return string
+     */
+    public function getWebserviceAuthUsername()
+    {
+        return Mage::getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_USERNAME);
+    }
+
+    /**
+     * Obtain password for CIG authentication.
+     *
+     * @return string
+     */
+    public function getWebserviceAuthPassword()
+    {
+        return Mage::getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
+    }
+
+    /**
+     * Obtain the webservice endpoint address (location).
+     *
+     * @param mixed $store
+     * @return string Null in production mode: use default from WSDL.
+     */
+    public function getEndpoint($store = null)
+    {
+        if ($this->isSandboxModeEnabled($store)) {
+            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtain Business Customer Portal username.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getAuthenticationUser($store = null)
+    {
+        if ($this->isSandboxModeEnabled($store)) {
+            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_USER, $store);
+        }
+
+        //TODO(nr): obtain production credentials
+        return null;
+    }
+
+    /**
+     * Obtain Business Customer Portal password/signature.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getAuthenticationSignature($store = null)
+    {
+        if ($this->isSandboxModeEnabled($store)) {
+            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_SIGNATURE, $store);
+        }
+
+        //TODO(nr): obtain production credentials
+        return null;
     }
 }

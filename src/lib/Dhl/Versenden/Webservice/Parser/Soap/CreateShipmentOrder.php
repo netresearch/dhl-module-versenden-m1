@@ -17,46 +17,42 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Versenden\Webservice\Parser
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config;
-use Dhl\Versenden\Config\Shipper\Account;
-use Dhl\Versenden\Config\Shipper\BankData;
-use Dhl\Versenden\Config\Shipper\Contact;
+namespace Dhl\Versenden\Webservice\Parser\Soap;
+use \Dhl\Bcs\Api as VersendenApi;
+use \Dhl\Versenden\Webservice;
 
 /**
- * Service
+ * CreateShipmentOrder
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Versenden\Webservice\Parser
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Shipper
+class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
 {
-    /** @var Account */
-    public $account;
-    /** @var BankData */
-    public $bankData;
-    /** @var Contact */
-    public $contact;
-    /** @var Contact */
-    public $returnReceiver;
-
-    public function __construct(
-        Account $account,
-        BankData $bankData,
-        Contact $contact,
-        Contact $returnReceiver)
+    /**
+     * @param VersendenApi\CreateShipmentOrderResponse $response
+     * @return Webservice\ResponseData\CreateShipment
+     */
+    public function parse($response)
     {
-        $this->account = $account;
-        $this->bankData = $bankData;
-        $this->contact = $contact;
-        $this->returnReceiver = $returnReceiver;
+        $status = $this->parseResponseStatus($response->getStatus());
+
+        $createdLabels = $response->getCreationState();
+        if ($createdLabels instanceof VersendenApi\CreationState) {
+            $createdLabels = array($createdLabels);
+        }
+        $labels = $this->parseLabels($createdLabels);
+
+        return new Webservice\ResponseData\CreateShipment($status, $labels);
     }
 }
+

@@ -17,46 +17,41 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Versenden\Webservice\ResponseData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config;
-use Dhl\Versenden\Config\Shipper\Account;
-use Dhl\Versenden\Config\Shipper\BankData;
-use Dhl\Versenden\Config\Shipper\Contact;
-
+namespace Dhl\Versenden\Webservice\ResponseData;
 /**
- * Service
+ * Version
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Versenden\Webservice\ResponseData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Shipper
+final class Version
 {
-    /** @var Account */
-    public $account;
-    /** @var BankData */
-    public $bankData;
-    /** @var Contact */
-    public $contact;
-    /** @var Contact */
-    public $returnReceiver;
+    /** @var string */
+    private $version;
 
-    public function __construct(
-        Account $account,
-        BankData $bankData,
-        Contact $contact,
-        Contact $returnReceiver)
+    /**
+     * Version constructor.
+     * @param string $version
+     */
+    public function __construct($version)
     {
-        $this->account = $account;
-        $this->bankData = $bankData;
-        $this->contact = $contact;
-        $this->returnReceiver = $returnReceiver;
+        $this->version = $version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
     }
 }

@@ -24,13 +24,18 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\Adapter;
-use Dhl\Versenden\Webservice\Adapter;
+use \Dhl\Bcs\Api as VersendenApi;
+use \Dhl\Versenden\Webservice\Adapter;
+use Dhl\Versenden\Webservice\Parser;
+use \Dhl\Versenden\Webservice\RequestData;
+use \Dhl\Versenden\Webservice\ResponseData;
+use \Dhl\Versenden\Webservice\Parser\Soap as SoapParser;
 
 /**
- * Adapter
+ * Soap
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice\Adapter
+ * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -38,91 +43,107 @@ use Dhl\Versenden\Webservice\Adapter;
 class Soap implements Adapter
 {
     /**
-     * @param $requestData
-     * @param $versionParser
-     * @throws Adapter\NotImplementedException
+     * @var VersendenApi\GVAPI_2_0_de
      */
-    public function getVersion($requestData, $versionParser)
+    private $soapClient;
+
+    public function __construct(\SoapClient $soapClient)
+    {
+        $this->soapClient = $soapClient;
+    }
+
+    /**
+     * @param RequestData\Version $requestData
+     * @param SoapParser\Version $parser
+     * @return ResponseData\Version
+     */
+    public function getVersion(RequestData $requestData, Parser $parser)
+    {
+        $requestType = Adapter\Soap\VersionRequestType::prepare($requestData);
+
+        $response = $this->soapClient->getVersion($requestType);
+        return $parser->parse($response);
+    }
+
+    /**
+     * @param RequestData\CreateShipment $requestData
+     * @param SoapParser\CreateShipmentOrder $parser
+     * @return ResponseData\CreateShipment
+     */
+    public function createShipmentOrder(RequestData $requestData, Parser $parser)
+    {
+        $requestType = Adapter\Soap\CreateShipmentRequestType::prepare($requestData);
+        
+        $response = $this->soapClient->createShipmentOrder($requestType);
+        return $parser->parse($response);
+    }
+
+    /**
+     * @param RequestData $requestData
+     * @param Parser $parser
+     * @throws NotImplementedException
+     */
+    public function deleteShipmentOrder(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
 
     /**
-     * @param $requestData
-     * @param $shipmentOrderParser
+     * @param RequestData $requestData
+     * @param Parser $parser
      * @throws NotImplementedException
      */
-    public function createShipmentOrder($requestData, $shipmentOrderParser)
+    public function getLabel(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
 
     /**
-     * @param $requestData
-     * @param $statusParser
+     * @param RequestData $requestData
+     * @param Parser $parser
      * @throws NotImplementedException
      */
-    public function deleteShipmentOrder($requestData, $statusParser)
+    public function getExportDoc(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
 
     /**
-     * @param $requestData
-     * @param $shipmentOrderParser
+     * @param RequestData $requestData
+     * @param Parser $parser
      * @throws NotImplementedException
      */
-    public function getLabel($requestData, $shipmentOrderParser)
+    public function doManifest(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
 
     /**
-     * @param $requestData
-     * @param $exportDocParser
+     * @param RequestData $requestData
+     * @param Parser $parser
      * @throws NotImplementedException
      */
-    public function getExportDoc($requestData, $exportDocParser)
+    public function getManifest(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
 
     /**
-     * @param $requestData
-     * @param $manifestStateParser
+     * @param RequestData $requestData
+     * @param Parser $parser
      * @throws NotImplementedException
      */
-    public function doManifest($requestData, $manifestStateParser)
+    public function updateShipmentOrder(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
 
     /**
-     * @param $requestData
-     * @param $manifestParser
+     * @param RequestData $requestData
+     * @param Parser $parser
      * @throws NotImplementedException
      */
-    public function getManifest($requestData, $manifestParser)
-    {
-        throw new Adapter\NotImplementedException();
-    }
-
-    /**
-     * @param $requestData
-     * @param $shipmentOrderParser
-     * @throws NotImplementedException
-     */
-    public function updateShipmentOrder($requestData, $shipmentOrderParser)
-    {
-        throw new Adapter\NotImplementedException();
-    }
-
-    /**
-     * @param $requestData
-     * @param $statusParser
-     * @throws NotImplementedException
-     */
-    public function validateShipment($requestData, $statusParser)
+    public function validateShipment(RequestData $requestData, Parser $parser)
     {
         throw new Adapter\NotImplementedException();
     }
