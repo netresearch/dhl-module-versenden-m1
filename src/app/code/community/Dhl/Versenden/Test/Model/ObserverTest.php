@@ -245,7 +245,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePackstation()
     {
-        $stationType = 'Packstation';
+        $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PACKSTATION;
         $stationId   = '987';
 
         $street = "{$stationType} {$stationId}"; // valid shop, recognized type
@@ -276,7 +276,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePostfiliale()
     {
-        $stationType = 'Postfiliale';
+        $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_POSTFILIALE;
         $stationId   = '123';
 
         $street = "{$stationType} {$stationId}"; // valid shop, recognized type

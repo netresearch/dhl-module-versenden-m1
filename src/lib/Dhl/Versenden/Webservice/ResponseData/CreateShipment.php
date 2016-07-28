@@ -17,46 +17,53 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Versenden\Webservice\ResponseData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config;
-use Dhl\Versenden\Config\Shipper\Account;
-use Dhl\Versenden\Config\Shipper\BankData;
-use Dhl\Versenden\Config\Shipper\Contact;
-
+namespace Dhl\Versenden\Webservice\ResponseData;
 /**
- * Service
+ * Label
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Versenden\Webservice\ResponseData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Shipper
+final class CreateShipment
 {
-    /** @var Account */
-    public $account;
-    /** @var BankData */
-    public $bankData;
-    /** @var Contact */
-    public $contact;
-    /** @var Contact */
-    public $returnReceiver;
+    /** @var Status */
+    private $status;
+    /** @var LabelCollection */
+    private $labels;
 
-    public function __construct(
-        Account $account,
-        BankData $bankData,
-        Contact $contact,
-        Contact $returnReceiver)
+    /**
+     * CreateShipment constructor.
+     * @param Status $status
+     * @param LabelCollection $labels
+     */
+    public function __construct(Status $status, LabelCollection $labels)
     {
-        $this->account = $account;
-        $this->bankData = $bankData;
-        $this->contact = $contact;
-        $this->returnReceiver = $returnReceiver;
+        $this->status = $status;
+        $this->labels = $labels;
+    }
+
+    /**
+     * @return Status
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return LabelCollection
+     */
+    public function getLabels()
+    {
+        return $this->labels;
     }
 }

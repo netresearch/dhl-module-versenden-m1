@@ -175,16 +175,15 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture getReceiver
      */
-    public function prepareParcelShop()
+    public function preparePostalFacility()
     {
         $address = Mage::getModel('sales/quote_address')->load(100);
         $streetName = 'Foo';
         $streetNumber = '909';
 
         $facility = new Varien_Object(array(
-            'shop_type' => 'ParcelShop',
+            'shop_type' => ShippingInfo\PostalFacility::TYPE_PAKETSHOP,
             'shop_number' => '808',
         ));
 
