@@ -17,7 +17,7 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Config
+ * @package   Dhl\Versenden
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -29,7 +29,7 @@ use Dhl\Versenden\Config as ConfigReader;
  * Data
  *
  * @category Dhl
- * @package  Dhl\Versenden\Config
+ * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/

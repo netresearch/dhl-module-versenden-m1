@@ -17,33 +17,35 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+namespace Dhl\Versenden\Webservice\Adapter\Soap;
+use Dhl\Bcs\Api as VersendenApi;
+use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * Dhl_Versenden_Test_Model_Webservice_AdapterTest
+ * NameType
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_Webservice_AdapterTest
-    extends EcomDev_PHPUnit_Test_Case
+class NameType implements RequestType
 {
     /**
-     * @test
+     * @param RequestData\Person $requestData
+     * @return VersendenApi\NameType
      */
-    public function getVersion()
+    public static function prepare(RequestData $requestData)
     {
-        $client = new \Dhl\Bcs\Api\GVAPI_2_0_de();
-        $version = new \Dhl\Bcs\Api\Version('2', '1', null);
-        $response = $client->getVersion($version);
-        print_r($response);
+        //TODO(nr): fill arguments
+        $requestType = new VersendenApi\NameType('bla', 'bla', 'bla');
+        return $requestType;
     }
 }

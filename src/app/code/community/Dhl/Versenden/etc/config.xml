@@ -181,6 +181,10 @@
                 <service_bulkygoods_enabled>1</service_bulkygoods_enabled>
                 <returnshipment_use_shipper>1</returnshipment_use_shipper>
 
+                <webservice_auth_username>magento_1</webservice_auth_username>
+                <webservice_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</webservice_auth_password>
+
+                <sandbox_endpoint>https://cig.dhl.de/services/sandbox/soap</sandbox_endpoint>
                 <sandbox_account_user>2222222222_01</sandbox_account_user>
                 <sandbox_account_signature>pass</sandbox_account_signature>
                 <sandbox_account_ekp>2222222222</sandbox_account_ekp>

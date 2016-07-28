@@ -17,47 +17,67 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden
+ * @package   Dhl\Versenden\Webservice\RequestData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\ShippingInfo;
+namespace Dhl\Versenden\Webservice\RequestData;
+use Dhl\Versenden\Webservice\RequestData;
+
 /**
- * Packstation
+ * ShipmentOrder
  *
  * @category Dhl
- * @package  Dhl\Versenden
+ * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class PostalFacility
+final class Version extends RequestData
 {
-    const TYPE_PACKSTATION = 'packStation';
-    const TYPE_PAKETSHOP   = 'parcelShop';
-    const TYPE_POSTFILIALE = 'postOffice';
+    /** @var string */
+    private $majorRelease;
+    /** @var string */
+    private $minorRelease;
+    /** @var string */
+    private $build;
 
-    /** @var string */
-    public $zip;
-    /** @var string */
-    public $city;
-    /** @var string */
-    public $country;
-    /** @var string */
-    public $countryISOCode;
-    /** @var string */
-    public $state;
-
-    public function __construct(\stdClass $object = null)
+    /**
+     * Version constructor.
+     * @param string $majorRelease
+     * @param string $minorRelease
+     * @param string $build
+     */
+    public function __construct($majorRelease, $minorRelease, $build)
     {
-        if ($object) {
-            $this->zip = isset($object->zip) ? $object->zip : '';
-            $this->city = isset($object->city) ? $object->city : '';
-            $this->country = isset($object->country) ? $object->country : '';
-            $this->countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : '';
-            $this->state = isset($object->state) ? $object->state : '';
-        }
+        $this->majorRelease = $majorRelease;
+        $this->minorRelease = $minorRelease;
+        $this->build = $build;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMajorRelease()
+    {
+        return $this->majorRelease;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMinorRelease()
+    {
+        return $this->minorRelease;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBuild()
+    {
+        return $this->build;
     }
 }
