@@ -8,6 +8,14 @@ services:
       MYSQL_DATABASE: magento
     restart: always
 
+  testdb:
+    image: mysql:5.6
+    container_name: magento_dbms_test
+    environment:
+      MYSQL_ROOT_PASSWORD: MagEC1
+      MYSQL_DATABASE: magento_unit_tests
+    restart: always
+
   env:
     image: "couchi.nr:5001/magento-ci/php-apache:${PHP_VERSION}"
     container_name: magento_env
@@ -15,6 +23,7 @@ services:
       - "80:80"
     links:
       - db:mysql
+      - testdb:mysql_test
     volumes:
       - ../../../reports:/opt/reports
     volumes_from:
