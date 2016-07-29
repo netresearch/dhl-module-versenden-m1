@@ -28,6 +28,8 @@ use Dhl\Versenden\Config as ConfigReader;
 /**
  * ReturnReceiver
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\ReturnReceiver
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

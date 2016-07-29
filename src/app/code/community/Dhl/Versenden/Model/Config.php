@@ -44,6 +44,10 @@ use Dhl\Versenden\Service\Collection as ServiceCollection;
  */
 class Dhl_Versenden_Model_Config
 {
+    const CONFIG_SECTION = 'carriers';
+    const CONFIG_GROUP = 'dhlversenden';
+
+
     const CONFIG_XML_PATH_AUTOLOAD_ENABLED = 'dhl_versenden/dev/autoload_enabled';
 
     const CONFIG_XML_PATH_CARRIER = 'carriers/dhlversenden';
@@ -78,6 +82,32 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SANDBOX_DHLPAKET = 'carriers/dhlversenden/sandbox_account_participation_dhlpaket';
     const CONFIG_XML_PATH_SANDBOX_RETURNSHIPMENT = 'carriers/dhlversenden/sandbox_account_participation_returnshipment';
     const CONFIG_XML_PATH_SANDBOX_GOGREEN_ENABLED = 'sandbox_account_gogreen_enabled';
+
+    /**
+     * Wrap store config access.
+     *
+     * @param string $field
+     * @param mixed $store
+     * @return mixed
+     */
+    protected function getStoreConfig($field, $store = null)
+    {
+        $path = sprintf('%s/%s/%s', self::CONFIG_SECTION, self::CONFIG_GROUP, $field);
+        return Mage::getStoreConfig($path, $store);
+    }
+
+    /**
+     * Wrap store config access.
+     *
+     * @param string $field
+     * @param mixed $store
+     * @return bool
+     */
+    protected function getStoreConfigFlag($field, $store = null)
+    {
+        $path = sprintf('%s/%s/%s', self::CONFIG_SECTION, self::CONFIG_GROUP, $field);
+        return Mage::getStoreConfigFlag($path, $store);
+    }
 
     /**
      * Check if custom autoloader should be registered.
@@ -143,6 +173,8 @@ class Dhl_Versenden_Model_Config
     /**
      * Load the merchant's DHL account data.
      *
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getAccountSettings()
      * @param mixed $store
      * @return Account
      * @throws ConfigException
@@ -156,6 +188,8 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getBankData()
      * @param mixed $store
      * @return BankData
      * @throws ConfigException
@@ -169,6 +203,8 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getContact()
      * @param mixed $store
      * @return ShipperContact
      * @throws ConfigException
@@ -186,6 +222,8 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getReturnReceiver()
      * @param mixed $store
      * @return ShipperContact
      * @throws ConfigException
@@ -208,6 +246,8 @@ class Dhl_Versenden_Model_Config
     /**
      * Load the merchant's DHL account data.
      *
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipment::getSettings()
      * @param mixed $store
      * @return ShipmentSettings
      * @throws ConfigException
@@ -223,6 +263,8 @@ class Dhl_Versenden_Model_Config
     /**
      * Check if the given shipping method should be processed with DHL Versenden.
      *
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipment::canProcessMethod()
      * @param string $shippingMethod
      * @return bool
      */
@@ -234,6 +276,8 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getShipper()
      * @param mixed $store
      * @return Shipper
      * @throws ConfigException
@@ -362,6 +406,9 @@ class Dhl_Versenden_Model_Config
     /**
      * Obtain Business Customer Portal username.
      *
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getAccountSettings()
+     * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings::getUser()
      * @param mixed $store
      * @return string
      */
@@ -378,6 +425,9 @@ class Dhl_Versenden_Model_Config
     /**
      * Obtain Business Customer Portal password/signature.
      *
+     * @deprecated
+     * @see Dhl_Versenden_Model_Config_Shipper::getAccountSettings()
+     * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings::getUser()
      * @param mixed $store
      * @return string
      */

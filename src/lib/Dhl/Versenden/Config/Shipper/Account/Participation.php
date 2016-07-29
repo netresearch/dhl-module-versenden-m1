@@ -30,6 +30,8 @@ use Dhl\Versenden\Config\Exception as ConfigException;
 /**
  * Account
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

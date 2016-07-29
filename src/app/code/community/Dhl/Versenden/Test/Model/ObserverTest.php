@@ -35,6 +35,15 @@
  */
 class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 {
+    protected function getLocationTypes()
+    {
+        return array(
+            \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PACKSTATION => 'Packstation',
+            \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_POSTFILIALE => 'Postfiliale',
+            \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PAKETSHOP =>   'Paketshop',
+        );
+    }
+
     /**
      * @test
      */
@@ -245,10 +254,16 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePackstation()
     {
-        $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PACKSTATION;
-        $stationId   = '987';
+        $stationTypes = $this->getLocationTypes();
+        $stationType  = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PACKSTATION;
 
-        $street = "{$stationType} {$stationId}"; // valid shop, recognized type
+        $stationId = '987';
+        // valid shop, recognized type:
+        $street = sprintf(
+            '%s %s',
+            $stationTypes[$stationType],
+            $stationId
+        );
         $company = '1234567890'; // valid post number
 
         $postalFacility = new Varien_Object();
@@ -276,10 +291,16 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePostfiliale()
     {
+        $stationTypes = $this->getLocationTypes();
         $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_POSTFILIALE;
-        $stationId   = '123';
 
-        $street = "{$stationType} {$stationId}"; // valid shop, recognized type
+        $stationId   = '123';
+        // valid shop, recognized type
+        $street = sprintf(
+            '%s %s',
+            $stationTypes[$stationType],
+            $stationId
+        );
         $company = '1234567890'; // valid post number
 
         $postalFacility = new Varien_Object();
@@ -307,7 +328,16 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePostalFacilityWrongType()
     {
-        $street = 'ParcelShop 123'; // valid shop, but unrecognized type
+        $stationTypes = $this->getLocationTypes();
+        $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PAKETSHOP;
+
+        $stationId   = '123';
+        // valid shop, but unrecognized type
+        $street = sprintf(
+            '%s %s',
+            $stationTypes[$stationType],
+            $stationId
+        );
         $company = '1234567890'; // valid post number
 
         $postalFacility = new Varien_Object();

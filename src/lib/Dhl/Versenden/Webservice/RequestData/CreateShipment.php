@@ -45,7 +45,7 @@ final class CreateShipment extends RequestData
     /**
      * CreateShipment constructor.
      * @param Version $version
-     * @param ShipmentOrder[] $shipmentOrder
+     * @param ShipmentOrderCollection $shipmentOrders
      */
     public function __construct(Version $version, ShipmentOrderCollection $shipmentOrders)
     {
