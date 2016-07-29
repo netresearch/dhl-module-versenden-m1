@@ -26,6 +26,7 @@
 namespace Dhl\Versenden;
 use Dhl\Versenden\ShippingInfo\Receiver;
 use Dhl\Versenden\ShippingInfo\ServiceSettings;
+use Dhl\Versenden\ShippingInfo\ShipmentSettings;
 
 /**
  * Service
@@ -42,11 +43,17 @@ class ShippingInfo
     public $shippingAddress;
     /** @var ServiceSettings */
     public $serviceSettings;
+    /** @var ShipmentSettings */
+    public $shipmentSettings;
 
-    public function __construct(Receiver $receiver = null, ServiceSettings $settings = null)
-    {
-        $this->shippingAddress = $receiver;
-        $this->serviceSettings = $settings;
+    public function __construct(
+        Receiver $receiver = null,
+        ServiceSettings $settings = null,
+        ShipmentSettings $shipmentSettings = null
+    ) {
+        $this->shippingAddress  = $receiver;
+        $this->serviceSettings  = $settings;
+        $this->shipmentSettings = $shipmentSettings;
     }
 
     /**
@@ -68,7 +75,8 @@ class ShippingInfo
     {
         $stdObject = \Zend_Json::decode($json, \Zend_Json::TYPE_OBJECT);
 
-        $this->shippingAddress = new Receiver($stdObject->shippingAddress);
-        $this->serviceSettings = new ServiceSettings($stdObject->serviceSettings);
+        $this->shippingAddress  = new Receiver($stdObject->shippingAddress);
+        $this->serviceSettings  = new ServiceSettings($stdObject->serviceSettings);
+        $this->shipmentSettings = new ShipmentSettings($stdObject->serviceSettings);
     }
 }

@@ -17,25 +17,38 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice\RequestData
+ * @package   Dhl\Versenden\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData;
+namespace Dhl\Versenden\Webservice\Adapter\Soap;
+use Dhl\Bcs\Api as VersendenApi;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * Receiver
+ * CommunicationType
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice\RequestData
+ * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Receiver extends Person
+class CommunicationType implements RequestType
 {
+    /**
+     * @param RequestData\ShipmentOrder\Person $requestData
+     * @return VersendenApi\CommunicationType
+     */
+    public static function prepare(RequestData $requestData)
+    {
+        $requestType = new VersendenApi\CommunicationType();
+        $requestType->setContactPerson($requestData->getContactPerson());
+        $requestType->setEmail($requestData->getEmail());
+        $requestType->setPhone($requestData->getPhone());
 
+        return $requestType;
+    }
 }

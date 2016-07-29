@@ -25,6 +25,8 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
+use Dhl\Bcs\Api\ShipmentItemType;
+use Dhl\Versenden\ShippingInfo\ShipmentSettings;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -44,42 +46,51 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipmentDetails(RequestData\ShipmentOrder $shipmentOrder)
     {
-        //TODO(nr): fill arguments
-        return new VersendenApi\ShipmentDetailsTypeType('bla', 'bla', 'bla', 'bla');
+        $product       = $shipmentOrder->getProductCode();
+        $accountNumber = $shipmentOrder->getAccountNumber();
+        $shipmentDate  = $shipmentOrder->getShipmentSettings()->date;
+        $shipmentItem  = new ShipmentItemType($shipmentOrder->getShipmentSettings()->weight);
+
+        return new VersendenApi\ShipmentDetailsTypeType($product, $accountNumber, $shipmentDate, $shipmentItem);
     }
 
     /**
-     * @param RequestData\Shipper $shipper
+     * @param RequestData\ShipmentOrder\Shipper $shipper
      * @return VersendenApi\ShipperType
      */
-    protected static function prepareShipper(RequestData\Shipper $shipper)
+    protected static function prepareShipper(RequestData\ShipmentOrder\Shipper $shipper)
     {
         $nameType = NameType::prepare($shipper);
-        //TODO(nr): fill arguments
-        return new VersendenApi\ShipperType($nameType, 'bla', 'bla');
+        $addressType = AddressType::prepare($shipper);
+        $communicationType = CommunicationType::prepare($shipper);
+
+        return new VersendenApi\ShipperType($nameType, $addressType, $communicationType);
     }
 
     /**
-     * @param RequestData\Receiver $receiver
+     * @param RequestData\ShipmentOrder $shipmentOrder
      * @return VersendenApi\ReceiverType
      */
-    protected static function prepareReceiver(RequestData\Receiver $receiver)
+    protected static function prepareReceiver(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $nameType = NameType::prepare($receiver);
+        $nameType = NameType::prepare($shipmentOrder->getReceiver());
         //TODO(nr): fill arguments
+
         return new VersendenApi\ReceiverType($nameType, 'bla', 'bla', 'bla', 'bla', 'bla');
     }
 
     /**
-     * @param RequestData\ReturnReceiver $return
+     * @param RequestData\ShipmentOrder\Shipper\ReturnReceiver $returnReceiver
      * @return VersendenApi\ShipperType
      */
-    protected static function prepareReturnReceiver(RequestData\ReturnReceiver $returnReceiver)
+    protected static function prepareReturnReceiver(RequestData\ShipmentOrder\Shipper\ReturnReceiver $returnReceiver)
     {
         //TODO(nr): check if return service was chosen
         $nameType = NameType::prepare($returnReceiver);
-        //TODO(nr): fill arguments
-        return new VersendenApi\ShipperType($nameType, 'bla', 'bla');
+        $addressType = AddressType::prepare($returnReceiver);
+        $communicationType = CommunicationType::prepare($returnReceiver);
+
+        return new VersendenApi\ShipperType($nameType, $addressType, $communicationType);
     }
 
     /**
@@ -98,13 +109,13 @@ class CreateShipmentRequestType implements RequestType
     protected static function prepareShipment(RequestData\ShipmentOrder $shipmentOrder)
     {
         $details = static::prepareShipmentDetails($shipmentOrder);
-        //TODO(nr): rework data objects from config
+
         $shipper = static::prepareShipper($shipmentOrder->getShipper());
-        $receiver = static::prepareReceiver($shipmentOrder->getReceiver());
-        //TODO(nr): load optional data info shipment order
-        $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getReturnReceiver());
+        $receiver = static::prepareReceiver($shipmentOrder);
+        $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
+
         $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
-        //TODO(nr): fill arguments
+
         return new VersendenApi\Shipment($details, $shipper, $receiver, $returnReceiver, $exportDocument);
     }
 

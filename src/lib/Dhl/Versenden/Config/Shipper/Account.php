@@ -31,6 +31,8 @@ use Dhl\Versenden\Config\Shipper\Account\Participation;
 /**
  * Account
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

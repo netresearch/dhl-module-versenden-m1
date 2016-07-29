@@ -23,42 +23,34 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Config;
-use Dhl\Versenden\Config\Shipper\Account;
-use Dhl\Versenden\Config\Shipper\BankData;
-use Dhl\Versenden\Config\Shipper\Contact;
-
+namespace Dhl\Versenden\ShippingInfo;
 /**
- * Shipper
+ * ShipmentSettings
  *
- * @deprecated
- * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Shipper
+class ShipmentSettings
 {
-    /** @var Account */
-    public $account;
-    /** @var BankData */
-    public $bankData;
-    /** @var Contact */
-    public $contact;
-    /** @var Contact */
-    public $returnReceiver;
+    /** @var string */
+    public $date;
+    /** @var string */
+    public $reference;
+    /** @var float */
+    public $weight;
+    /** @var string */
+    public $dhlProduct;
 
-    public function __construct(
-        Account $account,
-        BankData $bankData,
-        Contact $contact,
-        Contact $returnReceiver)
+    public function __construct(\stdClass $object = null)
     {
-        $this->account = $account;
-        $this->bankData = $bankData;
-        $this->contact = $contact;
-        $this->returnReceiver = $returnReceiver;
+        if ($object) {
+            $this->date = isset($object->date) ? $object->date : '';
+            $this->reference = isset($object->reference) ? $object->reference : '';
+            $this->weight = isset($object->weight) ? $object->weight : 0;
+            $this->dhlProduct = isset($object->dhlProduct) ? $object->dhlProduct : '';
+        }
     }
 }

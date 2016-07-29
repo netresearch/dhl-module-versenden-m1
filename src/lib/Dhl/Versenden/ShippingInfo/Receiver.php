@@ -75,6 +75,10 @@ class Receiver
     /** @var ParcelShop */
     public $parcelShop;
 
+    /**
+     * Receiver constructor. Loads properties from decoded, untyped JSON object.
+     * @param \stdClass|null $object
+     */
     public function __construct(\stdClass $object = null)
     {
         if ($object) {
