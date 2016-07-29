@@ -39,13 +39,17 @@ use Dhl\Versenden\Webservice\RequestData;
 class NameType implements RequestType
 {
     /**
-     * @param RequestData\Person $requestData
+     * @param RequestData\ShipmentOrder\Person $requestData
      * @return VersendenApi\NameType
      */
     public static function prepare(RequestData $requestData)
     {
-        //TODO(nr): fill arguments
-        $requestType = new VersendenApi\NameType('bla', 'bla', 'bla');
+        $requestType = new VersendenApi\NameType(
+            $requestData->getName1(),
+            $requestData->getName2(),
+            $requestData->getName3()
+        );
+
         return $requestType;
     }
 }

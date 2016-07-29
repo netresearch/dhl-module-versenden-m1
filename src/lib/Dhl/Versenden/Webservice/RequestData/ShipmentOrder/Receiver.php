@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData;
+namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * Person
+ * Receiver
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -35,7 +35,7 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class Person extends RequestData
+class Receiver extends Person
 {
 
 }
