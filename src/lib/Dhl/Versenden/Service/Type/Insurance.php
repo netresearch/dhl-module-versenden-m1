@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use Dhl\Versenden\ServiceWithOptions as OptionsService;
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
 
 /**
  * Insurance

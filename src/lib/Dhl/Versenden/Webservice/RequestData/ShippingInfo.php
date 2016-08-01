@@ -23,10 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
+namespace Dhl\Versenden\Webservice\RequestData;
+use Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 
 /**
- * Receiver
+ * ShippingInfo
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -34,55 +35,47 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Receiver extends Person implements \JsonSerializable
+class ShippingInfo implements \JsonSerializable
 {
-    /** @var Receiver\Packstation */
-    private $packstation;
-    /** @var Receiver\Postfiliale */
-    private $postfiliale;
-    /** @var Receiver\ParcelShop */
-    private $parcelShop;
+    /** @var ShipmentOrder\Receiver */
+    private $receiver;
+    /** @var ShipmentOrder\Settings\ServiceSettings */
+    private $serviceSettings;
+    /** @var ShipmentOrder\Settings\ShipmentSettings */
+    private $shipmentSettings;
 
     public function __construct(
-        $name1, $name2, $name3, $streetName, $streetNumber, $addressAddition, $dispatchingInformation,
-        $zip, $city, $country, $countryISOCode, $state, $phone, $email, $contactPerson,
-        Receiver\Packstation $packStation = null,
-        Receiver\Postfiliale $postFiliale = null,
-        Receiver\ParcelShop $parcelShop = null
+        ShipmentOrder\Receiver $receiver,
+        ShipmentOrder\Settings\ServiceSettings $serviceSettings,
+        ShipmentOrder\Settings\ShipmentSettings $shipmentSettings = null
     ) {
-        $this->packstation = $packStation;
-        $this->postfiliale = $postFiliale;
-        $this->parcelShop  = $parcelShop;
-
-        parent::__construct(
-            $name1, $name2, $name3, $streetName, $streetNumber,
-            $addressAddition, $dispatchingInformation, $zip, $city, $country,
-            $countryISOCode, $state, $phone, $email, $contactPerson
-        );
+        $this->receiver         = $receiver;
+        $this->serviceSettings  = $serviceSettings;
+        $this->shipmentSettings = $shipmentSettings;
     }
 
     /**
-     * @return Receiver\Packstation
+     * @return ShipmentOrder\Receiver
      */
-    public function getPackstation()
+    public function getReceiver()
     {
-        return $this->packstation;
+        return $this->receiver;
     }
 
     /**
-     * @return Receiver\Postfiliale
+     * @return ShipmentOrder\Settings\ServiceSettings
      */
-    public function getPostfiliale()
+    public function getServiceSettings()
     {
-        return $this->postfiliale;
+        return $this->serviceSettings;
     }
 
     /**
-     * @return Receiver\ParcelShop
+     * @return ShipmentOrder\Settings\ShipmentSettings
      */
-    public function getParcelShop()
+    public function getShipmentSettings()
     {
-        return $this->parcelShop;
+        return $this->shipmentSettings;
     }
 
     /**

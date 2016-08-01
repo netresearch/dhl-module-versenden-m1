@@ -28,7 +28,7 @@ use Dhl\Bcs\Api as VersendenApi;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * VersionRequestType
+ * ReceiverAddressType
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\Soap
@@ -36,18 +36,27 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VersionRequestType implements RequestType
+class ReceiverAddressType implements RequestType
 {
     /**
-     * @param RequestData\Version $requestData
-     * @return VersendenApi\Version
+     * @param RequestData\ShipmentOrder\Receiver $requestData
+     * @return VersendenApi\ReceiverNativeAddressType
      */
     public static function prepare(RequestData $requestData)
     {
-        $requestType = new VersendenApi\Version(
-            $requestData->getMajorRelease(),
-            $requestData->getMinorRelease(),
-            $requestData->getBuild()
+        $countryType = new VersendenApi\CountryType();
+        $countryType->setCountry($requestData->getCountry());
+        $countryType->setCountryISOCode($requestData->getCountryISOCode());
+        $countryType->setState($requestData->getState());
+
+        $requestType = new VersendenApi\ReceiverNativeAddressType(
+            $requestData->getName2(),
+            $requestData->getName3(),
+            $requestData->getStreetName(),
+            $requestData->getStreetNumber(),
+            $requestData->getZip(),
+            $requestData->getCity(),
+            $countryType
         );
 
         return $requestType;

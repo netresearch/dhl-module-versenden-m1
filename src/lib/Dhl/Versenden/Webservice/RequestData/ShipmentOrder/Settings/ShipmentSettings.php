@@ -23,10 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
+namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
+use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * Receiver
+ * ShipmentSettings
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -34,55 +35,62 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Receiver extends Person implements \JsonSerializable
+class ShipmentSettings extends RequestData implements \JsonSerializable
 {
-    /** @var Receiver\Packstation */
-    private $packstation;
-    /** @var Receiver\Postfiliale */
-    private $postfiliale;
-    /** @var Receiver\ParcelShop */
-    private $parcelShop;
+    /** @var string */
+    private $date;
+    /** @var string */
+    private $reference;
+    /** @var float */
+    private $weight;
+    /** @var string */
+    private $dhlProduct;
 
-    public function __construct(
-        $name1, $name2, $name3, $streetName, $streetNumber, $addressAddition, $dispatchingInformation,
-        $zip, $city, $country, $countryISOCode, $state, $phone, $email, $contactPerson,
-        Receiver\Packstation $packStation = null,
-        Receiver\Postfiliale $postFiliale = null,
-        Receiver\ParcelShop $parcelShop = null
-    ) {
-        $this->packstation = $packStation;
-        $this->postfiliale = $postFiliale;
-        $this->parcelShop  = $parcelShop;
-
-        parent::__construct(
-            $name1, $name2, $name3, $streetName, $streetNumber,
-            $addressAddition, $dispatchingInformation, $zip, $city, $country,
-            $countryISOCode, $state, $phone, $email, $contactPerson
-        );
+    /**
+     * ShipmentSettings constructor.
+     * @param string $date
+     * @param string $reference
+     * @param float $weight
+     * @param string $dhlProduct
+     */
+    public function __construct($date, $reference, $weight, $dhlProduct)
+    {
+        $this->date = $date;
+        $this->reference = $reference;
+        $this->weight = $weight;
+        $this->dhlProduct = $dhlProduct;
     }
 
     /**
-     * @return Receiver\Packstation
+     * @return string
      */
-    public function getPackstation()
+    public function getDate()
     {
-        return $this->packstation;
+        return $this->date;
     }
 
     /**
-     * @return Receiver\Postfiliale
+     * @return string
      */
-    public function getPostfiliale()
+    public function getReference()
     {
-        return $this->postfiliale;
+        return $this->reference;
     }
 
     /**
-     * @return Receiver\ParcelShop
+     * @return float
      */
-    public function getParcelShop()
+    public function getWeight()
     {
-        return $this->parcelShop;
+        return $this->weight;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDhlProduct()
+    {
+        return $this->dhlProduct;
     }
 
     /**

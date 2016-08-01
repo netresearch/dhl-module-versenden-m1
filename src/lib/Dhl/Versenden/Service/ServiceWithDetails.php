@@ -24,10 +24,10 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service as AbstractService;
+use \Dhl\Versenden\Service\Type as Service;
 
 /**
- * DayOfDelivery
+ * ServiceWithDetails
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,20 +35,35 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class DayOfDelivery extends AbstractService
+abstract class ServiceWithDetails extends Service
 {
     /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_DATE;
+    public $frontendInputType = self::INPUT_TYPE_TEXT;
+    /** @var string */
+    public $placeholder = '';
+
+    public function __construct($value = '', $placeholder = '')
+    {
+        $this->placeholder = $placeholder;
+
+        parent::__construct($value);
+    }
 
     /**
-     * DayOfDelivery constructor.
-     * @param string $value
+     * Get Placeholder from Service
+     *
+     * @return string
      */
-    public function __construct($value = '')
+    public function getPlaceholder()
     {
-        parent::__construct($value);
+        return $this->placeholder;
+    }
 
-        $this->name = 'Day Of Delivery';
-        $this->isCustomerService = true;
+    /**
+     * @return int
+     */
+    public function getMaxLength()
+    {
+        return 100;
     }
 }

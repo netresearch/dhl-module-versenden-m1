@@ -26,9 +26,12 @@
 namespace Dhl\Versenden\Config\Shipment;
 use Dhl\Versenden\Config\Data as ConfigData;
 use Dhl\Versenden\Config as ConfigReader;
+
 /**
  * Settings
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings\GlobalSettings
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

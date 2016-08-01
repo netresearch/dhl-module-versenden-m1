@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
 
-use Dhl\Versenden\ServiceWithDetails as DetailsService;
 /**
- * PreferredNeighbour
+ * DeliveryTimeFrame
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,19 +35,34 @@ use Dhl\Versenden\ServiceWithDetails as DetailsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour extends DetailsService
+class DeliveryTimeFrame extends OptionsService
 {
     /**
-     * PreferredNeighbour constructor.
-     *
+     * DeliveryTimeFrame constructor.
      * @param string $value
-     * @param string $placeholder
+     * @param array $options
      */
-    public function __construct($value = '', $placeholder = '')
+    public function __construct($value = '', $options = [])
     {
-        parent::__construct($value, $placeholder);
+        parent::__construct($value, $options);
 
-        $this->name              = 'Preferred Neighbour';
+        $this->name = 'Delivery Time Frame';
         $this->isCustomerService = true;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getOptions()
+    {
+        //TODO(nr): How to realize translations in lib?
+        return [
+            '10001200' => '10:00 - 12:00',
+            '12001400' => '12:00 - 14:00',
+            '14001600' => '14:00 - 16:00',
+            '16001800' => '16:00 - 18:00',
+            '18002000' => '18:00 - 20:00',
+            '19002100' => '19:00 - 21:00',
+        ];
     }
 }

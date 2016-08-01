@@ -24,9 +24,10 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
-use Dhl\Versenden\ServiceWithOptions as OptionsService;
+use Dhl\Versenden\Service\Type as Service;
+
 /**
- * VisualCheckOfAge
+ * ServiceWithOptions
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,23 +35,27 @@ use Dhl\Versenden\ServiceWithOptions as OptionsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VisualCheckOfAge extends OptionsService
+abstract class ServiceWithOptions extends Service
 {
-    const A16 = 'A16';
-    const A18 = 'A18';
-
     /** @var string */
     public $frontendInputType = self::INPUT_TYPE_SELECT;
+    /** @var string[] */
+    public $options = '';
 
-    /**
-     * VisualCheckOfAge constructor.
-     * @param string $value
-     */
     public function __construct($value = '', $options = [])
     {
-        parent::__construct($value, $options);
+        $this->options = $options;
 
-        $this->name = 'Visual Check Of Age';
-        $this->isCustomerService = false;
+        parent::__construct($value);
     }
+
+    /**
+     * Obtain the service's pre-defined setting options.
+     * @return string[]
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
 }

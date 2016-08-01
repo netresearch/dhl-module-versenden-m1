@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden;
-use Dhl\Versenden\Service as AbstractService;
-
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\ServiceWithDetails as DetailsService;
 /**
- * ServiceWithDetails
+ * PreferredNeighbour
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,35 +34,19 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class ServiceWithDetails extends AbstractService
+class PreferredNeighbour extends DetailsService
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
-    /** @var string */
-    public $placeholder = '';
-
+    /**
+     * PreferredNeighbour constructor.
+     *
+     * @param string $value
+     * @param string $placeholder
+     */
     public function __construct($value = '', $placeholder = '')
     {
-        $this->placeholder = $placeholder;
+        parent::__construct($value, $placeholder);
 
-        parent::__construct($value);
-    }
-
-    /**
-     * Get Placeholder from Service
-     *
-     * @return string
-     */
-    public function getPlaceholder()
-    {
-        return $this->placeholder;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMaxLength()
-    {
-        return 100;
+        $this->name              = 'Preferred Neighbour';
+        $this->isCustomerService = true;
     }
 }
