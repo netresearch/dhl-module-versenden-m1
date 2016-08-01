@@ -84,6 +84,50 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Convert a timestamp to a CE(S)T time string.
+     *
+     * @param string $timestamp The timestamp to convert
+     * @param string $format The output format
+     * @return string
+     */
+    public function utcToCet($timestamp = null, $format = 'Y-m-d H:i:s')
+    {
+        if (null === $timestamp) {
+            $timestamp = time();
+        }
+
+        $date = new DateTime("@$timestamp");
+        $timezoneCet = new DateTimeZone('Europe/Berlin');
+
+        $intervalSpec = sprintf("PT%dS", $timezoneCet->getOffset($date));
+        $date->add(new DateInterval($intervalSpec));
+
+        return $date->format($format);
+    }
+
+    /**
+     * Sum up all given shipment items' weight and convert to KG
+     *
+     * @param Mage_Sales_Model_Order_Shipment_Item[] $shipmentItems
+     * @param int $defaultWeight
+     * @param string $unit
+     * @return float
+     */
+    public function calculateItemsWeight($shipmentItems = array(), $defaultWeight = 200, $unit = 'G')
+    {
+        $sumWeight = function ($totalWeight, Mage_Sales_Model_Order_Shipment_Item $item) use ($defaultWeight) {
+            $totalWeight += $item->getWeight() ? $item->getWeight() : $defaultWeight;
+            return $totalWeight;
+        };
+        $totalWeight = array_reduce($shipmentItems, $sumWeight, 0);
+
+        if ($unit === 'G') {
+            $totalWeight *= 1000;
+        }
+        return $totalWeight;
+    }
+
+    /**
      * Prepare service settings from OPC form data.
      *
      * @param string[] $services
@@ -151,6 +195,8 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Obtain an instance of PostalFacility with properties loaded from given arguments.
      *
+     * @deprecated
+     * @see Dhl_Versenden_Helper_Webservice::shippingAddressToReceiver()
      * @param Varien_Object $facility
      * @param ShippingInfo\Receiver $receiver
      * @return ShippingInfo\PostalFacility

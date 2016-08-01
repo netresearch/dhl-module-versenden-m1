@@ -23,10 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service as AbstractService;
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\Type as Service;
+
 /**
- * ReturnShipment
+ * ParcelAnnouncement
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,19 +35,59 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ReturnShipment extends AbstractService
+class ParcelAnnouncement extends Service
 {
+    const DISPLAY_MODE_REQUIRED = 1;
+    const DISPLAY_MODE_OPTIONAL = 2;
+
     /** @var string */
     public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
 
     /**
-     * ReturnShipment constructor.
+     * ParcelAnnouncement constructor.
      * @param string $value
      */
     public function __construct($value = '')
     {
         parent::__construct($value);
 
-        $this->name = 'Return Shipment';
+        $this->name = 'Parcel Announcement';
+        $this->isCustomerService = true;
+
+        $this->setDisplayMode($value);
+    }
+
+    /**
+     * Let the user decide whether to enable this service or not.
+     */
+    public function setIsOptional()
+    {
+        $this->frontendInputType = self::INPUT_TYPE_BOOLEAN;
+    }
+
+    /**
+     * Always enable this service.
+     */
+    public function setIsRequired()
+    {
+        $this->frontendInputType = self::INPUT_TYPE_HIDDEN;
+    }
+
+    /**
+     * Set whether to display/render this service or not.
+     *
+     * @param int $displayMode
+     */
+    public function setDisplayMode($displayMode)
+    {
+        switch ($displayMode) {
+            case self::DISPLAY_MODE_OPTIONAL:
+                $this->setIsOptional();
+                break;
+            case self::DISPLAY_MODE_REQUIRED:
+                $this->setIsRequired();
+                break;
+            default:
+        }
     }
 }

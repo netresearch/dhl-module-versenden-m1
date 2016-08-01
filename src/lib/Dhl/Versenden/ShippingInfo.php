@@ -31,6 +31,8 @@ use Dhl\Versenden\ShippingInfo\ShipmentSettings;
 /**
  * Service
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShippingInfo
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

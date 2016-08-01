@@ -24,14 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use Dhl\Versenden\Config;
-use Dhl\Versenden\Config\Exception as ConfigException;
-use Dhl\Versenden\Config\Shipment\Settings as ShipmentSettings;
-use Dhl\Versenden\Config\Shipper;
-use Dhl\Versenden\Config\Shipper\Account;
-use Dhl\Versenden\Config\Shipper\Contact as ShipperContact;
-use Dhl\Versenden\Config\Shipper\BankData;
-use Dhl\Versenden\Config\Shipper\ReturnReceiver;
-use Dhl\Versenden\Service;
+use Dhl\Versenden\Service\Type as Service;
 use Dhl\Versenden\Service\Collection as ServiceCollection;
 /**
  * Dhl_Versenden_Model_Config
@@ -54,6 +47,7 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_CARRIER_ACTIVE = 'carriers/dhlversenden/active';
     const CONFIG_XML_PATH_CARRIER_TITLE = 'carriers/dhlversenden/title';
     const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlversenden/sandbox_mode';
+    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'carriers/dhlversenden/sandbox_endpoint';
     const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlversenden/logging_enabled';
     const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlversenden/log_level';
 
@@ -74,14 +68,6 @@ class Dhl_Versenden_Model_Config
 
     const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'carriers/dhlversenden/webservice_auth_username';
     const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'carriers/dhlversenden/webservice_auth_password';
-
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'carriers/dhlversenden/sandbox_endpoint';
-    const CONFIG_XML_PATH_SANDBOX_USER = 'carriers/dhlversenden/sandbox_account_user';
-    const CONFIG_XML_PATH_SANDBOX_SIGNATURE = 'carriers/dhlversenden/sandbox_account_signature';
-    const CONFIG_XML_PATH_SANDBOX_EKP = 'carriers/dhlversenden/sandbox_account_ekp';
-    const CONFIG_XML_PATH_SANDBOX_DHLPAKET = 'carriers/dhlversenden/sandbox_account_participation_dhlpaket';
-    const CONFIG_XML_PATH_SANDBOX_RETURNSHIPMENT = 'carriers/dhlversenden/sandbox_account_participation_returnshipment';
-    const CONFIG_XML_PATH_SANDBOX_GOGREEN_ENABLED = 'sandbox_account_gogreen_enabled';
 
     /**
      * Wrap store config access.
@@ -168,128 +154,6 @@ class Dhl_Versenden_Model_Config
         $isLevelEnabled = (Mage::getStoreConfig(self::CONFIG_XML_PATH_LOG_LEVEL) >= $level);
 
         return ($isEnabled && $isLevelEnabled);
-    }
-
-    /**
-     * Load the merchant's DHL account data.
-     *
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getAccountSettings()
-     * @param mixed $store
-     * @return Account
-     * @throws ConfigException
-     */
-    public function getShipperAccount($store = null)
-    {
-        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-
-        $reader = new Config($carrierConfig);
-        return new Account($reader);
-    }
-
-    /**
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getBankData()
-     * @param mixed $store
-     * @return BankData
-     * @throws ConfigException
-     */
-    public function getShipperBankData($store = null)
-    {
-        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-
-        $reader = new Config($carrierConfig);
-        return new BankData($reader);
-    }
-
-    /**
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getContact()
-     * @param mixed $store
-     * @return ShipperContact
-     * @throws ConfigException
-     */
-    public function getShipperContact($store = null)
-    {
-        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-
-        $country = Mage::getSingleton('directory/country')->loadByCode($carrierConfig['contact_countryid']);
-        $carrierConfig['contact_country'] = $country->getName();
-        $carrierConfig['contact_countrycode'] = $country->getIso2Code();
-
-        $reader = new Config($carrierConfig);
-        return new ShipperContact($reader);
-    }
-
-    /**
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getReturnReceiver()
-     * @param mixed $store
-     * @return ShipperContact
-     * @throws ConfigException
-     */
-    public function getReturnReceiver($store = null)
-    {
-        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-        if ($carrierConfig['returnshipment_use_shipper']) {
-            return $this->getShipperContact($store);
-        }
-
-        $country = Mage::getSingleton('directory/country')->loadByCode($carrierConfig['returnshipment_countryid']);
-        $carrierConfig['returnshipment_country'] = $country->getName();
-        $carrierConfig['returnshipment_countrycode'] = $country->getIso2Code();
-
-        $reader = new Config($carrierConfig);
-        return new ReturnReceiver($reader);
-    }
-
-    /**
-     * Load the merchant's DHL account data.
-     *
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipment::getSettings()
-     * @param mixed $store
-     * @return ShipmentSettings
-     * @throws ConfigException
-     */
-    public function getShipmentSettings($store = null)
-    {
-        $carrierConfig = Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER, $store);
-
-        $reader = new Config($carrierConfig);
-        return new ShipmentSettings($reader);
-    }
-
-    /**
-     * Check if the given shipping method should be processed with DHL Versenden.
-     *
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipment::canProcessMethod()
-     * @param string $shippingMethod
-     * @return bool
-     */
-    public function canProcessMethod($shippingMethod)
-    {
-        $enabledMethods = $this->getShipmentSettings()->shippingMethods;
-
-        return in_array($shippingMethod, $enabledMethods);
-    }
-
-    /**
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getShipper()
-     * @param mixed $store
-     * @return Shipper
-     * @throws ConfigException
-     */
-    public function getShipper($store = null)
-    {
-        return new Shipper(
-            $this->getShipperAccount($store),
-            $this->getShipperBankData($store),
-            $this->getShipperContact($store),
-            $this->getReturnReceiver($store)
-        );
     }
 
     /**
@@ -403,41 +267,4 @@ class Dhl_Versenden_Model_Config
         return null;
     }
 
-    /**
-     * Obtain Business Customer Portal username.
-     *
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getAccountSettings()
-     * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings::getUser()
-     * @param mixed $store
-     * @return string
-     */
-    public function getAuthenticationUser($store = null)
-    {
-        if ($this->isSandboxModeEnabled($store)) {
-            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_USER, $store);
-        }
-
-        //TODO(nr): obtain production credentials
-        return null;
-    }
-
-    /**
-     * Obtain Business Customer Portal password/signature.
-     *
-     * @deprecated
-     * @see Dhl_Versenden_Model_Config_Shipper::getAccountSettings()
-     * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings::getUser()
-     * @param mixed $store
-     * @return string
-     */
-    public function getAuthenticationSignature($store = null)
-    {
-        if ($this->isSandboxModeEnabled($store)) {
-            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_SIGNATURE, $store);
-        }
-
-        //TODO(nr): obtain production credentials
-        return null;
-    }
 }

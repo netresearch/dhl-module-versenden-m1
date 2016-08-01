@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden;
-use Dhl\Versenden\Service as AbstractService;
-
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\Type as Service;
 /**
- * ServiceWithOptions
+ * ReturnShipment
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,27 +34,19 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class ServiceWithOptions extends AbstractService
+class ReturnShipment extends Service
 {
     /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_SELECT;
-    /** @var string[] */
-    public $options = '';
-
-    public function __construct($value = '', $options = [])
-    {
-        $this->options = $options;
-
-        parent::__construct($value);
-    }
+    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
 
     /**
-     * Obtain the service's pre-defined setting options.
-     * @return string[]
+     * ReturnShipment constructor.
+     * @param string $value
      */
-    public function getOptions()
+    public function __construct($value = '')
     {
-        return $this->options;
-    }
+        parent::__construct($value);
 
+        $this->name = 'Return Shipment';
+    }
 }

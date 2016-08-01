@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * AccountSettings
+ * Account
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -35,7 +35,7 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-final class AccountSettings extends RequestData
+final class Account extends RequestData
 {
     /** @var string */
     private $user;
@@ -51,7 +51,7 @@ final class AccountSettings extends RequestData
     private $participationReturn;
 
     /**
-     * AccountSettings constructor.
+     * Account constructor.
      * @param string $user
      * @param string $signature
      * @param string $ekp

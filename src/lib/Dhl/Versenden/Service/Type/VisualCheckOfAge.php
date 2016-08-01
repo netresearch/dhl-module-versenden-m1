@@ -17,39 +17,40 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice\Soap
+ * @package   Dhl\Versenden\Service
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\Adapter\Soap;
-use Dhl\Bcs\Api as VersendenApi;
-use Dhl\Versenden\Webservice\RequestData;
-
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
 /**
- * VersionRequestType
+ * VisualCheckOfAge
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice\Soap
+ * @package  Dhl\Versenden\Service
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VersionRequestType implements RequestType
+class VisualCheckOfAge extends OptionsService
 {
-    /**
-     * @param RequestData\Version $requestData
-     * @return VersendenApi\Version
-     */
-    public static function prepare(RequestData $requestData)
-    {
-        $requestType = new VersendenApi\Version(
-            $requestData->getMajorRelease(),
-            $requestData->getMinorRelease(),
-            $requestData->getBuild()
-        );
+    const A16 = 'A16';
+    const A18 = 'A18';
 
-        return $requestType;
+    /** @var string */
+    public $frontendInputType = self::INPUT_TYPE_SELECT;
+
+    /**
+     * VisualCheckOfAge constructor.
+     * @param string $value
+     */
+    public function __construct($value = '', $options = [])
+    {
+        parent::__construct($value, $options);
+
+        $this->name = 'Visual Check Of Age';
+        $this->isCustomerService = false;
     }
 }

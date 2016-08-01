@@ -23,10 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service as AbstractService;
+namespace Dhl\Versenden\Service\Type;
+use \Dhl\Versenden\Service\Type as Service;
+
 /**
- * BulkyGoods
+ * DayOfDelivery
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,19 +35,20 @@ use Dhl\Versenden\Service as AbstractService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class BulkyGoods extends AbstractService
+class DayOfDelivery extends Service
 {
     /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
+    public $frontendInputType = self::INPUT_TYPE_DATE;
 
     /**
-     * BulkyGoods constructor.
+     * DayOfDelivery constructor.
      * @param string $value
      */
     public function __construct($value = '')
     {
         parent::__construct($value);
 
-        $this->name = 'Bulky Goods';
+        $this->name = 'Day Of Delivery';
+        $this->isCustomerService = true;
     }
 }

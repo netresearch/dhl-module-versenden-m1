@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden;
-use Dhl\Versenden\Service\Renderer;
+namespace Dhl\Versenden\Service;
 
 /**
- * Service
+ * Type
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,7 +34,7 @@ use Dhl\Versenden\Service\Renderer;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class Service
+abstract class Type
 {
     const INPUT_TYPE_BOOLEAN = 'boolean';
     const INPUT_TYPE_DATE    = 'date';

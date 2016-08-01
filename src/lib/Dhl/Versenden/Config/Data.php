@@ -28,6 +28,7 @@ use Dhl\Versenden\Config as ConfigReader;
 /**
  * Data
  *
+ * @deprecated 
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

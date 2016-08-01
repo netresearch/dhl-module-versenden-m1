@@ -25,14 +25,16 @@
 */
 namespace Dhl\Versenden\ShippingInfo;
 /**
-* Packstation
-*
-* @category Dhl
-* @package  Dhl\Versenden
-* @author   Christoph Aßmann <christoph.assmann@netresearch.de>
-* @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
-* @link     http://www.netresearch.de/
-*/
+ * Packstation
+ *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver\Packstation
+ * @category Dhl
+ * @package  Dhl\Versenden
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class Packstation extends PostalFacility
 {
     /** @var string */

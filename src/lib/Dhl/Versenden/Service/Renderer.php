@@ -24,9 +24,9 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service;
-use Dhl\Versenden\ServiceWithDetails as DetailsService;
-use Dhl\Versenden\ServiceWithOptions as OptionsService;
+use Dhl\Versenden\Service\Type as Service;
+use Dhl\Versenden\Service\ServiceWithDetails as DetailsService;
+use Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
 
 /**
  * Renderer

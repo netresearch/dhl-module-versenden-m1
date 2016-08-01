@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Service;
-use \Dhl\Versenden\Service;
+use \Dhl\Versenden\Service\Type as Service;
 /**
  * Collection
  *
