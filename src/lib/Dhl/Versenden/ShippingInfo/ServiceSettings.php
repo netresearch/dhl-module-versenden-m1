@@ -27,6 +27,8 @@ namespace Dhl\Versenden\ShippingInfo;
 /**
  * ServiceSettings
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings\ServiceSettings
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

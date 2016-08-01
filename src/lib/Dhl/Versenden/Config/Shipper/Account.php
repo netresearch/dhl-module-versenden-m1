@@ -32,7 +32,7 @@ use Dhl\Versenden\Config\Shipper\Account\Participation;
  * Account
  *
  * @deprecated
- * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\AccountSettings
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Account
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

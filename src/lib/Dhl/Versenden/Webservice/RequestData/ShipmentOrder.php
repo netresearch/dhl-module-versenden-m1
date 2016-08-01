@@ -17,18 +17,14 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Versenden\Webservice\RequestData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\RequestData;
-use Dhl\Versenden\Config\Shipment\Settings;
 use Dhl\Versenden\Config\Shipper;
-use Dhl\Versenden\ShippingInfo\Receiver;
-use Dhl\Versenden\ShippingInfo\ServiceSettings;
-use Dhl\Versenden\ShippingInfo\ShipmentSettings;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -57,7 +53,7 @@ use Dhl\Versenden\Webservice\RequestData;
  * It is supposed to be independent of the services that processes the shipment order.
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -99,19 +95,20 @@ class ShipmentOrder extends RequestData
 
     /**
      * ShipmentOrder constructor.
-     * @param ShipmentOrder\GlobalSettings $globalSettings
      * @param ShipmentOrder\Shipper $shipper
-     * @param Receiver $receiver
-     * @param ShipmentSettings $shipmentSettings
-     * @param ServiceSettings $serviceSettings
+     * @param ShipmentOrder\Receiver $receiver
+     * @param ShipmentOrder\Settings\GlobalSettings $globalSettings
+     * @param ShipmentOrder\Settings\ShipmentSettings $shipmentSettings
+     * @param ShipmentOrder\Settings\ServiceSettings $serviceSettings
      * @param int $sequenceNumber
      * @param string $labelType
      */
     public function __construct(
-        ShipmentOrder\GlobalSettings $globalSettings,
         ShipmentOrder\Shipper $shipper,
-        Receiver $receiver,
-        ShipmentSettings $shipmentSettings, ServiceSettings $serviceSettings,
+        ShipmentOrder\Receiver $receiver,
+        ShipmentOrder\Settings\GlobalSettings $globalSettings,
+        ShipmentOrder\Settings\ShipmentSettings $shipmentSettings,
+        ShipmentOrder\Settings\ServiceSettings $serviceSettings,
         $sequenceNumber = 1,
         $labelType = self::LABEL_TYPE_B64
     ) {
@@ -125,14 +122,14 @@ class ShipmentOrder extends RequestData
         $this->accountNumber = sprintf(
             '%s%s%s',
             $shipper->getAccount()->getEkp(),
-            preg_filter('/[^\d]/', '', $shipmentSettings->dhlProduct),
+            preg_filter('/[^\d]/', '', $shipmentSettings->getDhlProduct()),
             $shipper->getAccount()->getParticipationDefault()
         );
 
         $this->printOnlyIfCodable = $globalSettings->isPrintOnlyIfCodable();
         $this->labelResponseType = $labelType;
 
-        $this->productCode = $shipmentSettings->dhlProduct;
+        $this->productCode = $shipmentSettings->getDhlProduct();
         $this->sequenceNumber = $sequenceNumber;
     }
 
@@ -145,7 +142,7 @@ class ShipmentOrder extends RequestData
     }
 
     /**
-     * @return Receiver
+     * @return ShipmentOrder\Receiver
      */
     public function getReceiver()
     {
@@ -153,7 +150,7 @@ class ShipmentOrder extends RequestData
     }
 
     /**
-     * @return Settings
+     * @return ShipmentOrder\Settings\GlobalSettings
      */
     public function getGlobalSettings()
     {
@@ -161,7 +158,7 @@ class ShipmentOrder extends RequestData
     }
 
     /**
-     * @return ShipmentSettings
+     * @return ShipmentOrder\Settings\ShipmentSettings
      */
     public function getShipmentSettings()
     {
@@ -169,7 +166,7 @@ class ShipmentOrder extends RequestData
     }
 
     /**
-     * @return ServiceSettings
+     * @return ShipmentOrder\Settings\ServiceSettings
      */
     public function getServiceSettings()
     {

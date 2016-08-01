@@ -23,10 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
-
+namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 /**
- * Receiver
+ * ParcelShop
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -34,55 +33,59 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Receiver extends Person implements \JsonSerializable
+class ParcelShop extends PostalFacility implements \JsonSerializable
 {
-    /** @var Receiver\Packstation */
-    private $packstation;
-    /** @var Receiver\Postfiliale */
-    private $postfiliale;
-    /** @var Receiver\ParcelShop */
-    private $parcelShop;
+    /** @var string */
+    private $parcelShopNumber;
+    /** @var string */
+    private $streetName;
+    /** @var string */
+    private $streetNumber;
 
+    /**
+     * ParcelShop constructor.
+     * @param string $zip
+     * @param string $city
+     * @param string $country
+     * @param string $countryISOCode
+     * @param string $state
+     * @param string $parcelShopNumber
+     * @param string $streetName
+     * @param string $streetNumber
+     */
     public function __construct(
-        $name1, $name2, $name3, $streetName, $streetNumber, $addressAddition, $dispatchingInformation,
-        $zip, $city, $country, $countryISOCode, $state, $phone, $email, $contactPerson,
-        Receiver\Packstation $packStation = null,
-        Receiver\Postfiliale $postFiliale = null,
-        Receiver\ParcelShop $parcelShop = null
+        $zip, $city, $country, $countryISOCode, $state,
+        $parcelShopNumber, $streetName, $streetNumber
     ) {
-        $this->packstation = $packStation;
-        $this->postfiliale = $postFiliale;
-        $this->parcelShop  = $parcelShop;
+        $this->parcelShopNumber = $parcelShopNumber;
+        $this->streetName = $streetName;
+        $this->streetNumber = $streetNumber;
 
-        parent::__construct(
-            $name1, $name2, $name3, $streetName, $streetNumber,
-            $addressAddition, $dispatchingInformation, $zip, $city, $country,
-            $countryISOCode, $state, $phone, $email, $contactPerson
-        );
+        parent::__construct($zip, $city, $country, $countryISOCode, $state);
     }
 
     /**
-     * @return Receiver\Packstation
+     * @return string
      */
-    public function getPackstation()
+    public function getParcelShopNumber()
     {
-        return $this->packstation;
+        return $this->parcelShopNumber;
     }
 
     /**
-     * @return Receiver\Postfiliale
+     * @return string
      */
-    public function getPostfiliale()
+    public function getStreetName()
     {
-        return $this->postfiliale;
+        return $this->streetName;
     }
 
     /**
-     * @return Receiver\ParcelShop
+     * @return string
      */
-    public function getParcelShop()
+    public function getStreetNumber()
     {
-        return $this->parcelShop;
+        return $this->streetNumber;
     }
 
     /**

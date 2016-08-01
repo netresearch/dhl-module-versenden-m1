@@ -25,8 +25,10 @@
  */
 namespace Dhl\Versenden\ShippingInfo;
 /**
- * Packstation
+ * PostalFacility
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver\PostalFacility
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

@@ -27,6 +27,8 @@ namespace Dhl\Versenden\ShippingInfo;
 /**
  * Receiver
  *
+ * @deprecated
+ * @see \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver
  * @category Dhl
  * @package  Dhl\Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>

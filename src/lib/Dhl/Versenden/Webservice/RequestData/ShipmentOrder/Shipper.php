@@ -37,7 +37,7 @@ use Dhl\Versenden\Webservice\RequestData;
  */
 class Shipper extends RequestData
 {
-    /** @var Shipper\AccountSettings */
+    /** @var Shipper\Account */
     private $account;
     /** @var Shipper\BankData */
     private $bankData;
@@ -48,13 +48,13 @@ class Shipper extends RequestData
 
     /**
      * Shipper constructor.
-     * @param Shipper\AccountSettings $account
+     * @param Shipper\Account $account
      * @param Shipper\BankData $bankData
      * @param Shipper\Contact $contact
      * @param Shipper\Contact $returnReceiver
      */
     public function __construct(
-        Shipper\AccountSettings $account, Shipper\BankData $bankData,
+        Shipper\Account $account, Shipper\BankData $bankData,
         Shipper\Contact $contact, Shipper\Contact $returnReceiver
     ) {
         $this->account = $account;
@@ -64,7 +64,7 @@ class Shipper extends RequestData
     }
 
     /**
-     * @return Shipper\AccountSettings
+     * @return Shipper\Account
      */
     public function getAccount()
     {
@@ -88,7 +88,7 @@ class Shipper extends RequestData
     }
 
     /**
-     * @return Shipper\Contact
+     * @return Shipper\ReturnReceiver
      */
     public function getReturnReceiver()
     {

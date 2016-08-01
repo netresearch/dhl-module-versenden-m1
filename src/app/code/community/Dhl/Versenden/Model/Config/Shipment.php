@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings\GlobalSettings;
 
 /**
  * Dhl_Versenden_Model_Config_Shipment
@@ -45,7 +46,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return ShipmentOrder\GlobalSettings
+     * @return GlobalSettings
      */
     public function getSettings($store = null)
     {
@@ -68,7 +69,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
             $codPaymentMethods = explode(',', $codPaymentMethods);
         }
 
-        return new ShipmentOrder\GlobalSettings(
+        return new GlobalSettings(
             $printOnlyIfCodable,
             $unitOfMeasure,
             $productWeight,

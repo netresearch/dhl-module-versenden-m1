@@ -17,7 +17,7 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Versenden\Webservice\Soap
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -26,14 +26,13 @@
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
 use Dhl\Bcs\Api\ShipmentItemType;
-use Dhl\Versenden\ShippingInfo\ShipmentSettings;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
  * CreateShipmentRequestType
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Versenden\Webservice\Soap
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
@@ -46,12 +45,16 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipmentDetails(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $product       = $shipmentOrder->getProductCode();
-        $accountNumber = $shipmentOrder->getAccountNumber();
-        $shipmentDate  = $shipmentOrder->getShipmentSettings()->date;
-        $shipmentItem  = new ShipmentItemType($shipmentOrder->getShipmentSettings()->weight);
+        $shipmentItem  = new ShipmentItemType($shipmentOrder->getShipmentSettings()->getWeight());
 
-        return new VersendenApi\ShipmentDetailsTypeType($product, $accountNumber, $shipmentDate, $shipmentItem);
+        $shipmentDetailsType = new VersendenApi\ShipmentDetailsTypeType(
+            $shipmentOrder->getProductCode(),
+            $shipmentOrder->getAccountNumber(),
+            $shipmentOrder->getShipmentSettings()->getDate(),
+            $shipmentItem
+        );
+
+        return $shipmentDetailsType;
     }
 
     /**
@@ -60,23 +63,41 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipper(RequestData\ShipmentOrder\Shipper $shipper)
     {
-        $nameType = NameType::prepare($shipper);
-        $addressType = AddressType::prepare($shipper);
+        $nameType          = NameType::prepare($shipper);
+        $addressType       = AddressType::prepare($shipper);
         $communicationType = CommunicationType::prepare($shipper);
 
-        return new VersendenApi\ShipperType($nameType, $addressType, $communicationType);
+        $shipperType = new VersendenApi\ShipperType(
+            $nameType,
+            $addressType,
+            $communicationType
+        );
+
+        return $shipperType;
     }
 
     /**
-     * @param RequestData\ShipmentOrder $shipmentOrder
+     * @param RequestData\ShipmentOrder\Receiver $receiver
      * @return VersendenApi\ReceiverType
      */
-    protected static function prepareReceiver(RequestData\ShipmentOrder $shipmentOrder)
+    protected static function prepareReceiver(RequestData\ShipmentOrder\Receiver $receiver)
     {
-        $nameType = NameType::prepare($shipmentOrder->getReceiver());
-        //TODO(nr): fill arguments
+        $receiverAddressType = ReceiverAddressType::prepare($receiver);
+        $packStationType     = PostalFacilityType::prepare($receiver->getPackstation());
+        $postfilialeType     = PostalFacilityType::prepare($receiver->getPostfiliale());
+        $parcelShopType      = PostalFacilityType::prepare($receiver->getParcelShop());
+        $communicationType   = CommunicationType::prepare($receiver);
 
-        return new VersendenApi\ReceiverType($nameType, 'bla', 'bla', 'bla', 'bla', 'bla');
+        $receiverType = new VersendenApi\ReceiverType(
+            $receiver->getName1(),
+            $receiverAddressType,
+            $packStationType,
+            $postfilialeType,
+            $parcelShopType,
+            $communicationType
+        );
+
+        return $receiverType;
     }
 
     /**
@@ -86,11 +107,17 @@ class CreateShipmentRequestType implements RequestType
     protected static function prepareReturnReceiver(RequestData\ShipmentOrder\Shipper\ReturnReceiver $returnReceiver)
     {
         //TODO(nr): check if return service was chosen
-        $nameType = NameType::prepare($returnReceiver);
-        $addressType = AddressType::prepare($returnReceiver);
+        $nameType          = NameType::prepare($returnReceiver);
+        $addressType       = AddressType::prepare($returnReceiver);
         $communicationType = CommunicationType::prepare($returnReceiver);
 
-        return new VersendenApi\ShipperType($nameType, $addressType, $communicationType);
+        $returnReceiverType = new VersendenApi\ShipperType(
+            $nameType,
+            $addressType,
+            $communicationType
+        );
+
+        return $returnReceiverType;
     }
 
     /**
@@ -108,15 +135,23 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipment(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $details = static::prepareShipmentDetails($shipmentOrder);
-
-        $shipper = static::prepareShipper($shipmentOrder->getShipper());
-        $receiver = static::prepareReceiver($shipmentOrder);
+        $details        = static::prepareShipmentDetails($shipmentOrder);
+        $shipper        = static::prepareShipper($shipmentOrder->getShipper());
+        $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
         $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
 
-        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
+        //TODO(nr): DHLGKP-22
+//        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
 
-        return new VersendenApi\Shipment($details, $shipper, $receiver, $returnReceiver, $exportDocument);
+        $shipment = new VersendenApi\Shipment(
+            $details,
+            $shipper,
+            $receiver,
+            $returnReceiver,
+            null
+        );
+
+        return $shipment;
     }
 
     /**
@@ -125,14 +160,16 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipmentOrder(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $sequenceNumber = $shipmentOrder->getSequenceNumber();
-        $shipment = static::prepareShipment($shipmentOrder);
+        $shipment           = static::prepareShipment($shipmentOrder);
         $printOnlyIfCodable = new VersendenApi\Serviceconfiguration($shipmentOrder->isPrintOnlyIfCodable());
-        $labelResponseType = $shipmentOrder->getLabelResponseType();
 
-        $requestType = new VersendenApi\ShipmentOrderType($sequenceNumber, $shipment);
+        $requestType = new VersendenApi\ShipmentOrderType(
+            $shipmentOrder->getSequenceNumber(),
+            $shipment
+        );
+
         $requestType->setPrintOnlyIfCodeable($printOnlyIfCodable);
-        $requestType->setLabelResponseType($labelResponseType);
+        $requestType->setLabelResponseType($shipmentOrder->getLabelResponseType());
 
         return $requestType;
     }
@@ -156,7 +193,11 @@ class CreateShipmentRequestType implements RequestType
             $shipmentOrders[]= static::prepareShipmentOrder($order);
         }
 
-        $requestType = new VersendenApi\CreateShipmentOrderRequest($version, $shipmentOrders);
+        $requestType = new VersendenApi\CreateShipmentOrderRequest(
+            $version,
+            $shipmentOrders
+        );
+
         return $requestType;
     }
 }
