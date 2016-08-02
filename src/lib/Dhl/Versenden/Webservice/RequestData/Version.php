@@ -50,7 +50,7 @@ final class Version extends RequestData
      * @param string $minorRelease
      * @param string $build
      */
-    public function __construct($majorRelease, $minorRelease, $build)
+    public function __construct($majorRelease, $minorRelease, $build = null)
     {
         $this->majorRelease = $majorRelease;
         $this->minorRelease = $minorRelease;

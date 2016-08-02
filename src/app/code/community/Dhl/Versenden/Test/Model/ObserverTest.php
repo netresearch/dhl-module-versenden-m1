@@ -23,7 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Service\Type as Service;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 /**
  * Dhl_Versenden_Test_Model_ObserverTest
  *
@@ -38,9 +39,9 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
     protected function getLocationTypes()
     {
         return array(
-            \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PACKSTATION => 'Packstation',
-            \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_POSTFILIALE => 'Postfiliale',
-            \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PAKETSHOP =>   'Paketshop',
+            Receiver\PostalFacility::TYPE_PACKSTATION => 'Packstation',
+            Receiver\PostalFacility::TYPE_POSTFILIALE => 'Postfiliale',
+            Receiver\PostalFacility::TYPE_PAKETSHOP =>   'Paketshop',
         );
     }
 
@@ -146,10 +147,10 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
         // SERVICE DEFINITION
         $preferredLocationValue = 'Garage Location';
-        $preferredLocation = new \Dhl\Versenden\Service\PreferredLocation($preferredLocationValue);
+        $preferredLocation = new Service\PreferredLocation($preferredLocationValue);
 
         $preferredNeighbourValue = 'Foo Neighbour';
-        $preferredNeighbour = new \Dhl\Versenden\Service\PreferredNeighbour($preferredNeighbourValue);
+        $preferredNeighbour = new Service\PreferredNeighbour($preferredNeighbourValue);
 
         // two settings, only one actually enabled
         $requestMock = $this->getMockBuilder(Mage_Core_Controller_Request_Http::class)
@@ -233,12 +234,12 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $order->setShippingMethod("{$fooCarrier}_{$method}");
         $observer->setOrder($order);
 
-        $configMock = $this->getModelMock('dhl_versenden/config', array('canProcessMethod'));
+        $configMock = $this->getModelMock('dhl_versenden/config_shipment', array('canProcessMethod'));
         $configMock
             ->expects($this->any())
             ->method('canProcessMethod')
             ->willReturnOnConsecutiveCalls(false, true);
-        $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
+        $this->replaceByMock('model', 'dhl_versenden/config_shipment', $configMock);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
 
@@ -255,7 +256,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
     public function preparePackstation()
     {
         $stationTypes = $this->getLocationTypes();
-        $stationType  = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PACKSTATION;
+        $stationType  = Receiver\PostalFacility::TYPE_PACKSTATION;
 
         $stationId = '987';
         // valid shop, recognized type:
@@ -292,7 +293,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
     public function preparePostfiliale()
     {
         $stationTypes = $this->getLocationTypes();
-        $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_POSTFILIALE;
+        $stationType = Receiver\PostalFacility::TYPE_POSTFILIALE;
 
         $stationId   = '123';
         // valid shop, recognized type
@@ -329,7 +330,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
     public function preparePostalFacilityWrongType()
     {
         $stationTypes = $this->getLocationTypes();
-        $stationType = \Dhl\Versenden\ShippingInfo\PostalFacility::TYPE_PAKETSHOP;
+        $stationType = Receiver\PostalFacility::TYPE_PAKETSHOP;
 
         $stationId   = '123';
         // valid shop, but unrecognized type

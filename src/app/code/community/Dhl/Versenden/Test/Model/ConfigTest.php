@@ -94,55 +94,6 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     */
-    public function configSettingRequired()
-    {
-        $fieldName = "Foo";
-        $this->setExpectedException(
-            Dhl\Versenden\Config\Exception::class,
-            "$fieldName is a required value."
-        );
-
-        $config = new \Dhl\Versenden\Config();
-        $config->validateLength($fieldName, "", 1, 3);
-    }
-
-    /**
-     * @test
-     */
-    public function configSettingTooShort()
-    {
-        $fieldName = "Foo";
-        $minLength = 5;
-
-        $this->setExpectedException(
-            Dhl\Versenden\Config\Exception::class,
-            "Please enter at least $minLength characters for $fieldName."
-        );
-
-        $config = new \Dhl\Versenden\Config();
-        $config->validateLength($fieldName, $fieldName, $minLength, INF);
-    }
-
-    /**
-     * @test
-     */
-    public function configSettingTooLong()
-    {
-        $fieldName = "FooBar";
-        $maxLength = 5;
-
-        $this->setExpectedException(
-            Dhl\Versenden\Config\Exception::class,
-            "Please enter no more than $maxLength characters for $fieldName."
-        );
-
-        $config = new \Dhl\Versenden\Config();
-        $config->validateLength($fieldName, $fieldName, 0, $maxLength);
-    }
-
-    /**
-     * @test
      * @loadFixture ConfigTest
      */
     public function getEnabledServices()
@@ -156,16 +107,16 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
         $defaultServices = $defaultServiceCollection->getItems();
         $this->assertInternalType('array', $defaultServices);
 
-        /** @var \Dhl\Versenden\Service\ParcelAnnouncement[] $paServices */
+        /** @var \Dhl\Versenden\Service\Type\ParcelAnnouncement[] $paServices */
         $paServices = array_filter($defaultServices, function ($service) {
-            return ($service instanceof \Dhl\Versenden\Service\ParcelAnnouncement);
+            return ($service instanceof \Dhl\Versenden\Service\Type\ParcelAnnouncement);
         });
         $this->assertNotEmpty($paServices);
 
         // (2) bulky goods is disabled via config fixture
         // → should not be in the list of enabled services
         $bgServices = array_filter($defaultServices, function ($service) {
-            return ($service instanceof \Dhl\Versenden\Service\BulkyGoods);
+            return ($service instanceof \Dhl\Versenden\Service\Type\BulkyGoods);
         });
         $this->assertEmpty($bgServices);
 
@@ -176,9 +127,9 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
         $storeServices = $storeServiceCollection->getItems();
         $this->assertInternalType('array', $storeServices);
 
-        /** @var \Dhl\Versenden\Service\ParcelAnnouncement[] $paServices */
+        /** @var \Dhl\Versenden\Service\Type\ParcelAnnouncement[] $paServices */
         $paServices = array_filter($storeServices, function ($service) {
-            return ($service instanceof \Dhl\Versenden\Service\ParcelAnnouncement);
+            return ($service instanceof \Dhl\Versenden\Service\Type\ParcelAnnouncement);
         });
         $this->assertNotEmpty($paServices);
     }

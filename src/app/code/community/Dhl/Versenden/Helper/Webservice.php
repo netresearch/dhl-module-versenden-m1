@@ -39,6 +39,32 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
 {
     const ADAPTER_TYPE_SOAP = 'soap';
 
+    const OPERATION_GET_VERSION = 'getVersion';
+    const OPERATION_CREATE_SHIPMENT_ORDER = 'createShipmentOrder';
+    const OPERATION_DELETE_SHIPMENT_ORDER = 'deleteShipmentOrder';
+    const OPERATION_GET_LABEL = 'getLabel';
+    const OPERATION_EXPORT_DOC = 'getExportDoc';
+    const OPERATION_DO_MANIFEST = 'doManifest';
+    const OPERATION_GET_MANIFEST = 'getManifest';
+    const OPERATION_UPDATE_SHIPMENT_ORDER = 'updateShipmentOrder';
+    const OPERATION_VALIDATE_SHIPMENT = 'validateShipment';
+
+    /**
+     * @param string $operation
+     * @return Webservice\Parser
+     */
+    protected function getSoapParser($operation)
+    {
+        switch ($operation) {
+            case self::OPERATION_GET_VERSION:
+                return new Webservice\Parser\Soap\Version();
+            case self::OPERATION_CREATE_SHIPMENT_ORDER:
+                return new Webservice\Parser\Soap\CreateShipmentOrder();
+            default:
+                return null;
+        }
+    }
+
     /**
      * @return Webservice\Adapter\Soap
      */
@@ -61,9 +87,7 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
         );
         $client->__setSoapHeaders($authHeader);
 
-        $adapter = new Webservice\Adapter\Soap($client);
-
-        return $adapter;
+        return new Webservice\Adapter\Soap($client);
     }
 
     /**
@@ -82,6 +106,24 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
         }
 
         return $adapter;
+    }
+
+    /**
+     * @param string $type
+     * @param string $operation
+     * @return Webservice\Parser
+     */
+    public function getWebserviceParser($type, $operation)
+    {
+        $parser = null;
+
+        switch ($type) {
+            case self::ADAPTER_TYPE_SOAP:
+            default:
+                $parser = $this->getSoapParser($operation);
+        }
+
+        return $parser;
     }
 
     /**

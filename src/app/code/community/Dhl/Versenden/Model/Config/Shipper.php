@@ -103,7 +103,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return ShipperData\AccountSettings
+     * @return ShipperData\Account
      */
     public function getAccountSettings($store = null)
     {
@@ -125,7 +125,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $participationReturn  = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_RETURNSHIPMENT, $store);
         }
 
-        return new ShipperData\AccountSettings(
+        return new ShipperData\Account(
             $user,
             $signature,
             $ekp,

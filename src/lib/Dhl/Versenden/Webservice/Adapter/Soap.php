@@ -69,13 +69,19 @@ class Soap implements Adapter
      * @param RequestData\CreateShipment $requestData
      * @param SoapParser\CreateShipmentOrder $parser
      * @return ResponseData\CreateShipment
+     * @throws WsOperationException
      */
     public function createShipmentOrder(RequestData $requestData, Parser $parser)
     {
         $requestType = Adapter\Soap\CreateShipmentRequestType::prepare($requestData);
 
         $response = $this->soapClient->createShipmentOrder($requestType);
-        return $parser->parse($response);
+        $createShipment = $parser->parse($response);
+        if ($createShipment->getStatus()->isError()) {
+            throw new WsOperationException($createShipment->getStatus());
+        }
+
+        return $createShipment;
     }
 
     /**

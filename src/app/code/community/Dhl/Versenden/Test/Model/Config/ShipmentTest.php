@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Config\Shipment\Settings as ShipmentSettings;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings\GlobalSettings;
 /**
  * Dhl_Versenden_Test_Model_Config_ShipmentTest
  *
@@ -41,37 +41,37 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
      */
     public function getShipmentSettings()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $config = new Dhl_Versenden_Model_Config_Shipment();
 
-        $globalSettings = $config->getShipmentSettings();
-        $this->assertInstanceOf(ShipmentSettings::class, $globalSettings);
-        $this->assertTrue($globalSettings->printOnlyIfCodable);
-        $this->assertEquals('G', $globalSettings->unitOfMeasure);
-        $this->assertEquals(200, $globalSettings->productWeight);
-        $this->assertEquals(2, $globalSettings->codCharge);
+        $settings = $config->getSettings();
+        $this->assertInstanceOf(GlobalSettings::class, $settings);
+        $this->assertTrue($settings->isPrintOnlyIfCodable());
+        $this->assertEquals('G', $settings->getUnitOfMeasure());
+        $this->assertEquals(200, $settings->getProductWeight());
+        $this->assertEquals(2, $settings->getCodCharge());
 
-        $this->assertInternalType('array', $globalSettings->shippingMethods);
-        $this->assertCount(0, $globalSettings->shippingMethods);
+        $this->assertInternalType('array', $settings->getShippingMethods());
+        $this->assertCount(0, $settings->getShippingMethods());
 
-        $this->assertInternalType('array', $globalSettings->codPaymentMethods);
-        $this->assertCount(1, $globalSettings->codPaymentMethods);
-        $this->assertContains('cashondelivery', $globalSettings->codPaymentMethods);
+        $this->assertInternalType('array', $settings->getCodPaymentMethods());
+        $this->assertCount(1, $settings->getCodPaymentMethods());
+        $this->assertContains('cashondelivery', $settings->getCodPaymentMethods());
 
 
-        $storeSettings = $config->getShipmentSettings('store_two');
-        $this->assertInstanceOf(ShipmentSettings::class, $storeSettings);
-        $this->assertFalse($storeSettings->printOnlyIfCodable);
-        $this->assertEquals('KG', $storeSettings->unitOfMeasure);
-        $this->assertEquals(0.2, $storeSettings->productWeight);
-        $this->assertEquals(11, $storeSettings->codCharge);
+        $storeSettings = $config->getSettings('store_two');
+        $this->assertInstanceOf(GlobalSettings::class, $storeSettings);
+        $this->assertFalse($storeSettings->isPrintOnlyIfCodable());
+        $this->assertEquals('KG', $storeSettings->getUnitOfMeasure());
+        $this->assertEquals(0.2, $storeSettings->getProductWeight());
+        $this->assertEquals(11, $storeSettings->getCodCharge());
 
-        $this->assertInternalType('array', $storeSettings->shippingMethods);
-        $this->assertCount(2, $storeSettings->shippingMethods);
-        $this->assertContains('flatrate_flatrate', $storeSettings->shippingMethods);
-        $this->assertContains('tablerate_bestway', $storeSettings->shippingMethods);
+        $this->assertInternalType('array', $storeSettings->getShippingMethods());
+        $this->assertCount(2, $storeSettings->getShippingMethods());
+        $this->assertContains('flatrate_flatrate', $storeSettings->getShippingMethods());
+        $this->assertContains('tablerate_bestway', $storeSettings->getShippingMethods());
 
-        $this->assertInternalType('array', $storeSettings->codPaymentMethods);
-        $this->assertCount(0, $storeSettings->codPaymentMethods);
+        $this->assertInternalType('array', $storeSettings->getCodPaymentMethods());
+        $this->assertCount(0, $storeSettings->getCodPaymentMethods());
     }
 
     /**
@@ -82,17 +82,16 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
         $dhlMethod = 'dhl_ftw';
         $fooMethod = 'foo_bar';
 
-        $settings = new stdClass();
-        $settings->shippingMethods = array($dhlMethod);
+        $settings = new GlobalSettings(false, 'G', 0.25, array($dhlMethod), array(), 2, 'B64');
 
-        $configMock = $this->getModelMock('dhl_versenden/config', array('getShipmentSettings'));
+        $configMock = $this->getModelMock('dhl_versenden/config_shipment', array('getSettings'));
         $configMock
             ->expects($this->any())
-            ->method('getShipmentSettings')
+            ->method('getSettings')
             ->willReturn($settings);
-        $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
+        $this->replaceByMock('model', 'dhl_versenden/config_shipment', $configMock);
 
-        $config = Mage::getModel('dhl_versenden/config');
+        $config = Mage::getModel('dhl_versenden/config_shipment');
         $this->assertTrue($config->canProcessMethod($dhlMethod));
         $this->assertFalse($config->canProcessMethod($fooMethod));
     }

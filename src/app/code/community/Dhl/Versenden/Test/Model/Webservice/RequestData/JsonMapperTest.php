@@ -43,22 +43,28 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_JsonMapperTest
      */
     public function mapReceiver()
     {
-        $stationId = '123';
-        $receiverName = 'Foo';
+        $receiverName = 'Foo Name';
+        $receiverStreet = 'Foo Street';
+        $receiverStreetNumber = 'Foo 1';
+        $receiverZip = 'Foo Zip';
+        $receiverCity = 'Foo City';
+        $receiverCountry = 'XX';
 
+        $stationId = '123';
         $packStation = new Receiver\Packstation('04229', 'Leipzig', 'Germany', 'DE', '', $stationId, '123456');
+
         $receiver = new Receiver(
             $receiverName,
             '',
             '',
+            $receiverStreet,
+            $receiverStreetNumber,
             '',
             '',
+            $receiverZip,
+            $receiverCity,
             '',
-            '',
-            '',
-            '',
-            '',
-            '',
+            $receiverCountry,
             '',
             '',
             '',
@@ -72,8 +78,13 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_JsonMapperTest
         $receiver = ObjectMapper::getReceiver($stdObject);
 
         $this->assertInstanceOf(Receiver::class, $receiver);
-        $this->assertEquals($stationId, $receiver->getPackstation()->getPackstationNumber());
         $this->assertEquals($receiverName, $receiver->getName1());
+        $this->assertEquals($receiverStreet, $receiver->getStreetName());
+        $this->assertEquals($receiverStreetNumber, $receiver->getStreetNumber());
+        $this->assertEquals($receiverZip, $receiver->getZip());
+        $this->assertEquals($receiverCity, $receiver->getCity());
+        $this->assertEquals($receiverCountry, $receiver->getCountryISOCode());
+        $this->assertEquals($stationId, $receiver->getPackstation()->getPackstationNumber());
     }
 
     /**
@@ -110,6 +121,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_JsonMapperTest
 
     public function mapShipmentSettings()
     {
-        
+
     }
 }
