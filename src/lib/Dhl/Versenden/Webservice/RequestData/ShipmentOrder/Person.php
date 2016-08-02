@@ -93,6 +93,22 @@ abstract class Person extends RequestData
         $dispatchingInformation, $zip, $city, $country, $countryISOCode, $state,
         $phone, $email, $contactPerson
     ) {
+        $this->validateLength('Name', $name1, 1, 50);
+        $this->validateLength('Name (2)', $name2, 0, 50);
+        $this->validateLength('Name (3)', $name3, 0, 50);
+        $this->validateLength('Street Name', $streetName, 1, 35);
+        $this->validateLength('Street Number', $streetNumber, 1, 5);
+        $this->validateLength('Address Addition', $addressAddition, 0, 35);
+        $this->validateLength('Dispatching Information', $dispatchingInformation, 0, 35);
+        $this->validateLength('Postal Code', $zip, 1, 10);
+        $this->validateLength('City', $city, 1, 35);
+        $this->validateLength('Country', $country, 0, 30);
+        $this->validateLength('Country ISO Code', $countryISOCode, 2, 2);
+        $this->validateLength('Region', $state, 0, 30);
+        $this->validateLength('Phone', $phone, 0, 20);
+        $this->validateLength('E-Mail', $email, 0, 50);
+        $this->validateLength('Contact Person', $contactPerson, 0, 50);
+
         $this->name1 = $name1;
         $this->name2 = $name2;
         $this->name3 = $name3;

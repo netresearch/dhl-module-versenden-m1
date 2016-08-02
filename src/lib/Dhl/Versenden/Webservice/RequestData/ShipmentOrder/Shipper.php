@@ -88,7 +88,7 @@ class Shipper extends RequestData
     }
 
     /**
-     * @return Shipper\ReturnReceiver
+     * @return Shipper\Contact
      */
     public function getReturnReceiver()
     {

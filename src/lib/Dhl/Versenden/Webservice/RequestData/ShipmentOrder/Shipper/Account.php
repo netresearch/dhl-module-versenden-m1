@@ -61,6 +61,10 @@ final class Account extends RequestData
      */
     public function __construct($user, $signature, $ekp, $goGreen, $participationDefault, $participationReturn)
     {
+        $this->validateLength('EKP', $ekp, 10, 10);
+        $this->validateLength('Participation', $participationDefault, 2, 2);
+        $this->validateLength('Participation', $participationReturn, 2, 2);
+
         $this->user = $user;
         $this->signature = $signature;
         $this->ekp = $ekp;

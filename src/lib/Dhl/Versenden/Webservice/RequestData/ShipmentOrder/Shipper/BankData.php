@@ -64,6 +64,14 @@ final class BankData extends RequestData
      */
     public function __construct($accountOwner, $bankName, $iban, $bic, $note1, $note2, $accountReference)
     {
+        $this->validateLength('Account Owner', $accountOwner, 1, 80);
+        $this->validateLength('Bank Name', $bankName, 1, 80);
+        $this->validateLength('IBAN', $iban, 1, 34);
+        $this->validateLength('BIC', $bic, 0, 11);
+        $this->validateLength('Note1', $note1, 0, 35);
+        $this->validateLength('Note2', $note2, 0, 35);
+        $this->validateLength('Account Reference', $accountReference, 0, 35);
+
         $this->accountOwner = $accountOwner;
         $this->bankName = $bankName;
         $this->iban = $iban;
