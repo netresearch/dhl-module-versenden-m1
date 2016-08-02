@@ -25,7 +25,7 @@
  */
 namespace Dhl\Versenden\Webservice\ResponseData;
 /**
- * Label
+ * CreateShipment
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\ResponseData
@@ -39,16 +39,19 @@ final class CreateShipment
     private $status;
     /** @var LabelCollection */
     private $labels;
+    /** @var string[] */
+    private $sequence;
 
     /**
      * CreateShipment constructor.
      * @param Status $status
      * @param LabelCollection $labels
      */
-    public function __construct(Status $status, LabelCollection $labels)
+    public function __construct(Status $status, LabelCollection $labels, array $sequence)
     {
         $this->status = $status;
         $this->labels = $labels;
+        $this->sequence = $sequence;
     }
 
     /**
@@ -65,5 +68,15 @@ final class CreateShipment
     public function getLabels()
     {
         return $this->labels;
+    }
+
+    /**
+     * Obtain sequence number to shipment number mapping.
+     *
+     * @return \string[]
+     */
+    public function getSequence()
+    {
+        return $this->sequence;
     }
 }

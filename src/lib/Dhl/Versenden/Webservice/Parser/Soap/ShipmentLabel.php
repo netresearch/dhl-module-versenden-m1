@@ -43,7 +43,7 @@ abstract class ShipmentLabel extends Shipment implements Parser
      * @param VersendenApi\LabelData $labelData
      * @return ResponseData\Label
      */
-    private function parseLabel(VersendenApi\LabelData $labelData)
+    protected function parseLabel(VersendenApi\LabelData $labelData)
     {
         $label = new ResponseData\Label(
             $labelData->getStatus()->getStatusCode(),

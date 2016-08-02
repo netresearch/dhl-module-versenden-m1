@@ -41,8 +41,8 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
      */
     public function getServices()
     {
-        $serviceOne = new \Dhl\Versenden\Service\BulkyGoods();
-        $serviceTwo = new \Dhl\Versenden\Service\PreferredLocation();
+        $serviceOne = new \Dhl\Versenden\Service\Type\BulkyGoods();
+        $serviceTwo = new \Dhl\Versenden\Service\Type\PreferredLocation();
         $collection = new \Dhl\Versenden\Service\Collection([
             $serviceOne, $serviceTwo
         ]);

@@ -44,7 +44,7 @@ class PostalFacilityType implements RequestType
      * @param Receiver\PostalFacility $requestData
      * @return VersendenApi\PackStationType|VersendenApi\PostfilialeType|VersendenApi\ParcelShopType
      */
-    public static function prepare(RequestData $requestData)
+    public static function prepare(RequestData $requestData = null)
     {
         if ($requestData instanceof Receiver\Packstation) {
             $countryType = new CountryType();
