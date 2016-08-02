@@ -17,7 +17,7 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Versenden\Webservice\RequestData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -29,11 +29,37 @@ namespace Dhl\Versenden\Webservice;
  * RequestData
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 abstract class RequestData
 {
+    /**
+     * Validate a config setting's string length.
+     *
+     * @param string $name The label/key
+     * @param string $value The value to be validated
+     * @param int $minLength The minimum allowed string length
+     * @param int $maxLength The maximum allowed string length
+     * @return bool
+     * @throws RequestDataException
+     */
+    public function validateLength($name, $value, $minLength, $maxLength)
+    {
+        if ( ($minLength > 0) && !strlen($value) ) {
+            throw new RequestDataException("$name is a required value.");
+        }
+
+        if (strlen($value) < $minLength) {
+            throw new RequestDataException("Please enter at least $minLength characters for $name.");
+        }
+
+        if (strlen($value) > $maxLength) {
+            throw new RequestDataException("Please enter no more than $maxLength characters for $name.");
+        }
+
+        return true;
+    }
 }
