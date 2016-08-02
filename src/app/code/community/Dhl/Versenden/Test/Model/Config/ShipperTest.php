@@ -23,10 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Config\Shipper\Contact as ShipperContact;
-use Dhl\Versenden\Config\Shipper\BankData as ShipperBankData;
-use Dhl\Versenden\Config\Shipper\Account as ShipperAccount;
-use Dhl\Versenden\Config\Shipper\ReturnReceiver;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Account as ShipperAccount;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\BankData as ShipperBankData;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Contact as ShipperContact;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\ReturnReceiver;
 /**
  * Dhl_Versenden_Test_Model_Config_ShipperTest
  *
@@ -44,25 +45,25 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
      */
     public function getShipperAccount()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $config = new Dhl_Versenden_Model_Config_Shipper();
 
-        $testAccount = $config->getShipperAccount();
+        $testAccount = $config->getAccountSettings();
         $this->assertInstanceOf(ShipperAccount::class, $testAccount);
-        $this->assertEquals('2222222222_01', $testAccount->user);
-        $this->assertEquals('pass', $testAccount->signature);
-        $this->assertEquals('2222222222', $testAccount->ekp);
-        $this->assertTrue($testAccount->goGreen);
-        $this->assertEquals('01', $testAccount->participation->dhlPaket);
-        $this->assertEquals('01', $testAccount->participation->dhlReturnShipment);
+        $this->assertEquals('2222222222_01', $testAccount->getUser());
+        $this->assertEquals('pass', $testAccount->getSignature());
+        $this->assertEquals('2222222222', $testAccount->getEkp());
+        $this->assertTrue($testAccount->isGoGreen());
+        $this->assertEquals('01', $testAccount->getParticipationDefault());
+        $this->assertEquals('01', $testAccount->getParticipationReturn());
 
-        $prodAccount = $config->getShipperAccount('store_two');
+        $prodAccount = $config->getAccountSettings('store_two');
         $this->assertInstanceOf(ShipperAccount::class, $prodAccount);
-        $this->assertEquals('303', $prodAccount->user);
-        $this->assertEquals('magento', $prodAccount->signature);
-        $this->assertEquals('4711xx4711', $prodAccount->ekp);
-        $this->assertFalse($prodAccount->goGreen);
-        $this->assertEquals('98', $prodAccount->participation->dhlPaket);
-        $this->assertEquals('99', $prodAccount->participation->dhlReturnShipment);
+        $this->assertEquals('303', $prodAccount->getUser());
+        $this->assertEquals('magento', $prodAccount->getSignature());
+        $this->assertEquals('4711xx4711', $prodAccount->getEkp());
+        $this->assertFalse($prodAccount->isGoGreen());
+        $this->assertEquals('98', $prodAccount->getParticipationDefault());
+        $this->assertEquals('99', $prodAccount->getParticipationReturn());
     }
 
     /**
@@ -71,27 +72,27 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
      */
     public function getShipperBankData()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $config = new Dhl_Versenden_Model_Config_Shipper();
 
-        $defaultData = $config->getShipperBankData();
+        $defaultData = $config->getBankData();
         $this->assertInstanceOf(ShipperBankData::class, $defaultData);
-        $this->assertEquals("Foo Name", $defaultData->accountOwner);
-        $this->assertEquals("Foo Bank", $defaultData->bankName);
-        $this->assertEquals("DE999", $defaultData->iban);
-        $this->assertEquals("XXXXX", $defaultData->bic);
-        $this->assertEquals("Foo Note", $defaultData->note1);
-        $this->assertEquals("Foo Note 2", $defaultData->note2);
-        $this->assertEquals("Foo Ref", $defaultData->accountReference);
+        $this->assertEquals("Foo Name", $defaultData->getAccountOwner());
+        $this->assertEquals("Foo Bank", $defaultData->getBankName());
+        $this->assertEquals("DE999", $defaultData->getIban());
+        $this->assertEquals("XXXXX", $defaultData->getBic());
+        $this->assertEquals("Foo Note", $defaultData->getNote1());
+        $this->assertEquals("Foo Note 2", $defaultData->getNote2());
+        $this->assertEquals("Foo Ref", $defaultData->getAccountReference());
 
-        $storeData = $config->getShipperBankData('store_two');
+        $storeData = $config->getBankData('store_two');
         $this->assertInstanceOf(ShipperBankData::class, $storeData);
-        $this->assertEquals("Bar Name", $storeData->accountOwner);
-        $this->assertEquals("Bar Bank", $storeData->bankName);
-        $this->assertEquals("AT999", $storeData->iban);
-        $this->assertEquals("YYYYY", $storeData->bic);
-        $this->assertEquals("Bar Note", $storeData->note1);
-        $this->assertEquals("Bar Note 2", $storeData->note2);
-        $this->assertEquals("Bar Ref", $storeData->accountReference);
+        $this->assertEquals("Bar Name", $storeData->getAccountOwner());
+        $this->assertEquals("Bar Bank", $storeData->getBankName());
+        $this->assertEquals("AT999", $storeData->getIban());
+        $this->assertEquals("YYYYY", $storeData->getBic());
+        $this->assertEquals("Bar Note", $storeData->getNote1());
+        $this->assertEquals("Bar Note 2", $storeData->getNote2());
+        $this->assertEquals("Bar Ref", $storeData->getAccountReference());
     }
 
     /**
@@ -100,41 +101,41 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
      */
     public function getShipperContact()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $config = new Dhl_Versenden_Model_Config_Shipper();
 
-        $defaultContact = $config->getShipperContact();
+        $defaultContact = $config->getContact();
         $this->assertInstanceOf(ShipperContact::class, $defaultContact);
-        $this->assertEquals("Foo Name", $defaultContact->name1);
-        $this->assertEquals("Foo Name 2", $defaultContact->name2);
-        $this->assertEquals("Foo Name 3", $defaultContact->name3);
-        $this->assertEquals("Foo Street", $defaultContact->streetName);
-        $this->assertEquals("33", $defaultContact->streetNumber);
-        $this->assertEquals("Floor 33", $defaultContact->addressAddition);
-        $this->assertEquals("D0I", $defaultContact->dispatchingInformation);
-        $this->assertEquals("A1111", $defaultContact->zip);
-        $this->assertEquals("Foo City", $defaultContact->city);
-        $this->assertEquals("Germany", $defaultContact->country);
-        $this->assertEquals("DE", $defaultContact->countryISOCode);
-        $this->assertEquals("1234", $defaultContact->phone);
-        $this->assertEquals("a@foo", $defaultContact->email);
-        $this->assertEquals("Default Contact", $defaultContact->contactPerson);
+        $this->assertEquals("Foo Name", $defaultContact->getName1());
+        $this->assertEquals("Foo Name 2", $defaultContact->getName2());
+        $this->assertEquals("Foo Name 3", $defaultContact->getName3());
+        $this->assertEquals("Foo Street", $defaultContact->getStreetName());
+        $this->assertEquals("33", $defaultContact->getStreetNumber());
+        $this->assertEquals("Floor 33", $defaultContact->getAddressAddition());
+        $this->assertEquals("D0I", $defaultContact->getDispatchingInformation());
+        $this->assertEquals("A1111", $defaultContact->getZip());
+        $this->assertEquals("Foo City", $defaultContact->getCity());
+        $this->assertEquals("Germany", $defaultContact->getCountry());
+        $this->assertEquals("DE", $defaultContact->getCountryISOCode());
+        $this->assertEquals("1234", $defaultContact->getPhone());
+        $this->assertEquals("a@foo", $defaultContact->getEmail());
+        $this->assertEquals("Default Contact", $defaultContact->getContactPerson());
 
-        $storeContact = $config->getShipperContact('store_two');
+        $storeContact = $config->getContact('store_two');
         $this->assertInstanceOf(ShipperContact::class, $storeContact);
-        $this->assertEquals("Bar Name", $storeContact->name1);
-        $this->assertEquals("Bar Name 2", $storeContact->name2);
-        $this->assertEquals("Bar Name 3", $storeContact->name3);
-        $this->assertEquals("Bar Street", $storeContact->streetName);
-        $this->assertEquals("44b", $storeContact->streetNumber);
-        $this->assertEquals("Floor 44", $storeContact->addressAddition);
-        $this->assertEquals("D2I", $storeContact->dispatchingInformation);
-        $this->assertEquals("B1111", $storeContact->zip);
-        $this->assertEquals("Bar City", $storeContact->city);
-        $this->assertEquals("Austria", $storeContact->country);
-        $this->assertEquals("AT", $storeContact->countryISOCode);
-        $this->assertEquals("9876", $storeContact->phone);
-        $this->assertEquals("a@bar", $storeContact->email);
-        $this->assertEquals("Store Contact", $storeContact->contactPerson);
+        $this->assertEquals("Bar Name", $storeContact->getName1());
+        $this->assertEquals("Bar Name 2", $storeContact->getName2());
+        $this->assertEquals("Bar Name 3", $storeContact->getName3());
+        $this->assertEquals("Bar Street", $storeContact->getStreetName());
+        $this->assertEquals("44b", $storeContact->getStreetNumber());
+        $this->assertEquals("Floor 44", $storeContact->getAddressAddition());
+        $this->assertEquals("D2I", $storeContact->getDispatchingInformation());
+        $this->assertEquals("B1111", $storeContact->getZip());
+        $this->assertEquals("Bar City", $storeContact->getCity());
+        $this->assertEquals("Austria", $storeContact->getCountry());
+        $this->assertEquals("AT", $storeContact->getCountryISOCode());
+        $this->assertEquals("9876", $storeContact->getPhone());
+        $this->assertEquals("a@bar", $storeContact->getEmail());
+        $this->assertEquals("Store Contact", $storeContact->getContactPerson());
     }
 
     /**
@@ -143,42 +144,42 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
      */
     public function getReturnReceiver()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $config = new Dhl_Versenden_Model_Config_Shipper();
 
         $shipperReceiver = $config->getReturnReceiver();
         $this->assertInstanceOf(ShipperContact::class, $shipperReceiver);
-        $this->assertEquals("Foo Name", $shipperReceiver->name1);
-        $this->assertEquals("Foo Name 2", $shipperReceiver->name2);
-        $this->assertEquals("Foo Name 3", $shipperReceiver->name3);
-        $this->assertEquals("Foo Street", $shipperReceiver->streetName);
-        $this->assertEquals("33", $shipperReceiver->streetNumber);
-        $this->assertEquals("Floor 33", $shipperReceiver->addressAddition);
-        $this->assertEquals("D0I", $shipperReceiver->dispatchingInformation);
-        $this->assertEquals("A1111", $shipperReceiver->zip);
-        $this->assertEquals("Foo City", $shipperReceiver->city);
-        $this->assertEquals("Germany", $shipperReceiver->country);
-        $this->assertEquals("DE", $shipperReceiver->countryISOCode);
-        $this->assertEquals("1234", $shipperReceiver->phone);
-        $this->assertEquals("a@foo", $shipperReceiver->email);
-        $this->assertEquals("Default Contact", $shipperReceiver->contactPerson);
+        $this->assertEquals("Foo Name", $shipperReceiver->getName1());
+        $this->assertEquals("Foo Name 2", $shipperReceiver->getName2());
+        $this->assertEquals("Foo Name 3", $shipperReceiver->getName3());
+        $this->assertEquals("Foo Street", $shipperReceiver->getStreetName());
+        $this->assertEquals("33", $shipperReceiver->getStreetNumber());
+        $this->assertEquals("Floor 33", $shipperReceiver->getAddressAddition());
+        $this->assertEquals("D0I", $shipperReceiver->getDispatchingInformation());
+        $this->assertEquals("A1111", $shipperReceiver->getZip());
+        $this->assertEquals("Foo City", $shipperReceiver->getCity());
+        $this->assertEquals("Germany", $shipperReceiver->getCountry());
+        $this->assertEquals("DE", $shipperReceiver->getCountryISOCode());
+        $this->assertEquals("1234", $shipperReceiver->getPhone());
+        $this->assertEquals("a@foo", $shipperReceiver->getEmail());
+        $this->assertEquals("Default Contact", $shipperReceiver->getContactPerson());
 
         $storeReceiver = $config->getReturnReceiver('store_two');
         $this->assertInstanceOf(ShipperContact::class, $storeReceiver);
         $this->assertInstanceOf(ReturnReceiver::class, $storeReceiver);
-        $this->assertEquals("Return Name", $storeReceiver->name1);
-        $this->assertEquals("Return Name 2", $storeReceiver->name2);
-        $this->assertEquals("Return Name 3", $storeReceiver->name3);
-        $this->assertEquals("Return Street", $storeReceiver->streetName);
-        $this->assertEquals("55r", $storeReceiver->streetNumber);
-        $this->assertEquals("Floor 55", $storeReceiver->addressAddition);
-        $this->assertEquals("DRI", $storeReceiver->dispatchingInformation);
-        $this->assertEquals("R1111", $storeReceiver->zip);
-        $this->assertEquals("Return City", $storeReceiver->city);
-        $this->assertEquals("Switzerland", $storeReceiver->country);
-        $this->assertEquals("CH", $storeReceiver->countryISOCode);
-        $this->assertEquals("1010", $storeReceiver->phone);
-        $this->assertEquals("a@ret", $storeReceiver->email);
-        $this->assertEquals("Return Contact", $storeReceiver->contactPerson);
+        $this->assertEquals("Return Name", $storeReceiver->getName1());
+        $this->assertEquals("Return Name 2", $storeReceiver->getName2());
+        $this->assertEquals("Return Name 3", $storeReceiver->getName3());
+        $this->assertEquals("Return Street", $storeReceiver->getStreetName());
+        $this->assertEquals("55r", $storeReceiver->getStreetNumber());
+        $this->assertEquals("Floor 55", $storeReceiver->getAddressAddition());
+        $this->assertEquals("DRI", $storeReceiver->getDispatchingInformation());
+        $this->assertEquals("R1111", $storeReceiver->getZip());
+        $this->assertEquals("Return City", $storeReceiver->getCity());
+        $this->assertEquals("Switzerland", $storeReceiver->getCountry());
+        $this->assertEquals("CH", $storeReceiver->getCountryISOCode());
+        $this->assertEquals("1010", $storeReceiver->getPhone());
+        $this->assertEquals("a@ret", $storeReceiver->getEmail());
+        $this->assertEquals("Return Contact", $storeReceiver->getContactPerson());
     }
 
     /**
@@ -187,20 +188,20 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
      */
     public function getShipper()
     {
-        $config = new Dhl_Versenden_Model_Config();
+        $config = new Dhl_Versenden_Model_Config_Shipper();
 
         $defaultShipper = $config->getShipper();
-        $this->assertInstanceOf(Dhl\Versenden\Config\Shipper::class, $defaultShipper);
-        $this->assertEquals('pass', $defaultShipper->account->signature);
-        $this->assertEquals("DE999", $defaultShipper->bankData->iban);
-        $this->assertEquals("Foo City", $defaultShipper->contact->city);
-        $this->assertEquals("Foo City", $defaultShipper->returnReceiver->city);
+        $this->assertInstanceOf(Shipper::class, $defaultShipper);
+        $this->assertEquals('pass', $defaultShipper->getAccount()->getSignature());
+        $this->assertEquals("DE999", $defaultShipper->getBankData()->getIban());
+        $this->assertEquals("Foo City", $defaultShipper->getContact()->getCity());
+        $this->assertEquals("Foo City", $defaultShipper->getReturnReceiver()->getCity());
 
         $storeShipper = $config->getShipper('store_two');
-        $this->assertInstanceOf(Dhl\Versenden\Config\Shipper::class, $storeShipper);
-        $this->assertEquals('magento', $storeShipper->account->signature);
-        $this->assertEquals("AT999", $storeShipper->bankData->iban);
-        $this->assertEquals("Bar City", $storeShipper->contact->city);
-        $this->assertEquals("Return City", $storeShipper->returnReceiver->city);
+        $this->assertInstanceOf(Shipper::class, $storeShipper);
+        $this->assertEquals('magento', $storeShipper->getAccount()->getSignature());
+        $this->assertEquals("AT999", $storeShipper->getBankData()->getIban());
+        $this->assertEquals("Bar City", $storeShipper->getContact()->getCity());
+        $this->assertEquals("Return City", $storeShipper->getReturnReceiver()->getCity());
     }
 }

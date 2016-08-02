@@ -17,23 +17,33 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+namespace Dhl\Versenden\Webservice\Adapter;
+use Dhl\Versenden\Webservice\ResponseData\Status;
 
 /**
- * Dhl_Versenden_Model_Observer
+ * WsOperationException
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Service_Collection extends Varien_Data_Collection
+class WsOperationException extends \Exception
 {
-    protected $_itemObjectClass = 'Dhl\Versenden\Service';
+    /**
+     * WsOperationException constructor.
+     * @param Status $status
+     */
+    public function __construct(Status $status)
+    {
+        //TODO(nr): $status->getStatusMessage() ?
+        parent::__construct($status->getStatusText(), $status->getStatusCode());
+    }
 }

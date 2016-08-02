@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Service;
-use \Dhl\Versenden\ServiceWithOptions;
+use \Dhl\Versenden\Service\Collection as ServiceCollection;
+use \Dhl\Versenden\Service\Type as Service;
+use \Dhl\Versenden\Service\ServiceWithOptions;
 /**
  * Dhl_Versenden_Test_Model_ServiceTest
  *
@@ -124,7 +125,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function serviceCollection()
     {
-        $collection = new Service\Collection();
+        $collection = new ServiceCollection();
         $customerServices = $this->getCustomerServices();
         $collection->setItems($customerServices);
 

@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\ShippingInfo;
+use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver\PostalFacility;
 
 /**
  * Dhl_Versenden_Model_Observer
@@ -132,7 +132,7 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Sales_Model_Order $order */
         $order          = $observer->getOrder();
         $shippingMethod = $order->getShippingMethod();
-        $config         = Mage::getModel('dhl_versenden/config');
+        $config         = Mage::getModel('dhl_versenden/config_shipment');
 
         if ($config->canProcessMethod($shippingMethod)) {
             $parts          = explode('_', $shippingMethod);
@@ -180,7 +180,7 @@ class Dhl_Versenden_Model_Observer
         if (strpos($station, 'Packstation') === 0) {
             $facility->setData(
                 array(
-                    'shop_type'   => ShippingInfo\PostalFacility::TYPE_PACKSTATION,
+                    'shop_type'   => PostalFacility::TYPE_PACKSTATION,
                     'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
                     'post_number' => $postNumber,
                 )
@@ -188,7 +188,7 @@ class Dhl_Versenden_Model_Observer
         } elseif (strpos($station, 'Postfiliale') === 0) {
             $facility->setData(
                 array(
-                    'shop_type'   => ShippingInfo\PostalFacility::TYPE_POSTFILIALE,
+                    'shop_type'   => PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
                     'post_number' => $postNumber,
                 )

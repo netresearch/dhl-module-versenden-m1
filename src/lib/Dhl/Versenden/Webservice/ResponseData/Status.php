@@ -84,7 +84,7 @@ final class Status
      */
     public function isSuccess()
     {
-        return $this->getStatusCode() === '0';
+        return ($this->getStatusCode() == '0') && ($this->getStatusText() == 'ok');
     }
 
     /**

@@ -58,10 +58,10 @@ class CreateShipmentRequestType implements RequestType
     }
 
     /**
-     * @param RequestData\ShipmentOrder\Shipper $shipper
+     * @param RequestData\ShipmentOrder\Shipper\Contact $shipper
      * @return VersendenApi\ShipperType
      */
-    protected static function prepareShipper(RequestData\ShipmentOrder\Shipper $shipper)
+    protected static function prepareShipper(RequestData\ShipmentOrder\Shipper\Contact $shipper)
     {
         $nameType          = NameType::prepare($shipper);
         $addressType       = AddressType::prepare($shipper);
@@ -101,10 +101,10 @@ class CreateShipmentRequestType implements RequestType
     }
 
     /**
-     * @param RequestData\ShipmentOrder\Shipper\ReturnReceiver $returnReceiver
+     * @param RequestData\ShipmentOrder\Shipper\Contact $returnReceiver
      * @return VersendenApi\ShipperType
      */
-    protected static function prepareReturnReceiver(RequestData\ShipmentOrder\Shipper\ReturnReceiver $returnReceiver)
+    protected static function prepareReturnReceiver(RequestData\ShipmentOrder\Shipper\Contact $returnReceiver)
     {
         //TODO(nr): check if return service was chosen
         $nameType          = NameType::prepare($returnReceiver);
@@ -136,7 +136,7 @@ class CreateShipmentRequestType implements RequestType
     protected static function prepareShipment(RequestData\ShipmentOrder $shipmentOrder)
     {
         $details        = static::prepareShipmentDetails($shipmentOrder);
-        $shipper        = static::prepareShipper($shipmentOrder->getShipper());
+        $shipper        = static::prepareShipper($shipmentOrder->getShipper()->getContact());
         $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
         $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
 

@@ -23,7 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\ShippingInfo;
+use \Dhl\Versenden\Webservice\RequestData\ShippingInfo;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
 /**
  * Dhl_Versenden_Test_Model_Shipping_InfoTest
  *
@@ -41,16 +43,16 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
      */
     public function loadDhlVersendenInfo($jsonInfo)
     {
-        $shippingInfo = new ShippingInfo();
-        $shippingInfo->setJson($jsonInfo);
+        $stdObject = json_decode($jsonInfo);
+        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo($stdObject);
 
         $this->assertInstanceOf(
-            ShippingInfo\ServiceSettings::class,
-            $shippingInfo->serviceSettings
+            Settings\ServiceSettings::class,
+            $shippingInfo->getServiceSettings()
         );
         $this->assertInstanceOf(
-            ShippingInfo\Receiver::class,
-            $shippingInfo->shippingAddress
+            Receiver::class,
+            $shippingInfo->getReceiver()
         );
     }
 
@@ -62,42 +64,58 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         // prepare service settings
         $preferredLocation = 'Foo';
 
-        $settingsObj = new stdClass();
-        $settingsObj->preferredLocation = $preferredLocation;
-        $serviceSettings = new ShippingInfo\ServiceSettings($settingsObj);
+        $serviceSettings = new Settings\ServiceSettings(
+            false,
+            false,
+            $preferredLocation,
+            false,
+            false,
+            false,
+            false,
+            false,
+            false
+        );
 
         $streetNumber      = '303';
         $packstationNumber = '404';
         $postfilialNumber  = '505';
         $parcelShopNumber  = '606';
 
-        // prepare receiver
-        $packstationObject = new stdClass();
-        $packstationObject->packstationNumber = $packstationNumber;
-        $postfilialObject = new stdClass();
-        $postfilialObject->postfilialNumber = $postfilialNumber;
-        $parcelShopObject = new stdClass();
-        $parcelShopObject->parcelShopNumber = $parcelShopNumber;
-
-        $receiverObj = new stdClass();
-        $receiverObj->streetNumber = $streetNumber;
-        $receiverObj->packstation  = $packstationObject;
-        $receiverObj->postfiliale  = $postfilialObject;
-        $receiverObj->parcelShop   = $parcelShopObject;
-        $receiver = new ShippingInfo\Receiver($receiverObj);
+        $receiver = new Receiver(
+            'Foo Name',
+            '',
+            '',
+            'Foo Street',
+            $streetNumber,
+            '',
+            '',
+            'Foo Zip',
+            'Foo City',
+            '',
+            'DE',
+            '',
+            '',
+            '',
+            '',
+            new Receiver\Packstation('', '', '', '', '', $packstationNumber, $postfilialNumber),
+            new Receiver\Postfiliale('', '', '', '', '', $postfilialNumber, ''),
+            new Receiver\ParcelShop('', '', '', '', '', $parcelShopNumber, '', $streetNumber)
+        );
 
         // create and serialize shipping info
         $shippingInfo = new ShippingInfo($receiver, $serviceSettings);
-        $json = $shippingInfo->getJson();
+        $json = json_encode($shippingInfo, JSON_FORCE_OBJECT);
+
 
         // create shipping info from serialized string
-        $shippingInfo = new ShippingInfo();
-        $shippingInfo->setJson($json);
-        $this->assertEquals($preferredLocation, $shippingInfo->serviceSettings->preferredLocation);
-        $this->assertEquals($streetNumber, $shippingInfo->shippingAddress->streetNumber);
+        $stdObject = json_decode($json);
+        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo($stdObject);
 
-        $this->assertEquals($packstationNumber, $shippingInfo->shippingAddress->packstation->packstationNumber);
-        $this->assertEquals($postfilialNumber, $shippingInfo->shippingAddress->postfiliale->postfilialNumber);
-        $this->assertEquals($parcelShopNumber, $shippingInfo->shippingAddress->parcelShop->parcelShopNumber);
+        $this->assertEquals($preferredLocation, $shippingInfo->getServiceSettings()->getPreferredLocation());
+        $this->assertEquals($streetNumber, $shippingInfo->getReceiver()->getStreetNumber());
+
+        $this->assertEquals($packstationNumber, $shippingInfo->getReceiver()->getPackstation()->getPackstationNumber());
+        $this->assertEquals($postfilialNumber, $shippingInfo->getReceiver()->getPostfiliale()->getPostfilialNumber());
+        $this->assertEquals($parcelShopNumber, $shippingInfo->getReceiver()->getParcelShop()->getParcelShopNumber());
     }
 }

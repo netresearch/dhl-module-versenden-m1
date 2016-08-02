@@ -26,6 +26,7 @@
 namespace Dhl\Versenden\Webservice\Parser\Soap;
 use \Dhl\Bcs\Api as VersendenApi;
 use \Dhl\Versenden\Webservice;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * CreateShipmentOrder
@@ -46,13 +47,22 @@ class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
     {
         $status = $this->parseResponseStatus($response->getStatus());
 
-        $createdLabels = $response->getCreationState();
-        if ($createdLabels instanceof VersendenApi\CreationState) {
-            $createdLabels = array($createdLabels);
+        $creationStates = $response->getCreationState();
+        if ($creationStates instanceof VersendenApi\CreationState) {
+            $creationStates = array($creationStates);
         }
-        $labels = $this->parseLabels($createdLabels);
 
-        return new Webservice\ResponseData\CreateShipment($status, $labels);
+        $sequence = [];
+        $labels = new Webservice\ResponseData\LabelCollection();
+
+        /** @var VersendenApi\CreationState $creationState */
+        foreach ($creationStates as $creationState) {
+            $sequence[$creationState->getSequenceNumber()] = $creationState->getLabelData()->getShipmentNumber();
+            $label = $this->parseLabel($creationState->getLabelData());
+            $labels->addItem($label);
+        }
+
+        return new Webservice\ResponseData\CreateShipment($status, $labels, $sequence);
     }
 }
 
