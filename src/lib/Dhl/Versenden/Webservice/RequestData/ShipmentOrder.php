@@ -122,14 +122,14 @@ class ShipmentOrder extends RequestData
         $this->accountNumber = sprintf(
             '%s%s%s',
             $shipper->getAccount()->getEkp(),
-            preg_filter('/[^\d]/', '', $shipmentSettings->getDhlProduct()),
+            preg_filter('/[^\d]/', '', $shipmentSettings->getProduct()),
             $shipper->getAccount()->getParticipationDefault()
         );
 
         $this->printOnlyIfCodable = $globalSettings->isPrintOnlyIfCodable();
         $this->labelResponseType = $labelType;
 
-        $this->productCode = $shipmentSettings->getDhlProduct();
+        $this->productCode = $shipmentSettings->getProduct();
         $this->sequenceNumber = $sequenceNumber;
     }
 

@@ -49,7 +49,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
         //FIXME(nr): test must not perform actual webservice call, mock response!
         $adapter = Mage::helper('dhl_versenden/webservice')
-            ->getWebserviceAdapter(Dhl_Versenden_Helper_Webservice::ADAPTER_TYPE_SOAP);
+            ->getWebserviceAdapter(Dhl_Versenden_Model_Webservice_Gateway::SOAP);
 
         $requestData = new Webservice\RequestData\Version($major, $minor, null);
         $parser = new SoapParser\Version();
@@ -69,11 +69,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $this->markTestIncomplete('test must not perform actual webservice call');
 
         $adapter = Mage::helper('dhl_versenden/webservice')
-            ->getWebserviceAdapter(Dhl_Versenden_Helper_Webservice::ADAPTER_TYPE_SOAP);
+            ->getWebserviceAdapter(Dhl_Versenden_Model_Webservice_Gateway::SOAP);
 
         $requestData = new Webservice\RequestData\CreateShipment(
             new Webservice\RequestData\Version('2', '1', null),
-            new Webservice\RequestData\ShipmentOrder() // TODO(nr): array?
+            new Webservice\RequestData\ShipmentOrderCollection()
         );
         $parser = new SoapParser\CreateShipmentOrder();
 

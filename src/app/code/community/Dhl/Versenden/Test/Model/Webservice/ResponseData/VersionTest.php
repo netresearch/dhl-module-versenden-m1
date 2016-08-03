@@ -17,36 +17,32 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Service
+ * @package   Dhl_Versenden
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
-
+use \Dhl\Versenden\Webservice\ResponseData;
 /**
- * DeliveryTimeFrame
+ * Dhl_Versenden_Test_Model_Webservice_ResponseData_VersionTest
  *
  * @category Dhl
- * @package  Dhl\Versenden\Service
+ * @package  Dhl_Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class DeliveryTimeFrame extends OptionsService
+class Dhl_Versenden_Test_Model_Webservice_ResponseData_VersionTest
+    extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * DeliveryTimeFrame constructor.
-     * @param string $value
-     * @param array $options
+     * @test
      */
-    public function __construct($value = '', $options = [])
+    public function version()
     {
-        parent::__construct($value, $options);
-
-        $this->name = 'Delivery Time Frame';
-        $this->isCustomerService = true;
+        $versionNumber = '2.1';
+        $version = new ResponseData\Version($versionNumber);
+        $this->assertSame($versionNumber, $version->getVersion());
     }
 }

@@ -35,7 +35,7 @@ namespace Dhl\Versenden\Webservice\ResponseData;
  */
 final class Label
 {
-    /** @var string */
+    /** @var Status */
     private $status;
     /** @var string */
     private $shipmentNumber;
@@ -50,14 +50,14 @@ final class Label
 
     /**
      * Label constructor.
-     * @param string $status
+     * @param Status $status
      * @param string $shipmentNumber
      * @param string $label
      * @param string $returnLabel
      * @param string $exportLabel
      * @param string $codLabel
      */
-    public function __construct($status, $shipmentNumber, $label,
+    public function __construct(Status $status, $shipmentNumber, $label,
         $returnLabel = null, $exportLabel = null, $codLabel = null
     ) {
         $this->status = $status;
@@ -69,7 +69,7 @@ final class Label
     }
 
     /**
-     * @return string
+     * @return Status
      */
     public function getStatus()
     {
@@ -118,6 +118,6 @@ final class Label
 
     public function isCreated()
     {
-        return $this->status === '0';
+        return ($this->getStatus()->getStatusCode() === '0');
     }
 }

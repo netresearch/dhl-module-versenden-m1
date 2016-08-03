@@ -23,9 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
-use \Dhl\Versenden\Webservice\Parser\Soap as SoapParser;
-use \Dhl\Versenden\Webservice\RequestData;
 use \Dhl\Versenden\Webservice\ResponseData;
 /**
  * Dhl_Versenden_Model_Shipping_Carrier_Versenden
@@ -91,39 +88,22 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function requestToShipment(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $wsHelper = Mage::helper('dhl_versenden/webservice');
-        $wsType = Dhl_Versenden_Helper_Webservice::ADAPTER_TYPE_SOAP;
-        $wsOperation = Dhl_Versenden_Helper_Webservice::OPERATION_CREATE_SHIPMENT_ORDER;
-
-        $orderShipment = $request->getOrderShipment();
-        $sequenceNumber = 1;
-        $orderData = $request->getPackages();
-        $orderData['product'] = RequestData\ShipmentOrder::PRODUCT_CODE_PAKET_NATIONAL;
-        $shipmentOrder = $wsHelper->shipmentToShipmentOrder(
-            $orderShipment,
-            $sequenceNumber,
-            $orderData
+        $sequenceNumber = 0;
+        $shipmentRequests = array(
+            $sequenceNumber => $request,
         );
-        $shipmentOrders = new RequestData\ShipmentOrderCollection();
-        $shipmentOrders->addItem($shipmentOrder);
-
-        $wsVersion = new RequestData\Version('2', '1');
-        $requestData = new RequestData\CreateShipment(
-            $wsVersion,
-            $shipmentOrders
-        );
-
-        /** @var SoapParser\CreateShipmentOrder $parser */
-        $parser = $wsHelper->getWebserviceParser($wsType, $wsOperation);
-        /** @var SoapAdapter $adapter */
-        $adapter = $wsHelper->getWebserviceAdapter($wsType);
 
         $response = new Varien_Object();
+
         try {
-            /** @var ResponseData\CreateShipment $result */
-            $result = $adapter->createShipmentOrder($requestData, $parser);
-            $resultSequence = $result->getSequence();
-            $shipmentNumber = $resultSequence[$sequenceNumber];
+            $result = Mage::getModel('dhl_versenden/webservice_gateway_soap')
+                ->createShipmentOrder($shipmentRequests);
+            $shipmentNumber = $result->getShipmentNumber($sequenceNumber);
+
+            $shipmentStatus = $result->getLabels()->getItem($shipmentNumber)->getStatus();
+            if ($shipmentStatus->isError()) {
+                throw new ResponseData\StatusException($shipmentStatus);
+            }
 
             $responseData = array(
                 'info' => array(array(
@@ -132,7 +112,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 ))
             );
             $response->setData($responseData);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Mage::logException($e);
             throw $e;
         }

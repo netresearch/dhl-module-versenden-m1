@@ -45,8 +45,14 @@ abstract class ShipmentLabel extends Shipment implements Parser
      */
     protected function parseLabel(VersendenApi\LabelData $labelData)
     {
-        $label = new ResponseData\Label(
+        $labelStatus = new ResponseData\Status(
             $labelData->getStatus()->getStatusCode(),
+            $labelData->getStatus()->getStatusText(),
+            $labelData->getStatus()->getStatusMessage()
+        );
+
+        $label = new ResponseData\Label(
+            $labelStatus,
             $labelData->getShipmentNumber(),
             $labelData->getLabelData(),
             $labelData->getReturnLabelData(),

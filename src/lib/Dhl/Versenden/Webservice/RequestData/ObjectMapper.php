@@ -38,11 +38,13 @@ use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
  */
 class ObjectMapper
 {
+    const SCHEMA_VERSION = '1.0';
+
     /**
      * @param \stdClass $object
      * @return Settings\ServiceSettings
      */
-    public static function getServiceSettings(\stdClass $object)
+    protected static function getServiceSettings(\stdClass $object)
     {
         $dayOfDelivery = isset($object->dayOfDelivery) ? $object->dayOfDelivery : false;
         $deliveryTimeFrame = isset($object->deliveryTimeFrame) ? $object->deliveryTimeFrame : false;
@@ -71,21 +73,21 @@ class ObjectMapper
      * @param \stdClass $object
      * @return Settings\ShipmentSettings
      */
-    public static function getShipmentSettings(\stdClass $object)
+    protected static function getShipmentSettings(\stdClass $object)
     {
         $date = isset($object->date) ? $object->date : '';
         $reference = isset($object->reference) ? $object->reference : '';
         $weight = isset($object->weight) ? $object->weight : 0;
-        $dhlProduct = isset($object->dhlProduct) ? $object->dhlProduct : '';
+        $product = isset($object->product) ? $object->product : '';
 
-        return new Settings\ShipmentSettings($date, $reference, $weight, $dhlProduct);
+        return new Settings\ShipmentSettings($date, $reference, $weight, $product);
     }
 
     /**
      * @param \stdClass $object
      * @return Receiver\Packstation
      */
-    public static function getPackstation(\stdClass $object)
+    protected static function getPackstation(\stdClass $object)
     {
         $zip = isset($object->zip) ? $object->zip : '';
         $city = isset($object->city) ? $object->city : '';
@@ -111,7 +113,7 @@ class ObjectMapper
      * @param \stdClass $object
      * @return Receiver\ParcelShop
      */
-    public static function getParcelShop(\stdClass $object)
+    protected static function getParcelShop(\stdClass $object)
     {
         $zip = isset($object->zip) ? $object->zip : '';
         $city = isset($object->city) ? $object->city : '';
@@ -139,7 +141,7 @@ class ObjectMapper
      * @param \stdClass $object
      * @return Receiver\Postfiliale
      */
-    public static function getPostfiliale(\stdClass $object)
+    protected static function getPostfiliale(\stdClass $object)
     {
         $zip = isset($object->zip) ? $object->zip : '';
         $city = isset($object->city) ? $object->city : '';
@@ -165,7 +167,7 @@ class ObjectMapper
      * @param \stdClass $object
      * @return Receiver
      */
-    public static function getReceiver(\stdClass $object)
+    protected static function getReceiver(\stdClass $object)
     {
         $name1 = isset($object->name1) ? $object->name1 : '';
         $name2 = isset($object->name2) ? $object->name2 : '';
@@ -219,10 +221,14 @@ class ObjectMapper
 
     /**
      * @param \stdClass $object
-     * @return ShippingInfo
+     * @return ShippingInfo|null
      */
     public static function getShippingInfo(\stdClass $object)
     {
+        if (!self::canMap($object)) {
+            return null;
+        }
+
         $receiver = isset($object->receiver)
             ? static::getReceiver($object->receiver)
             : null;
@@ -235,4 +241,14 @@ class ObjectMapper
 
         return new ShippingInfo($receiver, $serviceSettings, $shipmentSettings);
     }
+
+    /**
+     * Check if the given stdClass can be mapped to RequestData objects
+     * @param \stdClass $object
+     * @return bool
+     */
+     protected static function canMap(\stdClass $object)
+     {
+         return (isset($object->schemaVersion) && $object->schemaVersion == self::SCHEMA_VERSION);
+     }
 }

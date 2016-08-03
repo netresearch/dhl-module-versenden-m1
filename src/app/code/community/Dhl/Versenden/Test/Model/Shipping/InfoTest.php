@@ -76,16 +76,21 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
             false
         );
 
+
+        $streetName        = 'Street';
         $streetNumber      = '303';
+
+
         $packstationNumber = '404';
         $postfilialNumber  = '505';
         $parcelShopNumber  = '606';
+        $postNumber        = '707';
 
         $receiver = new Receiver(
             'Foo Name',
             '',
             '',
-            'Foo Street',
+            $streetName,
             $streetNumber,
             '',
             '',
@@ -97,9 +102,9 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
             '',
             '',
             '',
-            new Receiver\Packstation('', '', '', '', '', $packstationNumber, $postfilialNumber),
-            new Receiver\Postfiliale('', '', '', '', '', $postfilialNumber, ''),
-            new Receiver\ParcelShop('', '', '', '', '', $parcelShopNumber, '', $streetNumber)
+            new Receiver\Packstation('', '', '', '', '', $packstationNumber, $postNumber),
+            new Receiver\Postfiliale('', '', '', '', '', $postfilialNumber, $postNumber),
+            new Receiver\ParcelShop('', '', '', '', '', $parcelShopNumber, $streetName, $streetNumber)
         );
 
         // create and serialize shipping info
@@ -112,10 +117,15 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo($stdObject);
 
         $this->assertEquals($preferredLocation, $shippingInfo->getServiceSettings()->getPreferredLocation());
+
         $this->assertEquals($streetNumber, $shippingInfo->getReceiver()->getStreetNumber());
+        $this->assertEquals($streetName, $shippingInfo->getReceiver()->getStreetName());
+        $this->assertEquals($streetName, $shippingInfo->getReceiver()->getParcelShop()->getStreetName());
 
         $this->assertEquals($packstationNumber, $shippingInfo->getReceiver()->getPackstation()->getPackstationNumber());
         $this->assertEquals($postfilialNumber, $shippingInfo->getReceiver()->getPostfiliale()->getPostfilialNumber());
         $this->assertEquals($parcelShopNumber, $shippingInfo->getReceiver()->getParcelShop()->getParcelShopNumber());
+        $this->assertEquals($postNumber, $shippingInfo->getReceiver()->getPackstation()->getPostNumber());
+        $this->assertEquals($postNumber, $shippingInfo->getReceiver()->getPostfiliale()->getPostNumber());
     }
 }
