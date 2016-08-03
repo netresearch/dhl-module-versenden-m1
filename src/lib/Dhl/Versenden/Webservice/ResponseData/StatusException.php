@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\Adapter;
-use Dhl\Versenden\Webservice\ResponseData\Status;
+namespace Dhl\Versenden\Webservice\ResponseData;
 
 /**
- * WsOperationException
+ * StatusException
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice
@@ -35,15 +34,21 @@ use Dhl\Versenden\Webservice\ResponseData\Status;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class WsOperationException extends \Exception
+class StatusException extends \Exception
 {
     /**
-     * WsOperationException constructor.
+     * StatusException constructor.
      * @param Status $status
      */
     public function __construct(Status $status)
     {
-        //TODO(nr): $status->getStatusMessage() ?
-        parent::__construct($status->getStatusText(), $status->getStatusCode());
+        $messages = $status->getStatusMessage();
+        if (!is_array($messages)) {
+            $messages = [$messages];
+        }
+
+        array_unshift($messages, $status->getStatusText());
+        $messages = implode("\n", $messages);
+        parent::__construct($messages, $status->getStatusCode());
     }
 }
