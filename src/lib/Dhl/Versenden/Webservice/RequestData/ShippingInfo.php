@@ -43,6 +43,8 @@ class ShippingInfo implements \JsonSerializable
     private $serviceSettings;
     /** @var ShipmentOrder\Settings\ShipmentSettings */
     private $shipmentSettings;
+    /** @var string */
+    private $schemaVersion = ObjectMapper::SCHEMA_VERSION;
 
     public function __construct(
         ShipmentOrder\Receiver $receiver,
@@ -76,6 +78,14 @@ class ShippingInfo implements \JsonSerializable
     public function getShipmentSettings()
     {
         return $this->shipmentSettings;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchemaVersion()
+    {
+        return $this->schemaVersion;
     }
 
     /**

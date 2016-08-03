@@ -40,18 +40,18 @@ final class CreateShipment
     /** @var LabelCollection */
     private $labels;
     /** @var string[] */
-    private $sequence;
+    private $shipmentNumbers;
 
     /**
      * CreateShipment constructor.
      * @param Status $status
      * @param LabelCollection $labels
      */
-    public function __construct(Status $status, LabelCollection $labels, array $sequence)
+    public function __construct(Status $status, LabelCollection $labels, array $shipmentNumbers)
     {
-        $this->status = $status;
-        $this->labels = $labels;
-        $this->sequence = $sequence;
+        $this->status          = $status;
+        $this->labels          = $labels;
+        $this->shipmentNumbers = $shipmentNumbers;
     }
 
     /**
@@ -75,8 +75,24 @@ final class CreateShipment
      *
      * @return \string[]
      */
-    public function getSequence()
+    public function getShipmentNumbers()
     {
-        return $this->sequence;
+        return $this->shipmentNumbers;
+    }
+
+    /**
+     * Obtain created shipment number by given sequence number
+     *
+     * @param string $sequenceNumber
+     * @return null|string
+     */
+    public function getShipmentNumber($sequenceNumber)
+    {
+        $numbers = $this->getShipmentNumbers();
+        if (!isset($numbers[$sequenceNumber])) {
+            return null;
+        }
+
+        return $numbers[$sequenceNumber];
     }
 }

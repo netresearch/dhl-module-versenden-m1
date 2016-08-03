@@ -44,21 +44,21 @@ class ShipmentSettings extends RequestData implements \JsonSerializable
     /** @var float */
     private $weight;
     /** @var string */
-    private $dhlProduct;
+    private $product;
 
     /**
      * ShipmentSettings constructor.
      * @param string $date
      * @param string $reference
      * @param float $weight
-     * @param string $dhlProduct
+     * @param string $product
      */
-    public function __construct($date, $reference, $weight, $dhlProduct)
+    public function __construct($date, $reference, $weight, $product)
     {
         $this->date = $date;
         $this->reference = $reference;
         $this->weight = $weight;
-        $this->dhlProduct = $dhlProduct;
+        $this->product = $product;
     }
 
     /**
@@ -88,9 +88,9 @@ class ShipmentSettings extends RequestData implements \JsonSerializable
     /**
      * @return string
      */
-    public function getDhlProduct()
+    public function getProduct()
     {
-        return $this->dhlProduct;
+        return $this->product;
     }
 
     /**
