@@ -39,6 +39,15 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
 {
     const CODE = 'dhlversenden';
 
+    const PRODUCT_CODE_PAKET_NATIONAL  = 'V01PAK';
+    const PRODUCT_CODE_WELTPAKET = 'V53WPAK';
+    const PRODUCT_CODE_EUROPAKET = 'V54EPAK';
+    const PRODUCT_CODE_KURIER_TAGGLEICH = 'V06TG';
+    const PRODUCT_CODE_KURIER_WUNSCHZEIT = 'V06WZ';
+    const PRODUCT_CODE_PAKET_AUSTRIA = 'V86PARCEL';
+    const PRODUCT_CODE_PAKET_CONNECT = 'V87PARCEL';
+    const PRODUCT_CODE_PAKET_INTERNATIONAL = 'V82PARCEL';
+
     /**
      * Init carrier code
      */
@@ -77,6 +86,33 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     public function isShippingLabelsAvailable()
     {
         return true;
+    }
+
+    /**
+     * Return container types of carrier
+     *
+     * @param Varien_Object|null $params
+     * @return array
+     */
+    public function getContainerTypes(Varien_Object $params = null)
+    {
+//        $params = new Varien_Object(array(
+//            'method' => $order->getShippingMethod(true)->getMethod(),
+//            'country_shipper' => $countryShipper,
+//            'country_recipient' => $address->getCountryId(),
+//        ));
+
+        //TODO(nr): filter by given recipient country, add product names
+        return array(
+            self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('V01PAK'),
+            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('V53WPAK'),
+            self::PRODUCT_CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('V54EPAK'),
+            self::PRODUCT_CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('V06TG'),
+            self::PRODUCT_CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__('V06WZ'),
+            self::PRODUCT_CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__('V86PARCEL'),
+            self::PRODUCT_CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__('V87PARCEL'),
+            self::PRODUCT_CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__('V82PARCEL'),
+        );
     }
 
     /**

@@ -98,7 +98,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
 
             $orderData = $shipmentRequest->getPackages();
             //TODO(nr): calculate or fetch from POST data
-            $orderData['product'] = RequestData\ShipmentOrder::PRODUCT_CODE_PAKET_NATIONAL;
+            $orderData['product'] = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
             $orderData['shipment_service'] = array();
             $orderData['service_setting'] = array();
 
