@@ -92,6 +92,13 @@
         </fieldsets>
     </global>
     <adminhtml>
+        <layout>
+            <updates>
+                <dhl_versenden>
+                    <file>dhl_versenden.xml</file>
+                </dhl_versenden>
+            </updates>
+        </layout>
         <translate>
             <modules>
                 <dhl_versenden>

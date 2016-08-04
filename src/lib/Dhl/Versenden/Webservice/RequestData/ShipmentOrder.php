@@ -63,15 +63,6 @@ class ShipmentOrder extends RequestData
     const LABEL_TYPE_B64 = 'B64';
     const LABEL_TYPE_URL = 'URL';
 
-    const PRODUCT_CODE_PAKET_NATIONAL  = 'V01PAK';
-    const PRODUCT_CODE_WELTPAKET = 'V53WPAK';
-    const PRODUCT_CODE_EUROPAKET = 'V54EPAK';
-    const PRODUCT_CODE_KURIER_TAGGLEICH = 'V06TG';
-    const PRODUCT_CODE_KURIER_WUNSCHZEIT = 'V06WZ';
-    const PRODUCT_CODE_PAKET_AUSTRIA = 'V86PARCEL';
-    const PRODUCT_CODE_PAKET_CONNECT = 'V87PARCEL';
-    const PRODUCT_CODE_PAKET_INTERNATIONAL = 'V82PARCEL';
-
     /** @var ShipmentOrder\Shipper */
     private $shipper;
     /** @var ShipmentOrder\GlobalSettings */
