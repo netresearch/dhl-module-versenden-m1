@@ -37,6 +37,26 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging
     extends Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging
 {
     /**
+     * Obtain selected weight unit from config.
+     * 
+     * @return string
+     */
+    public function getStoreUnit()
+    {
+        return Mage::getModel('dhl_versenden/config_shipment')->getSettings()->getUnitOfMeasure();
+    }
+
+    /**
+     * Obtain possible weight units from carrier.
+     *
+     * @return string[]
+     */
+    public function getWeightUnits()
+    {
+        return Mage::getSingleton('dhl_versenden/shipping_carrier_versenden')->getCode('unit_of_measure');
+    }
+
+    /**
      * Do customs information have to be added?
      *
      * @return bool
