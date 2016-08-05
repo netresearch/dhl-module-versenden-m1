@@ -24,20 +24,12 @@
  * @link      http://www.netresearch.de/
  */
  ?>
-<?php
-$shippingMethod = $this->getShipment()->getOrder()->getShippingMethod();
-$sizeSource = Mage::getModel('usa/shipping_carrier_usps_source_size')->toOptionArray();
-$girthEnabled = Mage::helper('usa')->displayGirthValue($shippingMethod) && $this->isGirthAllowed() ? 1 : 0;
-?>
+<?php /** @var $this Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging */ ?>
 <script type="text/javascript">
 //<![CDATA[
 document.observe("dom:loaded", function() {
     packaging = new Packaging(<?php echo $this->getConfigDataJson() ?>);
     packaging.changeContainerType($$('select[name=package_container]')[0]);
-    packaging.checkSizeAndGirthParameter(
-        $$('select[name=package_container]')[0],
-        <?php echo $girthEnabled; ?>
-    );
 });
 //]]>
 </script>
@@ -56,12 +48,7 @@ document.observe("dom:loaded", function() {
                 <div class="package-number"><?php echo Mage::helper('sales')->__('Package') ?><span></span></div>
                 <table class="package-options" cellspacing="0">
                     <thead>
-                        <th><?php echo Mage::helper('dhl_versenden/data')->__('Product') ?></th>
-                        <?php if ($girthEnabled == 1): ?>
-                            <th><?php echo Mage::helper('sales')->__('Size') ?></th>
-                            <th><?php echo Mage::helper('sales')->__('Girth') ?></th>
-                            <th>&nbsp;</th>
-                        <?php endif; ?>
+                        <th><label for="package_container"><?php echo Mage::helper('dhl_versenden/data')->__('Product') ?></label></th>
                         <th <?php echo $this->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
                             <?php echo Mage::helper('sales')->__('Customs Value') ?>
                         </th>
@@ -79,10 +66,8 @@ document.observe("dom:loaded", function() {
                     <tbody>
                         <td>
                             <?php $containers = $this->getContainers(); ?>
-                            <select name="package_container" onchange="packaging.changeContainerType(this);packaging.checkSizeAndGirthParameter(this, <?php echo  $girthEnabled ?>);"<?php if (empty($containers)):?>
-                                title="<?php echo Mage::helper('sales')->__('Package types are disregarded for USPS domestic shipments.') ?>"
-                                disabled="" class="disabled"
-                            <?php endif; ?>>
+                            <select id="package_container" name="package_container"
+                                    onchange="packaging.changeContainerType(this);">
                                 <?php foreach ($this->getContainers() as $key => $value): ?>
                                     <option value="<?php echo $key ?>" >
                                         <?php echo $value ?>
@@ -90,24 +75,6 @@ document.observe("dom:loaded", function() {
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <?php if ($girthEnabled == 1): ?>
-                            <td>
-                                <select name="package_size" onchange="packaging.checkSizeAndGirthParameter(this, <?php echo  $girthEnabled ?>);">
-                                    <?php foreach ($sizeSource as $key => $value): ?>
-                                    <option value="<?php echo $sizeSource[$key]['value'] ?>">
-                                        <?php echo $sizeSource[$key]['label'] ?>
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </td>
-                            <td><input type="text" class="input-text validate-greater-than-zero" name="container_girth" /></td>
-                            <td>
-                                <select name="container_girth_dimension_units" class="options-units-dimensions measures" onchange="packaging.changeMeasures(this);">
-                                    <option value="<?php echo Zend_Measure_Length::INCH ?>" selected="selected" ><?php echo Mage::helper('sales')->__('in') ?></option>
-                                    <option value="<?php echo Zend_Measure_Length::CENTIMETER ?>" ><?php echo Mage::helper('sales')->__('cm') ?></option>
-                                </select>
-                            </td>
-                        <?php endif; ?>
                         <?php
                             if ($this->displayCustomsValue()) {
                                 $customsValueDisplay = '';
@@ -122,10 +89,14 @@ document.observe("dom:loaded", function() {
                             <span class="customs-value-currency">[<?php echo $this->getCustomValueCurrencyCode(); ?>]</span>
                         </td>
                         <td>
+                            <?php $weightOptions = $this->getWeightUnits(); ?>
                             <input type="text" class="options-weight input-text required-entry validate-greater-than-zero" name="container_weight" />
                             <select name="container_weight_units" class="options-units-weight measures" onchange="packaging.changeMeasures(this);">
-                                <option value="<?php echo Zend_Measure_Weight::POUND ?>" selected="selected"  ><?php echo Mage::helper('sales')->__('lb') ?></option>
-                                <option value="<?php echo Zend_Measure_Weight::KILOGRAM ?>" ><?php echo Mage::helper('sales')->__('kg') ?></option>
+                                <?php foreach ($this->getWeightUnits() as $value => $label): ?>
+                                    <?php $label = Mage::helper('sales')->__(strtolower($value)); ?>
+                                    <?php $selected = ($value == $this->getStoreUnit()) ? 'selected="selected"' : ''; ?>
+                                    <option value="<?php echo $value ?>" <?php echo $selected ?>><?php echo $label ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </td>
                         <td>
@@ -139,7 +110,6 @@ document.observe("dom:loaded", function() {
                         </td>
                         <td>
                             <select name="container_dimension_units" class="options-units-dimensions measures" onchange="packaging.changeMeasures(this);">
-                                <option value="<?php echo Zend_Measure_Length::INCH ?>" selected="selected" ><?php echo Mage::helper('sales')->__('in') ?></option>
                                 <option value="<?php echo Zend_Measure_Length::CENTIMETER ?>" ><?php echo Mage::helper('sales')->__('cm') ?></option>
                             </select>
                         </td>
