@@ -57,10 +57,12 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
 
         // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
-        Mage::dispatchEvent('dhl_versenden_set_postal_facility', array(
-            'quote_address' => $address,
-            'postal_facility' => $facility,
-        ));
+        Mage::dispatchEvent(
+            'dhl_versenden_set_postal_facility', array(
+                'quote_address'   => $address,
+                'postal_facility' => $facility,
+            )
+        );
 
         $packStation = null;
         if ($facility->getData('shop_type') === ShipmentOrder\Receiver\PostalFacility::TYPE_PACKSTATION) {
@@ -131,61 +133,14 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
      */
     public function serviceSelectionToServiceSettings(array $selectedServices, array $serviceDetails)
     {
-        $dayOfDelivery = false;
-        if (isset($selectedServices['dayOfDelivery']) && isset($serviceDetails['dayOfDelivery'])) {
-            $dayOfDelivery = $serviceDetails['dayOfDelivery'];
-        }
-
-        $deliveryTimeFrame = false;
-        if (isset($selectedServices['deliveryTimeFrame']) && isset($serviceDetails['deliveryTimeFrame'])) {
-            $deliveryTimeFrame = $serviceDetails['deliveryTimeFrame'];
-        }
-
-        $preferredLocation = false;
-        if (isset($selectedServices['preferredLocation']) && isset($serviceDetails['preferredLocation'])) {
-            $preferredLocation = $serviceDetails['preferredLocation'];
-        }
-
-        $preferredNeighbour = false;
-        if (isset($selectedServices['preferredNeighbour']) && isset($serviceDetails['preferredNeighbour'])) {
-            $preferredNeighbour = $serviceDetails['preferredNeighbour'];
-        }
-
-        $parcelAnnouncement = false;
-        if (isset($selectedServices['parcelAnnouncement'])) {
-            $parcelAnnouncement = true;
-        }
-
-        $visualCheckOfAge = false;
-        if (isset($selectedServices['visualCheckOfAge']) && isset($serviceDetails['visualCheckOfAge'])) {
-            $visualCheckOfAge = $serviceDetails['visualCheckOfAge'];
-        }
-
-        $returnShipment = false;
-        if (isset($selectedServices['returnShipment'])) {
-            $returnShipment = true;
-        }
-
-        $insurance = false;
-        if (isset($selectedServices['insurance']) && isset($serviceDetails['insurance'])) {
-            $insurance = $serviceDetails['insurance'];
-        }
-
-        $bulkyGoods = false;
-        if (isset($selectedServices['bulkyGoods'])) {
-            $bulkyGoods = true;
-        }
-
-        return new ShipmentOrder\Settings\ServiceSettings(
-            $dayOfDelivery,
-            $deliveryTimeFrame,
-            $preferredLocation,
-            $preferredNeighbour,
-            $parcelAnnouncement,
-            $visualCheckOfAge,
-            $returnShipment,
-            $insurance,
-            $bulkyGoods
+        array_walk(
+            $selectedServices,
+            function (&$value, $key, $serviceDetails) {
+                $value = isset($serviceDetails[$key]) ? $serviceDetails[$key] : true;
+            },
+            $serviceDetails
         );
+
+        return ShipmentOrder\Settings\ServiceSettings::fromArray($selectedServices);
     }
 }
