@@ -133,4 +133,28 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
         });
         $this->assertNotEmpty($paServices);
     }
+
+    /**
+     * @test
+     * @loadFixture ConfigTest
+     */
+    public function getWebserviceCredentials()
+    {
+        $config = new Dhl_Versenden_Model_Config();
+
+        $this->assertEquals('uFoo', $config->getWebserviceAuthUsername());
+        $this->assertEquals('pFoo', $config->getWebserviceAuthPassword());
+    }
+
+    /**
+     * @test
+     * @loadFixture ConfigTest
+     */
+    public function getWebserviceEndpoint()
+    {
+        $config = new Dhl_Versenden_Model_Config();
+
+        $this->assertEquals('sandbox endpoint', $config->getEndpoint());
+        $this->assertNull($config->getEndpoint('store_two'));
+    }
 }

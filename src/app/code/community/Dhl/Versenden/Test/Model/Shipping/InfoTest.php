@@ -25,7 +25,7 @@
  */
 use \Dhl\Versenden\Webservice\RequestData\ShippingInfo;
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection;
 /**
  * Dhl_Versenden_Test_Model_Shipping_InfoTest
  *
@@ -47,8 +47,8 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo($stdObject);
 
         $this->assertInstanceOf(
-            Settings\ServiceSettings::class,
-            $shippingInfo->getServiceSettings()
+            ServiceSelection::class,
+            $shippingInfo->getServiceSelection()
         );
         $this->assertInstanceOf(
             Receiver::class,
@@ -64,7 +64,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         // prepare service settings
         $preferredLocation = 'Foo';
 
-        $serviceSettings = Settings\ServiceSettings::fromProperties(
+        $serviceSelection = ServiceSelection::fromProperties(
             false,
             false,
             $preferredLocation,
@@ -108,7 +108,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         );
 
         // create and serialize shipping info
-        $shippingInfo = new ShippingInfo($receiver, $serviceSettings);
+        $shippingInfo = new ShippingInfo($receiver, $serviceSelection);
         $json = json_encode($shippingInfo, JSON_FORCE_OBJECT);
 
 
@@ -116,7 +116,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $stdObject = json_decode($json);
         $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo($stdObject);
 
-        $this->assertEquals($preferredLocation, $shippingInfo->getServiceSettings()->getPreferredLocation());
+        $this->assertEquals($preferredLocation, $shippingInfo->getServiceSelection()->getPreferredLocation());
 
         $this->assertEquals($streetNumber, $shippingInfo->getReceiver()->getStreetNumber());
         $this->assertEquals($streetName, $shippingInfo->getReceiver()->getStreetName());
