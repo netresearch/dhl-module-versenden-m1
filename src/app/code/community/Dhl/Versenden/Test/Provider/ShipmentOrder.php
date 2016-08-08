@@ -238,7 +238,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $shipmentSettingsWeight, $shipmentSettingsProduct
         );
 
-        $serviceSettings = new RequestData\ShipmentOrder\Settings\ServiceSettings(
+        $serviceSettings = RequestData\ShipmentOrder\Settings\ServiceSettings::fromProperties(
             $serviceSettingsDayOfDelivery, $serviceSettingsDeliveryTimeFrame,
             $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
             $serviceSettingsParcelAnnouncement,

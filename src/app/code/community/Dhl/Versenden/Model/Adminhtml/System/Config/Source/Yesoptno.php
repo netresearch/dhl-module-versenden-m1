@@ -47,9 +47,9 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
     public function toOptionArray()
     {
         $options = $this->toArray();
-        $optionsArray = [];
-        foreach ([self::Y, self::OPT, self::N] as $optionValue) {
-            $optionsArray[] = ['value' => $optionValue, 'label' => $options[$optionValue]];
+        $optionsArray = array();
+        foreach (array(self::Y, self::OPT, self::N) as $optionValue) {
+            $optionsArray[] = array('value' => $optionValue, 'label' => $options[$optionValue]);
         }
 
         return $optionsArray;
@@ -62,10 +62,10 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
      */
     public function toArray()
     {
-        return [
+        return array(
             self::N => Mage::helper('adminhtml')->__('No'),
             self::Y => Mage::helper('adminhtml')->__('Yes'),
             self::OPT => Mage::helper('adminhtml')->__('Optional'),
-        ];
+        );
     }
 }
