@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Config;
 use Dhl\Versenden\Service\Type as Service;
 use Dhl\Versenden\Service\Collection as ServiceCollection;
 /**
@@ -170,14 +169,18 @@ class Dhl_Versenden_Model_Config
         $collection->addItem(new Service\DayOfDelivery($dayOfDelivery));
 
         $deliveryTimeFrame = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_DELIVERYTIMEFRAME, $store);
-        $collection->addItem(new Service\DeliveryTimeFrame($deliveryTimeFrame, [
-            '10001200' => '10:00 - 12:00',
-            '12001400' => '12:00 - 14:00',
-            '14001600' => '14:00 - 16:00',
-            '16001800' => '16:00 - 18:00',
-            '18002000' => '18:00 - 20:00',
-            '19002100' => '19:00 - 21:00',
-        ]));
+        $collection->addItem(
+            new Service\DeliveryTimeFrame(
+                $deliveryTimeFrame, array(
+                    '10001200' => '10:00 - 12:00',
+                    '12001400' => '12:00 - 14:00',
+                    '14001600' => '14:00 - 16:00',
+                    '16001800' => '16:00 - 18:00',
+                    '18002000' => '18:00 - 20:00',
+                    '19002100' => '19:00 - 21:00',
+                )
+            )
+        );
 
         $preferredLocation = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION, $store);
         $placeholder = Mage::getStoreConfig(self::CONFIG_XML_PATH_SERVICE_PREFERREDLOCATION_PLACEHOLDER, $store);
@@ -193,19 +196,27 @@ class Dhl_Versenden_Model_Config
         $collection->addItem(new Service\ParcelAnnouncement($parcelAnnouncement));
 
         $visualCheckOfAge = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_VISUALCHECKOFAGE, $store);
-        $collection->addItem(new Service\VisualCheckOfAge($visualCheckOfAge, [
-            Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
-            Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
-        ]));
+        $collection->addItem(
+            new Service\VisualCheckOfAge(
+                $visualCheckOfAge, array(
+                    Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
+                    Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
+                )
+            )
+        );
 
         $returnShipment = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_RETURNSHIPMENT, $store);
         $collection->addItem(new Service\ReturnShipment($returnShipment));
 
         $insurance = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_INSURANCE, $store);
-        $collection->addItem(new Service\Insurance($insurance, [
-            Service\Insurance::TYPE_A => '2.500',
-            Service\Insurance::TYPE_B => '25.000'
-        ]));
+        $collection->addItem(
+            new Service\Insurance(
+                $insurance, array(
+                    Service\Insurance::TYPE_A => '2.500',
+                    Service\Insurance::TYPE_B => '25.000'
+                )
+            )
+        );
 
         $bulkyGoods = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SERVICE_BULKYGOODS, $store);
         $collection->addItem(new Service\BulkyGoods($bulkyGoods));
@@ -225,9 +236,11 @@ class Dhl_Versenden_Model_Config
     {
         $services = $this->getServices($store)->getItems();
 
-        $items = array_filter($services, function (Service $item) {
-            return (bool)$item->value;
-        });
+        $items = array_filter(
+            $services, function (Service $item) {
+                return (bool)$item->value;
+            }
+        );
 
         return new ServiceCollection($items);
     }

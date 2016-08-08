@@ -26,7 +26,6 @@
 namespace Dhl\Versenden\Webservice\Parser\Soap;
 use \Dhl\Bcs\Api as VersendenApi;
 use \Dhl\Versenden\Webservice;
-use Nette\Application\ForbiddenRequestException;
 
 /**
  * CreateShipmentOrder

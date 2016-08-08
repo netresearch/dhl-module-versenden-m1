@@ -40,12 +40,12 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden_Source_Unitofmeasure
         $unitArr = Mage::getSingleton('dhl_versenden/shipping_carrier_versenden')
             ->getCode('unit_of_measure');
 
-        $returnArr = [];
-        foreach ($unitArr as $key => $val){
-            $returnArr[] = [
+        $returnArr = array();
+        foreach ($unitArr as $key => $val) {
+            $returnArr[] = array(
                 'value' => $key,
                 'label' => $val,
-            ];
+            );
         }
         return $returnArr;
     }

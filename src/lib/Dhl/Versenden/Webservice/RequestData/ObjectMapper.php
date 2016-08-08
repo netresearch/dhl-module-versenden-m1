@@ -56,7 +56,7 @@ class ObjectMapper
         $insurance = isset($object->insurance) ? $object->insurance : false;
         $bulkyGoods = isset($object->bulkyGoods) ? $object->bulkyGoods : false;
 
-        return new Settings\ServiceSettings(
+        return Settings\ServiceSettings::fromProperties(
             $dayOfDelivery,
             $deliveryTimeFrame,
             $preferredLocation,

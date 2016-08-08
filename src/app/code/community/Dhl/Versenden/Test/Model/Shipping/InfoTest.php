@@ -64,7 +64,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         // prepare service settings
         $preferredLocation = 'Foo';
 
-        $serviceSettings = new Settings\ServiceSettings(
+        $serviceSettings = Settings\ServiceSettings::fromProperties(
             false,
             false,
             $preferredLocation,

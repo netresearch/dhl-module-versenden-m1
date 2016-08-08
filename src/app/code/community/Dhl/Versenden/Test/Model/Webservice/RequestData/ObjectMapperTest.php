@@ -95,7 +95,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
      */
     protected function getServiceSettings($location, $age, $insurance, $bulkyGoods)
     {
-        $serviceSettings = new Settings\ServiceSettings(
+        $serviceSettings = Settings\ServiceSettings::fromProperties(
             false,
             false,
             $location,

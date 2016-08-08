@@ -42,6 +42,8 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
     implements Dhl_Versenden_Model_Webservice_Gateway
 {
     /**
+     * @param Dhl_Versenden_Model_Config_Shipper $config shipper configuration object
+     *
      * @return Webservice\Adapter
      */
     public function getAdapter(Dhl_Versenden_Model_Config_Shipper $config)

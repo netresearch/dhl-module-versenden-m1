@@ -78,7 +78,8 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      */
     public function shipmentToShipmentOrder(
         Mage_Sales_Model_Order_Shipment $shipment, $sequenceNumber = 1, $orderData = array()
-    ) {
+    )
+    {
         $helper = Mage::helper('dhl_versenden/webservice');
 
         // (1) data derived from config
