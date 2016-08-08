@@ -96,22 +96,14 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function getContainerTypes(Varien_Object $params = null)
     {
-//        $params = new Varien_Object(array(
-//            'method' => $order->getShippingMethod(true)->getMethod(),
-//            'country_shipper' => $countryShipper,
-//            'country_recipient' => $address->getCountryId(),
-//        ));
+        if ( ($params->getData('country_shipper') == 'DE') && ($params->getData('country_recipient') == 'DE') ) {
+            return array(
+                self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
+            );
+        }
 
-        //TODO(nr): filter by given recipient country, add product names
         return array(
-            self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('V01PAK'),
-            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('V53WPAK'),
-            self::PRODUCT_CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('V54EPAK'),
-            self::PRODUCT_CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('V06TG'),
-            self::PRODUCT_CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__('V06WZ'),
-            self::PRODUCT_CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__('V86PARCEL'),
-            self::PRODUCT_CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__('V87PARCEL'),
-            self::PRODUCT_CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__('V82PARCEL'),
+            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('DHL Weltpaket'),
         );
     }
 

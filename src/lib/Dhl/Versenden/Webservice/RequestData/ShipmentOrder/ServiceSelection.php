@@ -23,12 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
-
+namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
- * ServiceSettings
+ * ServiceSelection
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -36,7 +35,7 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceSettings extends RequestData implements \JsonSerializable
+class ServiceSelection extends RequestData implements \JsonSerializable
 {
     /** @var bool|string false or date */
     private $dayOfDelivery = false;
@@ -56,14 +55,14 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     private $insurance = false;
     /** @var bool false or true */
     private $bulkyGoods = false;
-    
+
     /**
      * Constructs ServiceSettings object from array with values that differ from initial settings
      *
      *
      * @param array $options service setting options that differ from default
      *
-     * @return ServiceSettings
+     * @return ServiceSelection
      */
     public static function fromArray(array $options)
     {
@@ -77,11 +76,11 @@ class ServiceSettings extends RequestData implements \JsonSerializable
             },
             $instance
         );
-        
+
         return $instance;
     }
-    
-    
+
+
     /**
      * Constructs service setting object from giving each property explicitly
      *
@@ -95,9 +94,9 @@ class ServiceSettings extends RequestData implements \JsonSerializable
      * @param bool|string $insurance
      * @param bool        $bulkyGoods
      *
-     * @return ServiceSettings
+     * @return ServiceSelection
      */
-    
+
     public static function fromProperties(
         $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
         $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods
@@ -112,10 +111,10 @@ class ServiceSettings extends RequestData implements \JsonSerializable
         $instance->returnShipment = $returnShipment;
         $instance->insurance = $insurance;
         $instance->bulkyGoods = $bulkyGoods;
-        
+
         return $instance;
     }
-    
+
     /**
      * @return bool|string
      */
@@ -123,7 +122,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->dayOfDelivery;
     }
-    
+
     /**
      * @return bool|string
      */
@@ -131,7 +130,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->deliveryTimeFrame;
     }
-    
+
     /**
      * @return bool|string
      */
@@ -139,7 +138,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->preferredLocation;
     }
-    
+
     /**
      * @return bool|string
      */
@@ -147,7 +146,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->preferredNeighbour;
     }
-    
+
     /**
      * @return int
      */
@@ -155,7 +154,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->parcelAnnouncement;
     }
-    
+
     /**
      * @return bool|string
      */
@@ -163,7 +162,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->visualCheckOfAge;
     }
-    
+
     /**
      * @return boolean
      */
@@ -171,7 +170,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->returnShipment;
     }
-    
+
     /**
      * @return bool|string
      */
@@ -179,7 +178,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->insurance;
     }
-    
+
     /**
      * @return boolean
      */
@@ -187,7 +186,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->bulkyGoods;
     }
-    
+
     /**
      * Specify data which should be serialized to JSON
      *

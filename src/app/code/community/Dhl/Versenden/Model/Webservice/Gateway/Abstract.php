@@ -52,9 +52,40 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
     /**
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     */
+    protected function _createShipmentOrderBefore(array $shipmentRequests)
+    {
+        $eventData = array('shipment_requests' => $shipmentRequests);
+        Mage::dispatchEvent('dhl_versenden_create_shipment_order_before', $eventData);
+    }
+
+    /**
+     * @param ResponseData\CreateShipment $result
+     */
+    protected function _createShipmentOrderAfter(ResponseData\CreateShipment $result)
+    {
+        $eventData = array('result' => $result);
+        Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
+    }
+
+    /**
+     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
      * @return ResponseData\CreateShipment
      */
-    abstract public function createShipmentOrder(array $shipmentRequests);
+    abstract protected function _createShipmentOrder(array $shipmentRequests);
+
+    /**
+     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     * @return ResponseData\CreateShipment
+     */
+    public function createShipmentOrder(array $shipmentRequests)
+    {
+        $this->_createShipmentOrderBefore($shipmentRequests);
+        $result = $this->_createShipmentOrder($shipmentRequests);
+        $this->_createShipmentOrderAfter($result);
+
+        return $result;
+    }
 
     /**
      * @param Dhl_Versenden_Model_Config_Shipper $config
@@ -71,15 +102,18 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     /**
      * Create one shipment order from given shipment
      *
-     * @param Mage_Sales_Model_Order_Shipment $shipment
      * @param int $sequenceNumber
-     * @param array $orderData
+     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @param array $packageInfo
+     * @param array $serviceInfo
      * @return RequestData\ShipmentOrder
      */
     public function shipmentToShipmentOrder(
-        Mage_Sales_Model_Order_Shipment $shipment, $sequenceNumber = 1, $orderData = array()
-    )
-    {
+        $sequenceNumber,
+        Mage_Sales_Model_Order_Shipment $shipment,
+        $packageInfo,
+        $serviceInfo
+    ) {
         $helper = Mage::helper('dhl_versenden/webservice');
 
         // (1) data derived from config
@@ -87,7 +121,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
         $shipper        = $shipperConfig->getShipper($shipment->getStoreId());
-        /** @var RequestData\ShipmentOrder\Settings\GlobalSettings $globalSettings */
+        /** @var RequestData\ShipmentOrder\GlobalSettings $globalSettings */
         $globalSettings = $shipmentConfig->getSettings($shipment->getStoreId());
 
 
@@ -97,43 +131,46 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $shippingInfo = Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
         if (!$shippingInfo) {
             $receiver = $helper->shippingAddressToReceiver($shipment->getShippingAddress());
-            $serviceSettings = $helper->serviceSelectionToServiceSettings(
-                $orderData['shipment_service'],
-                $orderData['service_setting']
+            $serviceSelection = $helper->serviceSelectionToServiceSettings(
+                $serviceInfo['shipment_service'],
+                $serviceInfo['service_setting']
             );
         } else {
             $receiver = $shippingInfo->getReceiver();
-            $serviceSettings = $shippingInfo->getServiceSettings();
+            $serviceSelection = $shippingInfo->getServiceSelection();
         }
-
 
         // (3) data derived from shipment creation
         // add/override shipment and service settings from shipment creation
-        $weight = $helper->calculateItemsWeight(
-            $shipment->getAllItems(),
-            $globalSettings->getProductWeight(),
-            $globalSettings->getUnitOfMeasure()
-        );
-        $shipmentSettings = new RequestData\ShipmentOrder\Settings\ShipmentSettings(
-            $helper->utcToCet(null, 'Y-m-d'),
-            $shipment->getIncrementId(),
-            $weight,
-            $orderData['product']
-        );
+        $packageCollection = new RequestData\ShipmentOrder\PackageCollection();
+        $productCode = '';
+        //TODO(nr): min package weight
+        foreach ($packageInfo as $idx => $packageDetails) {
+            $package = new RequestData\ShipmentOrder\Package(
+                $idx,
+                $shipment->getOrder()->getIncrementId(),
+                $packageDetails['params']['weight']
+            );
+            $packageCollection->addItem($package);
+
+            $productCode = $packageDetails['params']['container'];
+        }
 
         // update shipping info
-        $shippingInfo = new Webservice\RequestData\ShippingInfo($receiver, $serviceSettings, $shipmentSettings);
+        $shippingInfo = new Webservice\RequestData\ShippingInfo($receiver, $serviceSelection, $packageCollection);
         $shipment->getShippingAddress()->setDhlVersendenInfo(
             json_encode($shippingInfo, JSON_FORCE_OBJECT)
         );
 
         return new Webservice\RequestData\ShipmentOrder(
+            $sequenceNumber,
             $shipper,
             $receiver,
-            $globalSettings,
-            $shipmentSettings,
-            $serviceSettings,
-            $sequenceNumber,
+            $serviceSelection,
+            $packageCollection,
+            $productCode,
+            $helper->utcToCet(null, 'Y-m-d'),
+            $globalSettings->isPrintOnlyIfCodable(),
             $globalSettings->getLabelType()
         );
     }

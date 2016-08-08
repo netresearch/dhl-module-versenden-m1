@@ -226,19 +226,18 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $receiverPhone, $receiverEmail, $receiverContactPerson, $packstation
         );
 
-        $globalSettings = new RequestData\ShipmentOrder\Settings\GlobalSettings(
+        $globalSettings = new RequestData\ShipmentOrder\GlobalSettings(
             $globalSettingsPrintOnlyIfCodable, $globalSettingsUnitOfMeasure,
             $globalSettingsProductWeight, $globalSettingsShippingMethods,
             $globalSettingsCodPaymentMethods, $globalSettingsCodCharge,
             $globalSettingsLabelType
         );
 
-        $shipmentSettings = new RequestData\ShipmentOrder\Settings\ShipmentSettings(
-            $shipmentSettingsDate, $shipmentSettingsReference,
-            $shipmentSettingsWeight, $shipmentSettingsProduct
-        );
+        $packageCollection = new RequestData\ShipmentOrder\PackageCollection();
+        $package = new RequestData\ShipmentOrder\Package(0, $shipmentSettingsReference, $shipmentSettingsWeight);
+        $packageCollection->addItem($package);
 
-        $serviceSettings = RequestData\ShipmentOrder\Settings\ServiceSettings::fromProperties(
+        $serviceSelection = RequestData\ShipmentOrder\ServiceSelection::fromProperties(
             $serviceSettingsDayOfDelivery, $serviceSettingsDeliveryTimeFrame,
             $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
             $serviceSettingsParcelAnnouncement,
@@ -249,12 +248,14 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
 
 
         $shipmentOrder = new RequestData\ShipmentOrder(
+            $sequenceNumber,
             $shipper,
             $receiver,
-            $globalSettings,
-            $shipmentSettings,
-            $serviceSettings,
-            $sequenceNumber,
+            $serviceSelection,
+            $packageCollection,
+            $shipmentSettingsProduct,
+            $shipmentSettingsDate,
+            $globalSettingsPrintOnlyIfCodable,
             $labelResponseType
         );
 

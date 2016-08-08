@@ -24,7 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\RequestData;
-use Dhl\Versenden\Config\Shipper;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -63,65 +62,77 @@ class ShipmentOrder extends RequestData
     const LABEL_TYPE_B64 = 'B64';
     const LABEL_TYPE_URL = 'URL';
 
+    /** @var string */
+    private $sequenceNumber;
     /** @var ShipmentOrder\Shipper */
     private $shipper;
-    /** @var ShipmentOrder\GlobalSettings */
-    private $globalSettings;
-    /** @var Receiver */
+    /** @var ShipmentOrder\Receiver */
     private $receiver;
-    /** @var ShipmentSettings */
-    private $shipmentSettings;
-    /** @var ServiceSettings */
-    private $serviceSettings;
+    /** @var ShipmentOrder\ServiceSelection */
+    private $serviceSelection;
+    /** @var ShipmentOrder\PackageCollection */
+    private $packages;
+    /** @var string */
+    private $productCode;
+    /** @var string */
+    private $shipmentDate;
     /** @var string */
     private $accountNumber;
     /** @var bool */
     private $printOnlyIfCodable;
     /** @var string */
     private $labelResponseType;
-    /** @var string */
-    private $productCode;
-    /** @var string */
-    private $sequenceNumber;
 
     /**
      * ShipmentOrder constructor.
+     * @param $sequenceNumber
      * @param ShipmentOrder\Shipper $shipper
      * @param ShipmentOrder\Receiver $receiver
-     * @param ShipmentOrder\Settings\GlobalSettings $globalSettings
-     * @param ShipmentOrder\Settings\ShipmentSettings $shipmentSettings
-     * @param ShipmentOrder\Settings\ServiceSettings $serviceSettings
-     * @param int $sequenceNumber
+     * @param ShipmentOrder\ServiceSelection $serviceSelection
+     * @param ShipmentOrder\PackageCollection $packages
+     * @param string $productCode
+     * @param string $shipmentDate
+     * @param bool $printOnlyIfCodable
      * @param string $labelType
      */
     public function __construct(
+        $sequenceNumber,
         ShipmentOrder\Shipper $shipper,
         ShipmentOrder\Receiver $receiver,
-        ShipmentOrder\Settings\GlobalSettings $globalSettings,
-        ShipmentOrder\Settings\ShipmentSettings $shipmentSettings,
-        ShipmentOrder\Settings\ServiceSettings $serviceSettings,
-        $sequenceNumber = 1,
+        ShipmentOrder\ServiceSelection $serviceSelection,
+        ShipmentOrder\PackageCollection $packages,
+        $productCode,
+        $shipmentDate,
+        $printOnlyIfCodable,
         $labelType = self::LABEL_TYPE_B64
     ) {
-        $this->shipmentSettings = $shipmentSettings;
+        $this->sequenceNumber = $sequenceNumber;
+
+        $this->packages = $packages;
         $this->shipper = $shipper;
         $this->receiver = $receiver;
 
-        $this->globalSettings = $globalSettings;
-        $this->serviceSettings = $serviceSettings;
+        $this->serviceSelection = $serviceSelection;
 
         $this->accountNumber = sprintf(
             '%s%s%s',
             $shipper->getAccount()->getEkp(),
-            preg_filter('/[^\d]/', '', $shipmentSettings->getProduct()),
+            preg_filter('/[^\d]/', '', $productCode),
             $shipper->getAccount()->getParticipationDefault()
         );
 
-        $this->printOnlyIfCodable = $globalSettings->isPrintOnlyIfCodable();
-        $this->labelResponseType = $labelType;
+        $this->productCode        = $productCode;
+        $this->shipmentDate       = $shipmentDate;
+        $this->printOnlyIfCodable = $printOnlyIfCodable;
+        $this->labelResponseType  = $labelType;
+    }
 
-        $this->productCode = $shipmentSettings->getProduct();
-        $this->sequenceNumber = $sequenceNumber;
+    /**
+     * @return string
+     */
+    public function getSequenceNumber()
+    {
+        return $this->sequenceNumber;
     }
 
     /**
@@ -141,27 +152,19 @@ class ShipmentOrder extends RequestData
     }
 
     /**
-     * @return ShipmentOrder\Settings\GlobalSettings
+     * @return ShipmentOrder\ServiceSelection
      */
-    public function getGlobalSettings()
+    public function getServiceSelection()
     {
-        return $this->globalSettings;
+        return $this->serviceSelection;
     }
 
     /**
-     * @return ShipmentOrder\Settings\ShipmentSettings
+     * @return ShipmentOrder\PackageCollection
      */
-    public function getShipmentSettings()
+    public function getPackages()
     {
-        return $this->shipmentSettings;
-    }
-
-    /**
-     * @return ShipmentOrder\Settings\ServiceSettings
-     */
-    public function getServiceSettings()
-    {
-        return $this->serviceSettings;
+        return $this->packages;
     }
 
     /**
@@ -170,6 +173,22 @@ class ShipmentOrder extends RequestData
     public function getAccountNumber()
     {
         return $this->accountNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductCode()
+    {
+        return $this->productCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShipmentDate()
+    {
+        return $this->shipmentDate;
     }
 
     /**
@@ -186,21 +205,5 @@ class ShipmentOrder extends RequestData
     public function getLabelResponseType()
     {
         return $this->labelResponseType;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProductCode()
-    {
-        return $this->productCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSequenceNumber()
-    {
-        return $this->sequenceNumber;
     }
 }

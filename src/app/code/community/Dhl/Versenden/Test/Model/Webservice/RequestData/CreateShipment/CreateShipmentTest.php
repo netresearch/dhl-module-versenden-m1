@@ -352,85 +352,57 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipment_CreateShipm
 
         $this->assertEquals(
             $expectation->isGlobalSettingsPrintOnlyIfCodable(),
-            $order->getGlobalSettings()->isPrintOnlyIfCodable()
-        );
-        $this->assertEquals(
-            $expectation->getGlobalSettingsUnitOfMeasure(),
-            $order->getGlobalSettings()->getUnitOfMeasure()
-        );
-        $this->assertEquals(
-            $expectation->getGlobalSettingsProductWeight(),
-            $order->getGlobalSettings()->getProductWeight()
-        );
-        $this->assertEquals(
-            $expectation->getGlobalSettingsShippingMethods(),
-            $order->getGlobalSettings()->getShippingMethods()
-        );
-        $this->assertEquals(
-            $expectation->getGlobalSettingsCodPaymentMethods(),
-            $order->getGlobalSettings()->getCodPaymentMethods()
-        );
-        $this->assertEquals(
-            $expectation->getGlobalSettingsCodCharge(),
-            $order->getGlobalSettings()->getCodCharge()
+            $order->isPrintOnlyIfCodable()
         );
         $this->assertEquals(
             $expectation->getGlobalSettingsLabelType(),
-            $order->getGlobalSettings()->getLabelType()
+            $order->getLabelResponseType()
         );
 
         $this->assertEquals(
             $expectation->getShipmentSettingsDate(),
-            $order->getShipmentSettings()->getDate()
-        );
-        $this->assertEquals(
-            $expectation->getShipmentSettingsReference(),
-            $order->getShipmentSettings()->getReference()
-        );
-        $this->assertEquals(
-            $expectation->getShipmentSettingsWeight(),
-            $order->getShipmentSettings()->getWeight()
+            $order->getShipmentDate()
         );
         $this->assertEquals(
             $expectation->getShipmentSettingsProduct(),
-            $order->getShipmentSettings()->getProduct()
+            $order->getProductCode()
         );
 
         $this->assertEquals(
             $expectation->getServiceSettingsDayOfDelivery(),
-            $order->getServiceSettings()->getDayOfDelivery()
+            $order->getServiceSelection()->getDayOfDelivery()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsDeliveryTimeFrame(),
-            $order->getServiceSettings()->getDeliveryTimeFrame()
+            $order->getServiceSelection()->getDeliveryTimeFrame()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsPreferredLocation(),
-            $order->getServiceSettings()->getPreferredLocation()
+            $order->getServiceSelection()->getPreferredLocation()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsPreferredNeighbour(),
-            $order->getServiceSettings()->getPreferredNeighbour()
+            $order->getServiceSelection()->getPreferredNeighbour()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsParcelAnnouncement(),
-            $order->getServiceSettings()->getParcelAnnouncement()
+            $order->getServiceSelection()->getParcelAnnouncement()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsVisualCheckOfAge(),
-            $order->getServiceSettings()->getVisualCheckOfAge()
+            $order->getServiceSelection()->getVisualCheckOfAge()
         );
         $this->assertEquals(
             $expectation->isServiceSettingsReturnShipment(),
-            $order->getServiceSettings()->isReturnShipment()
+            $order->getServiceSelection()->isReturnShipment()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsInsurance(),
-            $order->getServiceSettings()->getInsurance()
+            $order->getServiceSelection()->getInsurance()
         );
         $this->assertEquals(
             $expectation->isServiceSettingsBulkyGoods(),
-            $order->getServiceSettings()->isBulkyGoods()
+            $order->getServiceSelection()->isBulkyGoods()
         );
     }
 }

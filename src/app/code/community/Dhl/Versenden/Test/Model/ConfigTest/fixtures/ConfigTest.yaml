@@ -35,3 +35,8 @@ config:
   default/carriers/dhlversenden/service_bulkygoods_enabled: "0"
   default/carriers/dhlversenden/service_parcelannouncement_enabled: "1"
   stores/store_two/carriers/dhlversenden/service_parcelannouncement_enabled: "2"
+
+  default/carriers/dhlversenden/webservice_auth_username:  "uFoo"
+  default/carriers/dhlversenden/webservice_auth_password:  "pFoo"
+  default/carriers/dhlversenden/sandbox_endpoint:          "sandbox endpoint"
+  stores/store_two/carriers/dhlversenden/sandbox_endpoint: "default endpoint"

@@ -45,14 +45,19 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipmentDetails(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $shipmentItem  = new ShipmentItemType($shipmentOrder->getShipmentSettings()->getWeight());
+        //TODO(nr): how to add multiple parcels/packages?
+        $packages = $shipmentOrder->getPackages()->getItems();
+        /** @var RequestData\ShipmentOrder\Package $package */
+        $package = current($packages);
+        $shipmentItemType = new ShipmentItemType($package->getWeightInKG());
 
         $shipmentDetailsType = new VersendenApi\ShipmentDetailsTypeType(
             $shipmentOrder->getProductCode(),
             $shipmentOrder->getAccountNumber(),
-            $shipmentOrder->getShipmentSettings()->getDate(),
-            $shipmentItem
+            $shipmentOrder->getShipmentDate(),
+            $shipmentItemType
         );
+
 
         return $shipmentDetailsType;
     }
