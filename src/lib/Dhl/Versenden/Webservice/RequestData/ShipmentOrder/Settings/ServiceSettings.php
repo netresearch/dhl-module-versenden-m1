@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
+
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -38,51 +39,83 @@ use Dhl\Versenden\Webservice\RequestData;
 class ServiceSettings extends RequestData implements \JsonSerializable
 {
     /** @var bool|string false or date */
-    private $dayOfDelivery;
+    private $dayOfDelivery = false;
     /** @var bool|string false or time */
-    private $deliveryTimeFrame;
+    private $deliveryTimeFrame = false;
     /** @var bool|string false or location */
-    private $preferredLocation;
+    private $preferredLocation = false;
     /** @var bool|string false or neighbour address */
-    private $preferredNeighbour;
+    private $preferredNeighbour = false;
     /** @var int yes/no/optional */
-    private $parcelAnnouncement;
+    private $parcelAnnouncement = 0;
     /** @var bool|string false or A16 or A18 */
-    private $visualCheckOfAge;
+    private $visualCheckOfAge = false;
     /** @var bool false or true */
-    private $returnShipment;
+    private $returnShipment = false;
     /** @var bool|string false or A or B */
-    private $insurance;
+    private $insurance = false;
     /** @var bool false or true */
-    private $bulkyGoods;
-
+    private $bulkyGoods = false;
+    
     /**
-     * ServiceSettings constructor.
+     * Constructs ServiceSettings object from array with values that differ from initial settings
+     *
+     *
+     * @param array $options service setting options that differ from default
+     *
+     * @return ServiceSettings
+     */
+    public static function fromArray(array $options)
+    {
+        $instance = new self();
+        array_walk(
+            $options,
+            function (&$value, $key, &$instance) {
+                if (property_exists($instance, $key)) {
+                    $instance->$key = $value;
+                }
+            },
+            $instance
+        );
+        
+        return $instance;
+    }
+    
+    
+    /**
+     * Constructs service setting object from giving each property explicitly
+     *
      * @param bool|string $dayOfDelivery
      * @param bool|string $deliveryTimeFrame
      * @param bool|string $preferredLocation
      * @param bool|string $preferredNeighbour
-     * @param int $parcelAnnouncement
+     * @param int         $parcelAnnouncement
      * @param bool|string $visualCheckOfAge
-     * @param bool $returnShipment
+     * @param bool        $returnShipment
      * @param bool|string $insurance
-     * @param bool $bulkyGoods
+     * @param bool        $bulkyGoods
+     *
+     * @return ServiceSettings
      */
-    public function __construct(
+    
+    public static function fromProperties(
         $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
         $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods
     ) {
-        $this->dayOfDelivery = $dayOfDelivery;
-        $this->deliveryTimeFrame = $deliveryTimeFrame;
-        $this->preferredLocation = $preferredLocation;
-        $this->preferredNeighbour = $preferredNeighbour;
-        $this->parcelAnnouncement = $parcelAnnouncement;
-        $this->visualCheckOfAge = $visualCheckOfAge;
-        $this->returnShipment = $returnShipment;
-        $this->insurance = $insurance;
-        $this->bulkyGoods = $bulkyGoods;
+        $instance = new self();
+        $instance->dayOfDelivery = $dayOfDelivery;
+        $instance->deliveryTimeFrame = $deliveryTimeFrame;
+        $instance->preferredLocation = $preferredLocation;
+        $instance->preferredNeighbour = $preferredNeighbour;
+        $instance->parcelAnnouncement = $parcelAnnouncement;
+        $instance->visualCheckOfAge = $visualCheckOfAge;
+        $instance->returnShipment = $returnShipment;
+        $instance->insurance = $insurance;
+        $instance->bulkyGoods = $bulkyGoods;
+        
+        return $instance;
     }
-
+    
     /**
      * @return bool|string
      */
@@ -90,7 +123,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->dayOfDelivery;
     }
-
+    
     /**
      * @return bool|string
      */
@@ -98,7 +131,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->deliveryTimeFrame;
     }
-
+    
     /**
      * @return bool|string
      */
@@ -106,7 +139,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->preferredLocation;
     }
-
+    
     /**
      * @return bool|string
      */
@@ -114,7 +147,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->preferredNeighbour;
     }
-
+    
     /**
      * @return int
      */
@@ -122,7 +155,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->parcelAnnouncement;
     }
-
+    
     /**
      * @return bool|string
      */
@@ -130,7 +163,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->visualCheckOfAge;
     }
-
+    
     /**
      * @return boolean
      */
@@ -138,7 +171,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->returnShipment;
     }
-
+    
     /**
      * @return bool|string
      */
@@ -146,7 +179,7 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->insurance;
     }
-
+    
     /**
      * @return boolean
      */
@@ -154,12 +187,13 @@ class ServiceSettings extends RequestData implements \JsonSerializable
     {
         return $this->bulkyGoods;
     }
-
+    
     /**
      * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
+     *        which is a value of any type other than a resource.
      * @since 5.4.0
      */
     public function jsonSerialize()
