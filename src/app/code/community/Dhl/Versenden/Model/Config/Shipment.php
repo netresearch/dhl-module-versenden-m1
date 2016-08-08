@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings\GlobalSettings;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\GlobalSettings;
 
 /**
  * Dhl_Versenden_Model_Config_Shipment

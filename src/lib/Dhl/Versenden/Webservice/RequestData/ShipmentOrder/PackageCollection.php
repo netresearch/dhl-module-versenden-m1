@@ -23,11 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
-use Dhl\Versenden\Webservice\RequestData;
-
+namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 /**
- * ShipmentSettings
+ * PackageCollection
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -35,62 +33,79 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ShipmentSettings extends RequestData implements \JsonSerializable
+class PackageCollection implements \IteratorAggregate, \Countable, \JsonSerializable
 {
-    /** @var string */
-    private $date;
-    /** @var string */
-    private $reference;
-    /** @var float */
-    private $weight;
-    /** @var string */
-    private $product;
+    /**
+     * @var Package[]
+     */
+    protected $packages = [];
 
     /**
-     * ShipmentSettings constructor.
-     * @param string $date
-     * @param string $reference
-     * @param float $weight
-     * @param string $product
+     * @return int
      */
-    public function __construct($date, $reference, $weight, $product)
+    public function count()
     {
-        $this->date = $date;
-        $this->reference = $reference;
-        $this->weight = $weight;
-        $this->product = $product;
+        return count($this->packages);
     }
 
     /**
-     * @return string
+     * @return \ArrayIterator
      */
-    public function getDate()
+    public function getIterator()
     {
-        return $this->date;
+        return new \ArrayIterator($this->packages);
     }
 
     /**
-     * @return string
+     * Set all shipment orders to the collection.
+     *
+     * @param Package[] $packages
+     * @return $this
      */
-    public function getReference()
+    public function setItems(array $packages)
     {
-        return $this->reference;
+        $this->packages = [];
+        foreach ($packages as $package) {
+            $this->addItem($package);
+        }
+
+        return $this;
     }
 
     /**
-     * @return float
+     * Obtain all shipment orders from collection
+     *
+     * @return Package[]
      */
-    public function getWeight()
+    public function getItems()
     {
-        return $this->weight;
+        return $this->packages;
     }
 
     /**
-     * @return string
+     * Add a shipment order to the collection.
+     *
+     * @param Package $package
+     * @return $this
      */
-    public function getProduct()
+    public function addItem(Package $package)
     {
-        return $this->product;
+        $this->packages[$package->getSequenceNumber()] = $package;
+
+        return $this;
+    }
+
+    /**
+     * @param $sequenceNumber
+     * @return Package|null
+     */
+    public function getItem($sequenceNumber)
+    {
+        if (!isset($this->packages[$sequenceNumber])) {
+            return null;
+        }
+
+        return $this->packages[$sequenceNumber];
     }
 
     /**

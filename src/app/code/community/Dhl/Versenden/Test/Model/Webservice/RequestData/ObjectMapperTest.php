@@ -25,8 +25,10 @@
  */
 use \Dhl\Versenden\Webservice\RequestData\ObjectMapper;
 use \Dhl\Versenden\Webservice\RequestData\ShippingInfo;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Package;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\PackageCollection;
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection;
 /**
  * Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
  *
@@ -91,11 +93,11 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
      * @param $age
      * @param $insurance
      * @param $bulkyGoods
-     * @return Settings\ServiceSettings
+     * @return ServiceSelection
      */
-    protected function getServiceSettings($location, $age, $insurance, $bulkyGoods)
+    protected function getServiceSelection($location, $age, $insurance, $bulkyGoods)
     {
-        $serviceSettings = Settings\ServiceSettings::fromProperties(
+        $serviceSettings = ServiceSelection::fromProperties(
             false,
             false,
             $location,
@@ -111,17 +113,18 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
     }
 
     /**
-     * @param $date
      * @param $reference
      * @param $weight
-     * @param $product
-     * @return Settings\ShipmentSettings
+     * @return PackageCollection
      */
-    protected function getShipmentSettings($date, $reference, $weight, $product)
+    protected function getPackages($reference, $weight)
     {
-        $shipmentSettings = new Settings\ShipmentSettings($date, $reference, $weight, $product);
+        $packageCollection = new PackageCollection();
 
-        return $shipmentSettings;
+        $package = new Package(0, $reference, $weight);
+        $packageCollection->addItem($package);
+
+        return $packageCollection;
     }
 
     /**
@@ -149,19 +152,16 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
         $insurance = 'B';
         $bulkyGoods = true;
 
-        $serviceSettings = $this->getServiceSettings($location, $age, $insurance, $bulkyGoods);
+        $serviceSelection = $this->getServiceSelection($location, $age, $insurance, $bulkyGoods);
 
 
-        $date = '1970-01-01';
         $reference = 'XXX';
         $weight = 1.5;
-        $product = 'DHL00PAK';
 
-        $shipmentSettings = $this->getShipmentSettings($date, $reference, $weight, $product);
-
-        $shippingInfo = new ShippingInfo($receiver, $serviceSettings, $shipmentSettings);
+        $packages = $this->getPackages($reference, $weight);
 
 
+        $shippingInfo = new ShippingInfo($receiver, $serviceSelection, $packages);
         $json = json_encode($shippingInfo, JSON_FORCE_OBJECT);
         $stdObject = json_decode($json);
 
@@ -179,15 +179,16 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
         $this->assertEquals($stationId, $shippingInfo->getReceiver()->getPackstation()->getPackstationNumber());
         $this->assertEquals($postNumber, $shippingInfo->getReceiver()->getPackstation()->getPostNumber());
 
-        $this->assertEquals($location, $shippingInfo->getServiceSettings()->getPreferredLocation());
-        $this->assertEquals($age, $shippingInfo->getServiceSettings()->getVisualCheckOfAge());
-        $this->assertEquals($insurance, $shippingInfo->getServiceSettings()->getInsurance());
-        $this->assertEquals($bulkyGoods, $shippingInfo->getServiceSettings()->isBulkyGoods());
+        $this->assertEquals($location, $shippingInfo->getServiceSelection()->getPreferredLocation());
+        $this->assertEquals($age, $shippingInfo->getServiceSelection()->getVisualCheckOfAge());
+        $this->assertEquals($insurance, $shippingInfo->getServiceSelection()->getInsurance());
+        $this->assertEquals($bulkyGoods, $shippingInfo->getServiceSelection()->isBulkyGoods());
 
-        $this->assertEquals($date, $shippingInfo->getShipmentSettings()->getDate());
-        $this->assertEquals($reference, $shippingInfo->getShipmentSettings()->getReference());
-        $this->assertEquals($weight, $shippingInfo->getShipmentSettings()->getWeight());
-        $this->assertEquals($product, $shippingInfo->getShipmentSettings()->getProduct());
+        /** @var Package $package */
+        foreach ($shippingInfo->getPackages() as $package) {
+            $this->assertEquals($reference, $package->getReference());
+            $this->assertEquals($weight, $package->getWeightInKG());
+        }
     }
 
     /**
@@ -215,17 +216,15 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
         $insurance = 'B';
         $bulkyGoods = true;
 
-        $serviceSettings = $this->getServiceSettings($location, $age, $insurance, $bulkyGoods);
+        $serviceSettings = $this->getServiceSelection($location, $age, $insurance, $bulkyGoods);
 
 
-        $date = '1970-01-01';
         $reference = 'XXX';
         $weight = 1.5;
-        $product = 'DHL00PAK';
 
-        $shipmentSettings = $this->getShipmentSettings($date, $reference, $weight, $product);
+        $packages = $this->getPackages($reference, $weight);
 
-        $shippingInfo = new ShippingInfo($receiver, $serviceSettings, $shipmentSettings);
+        $shippingInfo = new ShippingInfo($receiver, $serviceSettings, $packages);
 
 
         $json = json_encode($shippingInfo, JSON_FORCE_OBJECT);

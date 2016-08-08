@@ -39,21 +39,21 @@ class ShippingInfo implements \JsonSerializable
 {
     /** @var ShipmentOrder\Receiver */
     private $receiver;
-    /** @var ShipmentOrder\Settings\ServiceSettings */
-    private $serviceSettings;
-    /** @var ShipmentOrder\Settings\ShipmentSettings */
-    private $shipmentSettings;
+    /** @var ShipmentOrder\ServiceSelection */
+    private $serviceSelection;
+    /** @var ShipmentOrder\PackageCollection */
+    private $packages;
     /** @var string */
     private $schemaVersion = ObjectMapper::SCHEMA_VERSION;
 
     public function __construct(
         ShipmentOrder\Receiver $receiver,
-        ShipmentOrder\Settings\ServiceSettings $serviceSettings,
-        ShipmentOrder\Settings\ShipmentSettings $shipmentSettings = null
+        ShipmentOrder\ServiceSelection $serviceSelection,
+        ShipmentOrder\PackageCollection $packages = null
     ) {
         $this->receiver         = $receiver;
-        $this->serviceSettings  = $serviceSettings;
-        $this->shipmentSettings = $shipmentSettings;
+        $this->serviceSelection = $serviceSelection;
+        $this->packages         = $packages;
     }
 
     /**
@@ -65,19 +65,19 @@ class ShippingInfo implements \JsonSerializable
     }
 
     /**
-     * @return ShipmentOrder\Settings\ServiceSettings
+     * @return ShipmentOrder\ServiceSelection
      */
-    public function getServiceSettings()
+    public function getServiceSelection()
     {
-        return $this->serviceSettings;
+        return $this->serviceSelection;
     }
 
     /**
-     * @return ShipmentOrder\Settings\ShipmentSettings
+     * @return ShipmentOrder\PackageCollection
      */
-    public function getShipmentSettings()
+    public function getPackages()
     {
-        return $this->shipmentSettings;
+        return $this->packages;
     }
 
     /**

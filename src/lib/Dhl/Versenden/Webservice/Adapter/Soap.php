@@ -149,4 +149,12 @@ class Soap implements Adapter
     {
         throw new Adapter\NotImplementedException();
     }
+
+    /**
+     * @return \SoapClient
+     */
+    public function getClient()
+    {
+        return $this->soapClient;
+    }
 }

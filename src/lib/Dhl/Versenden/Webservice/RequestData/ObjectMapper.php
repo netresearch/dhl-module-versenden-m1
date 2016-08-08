@@ -24,8 +24,10 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\RequestData;
+use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Package;
+use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\PackageCollection;
 use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
-use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Settings;
+use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection;
 
 /**
  * ObjectMapper
@@ -42,9 +44,9 @@ class ObjectMapper
 
     /**
      * @param \stdClass $object
-     * @return Settings\ServiceSettings
+     * @return ServiceSelection
      */
-    protected static function getServiceSettings(\stdClass $object)
+    protected static function getServiceSelection(\stdClass $object)
     {
         $dayOfDelivery = isset($object->dayOfDelivery) ? $object->dayOfDelivery : false;
         $deliveryTimeFrame = isset($object->deliveryTimeFrame) ? $object->deliveryTimeFrame : false;
@@ -56,7 +58,7 @@ class ObjectMapper
         $insurance = isset($object->insurance) ? $object->insurance : false;
         $bulkyGoods = isset($object->bulkyGoods) ? $object->bulkyGoods : false;
 
-        return Settings\ServiceSettings::fromProperties(
+        return ServiceSelection::fromProperties(
             $dayOfDelivery,
             $deliveryTimeFrame,
             $preferredLocation,
@@ -70,17 +72,38 @@ class ObjectMapper
     }
 
     /**
-     * @param \stdClass $object
-     * @return Settings\ShipmentSettings
+     * @param \stdClass $packagesObject
+     * @return PackageCollection
      */
-    protected static function getShipmentSettings(\stdClass $object)
+    protected static function getPackages(\stdClass  $packagesObject)
     {
-        $date = isset($object->date) ? $object->date : '';
-        $reference = isset($object->reference) ? $object->reference : '';
-        $weight = isset($object->weight) ? $object->weight : 0;
-        $product = isset($object->product) ? $object->product : '';
+        $packageCollection = new PackageCollection();
+        $packages = $packagesObject->packages;
 
-        return new Settings\ShipmentSettings($date, $reference, $weight, $product);
+        $i = 0;
+        while (isset($packages->{$i})) {
+            $object = $packages->{$i};
+            $sequenceNumber = isset($object->sequenceNumber) ? $object->sequenceNumber : 0;
+            $reference = isset($object->reference) ? $object->reference : '';
+            $weightInKG = isset($object->weightInKG) ? $object->weightInKG : 0;
+            $lengthInCM = isset($object->lengthInCM) ? $object->lengthInCM : null;
+            $widthInCM = isset($object->widthInCM) ? $object->widthInCM : null;
+            $heightInCM = isset($object->heightInCM) ? $object->heightInCM : null;
+
+            $package = new Package(
+                $sequenceNumber,
+                $reference,
+                $weightInKG,
+                $lengthInCM,
+                $widthInCM,
+                $heightInCM
+            );
+            $packageCollection->addItem($package);
+
+            $i++;
+        }
+
+        return $packageCollection;
     }
 
     /**
@@ -232,14 +255,14 @@ class ObjectMapper
         $receiver = isset($object->receiver)
             ? static::getReceiver($object->receiver)
             : null;
-        $serviceSettings = isset($object->serviceSettings)
-            ? static::getServiceSettings($object->serviceSettings)
+        $serviceSettings = isset($object->serviceSelection)
+            ? static::getServiceSelection($object->serviceSelection)
             : null;
-        $shipmentSettings = isset($object->shipmentSettings)
-            ? static::getShipmentSettings($object->shipmentSettings)
+        $packages = isset($object->packages)
+            ? static::getPackages($object->packages)
             : null;
 
-        return new ShippingInfo($receiver, $serviceSettings, $shipmentSettings);
+        return new ShippingInfo($receiver, $serviceSettings, $packages);
     }
 
     /**

@@ -129,7 +129,7 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
     /**
      * @param bool[] $selectedServices
      * @param string[] $serviceDetails
-     * @return ShipmentOrder\Settings\ServiceSettings
+     * @return ShipmentOrder\ServiceSelection
      */
     public function serviceSelectionToServiceSettings(array $selectedServices, array $serviceDetails)
     {
@@ -141,6 +141,6 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
             $serviceDetails
         );
 
-        return ShipmentOrder\Settings\ServiceSettings::fromArray($selectedServices);
+        return ShipmentOrder\ServiceSelection::fromArray($selectedServices);
     }
 }

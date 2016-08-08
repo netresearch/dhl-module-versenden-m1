@@ -44,6 +44,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
     /**
      * @param Dhl_Versenden_Model_Config_Shipper $config shipper configuration object
      *
+     * @param Dhl_Versenden_Model_Config_Shipper $config
      * @return Webservice\Adapter
      */
     public function getAdapter(Dhl_Versenden_Model_Config_Shipper $config)
@@ -52,6 +53,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
             'location' => $config->getEndpoint(),
             'login' => $config->getWebserviceAuthUsername(),
             'password' => $config->getWebserviceAuthPassword(),
+            'trace' => 1
         );
         $client = new \Dhl\Bcs\Api\GVAPI_2_0_de($options);
 
@@ -87,28 +89,28 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
     /**
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
      * @return ResponseData\CreateShipment
+     * @throws SoapFault
      */
-    public function createShipmentOrder(array $shipmentRequests)
+    protected function _createShipmentOrder(array $shipmentRequests)
     {
-        //TODO(nr): dispatch request_before event
-
         $wsVersion = new RequestData\Version('2', '1');
         $shipmentOrders = new RequestData\ShipmentOrderCollection();
 
+        /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
             $orderShipment = $shipmentRequest->getOrderShipment();
 
-            $packages = $shipmentRequest->getPackages();
-            //TODO(nr): calculate or fetch from POST data
-            $package = $packages[1]['params'];
-            $orderData['product'] = $package['container'];
-            $orderData['shipment_service'] = array();
-            $orderData['service_setting'] = array();
+            $packageInfo = $shipmentRequest->getPackages();
+            $serviceInfo = array(
+                'shipment_service' => array(),
+                'service_setting' => array(),
+            );
 
             $shipmentOrder = $this->shipmentToShipmentOrder(
-                $orderShipment,
                 $sequenceNumber,
-                $orderData
+                $orderShipment,
+                $packageInfo,
+                $serviceInfo
             );
 
             $shipmentOrders->addItem($shipmentOrder);
@@ -121,10 +123,35 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         $parser = $this->getParser(self::OPERATION_CREATE_SHIPMENT_ORDER);
         /** @var SoapAdapter $adapter */
         $adapter = $this->getAdapter(Mage::getModel('dhl_versenden/config_shipper'));
-        /** @var ResponseData\CreateShipment $result */
-        $result = $adapter->createShipmentOrder($requestData, $parser);
 
-        //TODO(nr): dispatch request_after event
+        try {
+            /** @var ResponseData\CreateShipment $result */
+            $result = $adapter->createShipmentOrder($requestData, $parser);
+        } catch (SoapFault $fault) {
+            $this->logRequest($adapter);
+            $this->logResponse($adapter);
+            throw $fault;
+        }
+
         return $result;
+    }
+
+    /**
+     * @param SoapAdapter $adapter
+     */
+    public function logRequest(SoapAdapter $adapter)
+    {
+        $request = $adapter->getClient()->__getLastRequest();
+        Mage::getSingleton('core/logger')->log($request);
+    }
+
+    /**
+     * @param SoapAdapter $adapter
+     */
+    public function logResponse(SoapAdapter $adapter)
+    {
+        $headers = $adapter->getClient()->__getLastResponseHeaders();
+        $response = $adapter->getClient()->__getLastResponse();
+        Mage::getSingleton('core/logger')->log($headers . "\n\n" . $response);
     }
 }
