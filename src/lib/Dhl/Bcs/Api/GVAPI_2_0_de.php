@@ -117,7 +117,7 @@ class GVAPI_2_0_de extends \SoapClient
       'features' => 1,
     ), $options);
       if (!$wsdl) {
-        $wsdl = __DIR__ . '/geschaeftskundenversand-api-2.1.wsdl';
+        $wsdl = 'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.1/geschaeftskundenversand-api-2.1.wsdl';
       }
       parent::__construct($wsdl, $options);
     }
