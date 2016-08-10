@@ -37,7 +37,7 @@ document.observe("dom:loaded", function() {
 <div id="packaging_window" class="packaging-window" style="display:none;">
     <div class="entry-edit">
         <div class="entry-edit-head">
-            <button type="button" class="scalable AddPackageBtn" onclick="packaging.newPackage();">
+            <button type="button" class="disabled scalable AddPackageBtn" onclick="return false;">
                 <span><span><span><?php echo Mage::helper('sales')->__('Add Package') ?></span></span></span>
             </button>
             <h4 class="icon-head fieldset-legend"><?php echo Mage::helper('sales')->__('Create Packages') ?></h4>
@@ -130,7 +130,7 @@ document.observe("dom:loaded", function() {
                             </button>
                         </td>
                         <td>
-                            <button type="button" class="scalable DeletePackageBtn" onclick="packaging.deletePackage(this);">
+                            <button type="button" class="disabled scalable DeletePackageBtn" onclick="return false;">
                                 <span><span><span><?php echo Mage::helper('sales')->__('Delete Package') ?></span></span></span>
                             </button>
                         </td>

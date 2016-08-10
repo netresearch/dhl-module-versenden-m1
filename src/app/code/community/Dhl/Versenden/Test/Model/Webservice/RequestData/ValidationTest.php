@@ -38,7 +38,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
 {
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\RequestDataException
+     * @expectedException \Dhl\Versenden\Webservice\RequestData\ValidationException
      */
     public function requiredValue()
     {
@@ -72,7 +72,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\RequestDataException
+     * @expectedException \Dhl\Versenden\Webservice\RequestData\ValidationException
      */
     public function tooShort()
     {
@@ -106,7 +106,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\RequestDataException
+     * @expectedException \Dhl\Versenden\Webservice\RequestData\ValidationException
      */
     public function tooLong()
     {

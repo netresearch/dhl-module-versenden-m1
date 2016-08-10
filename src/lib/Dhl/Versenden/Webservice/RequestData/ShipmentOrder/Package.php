@@ -39,8 +39,6 @@ class Package extends RequestData implements \JsonSerializable
 {
     /** @var int */
     private $sequenceNumber;
-    /** @var string */
-    private $reference;
     /** @var float */
     private $weightInKG;
     /** @var int */
@@ -53,17 +51,15 @@ class Package extends RequestData implements \JsonSerializable
     /**
      * Package constructor.
      * @param $sequenceNumber
-     * @param $reference
      * @param $weightInKG
      * @param null $lengthInCM
      * @param null $widthInCM
      * @param null $heightInCM
      */
-    public function __construct($sequenceNumber, $reference,
+    public function __construct($sequenceNumber,
         $weightInKG, $lengthInCM = null, $widthInCM = null, $heightInCM = null
     ) {
         $this->sequenceNumber = $sequenceNumber;
-        $this->reference = $reference;
         $this->weightInKG = $weightInKG;
         $this->lengthInCM = $lengthInCM;
         $this->widthInCM  = $widthInCM;
@@ -76,14 +72,6 @@ class Package extends RequestData implements \JsonSerializable
     public function getSequenceNumber()
     {
         return $this->sequenceNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getReference()
-    {
-        return $this->reference;
     }
 
     /**

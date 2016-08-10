@@ -17,38 +17,23 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Versenden\Webservice\RequestData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\ResponseData;
+namespace Dhl\Versenden\Webservice\RequestData;
 use \Dhl\Versenden\Webservice\Exception;
 /**
- * StatusException
+ * ValidationException
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class StatusException extends Exception
+class ValidationException extends Exception
 {
-    /**
-     * StatusException constructor.
-     * @param Status $status
-     */
-    public function __construct(Status $status)
-    {
-        $messages = $status->getStatusMessage();
-        if (!is_array($messages)) {
-            $messages = [$messages];
-        }
-
-        array_unshift($messages, $status->getStatusText());
-        $messages = implode("\n", $messages);
-        parent::__construct($messages, $status->getStatusCode());
-    }
 }
