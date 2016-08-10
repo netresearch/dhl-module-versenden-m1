@@ -84,7 +84,6 @@ class ObjectMapper
         while (isset($packages->{$i})) {
             $object = $packages->{$i};
             $sequenceNumber = isset($object->sequenceNumber) ? $object->sequenceNumber : 0;
-            $reference = isset($object->reference) ? $object->reference : '';
             $weightInKG = isset($object->weightInKG) ? $object->weightInKG : 0;
             $lengthInCM = isset($object->lengthInCM) ? $object->lengthInCM : null;
             $widthInCM = isset($object->widthInCM) ? $object->widthInCM : null;
@@ -92,7 +91,6 @@ class ObjectMapper
 
             $package = new Package(
                 $sequenceNumber,
-                $reference,
                 $weightInKG,
                 $lengthInCM,
                 $widthInCM,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Dhl Versenden
+ * ${VENDOR_NAME} ${MODULE_NAME}
  *
  * NOTICE OF LICENSE
  *
@@ -16,23 +16,24 @@
  *
  * PHP version 5
  *
- * @category  Dhl
- * @package   Dhl\Versenden\Webservice\RequestData
- * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @category  ${VENDOR_NAME}
+ * @package   ${VENDOR_NAME}_${MODULE_NAME}
+ * @author    christoph <${USER_EMAIL}>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice;
 /**
- * Exception
+ * ${NAME}
  *
- * @category Dhl
- * @package  Dhl\Versenden\Webservice\RequestData
- * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @category ${VENDOR_NAME}
+ * @package  ${VENDOR_NAME}_${MODULE_NAME}
+ * @author   christoph <${USER_EMAIL}>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class RequestDataException extends \Exception
+class Exception extends \Exception
 {
+    
 }

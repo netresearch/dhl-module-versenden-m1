@@ -44,20 +44,20 @@ abstract class RequestData
      * @param int $minLength The minimum allowed string length
      * @param int $maxLength The maximum allowed string length
      * @return bool
-     * @throws RequestDataException
+     * @throws RequestData\ValidationException
      */
     public function validateLength($name, $value, $minLength, $maxLength)
     {
         if ( ($minLength > 0) && !strlen($value) ) {
-            throw new RequestDataException("$name is a required value.");
+            throw new RequestData\ValidationException("$name is a required value.");
         }
 
         if (strlen($value) < $minLength) {
-            throw new RequestDataException("Please enter at least $minLength characters for $name.");
+            throw new RequestData\ValidationException("Please enter at least $minLength characters for $name.");
         }
 
         if (strlen($value) > $maxLength) {
-            throw new RequestDataException("Please enter no more than $maxLength characters for $name.");
+            throw new RequestData\ValidationException("Please enter no more than $maxLength characters for $name.");
         }
 
         return true;

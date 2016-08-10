@@ -88,13 +88,11 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
 
     /**
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return ResponseData\CreateShipment
-     * @throws SoapFault
+     * @return RequestData\ShipmentOrderCollection
      */
-    protected function _createShipmentOrder(array $shipmentRequests)
+    protected function prepareShipmentOrders(array $shipmentRequests)
     {
-        $wsVersion = new RequestData\Version('2', '1');
-        $shipmentOrders = new RequestData\ShipmentOrderCollection();
+        $shipmentOrderCollection = new RequestData\ShipmentOrderCollection();
 
         /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
@@ -106,19 +104,53 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
                 'service_setting' => array(),
             );
 
-            $shipmentOrder = $this->shipmentToShipmentOrder(
-                $sequenceNumber,
-                $orderShipment,
-                $packageInfo,
-                $serviceInfo
-            );
+            try {
+                $shipmentOrder = $this->shipmentToShipmentOrder(
+                    $sequenceNumber,
+                    $orderShipment,
+                    $packageInfo,
+                    $serviceInfo
+                );
 
-            $shipmentOrders->addItem($shipmentOrder);
+                $shipmentOrderCollection->addItem($shipmentOrder);
+            } catch (RequestData\ValidationException $e) {
+                $shipmentRequest->setData('request_data_exception', $e->getMessage());
+            }
         }
 
+        return $shipmentOrderCollection;
+    }
+
+    /**
+     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     * @return ResponseData\CreateShipment
+     * @throws SoapFault
+     * @throws RequestData\ValidationException
+     */
+    protected function _createShipmentOrder(array $shipmentRequests)
+    {
+        $wsVersion = new RequestData\Version('2', '1');
+        $shipmentOrderCollection = $this->prepareShipmentOrders($shipmentRequests);
+
+        // handle validation errors in shipment request data
+        $shipmentOrderErrors = array();
+        foreach ($shipmentRequests as $shipmentRequest) {
+            if ($shipmentRequest->hasData('request_data_exception')) {
+                $shipmentOrderErrors[]= sprintf(
+                    '#%s: %s',
+                    $shipmentRequest->getOrderShipment()->getOrder()->getIncrementId(),
+                    $shipmentRequest->getData('request_data_exception')
+                );
+            }
+        }
+
+        if (count($shipmentOrderErrors)) {
+            $msg = sprintf('%s %s', 'The shipment request(s) had errors.', implode("\n", $shipmentOrderErrors));
+            throw new RequestData\ValidationException($msg);
+        }
 
         /** @var RequestData\CreateShipment $requestData */
-        $requestData = new RequestData\CreateShipment($wsVersion, $shipmentOrders);
+        $requestData = new RequestData\CreateShipment($wsVersion, $shipmentOrderCollection);
         /** @var SoapParser\CreateShipmentOrder $parser */
         $parser = $this->getParser(self::OPERATION_CREATE_SHIPMENT_ORDER);
         /** @var SoapAdapter $adapter */

@@ -57,7 +57,7 @@ class CreateShipmentRequestType implements RequestType
             $shipmentOrder->getShipmentDate(),
             $shipmentItemType
         );
-
+        $shipmentDetailsType->setCustomerReference($shipmentOrder->getReference());
 
         return $shipmentDetailsType;
     }

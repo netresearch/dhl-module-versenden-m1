@@ -40,6 +40,8 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
     /**
      * @test
      * @dataProvider dataProvider
+     *
+     * @param string $jsonInfo
      */
     public function loadDhlVersendenInfo($jsonInfo)
     {

@@ -76,6 +76,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
 
+        // national
         $shipperCountry = 'DE';
         $receiverCountry = 'DE';
         $params = new Varien_Object(array(
@@ -89,6 +90,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayNotHasKey($paketInternational, $containerTypes);
 
 
+        // international shipper, national receiver
         $shipperCountry = 'AT';
         $receiverCountry = 'DE';
         $params = new Varien_Object(array(
@@ -101,6 +103,8 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayHasKey($paketInternational, $containerTypes);
         $this->assertArrayNotHasKey($paketNational, $containerTypes);
 
+
+        // international shipper, international receiver
         $shipperCountry = 'AT';
         $receiverCountry = 'CH';
         $params = new Varien_Object(array(
@@ -113,6 +117,13 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayHasKey($paketInternational, $containerTypes);
         $this->assertArrayNotHasKey($paketNational, $containerTypes);
 
+
+        // no shipper or receiver info given
+        $params = null;
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertArrayHasKey($paketInternational, $containerTypes);
+        $this->assertArrayHasKey($paketNational, $containerTypes);
     }
 
     /**
@@ -166,7 +177,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\ResponseData\StatusException
+     * @expectedException \Mage_Core_Exception
      */
     public function requestToShipmentStatusException()
     {
