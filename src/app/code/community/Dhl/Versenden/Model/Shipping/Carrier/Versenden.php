@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\ResponseData;
+use \Dhl\Versenden\Webservice;
 /**
  * Dhl_Versenden_Model_Shipping_Carrier_Versenden
  *
@@ -38,6 +38,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     implements Mage_Shipping_Model_Carrier_Interface
 {
     const CODE = 'dhlversenden';
+    const PACKAGE_MIN_WEIGHT = 0.2;
 
     const PRODUCT_CODE_PAKET_NATIONAL  = 'V01PAK';
     const PRODUCT_CODE_WELTPAKET = 'V53WPAK';
@@ -55,6 +56,49 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     {
         parent::_construct();
         $this->_code = self::CODE;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getProducts()
+    {
+        return array(
+            self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
+            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__(''),
+        );
+    }
+
+    /**
+     * Obtain DHL products for national shipping.
+     *
+     * @return string[]
+     */
+    protected function getNationalProducts()
+    {
+        $products = $this->getProducts();
+        return array(
+            self::PRODUCT_CODE_PAKET_NATIONAL => $products[self::PRODUCT_CODE_PAKET_NATIONAL],
+        );
+    }
+
+    /**
+     * Obtain DHL products for international shipping.
+     *
+     * @return string[]
+     */
+    protected function getInternationalProducts()
+    {
+        $products = $this->getProducts();
+        return array(
+            self::PRODUCT_CODE_WELTPAKET  => $products[self::PRODUCT_CODE_WELTPAKET ],
+        );
     }
 
     /**
@@ -96,15 +140,18 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function getContainerTypes(Varien_Object $params = null)
     {
-        if ( ($params->getData('country_shipper') == 'DE') && ($params->getData('country_recipient') == 'DE') ) {
-            return array(
-                self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
-            );
+        if (!$params) {
+            return $this->getProducts();
         }
 
-        return array(
-            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('DHL Weltpaket'),
-        );
+        $isNationalShipping = ($params->getData('country_shipper') == 'DE')
+            && ($params->getData('country_recipient') == 'DE');
+
+        if ($isNationalShipping) {
+            return $this->getNationalProducts();
+        } else {
+            return $this->getInternationalProducts();
+        }
     }
 
     /**
@@ -130,7 +177,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
 
             $shipmentStatus = $result->getLabels()->getItem($shipmentNumber)->getStatus();
             if ($shipmentStatus->isError()) {
-                throw new ResponseData\StatusException($shipmentStatus);
+                throw new Webservice\ResponseData\StatusException($shipmentStatus);
             }
 
             $responseData = array(
@@ -140,9 +187,8 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 ))
             );
             $response->setData($responseData);
-        } catch (\Exception $e) {
-            Mage::logException($e);
-            throw $e;
+        } catch (Webservice\Exception $e) {
+            Mage::throwException($e->getMessage());
         }
 
         return $response;

@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Webservice;
 /**
  * Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
  *
@@ -47,7 +47,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $gateway = new Dhl_Versenden_Model_Webservice_Gateway_Soap();
         $soapAdapter = $gateway->getAdapter($config);
 
-        $this->assertInstanceOf(\Dhl\Versenden\Webservice\Adapter\Soap::class, $soapAdapter);
+        $this->assertInstanceOf(Webservice\Adapter\Soap::class, $soapAdapter);
 
         $soapClient = $soapAdapter->getClient();
         $this->assertInstanceOf(SoapClient::class, $soapClient);
@@ -60,10 +60,10 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     {
         $gateway = new Dhl_Versenden_Model_Webservice_Gateway_Soap();
         $parser = $gateway->getParser(Dhl_Versenden_Model_Webservice_Gateway_Soap::OPERATION_GET_VERSION);
-        $this->assertInstanceOf(\Dhl\Versenden\Webservice\Parser::class, $parser);
+        $this->assertInstanceOf(Webservice\Parser::class, $parser);
 
         $parser = $gateway->getParser(Dhl_Versenden_Model_Webservice_Gateway_Soap::OPERATION_CREATE_SHIPMENT_ORDER);
-        $this->assertInstanceOf(\Dhl\Versenden\Webservice\Parser::class, $parser);
+        $this->assertInstanceOf(Webservice\Parser::class, $parser);
 
         $parser = $gateway->getParser('operation accomplished');
         $this->assertNull($parser);
@@ -72,27 +72,171 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     /**
      * @test
      * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
+     * @loadFixture ../../../ConfigTest/fixtures/ConfigTest
+     * @loadFixture ../../../Config/ShipmentTest/fixtures/ShipmentTest
+     * @loadFixture ../../../Config/ShipperTest/fixtures/ShipperTest
      *
-     * @param $shipmentOrder
-     * @param $expectation
+     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
+     */
+    public function shipmentToShipmentOrder($shipmentOrder, $expectation)
+    {
+        $sequenceNumber = '303';
+        $incrementId    = '808';
+        $shipmentDate   = '2016-12-24';
+
+        $productCode    = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
+        $packageWeight  = 1.2;
+
+        $receiver         = $shipmentOrder->getReceiver();
+        $serviceSelection = $shipmentOrder->getServiceSelection();
+
+        $helperMock = $this->getHelperMock(
+            'dhl_versenden/webservice',
+            array('utcToCet', 'serviceSelectionToServiceSettings', 'shippingAddressToReceiver')
+        );
+        $helperMock
+            ->expects($this->once())
+            ->method('utcToCet')
+            ->willReturn($shipmentDate);
+        $helperMock
+            ->expects($this->once())
+            ->method('serviceSelectionToServiceSettings')
+            ->willReturn($serviceSelection);
+        $helperMock
+            ->expects($this->once())
+            ->method('shippingAddressToReceiver')
+            ->willReturn($receiver);
+        $this->replaceByMock('helper', 'dhl_versenden/webservice', $helperMock);
+
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setData('dhl_versenden_info', '');
+        $order = new Mage_Sales_Model_Order();
+        $order->setIncrementId($incrementId);
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setOrder($order);
+        $shipment->setStoreId(2);
+
+
+        $packageInfo = array(
+            array(
+                'params' => array(
+                    'container' => $productCode,
+                    'weight'    => $packageWeight,
+                ),
+                'items' => array()
+            )
+        );
+        $serviceInfo = array(
+            'shipment_service' => array(),
+            'service_setting' => array(),
+        );
+
+        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')
+            ->shipmentToShipmentOrder($sequenceNumber, $shipment, $packageInfo, $serviceInfo);
+
+        $this->assertEquals($shipmentOrder->getReceiver()->getName1(), $expectation->getReceiverName1());
+        $this->assertEquals(
+            $shipmentOrder->getServiceSelection()->isBulkyGoods(),
+            $expectation->isServiceSettingsBulkyGoods()
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider dataProvider
+     * @loadFixture ../../../ConfigTest/fixtures/ConfigTest
+     * @loadFixture ../../../Config/ShipmentTest/fixtures/ShipmentTest
+     * @loadFixture ../../../Config/ShipperTest/fixtures/ShipperTest
+     *
+     * @param string $jsonInfo
+     */
+    public function shipmentToShipmentOrderWithJson($jsonInfo)
+    {
+        $sequenceNumber = '303';
+        $incrementId    = '808';
+        $shipmentDate   = '2016-12-24';
+
+        $productCode    = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
+        $packageWeight  = 1.2;
+
+        $helperMock = $this->getHelperMock(
+            'dhl_versenden/webservice',
+            array('utcToCet')
+        );
+        $helperMock
+            ->expects($this->once())
+            ->method('utcToCet')
+            ->willReturn($shipmentDate);
+        $this->replaceByMock('helper', 'dhl_versenden/webservice', $helperMock);
+
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
+        $order = new Mage_Sales_Model_Order();
+        $order->setIncrementId($incrementId);
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setOrder($order);
+        $shipment->setStoreId(2);
+
+
+        $packageInfo = array(
+            array(
+                'params' => array(
+                    'container' => $productCode,
+                    'weight'    => $packageWeight,
+                ),
+                'items' => array()
+            )
+        );
+        $serviceInfo = array(
+            'shipment_service' => array(),
+            'service_setting' => array(),
+        );
+
+        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')
+            ->shipmentToShipmentOrder($sequenceNumber, $shipment, $packageInfo, $serviceInfo);
+
+        $this->assertEquals($sequenceNumber, $shipmentOrder->getSequenceNumber());
+        $this->assertEquals($incrementId, $shipmentOrder->getReference());
+        $this->assertEquals($productCode, $shipmentOrder->getProductCode());
+        $this->assertEquals($shipmentDate, $shipmentOrder->getShipmentDate());
+
+        $packages = $shipmentOrder->getPackages();
+        $this->assertInstanceOf(Webservice\RequestData\ShipmentOrder\PackageCollection::class, $packages);
+        $this->assertCount(1, $packages);
+        /** @var Webservice\RequestData\ShipmentOrder\Package $package */
+        foreach ($packages as $package) {
+            $this->assertEquals($packageWeight, $package->getWeightInKG());
+        }
+    }
+
+    /**
+     * @test
+     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
+     *
+     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
      */
     public function createShipmentOrderOk($shipmentOrder, $expectation)
     {
         $sequenceNumber = 'foo';
         $shipmentNumber = 'bar';
 
-        $wsResponse = new \Dhl\Versenden\Webservice\ResponseData\CreateShipment(
-            new \Dhl\Versenden\Webservice\ResponseData\Status(0, 'ok', 'ok'),
-            new \Dhl\Versenden\Webservice\ResponseData\LabelCollection(),
+        $wsResponse = new Webservice\ResponseData\CreateShipment(
+            new Webservice\ResponseData\Status(0, 'ok', 'ok'),
+            new Webservice\ResponseData\LabelCollection(),
             array($sequenceNumber => $shipmentNumber)
         );
 
         $request = new Mage_Shipping_Model_Shipment_Request();
         $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
+        $request->setPackages(array());
         $shipmentRequests = array($sequenceNumber => $request);
 
 
-        $adapter = $this->getMockBuilder(\Dhl\Versenden\Webservice\Adapter\Soap::class)
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
             ->disableOriginalConstructor()
             ->setMethods(array('createShipmentOrder'))
             ->getMock();
@@ -120,6 +264,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->method('logResponse');
 
 
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
         $result = $gateway->createShipmentOrder($shipmentRequests);
         $this->assertEquals($wsResponse, $result);
 
@@ -130,10 +275,53 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     /**
      * @test
      * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
+     * @expectedException Webservice\RequestData\ValidationException
+     *
+     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
+     */
+    public function createShipmentOrderRequestDataException($shipmentOrder, $expectation)
+    {
+        $customerReference = '303';
+        $validationError   = 'too erroneous!';
+        $frontendMessage   = "The shipment request(s) had errors. #$customerReference: $validationError";
+
+        $shipmentOrder = new Mage_Sales_Model_Order();
+        $shipmentOrder->setIncrementId($customerReference);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setOrder($shipmentOrder);
+
+        $sequenceNumber = 'foo';
+
+        $request = new Mage_Shipping_Model_Shipment_Request();
+        $request->setOrderShipment($shipment);
+        $request->setPackages(array());
+        $shipmentRequests = array($sequenceNumber => $request);
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('shipmentToShipmentOrder'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('shipmentToShipmentOrder')
+            ->willThrowException(new Webservice\RequestData\ValidationException($validationError));
+
+
+        $this->setExpectedException(
+            Webservice\RequestData\ValidationException::class,
+            $frontendMessage
+        );
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $gateway->createShipmentOrder($shipmentRequests);
+    }
+
+    /**
+     * @test
+     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
      * @expectedException SoapFault
      *
-     * @param $shipmentOrder
-     * @param $expectation
+     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
      */
     public function createShipmentOrderLogFault($shipmentOrder, $expectation)
     {
@@ -141,10 +329,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $request = new Mage_Shipping_Model_Shipment_Request();
         $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
+        $request->setPackages(array());
         $shipmentRequests = array($sequenceNumber => $request);
 
 
-        $adapter = $this->getMockBuilder(\Dhl\Versenden\Webservice\Adapter\Soap::class)
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
             ->disableOriginalConstructor()
             ->setMethods(array('createShipmentOrder'))
             ->getMock();
@@ -173,6 +362,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->method('logResponse');
 
 
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
         $gateway->createShipmentOrder($shipmentRequests);
     }
 
@@ -212,7 +402,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             );
         $this->replaceByMock('singleton', 'core/logger', $loggerMock);
 
-        $adapter = new \Dhl\Versenden\Webservice\Adapter\Soap($clientMock);
+        $adapter = new Webservice\Adapter\Soap($clientMock);
 
         $gateway = new Dhl_Versenden_Model_Webservice_Gateway_Soap();
         $gateway->logRequest($adapter);

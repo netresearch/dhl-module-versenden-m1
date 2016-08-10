@@ -234,7 +234,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         );
 
         $packageCollection = new RequestData\ShipmentOrder\PackageCollection();
-        $package = new RequestData\ShipmentOrder\Package(0, $shipmentSettingsReference, $shipmentSettingsWeight);
+        $package = new RequestData\ShipmentOrder\Package(0, $shipmentSettingsWeight);
         $packageCollection->addItem($package);
 
         $serviceSelection = RequestData\ShipmentOrder\ServiceSelection::fromProperties(
@@ -249,6 +249,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
 
         $shipmentOrder = new RequestData\ShipmentOrder(
             $sequenceNumber,
+            $shipmentSettingsReference,
             $shipper,
             $receiver,
             $serviceSelection,

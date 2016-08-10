@@ -113,15 +113,14 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
     }
 
     /**
-     * @param $reference
      * @param $weight
      * @return PackageCollection
      */
-    protected function getPackages($reference, $weight)
+    protected function getPackages($weight)
     {
         $packageCollection = new PackageCollection();
 
-        $package = new Package(0, $reference, $weight);
+        $package = new Package(0, $weight);
         $packageCollection->addItem($package);
 
         return $packageCollection;
@@ -155,10 +154,8 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
         $serviceSelection = $this->getServiceSelection($location, $age, $insurance, $bulkyGoods);
 
 
-        $reference = 'XXX';
         $weight = 1.5;
-
-        $packages = $this->getPackages($reference, $weight);
+        $packages = $this->getPackages($weight);
 
 
         $shippingInfo = new ShippingInfo($receiver, $serviceSelection, $packages);
@@ -186,7 +183,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
 
         /** @var Package $package */
         foreach ($shippingInfo->getPackages() as $package) {
-            $this->assertEquals($reference, $package->getReference());
             $this->assertEquals($weight, $package->getWeightInKG());
         }
     }

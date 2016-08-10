@@ -109,11 +109,11 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      * Sum up all given shipment items' weight and convert to KG
      *
      * @param Mage_Sales_Model_Order_Shipment_Item[] $shipmentItems
-     * @param int $defaultWeight
+     * @param float $defaultWeight
      * @param string $unit
      * @return float
      */
-    public function calculateItemsWeight($shipmentItems = array(), $defaultWeight = 200, $unit = 'G')
+    public function calculateItemsWeight($shipmentItems = array(), $defaultWeight = 0.2, $unit = 'KG')
     {
         $sumWeight = function ($totalWeight, Mage_Sales_Model_Order_Shipment_Item $item) use ($defaultWeight) {
             $totalWeight += $item->getWeight() ? $item->getWeight() : $defaultWeight;

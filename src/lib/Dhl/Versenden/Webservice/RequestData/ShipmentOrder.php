@@ -64,6 +64,8 @@ class ShipmentOrder extends RequestData
 
     /** @var string */
     private $sequenceNumber;
+    /** @var string */
+    private $reference;
     /** @var ShipmentOrder\Shipper */
     private $shipper;
     /** @var ShipmentOrder\Receiver */
@@ -85,18 +87,21 @@ class ShipmentOrder extends RequestData
 
     /**
      * ShipmentOrder constructor.
-     * @param $sequenceNumber
-     * @param ShipmentOrder\Shipper $shipper
-     * @param ShipmentOrder\Receiver $receiver
-     * @param ShipmentOrder\ServiceSelection $serviceSelection
+     *
+     * @param int                             $sequenceNumber
+     * @param string                          $reference
+     * @param ShipmentOrder\Shipper           $shipper
+     * @param ShipmentOrder\Receiver          $receiver
+     * @param ShipmentOrder\ServiceSelection  $serviceSelection
      * @param ShipmentOrder\PackageCollection $packages
-     * @param string $productCode
-     * @param string $shipmentDate
-     * @param bool $printOnlyIfCodable
-     * @param string $labelType
+     * @param string                          $productCode
+     * @param string                          $shipmentDate
+     * @param bool                            $printOnlyIfCodable
+     * @param string                          $labelType
      */
     public function __construct(
         $sequenceNumber,
+        $reference,
         ShipmentOrder\Shipper $shipper,
         ShipmentOrder\Receiver $receiver,
         ShipmentOrder\ServiceSelection $serviceSelection,
@@ -107,6 +112,7 @@ class ShipmentOrder extends RequestData
         $labelType = self::LABEL_TYPE_B64
     ) {
         $this->sequenceNumber = $sequenceNumber;
+        $this->reference = $reference;
 
         $this->packages = $packages;
         $this->shipper = $shipper;
@@ -133,6 +139,14 @@ class ShipmentOrder extends RequestData
     public function getSequenceNumber()
     {
         return $this->sequenceNumber;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReference()
+    {
+        return $this->reference;
     }
 
     /**
