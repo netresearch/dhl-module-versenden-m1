@@ -65,13 +65,13 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     {
         return array(
             self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
-            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__(''),
-            self::PRODUCT_CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__(''),
-            self::PRODUCT_CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__(''),
-            self::PRODUCT_CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__(''),
-            self::PRODUCT_CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__(''),
-            self::PRODUCT_CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__(''),
-            self::PRODUCT_CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__(''),
+            self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('DHL Weltpaket'),
+            self::PRODUCT_CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('DHL Europaket'),
+            self::PRODUCT_CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('DHL Kurier Taggleich'),
+            self::PRODUCT_CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__('DHL Kurier Wunschzeit'),
+            self::PRODUCT_CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__('DHL Paket Austria'),
+            self::PRODUCT_CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__('DHL PAKET Connect'),
+            self::PRODUCT_CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__('DHL PAKET International'),
         );
     }
 
@@ -97,7 +97,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     {
         $products = $this->getProducts();
         return array(
-            self::PRODUCT_CODE_WELTPAKET  => $products[self::PRODUCT_CODE_WELTPAKET ],
+            self::PRODUCT_CODE_WELTPAKET  => $products[self::PRODUCT_CODE_WELTPAKET],
         );
     }
 
@@ -171,6 +171,12 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         $response = new Varien_Object();
 
         try {
+            $requestData = new Webservice\RequestData\Version('2', '1', null);
+            $parser = new Webservice\Parser\Soap\Version();
+            $adapter = Mage::getModel('dhl_versenden/webservice_gateway_soap')
+                ->getAdapter(Mage::getModel('dhl_versenden/config_shipper'));
+            $adapter->getVersion($requestData, $parser);
+
             $result = Mage::getModel('dhl_versenden/webservice_gateway_soap')
                 ->createShipmentOrder($shipmentRequests);
             $shipmentNumber = $result->getShipmentNumber($sequenceNumber);

@@ -42,7 +42,7 @@ class Dhl_Versenden_Test_Controller_Adminhtml_System_ConfigControllerTest
      * @see Dhl_Versenden_Block_Adminhtml_System_Config_Info
      *
      * @test
-     * @loadFixture ControllerTest
+     * @loadFixture Controller_ConfigTest
      */
     public function renderSection()
     {

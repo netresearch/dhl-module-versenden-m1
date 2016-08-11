@@ -42,17 +42,18 @@ class Postfiliale extends PostalFacility implements \JsonSerializable
 
     /**
      * Postfiliale constructor.
+     * @param string $zip
+     * @param string $city
      * @param string $postfilialNumber
      * @param string $postNumber
      */
     public function __construct(
-        $zip, $city, $country, $countryISOCode, $state,
-        $postfilialNumber, $postNumber
+        $zip, $city, $postfilialNumber, $postNumber
     ) {
         $this->postfilialNumber = $postfilialNumber;
         $this->postNumber = $postNumber;
 
-        parent::__construct($zip, $city, $country, $countryISOCode, $state);
+        parent::__construct($zip, $city);
     }
 
     /**

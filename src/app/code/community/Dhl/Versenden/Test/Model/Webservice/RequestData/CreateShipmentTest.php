@@ -33,7 +33,7 @@ use \Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipment_CreateShipmentTest
+class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
     extends EcomDev_PHPUnit_Test_Case
 {
     /**
@@ -326,18 +326,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipment_CreateShipm
         $this->assertEquals(
             $expectation->getPackstationCity(),
             $order->getReceiver()->getPackstation()->getCity()
-        );
-        $this->assertEquals(
-            $expectation->getPackstationCountry(),
-            $order->getReceiver()->getPackstation()->getCountry()
-        );
-        $this->assertEquals(
-            $expectation->getPackstationCountryISOCode(),
-            $order->getReceiver()->getPackstation()->getCountryISOCode()
-        );
-        $this->assertEquals(
-            $expectation->getPackstationState(),
-            $order->getReceiver()->getPackstation()->getState()
         );
         $this->assertEquals(
             $expectation->getPackstationPackstationNumber(),

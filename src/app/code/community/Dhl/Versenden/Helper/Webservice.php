@@ -69,9 +69,6 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
             $packStation = new ShipmentOrder\Receiver\Packstation(
                 $address->getPostcode(),
                 $address->getCity(),
-                $country,
-                $countryISOCode,
-                $address->getRegion(),
                 $facility->getData('shop_number'),
                 $facility->getData('post_number')
             );
@@ -82,9 +79,6 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
             $postFiliale = new ShipmentOrder\Receiver\Postfiliale(
                 $address->getPostcode(),
                 $address->getCity(),
-                $country,
-                $countryISOCode,
-                $address->getRegion(),
                 $facility->getData('shop_number'),
                 $facility->getData('post_number')
             );
@@ -95,9 +89,6 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
             $parcelShop = new ShipmentOrder\Receiver\ParcelShop(
                 $address->getPostcode(),
                 $address->getCity(),
-                $country,
-                $countryISOCode,
-                $address->getRegion(),
                 $facility->getData('shop_number'),
                 $streetName,
                 $streetNumber
@@ -133,15 +124,15 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
      */
     public function serviceSelectionToServiceSettings(array $selectedServices, array $serviceDetails)
     {
-        array_walk(
-            $selectedServices,
-            function (&$value, $key, $serviceDetails) {
-                $value = isset($serviceDetails[$key]) ? $serviceDetails[$key] : true;
-            },
-            $serviceDetails
-        );
+        $settings = array();
 
-        return ShipmentOrder\ServiceSelection::fromArray($selectedServices);
+        foreach ($selectedServices as $name => $isSelected) {
+            if ($isSelected) {
+                $settings[$name] = isset($serviceDetails[$name]) ? $serviceDetails[$name] : true;
+            }
+        }
+
+        return ShipmentOrder\ServiceSelection::fromArray($settings);
     }
 
     /**
