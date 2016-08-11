@@ -41,7 +41,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 {
     /**
      * @test
-     * @loadFixture ShipperTest
+     * @loadFixture Model_ShipperConfigTest
      */
     public function getShipperAccount()
     {
@@ -68,7 +68,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 
     /**
      * @test
-     * @loadFixture ShipperTest
+     * @loadFixture Model_ShipperConfigTest
      */
     public function getShipperBankData()
     {
@@ -97,7 +97,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 
     /**
      * @test
-     * @loadFixture ShipperTest
+     * @loadFixture Model_ShipperConfigTest
      */
     public function getShipperContact()
     {
@@ -140,7 +140,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 
     /**
      * @test
-     * @loadFixture ShipperTest
+     * @loadFixture Model_ShipperConfigTest
      */
     public function getReturnReceiver()
     {
@@ -184,7 +184,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 
     /**
      * @test
-     * @loadFixture ShipperTest
+     * @loadFixture Model_ShipperConfigTest
      */
     public function getShipper()
     {

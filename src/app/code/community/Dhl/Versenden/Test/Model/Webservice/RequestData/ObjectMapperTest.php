@@ -59,9 +59,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
         $packStation = new Receiver\Packstation(
             $receiverZip,
             $receiverCity,
-            '',
-            $receiverCountry,
-            '',
             $stationId,
             $postNumber
         );

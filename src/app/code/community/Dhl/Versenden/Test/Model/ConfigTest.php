@@ -37,7 +37,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function isAutoloadEnabled()
     {
@@ -47,7 +47,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function getTitle()
     {
@@ -59,7 +59,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function isActive()
     {
@@ -71,7 +71,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function isSandboxModeEnabled()
     {
@@ -83,7 +83,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function isLoggingEnabled()
     {
@@ -94,7 +94,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function getEnabledServices()
     {
@@ -136,7 +136,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function getWebserviceCredentials()
     {
@@ -148,7 +148,7 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function getWebserviceEndpoint()
     {
