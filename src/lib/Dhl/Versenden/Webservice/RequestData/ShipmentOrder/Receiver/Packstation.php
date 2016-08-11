@@ -44,20 +44,16 @@ class Packstation extends PostalFacility implements \JsonSerializable
      * Packstation constructor.
      * @param string $zip
      * @param string $city
-     * @param string $country
-     * @param string $countryISOCode
-     * @param string $state
      * @param string $packstationNumber
      * @param string $postNumber
      */
     public function __construct(
-        $zip, $city, $country, $countryISOCode, $state,
-        $packstationNumber, $postNumber
+        $zip, $city, $packstationNumber, $postNumber
     ) {
         $this->packstationNumber = $packstationNumber;
         $this->postNumber = $postNumber;
 
-        parent::__construct($zip, $city, $country, $countryISOCode, $state);
+        parent::__construct($zip, $city);
     }
 
     /**

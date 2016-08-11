@@ -83,6 +83,8 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $this->assertSame($statusMessage, $createShipment->getStatus()->getStatusMessage());
 
         $this->assertSame($sequence, $createShipment->getShipmentNumbers());
+        $this->assertEquals($shipmentNumber, $createShipment->getShipmentNumber($sequenceNumber));
+        $this->assertNull($createShipment->getShipmentNumber('9999'));
 
         $this->assertTrue($createShipment->getLabels()->getItem($shipmentNumber)->isCreated());
         $this->assertSame($labelData, $createShipment->getLabels()->getItem($shipmentNumber)->getLabel());

@@ -38,12 +38,14 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging
 {
     /**
      * Obtain selected weight unit from config.
-     * 
+     *
      * @return string
      */
     public function getStoreUnit()
     {
-        return Mage::getModel('dhl_versenden/config_shipment')->getSettings()->getUnitOfMeasure();
+        $settings = Mage::getModel('dhl_versenden/config_shipment')
+            ->getSettings($this->getShipment()->getStoreId());
+        return $settings->getUnitOfMeasure();
     }
 
     /**
@@ -69,15 +71,15 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging
         );
         $recipientCountry = $this->getShipment()->getOrder()->getShippingAddress()->getCountryId();
 
-        // are shipper and receiver located in the same country?
-        $sameCountry = parent::displayCustomsValue();
+        // are shipper and receiver located in different countries?
+        $diffCountry = parent::displayCustomsValue();
 
         // are shipper and receiver both located in EU country?
         $bothEu = Mage::helper('core/data')->isCountryInEU($shipperCountry)
             && Mage::helper('core/data')->isCountryInEU($recipientCountry);
 
 
-        return !($sameCountry || $bothEu);
+        return $diffCountry && !$bothEu;
     }
 
 }

@@ -77,7 +77,7 @@ class Dhl_Versenden_Model_Observer
             'dhl_versenden/checkout_onepage_shipping_method_service',
             'dhl_versenden_service',
             array(
-                'template'    => 'dhl_versenden/checkout/onepage/shipping_method/service.phtml',
+                'template'    => 'dhl_versenden/checkout/shipping_services.phtml',
                 'module_name' => 'Dhl_Versenden',
             )
         );

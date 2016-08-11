@@ -195,45 +195,128 @@ class Dhl_Versenden_Test_Helper_WebserviceTest extends EcomDev_PHPUnit_Test_Case
         $this->assertNull($receiver->getPackstation());
         $this->assertNull($receiver->getPostfiliale());
         $this->assertNull($receiver->getParcelShop());
+    }
 
+    /**
+     * @test
+     */
+    public function packStationAddressToReceiver()
+    {
+        $helper = new Dhl_Versenden_Helper_Webservice();
 
+        $firstName = 'Foo';
+        $lastName = 'Bar';
+        $name = "$firstName $lastName";
         $streetName = 'Packstation';
         $streetNumber = '111';
         $streetFull = "$streetName $streetNumber";
+        $postCode = '12345';
+        $city = 'Foo';
+        $country = 'DE';
+        $telephone = '54321';
+        $email = 'a@b.c';
         $postNumber = '123456';
 
-        $address->setStreetFull($streetFull);
+        $address = new Mage_Sales_Model_Quote_Address();
+        $address->setFirstname($firstName);
+        $address->setLastname($lastName);
         $address->setCompany($postNumber);
+        $address->setStreetFull($streetFull);
+        $address->setPostcode($postCode);
+        $address->setCity($city);
+        $address->setCountry($country);
+        $address->setTelephone($telephone);
+        $address->setEmail($email);
 
         $receiver = $helper->shippingAddressToReceiver($address);
-
+        $this->assertSame($name, $receiver->getName1());
         $this->assertNotNull($receiver->getPackstation());
         $this->assertSame($streetNumber, $receiver->getPackstation()->getPackstationNumber());
         $this->assertSame($postNumber, $receiver->getPackstation()->getPostNumber());
         $this->assertSame($postCode, $receiver->getPackstation()->getZip());
         $this->assertSame($city, $receiver->getPackstation()->getCity());
-        $this->assertSame($country, $receiver->getPackstation()->getCountryISOCode());
         $this->assertNull($receiver->getPostfiliale());
         $this->assertNull($receiver->getParcelShop());
+    }
 
+    /**
+     * @test
+     */
+    public function postOfficeAddressToReceiver()
+    {
+        $helper = new Dhl_Versenden_Helper_Webservice();
 
+        $firstName = 'Foo';
+        $lastName = 'Bar';
+        $name = "$firstName $lastName";
         $streetName = 'Postfiliale';
         $streetNumber = '888';
         $streetFull = "$streetName $streetNumber";
+        $postCode = '12345';
+        $city = 'Foo';
+        $country = 'DE';
+        $telephone = '54321';
+        $email = 'a@b.c';
         $postNumber = '654321';
 
-        $address->setStreetFull($streetFull);
+        $address = new Mage_Sales_Model_Quote_Address();
+        $address->setFirstname($firstName);
+        $address->setLastname($lastName);
         $address->setCompany($postNumber);
+        $address->setStreetFull($streetFull);
+        $address->setPostcode($postCode);
+        $address->setCity($city);
+        $address->setCountry($country);
+        $address->setTelephone($telephone);
+        $address->setEmail($email);
 
         $receiver = $helper->shippingAddressToReceiver($address);
-
+        $this->assertSame($name, $receiver->getName1());
+        $this->assertNotNull($receiver->getPostfiliale());
         $this->assertSame($streetNumber, $receiver->getPostfiliale()->getPostfilialNumber());
         $this->assertSame($postNumber, $receiver->getPostfiliale()->getPostNumber());
         $this->assertSame($postCode, $receiver->getPostfiliale()->getZip());
         $this->assertSame($city, $receiver->getPostfiliale()->getCity());
-        $this->assertSame($country, $receiver->getPostfiliale()->getCountryISOCode());
         $this->assertNull($receiver->getPackstation());
         $this->assertNull($receiver->getParcelShop());
+    }
 
+    /**
+     * @test
+     */
+    public function parcelShopAddressToReceiver()
+    {
+        $helper = new Dhl_Versenden_Helper_Webservice();
+
+        $firstName = 'Foo';
+        $lastName = 'Bar';
+        $name = "$firstName $lastName";
+        $streetName = 'Paketshop';
+        $streetNumber = '999';
+        $streetFull = "$streetName $streetNumber";
+        $postCode = '12345';
+        $city = 'Foo';
+        $country = 'DE';
+        $telephone = '54321';
+        $email = 'a@b.c';
+        $postNumber = '654321';
+
+        $address = new Mage_Sales_Model_Quote_Address();
+        $address->setFirstname($firstName);
+        $address->setLastname($lastName);
+        $address->setCompany($postNumber);
+        $address->setStreetFull($streetFull);
+        $address->setPostcode($postCode);
+        $address->setCity($city);
+        $address->setCountry($country);
+        $address->setTelephone($telephone);
+        $address->setEmail($email);
+
+        // parcel shops are not handled by this extension
+        $receiver = $helper->shippingAddressToReceiver($address);
+        $this->assertSame($name, $receiver->getName1());
+        $this->assertNull($receiver->getParcelShop());
+        $this->assertNull($receiver->getPackstation());
+        $this->assertNull($receiver->getPostfiliale());
     }
 }

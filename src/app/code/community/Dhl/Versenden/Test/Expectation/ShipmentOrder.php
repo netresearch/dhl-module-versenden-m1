@@ -158,28 +158,12 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /** @var string */
     protected $packstationCity;
     /** @var string */
-    protected $packstationCountry;
-    /** @var string */
-    protected $packstationCountryISOCode;
-    /** @var string */
-    protected $packstationState;
-    /** @var string */
     protected $packstationPackstationNumber;
     /** @var string */
     protected $packstationPostNumber;
 
     /** @var bool */
     protected $globalSettingsPrintOnlyIfCodable;
-    /** @var string  */
-    protected $globalSettingsUnitOfMeasure;
-    /** @var float */
-    protected $globalSettingsProductWeight;
-    /** @var string[] */
-    protected $globalSettingsShippingMethods;
-    /** @var string[] */
-    protected $globalSettingsCodPaymentMethods;
-    /** @var float */
-    protected $globalSettingsCodCharge;
     /** @var string */
     protected $globalSettingsLabelType;
 
@@ -277,17 +261,9 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $receiverContactPerson
      * @param string $packstationZip
      * @param string $packstationCity
-     * @param string $packstationCountry
-     * @param string $packstationCountryISOCode
-     * @param string $packstationState
      * @param string $packstationPackstationNumber
      * @param string $packstationPostNumber
      * @param bool $globalSettingsPrintOnlyIfCodable
-     * @param string $globalSettingsUnitOfMeasure
-     * @param float $globalSettingsProductWeight
-     * @param string[] $globalSettingsShippingMethods
-     * @param string[] $globalSettingsCodPaymentMethods
-     * @param float $globalSettingsCodCharge
      * @param string $globalSettingsLabelType
      * @param string $shipmentSettingsDate
      * @param string $shipmentSettingsReference
@@ -335,12 +311,9 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $receiverDispatchingInformation, $receiverZip, $receiverCity,
         $receiverCountry, $receiverCountryISOCode, $receiverState,
         $receiverPhone, $receiverEmail, $receiverContactPerson, $packstationZip,
-        $packstationCity, $packstationCountry, $packstationCountryISOCode,
-        $packstationState, $packstationPackstationNumber, $packstationPostNumber,
+        $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
 
-        $globalSettingsPrintOnlyIfCodable, $globalSettingsUnitOfMeasure, $globalSettingsProductWeight,
-        array $globalSettingsShippingMethods, array $globalSettingsCodPaymentMethods,
-        $globalSettingsCodCharge, $globalSettingsLabelType,
+        $globalSettingsPrintOnlyIfCodable, $globalSettingsLabelType,
 
         $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight, $shipmentSettingsProduct,
 
@@ -412,17 +385,9 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->receiverContactPerson = $receiverContactPerson;
         $this->packstationZip = $packstationZip;
         $this->packstationCity = $packstationCity;
-        $this->packstationCountry = $packstationCountry;
-        $this->packstationCountryISOCode = $packstationCountryISOCode;
-        $this->packstationState = $packstationState;
         $this->packstationPackstationNumber = $packstationPackstationNumber;
         $this->packstationPostNumber = $packstationPostNumber;
         $this->globalSettingsPrintOnlyIfCodable = $globalSettingsPrintOnlyIfCodable;
-        $this->globalSettingsUnitOfMeasure = $globalSettingsUnitOfMeasure;
-        $this->globalSettingsProductWeight = $globalSettingsProductWeight;
-        $this->globalSettingsShippingMethods = $globalSettingsShippingMethods;
-        $this->globalSettingsCodPaymentMethods = $globalSettingsCodPaymentMethods;
-        $this->globalSettingsCodCharge = $globalSettingsCodCharge;
         $this->globalSettingsLabelType = $globalSettingsLabelType;
         $this->shipmentSettingsDate = $shipmentSettingsDate;
         $this->shipmentSettingsReference = $shipmentSettingsReference;
@@ -924,30 +889,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /**
      * @return string
      */
-    public function getPackstationCountry()
-    {
-        return $this->packstationCountry;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPackstationCountryISOCode()
-    {
-        return $this->packstationCountryISOCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPackstationState()
-    {
-        return $this->packstationState;
-    }
-
-    /**
-     * @return string
-     */
     public function getPackstationPackstationNumber()
     {
         return $this->packstationPackstationNumber;
@@ -967,46 +908,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     public function isGlobalSettingsPrintOnlyIfCodable()
     {
         return $this->globalSettingsPrintOnlyIfCodable;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGlobalSettingsUnitOfMeasure()
-    {
-        return $this->globalSettingsUnitOfMeasure;
-    }
-
-    /**
-     * @return float
-     */
-    public function getGlobalSettingsProductWeight()
-    {
-        return $this->globalSettingsProductWeight;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getGlobalSettingsShippingMethods()
-    {
-        return $this->globalSettingsShippingMethods;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getGlobalSettingsCodPaymentMethods()
-    {
-        return $this->globalSettingsCodPaymentMethods;
-    }
-
-    /**
-     * @return float
-     */
-    public function getGlobalSettingsCodCharge()
-    {
-        return $this->globalSettingsCodCharge;
     }
 
     /**

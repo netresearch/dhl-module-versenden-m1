@@ -91,7 +91,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ../../ConfigTest/fixtures/ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function appendServices()
     {
@@ -117,7 +117,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      * Assert early return.
      *
      * @test
-     * @loadFixture ../../ConfigTest/fixtures/ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function appendNoServices()
     {
@@ -139,7 +139,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture Quotes
+     * @loadFixture Model_ObserverTest
      */
     public function saveShippingSettings()
     {
@@ -201,7 +201,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      * Assert early return (wrong shipping method).
      *
      * @test
-     * @loadFixture Quotes
+     * @loadFixture Model_ObserverTest
      */
     public function saveNoShippingSettings()
     {

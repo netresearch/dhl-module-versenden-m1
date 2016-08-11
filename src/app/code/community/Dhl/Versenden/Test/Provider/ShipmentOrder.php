@@ -101,18 +101,10 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $receiverContactPerson = 'Receiver Person';
         $packstationZip = 'PP123';
         $packstationCity = 'Packstation City';
-        $packstationCountry = 'Packstation Country';
-        $packstationCountryISOCode = 'PP';
-        $packstationState = 'Packstation State';
         $packstationPackstationNumber = 'Packstation 808';
         $packstationPostNumber = '654321';
 
         $globalSettingsPrintOnlyIfCodable = true;
-        $globalSettingsUnitOfMeasure = 'KG';
-        $globalSettingsProductWeight = 1.2;
-        $globalSettingsShippingMethods = ['dhl_foo', 'dhl_bar'];
-        $globalSettingsCodPaymentMethods = ['cod_cod', 'foo_cod'];
-        $globalSettingsCodCharge = 3;
         $globalSettingsLabelType = 'R2D2';
 
         $shipmentSettingsDate = '2012-12-12';
@@ -161,12 +153,9 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $receiverStreetNumber, $receiverAddressAddition, $receiverDispatchingInformation,
             $receiverZip, $receiverCity, $receiverCountry, $receiverCountryISOCode,
             $receiverState, $receiverPhone, $receiverEmail, $receiverContactPerson,
-            $packstationZip, $packstationCity, $packstationCountry, $packstationCountryISOCode,
-            $packstationState, $packstationPackstationNumber, $packstationPostNumber,
+            $packstationZip, $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
 
-            $globalSettingsPrintOnlyIfCodable, $globalSettingsUnitOfMeasure,
-            $globalSettingsProductWeight, $globalSettingsShippingMethods,
-            $globalSettingsCodPaymentMethods, $globalSettingsCodCharge, $globalSettingsLabelType,
+            $globalSettingsPrintOnlyIfCodable, $globalSettingsLabelType,
 
             $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight,
             $shipmentSettingsProduct, $serviceSettingsDayOfDelivery,
@@ -214,9 +203,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         );
 
         $packstation = new RequestData\ShipmentOrder\Receiver\Packstation(
-            $packstationZip, $packstationCity, $packstationCountry,
-            $packstationCountryISOCode, $packstationState,
-            $packstationPackstationNumber, $packstationPostNumber
+            $packstationZip, $packstationCity, $packstationPackstationNumber, $packstationPostNumber
         );
         $receiver = new RequestData\ShipmentOrder\Receiver(
             $receiverName1, $receiverName2, $receiverName3, $receiverStreetName,
@@ -224,13 +211,6 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $receiverDispatchingInformation, $receiverZip, $receiverCity,
             $receiverCountry, $receiverCountryISOCode, $receiverState,
             $receiverPhone, $receiverEmail, $receiverContactPerson, $packstation
-        );
-
-        $globalSettings = new RequestData\ShipmentOrder\GlobalSettings(
-            $globalSettingsPrintOnlyIfCodable, $globalSettingsUnitOfMeasure,
-            $globalSettingsProductWeight, $globalSettingsShippingMethods,
-            $globalSettingsCodPaymentMethods, $globalSettingsCodCharge,
-            $globalSettingsLabelType
         );
 
         $packageCollection = new RequestData\ShipmentOrder\PackageCollection();

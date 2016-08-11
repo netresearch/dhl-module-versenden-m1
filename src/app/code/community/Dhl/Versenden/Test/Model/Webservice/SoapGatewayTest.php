@@ -38,7 +38,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 {
     /**
      * @test
-     * @fixture SoapGateway
+     * @fixture Model_SoapGatewayTest
      */
     public function getAdapter()
     {
@@ -72,9 +72,9 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     /**
      * @test
      * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
-     * @loadFixture ../../../ConfigTest/fixtures/ConfigTest
-     * @loadFixture ../../../Config/ShipmentTest/fixtures/ShipmentTest
-     * @loadFixture ../../../Config/ShipperTest/fixtures/ShipperTest
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_ShipmentConfigTest
+     * @loadFixture Model_ShipperConfigTest
      *
      * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
      * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
@@ -146,9 +146,9 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     /**
      * @test
      * @dataProvider dataProvider
-     * @loadFixture ../../../ConfigTest/fixtures/ConfigTest
-     * @loadFixture ../../../Config/ShipmentTest/fixtures/ShipmentTest
-     * @loadFixture ../../../Config/ShipperTest/fixtures/ShipperTest
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_ShipmentConfigTest
+     * @loadFixture Model_ShipperConfigTest
      *
      * @param string $jsonInfo
      */

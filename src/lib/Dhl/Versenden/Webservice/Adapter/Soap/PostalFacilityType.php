@@ -42,21 +42,16 @@ class PostalFacilityType implements RequestType
 {
     /**
      * @param Receiver\PostalFacility $requestData
-     * @return VersendenApi\PackStationType|VersendenApi\PostfilialeType|VersendenApi\ParcelShopType
+     * @return VersendenApi\PackstationType|VersendenApi\PostfilialeType|VersendenApi\ParcelShopType
      */
     public static function prepare(RequestData $requestData = null)
     {
         if ($requestData instanceof Receiver\Packstation) {
-            $countryType = new CountryType();
-            $countryType->setCountry($requestData->getCountry());
-            $countryType->setCountryISOCode($requestData->getCountryISOCode());
-            $countryType->setState($requestData->getState());
-
-            return new VersendenApi\PackStationType(
+            return new VersendenApi\PackstationType(
                 $requestData->getPackstationNumber(),
+                $requestData->getPostNumber(),
                 $requestData->getZip(),
-                $requestData->getCity(),
-                $countryType
+                $requestData->getCity()
             );
         }
 
@@ -70,11 +65,15 @@ class PostalFacilityType implements RequestType
         }
 
         if ($requestData instanceof Receiver\ParcelShop) {
-            return new VersendenApi\ParcelShopType(
+            $parcelShopType = new VersendenApi\ParcelShopType(
                 $requestData->getParcelShopNumber(),
                 $requestData->getZip(),
                 $requestData->getCity()
             );
+            $parcelShopType->setStreetName($requestData->getStreetName());
+            $parcelShopType->setStreetNumber($requestData->getStreetNumber());
+
+            return $parcelShopType;
         }
 
         return null;

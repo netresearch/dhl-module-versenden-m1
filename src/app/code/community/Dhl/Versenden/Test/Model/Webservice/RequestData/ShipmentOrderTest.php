@@ -33,7 +33,7 @@ use \Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipment_ShipmentOrderTest
+class Dhl_Versenden_Test_Model_Webservice_RequestData_ShipmentOrderTest
     extends EcomDev_PHPUnit_Test_Case
 {
     /**
