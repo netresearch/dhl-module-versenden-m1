@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
+namespace Dhl\Versenden\Shipment\Service;
 
 /**
- * Insurance
+ * DeliveryTimeFrame
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,20 +34,22 @@ use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Insurance extends OptionsService
+class DeliveryTimeFrame extends Type\Select
 {
-    const TYPE_A = 'A';
-    const TYPE_B = 'B';
+    const CODE = 'deliveryTimeFrame';
 
     /**
-     * Insurance constructor.
-     * @param string $value
+     * DeliveryTimeFrame constructor.
+     *
+     * @param string $name
+     * @param bool $isEnabled
+     * @param bool $isSelected
+     * @paramt string[] $options
      */
-    public function __construct($value = '', $options = [])
+    public function __construct($name, $isEnabled, $isSelected, $options)
     {
-        parent::__construct($value, $options);
+        $this->customerService = true;
 
-        $this->name = 'Insurance';
-        $this->isCustomerService = false;
+        parent::__construct($name, $isEnabled, $isSelected, $options);
     }
 }

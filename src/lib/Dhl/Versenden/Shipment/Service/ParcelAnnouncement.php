@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service;
 
 /**
  * ParcelAnnouncement
@@ -35,59 +34,64 @@ use \Dhl\Versenden\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ParcelAnnouncement extends Service
+class ParcelAnnouncement extends Type\Boolean
 {
+    const CODE = 'parcelAnnouncement';
+
     const DISPLAY_MODE_REQUIRED = 1;
     const DISPLAY_MODE_OPTIONAL = 2;
 
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
-
     /**
      * ParcelAnnouncement constructor.
-     * @param string $value
-     */
-    public function __construct($value = '')
-    {
-        parent::__construct($value);
-
-        $this->name = 'Parcel Announcement';
-        $this->isCustomerService = true;
-
-        $this->setDisplayMode($value);
-    }
-
-    /**
-     * Let the user decide whether to enable this service or not.
-     */
-    public function setIsOptional()
-    {
-        $this->frontendInputType = self::INPUT_TYPE_BOOLEAN;
-    }
-
-    /**
-     * Always enable this service.
-     */
-    public function setIsRequired()
-    {
-        $this->frontendInputType = self::INPUT_TYPE_HIDDEN;
-    }
-
-    /**
-     * Set whether to display/render this service or not.
      *
-     * @param int $displayMode
+     * @param string $name
+     * @param int $isEnabled
+     * @param bool $isSelected
      */
-    public function setDisplayMode($displayMode)
+    public function __construct($name, $isEnabled, $isSelected)
     {
-        switch ($displayMode) {
-            case self::DISPLAY_MODE_OPTIONAL:
-                $this->setIsOptional();
-                break;
-            case self::DISPLAY_MODE_REQUIRED:
-                $this->setIsRequired();
-                break;
-            default:
+        if ($isEnabled == self::DISPLAY_MODE_OPTIONAL) {
+            // customer can decide
+            $this->customerService = true;
         }
+        parent::__construct($name, (bool)$isEnabled, $isSelected);
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getSelectorHtml()
+    {
+        if (!$this->isCustomerService()) {
+            $format = '<input type="hidden" name="shipment_service[%s]" value="%s">';
+            return sprintf($format, $this->getCode(), $this->isSelected());
+        }
+
+        return parent::getSelectorHtml();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelHtml()
+    {
+        if (!$this->isCustomerService()) {
+            return '';
+        }
+
+        return parent::getLabelHtml();
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueHtml()
+    {
+        if (!$this->isCustomerService()) {
+            return '';
+        }
+
+        return parent::getValueHtml();
     }
 }

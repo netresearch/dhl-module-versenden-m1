@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service;
+
 /**
- * ReturnShipment
+ * Insurance
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,19 +34,10 @@ use \Dhl\Versenden\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ReturnShipment extends Service
+class Insurance extends Type\Select
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
+    const CODE = 'insurance';
 
-    /**
-     * ReturnShipment constructor.
-     * @param string $value
-     */
-    public function __construct($value = '')
-    {
-        parent::__construct($value);
-
-        $this->name = 'Return Shipment';
-    }
+    const TYPE_A = 'A';
+    const TYPE_B = 'B';
 }

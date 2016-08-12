@@ -29,13 +29,18 @@
     <adminhtml_sales_order_shipment_new>
         <reference name="form">
             <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
-                   name="shipment_packaging" template="sales/order/shipment/packaging/popup.phtml">
+                   name="shipment_packaging"
+                   template="sales/order/shipment/packaging/popup.phtml">
                 <action method="setTemplate">
-                    <template helper="dhl_versenden/data/getPackagingPopupTemplate">
+                    <template
+                            helper="dhl_versenden/data/getPackagingPopupTemplate">
                         <name>dhl_versenden/sales/packaging_popup.phtml</name>
                         <block>shipment_packaging</block>
                     </template>
                 </action>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_service"
+                       name="shipping_services"
+                       template="dhl_versenden/sales/shipping_services.phtml"/>
             </block>
         </reference>
     </adminhtml_sales_order_shipment_new>

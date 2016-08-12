@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service\Type;
 
 /**
- * ServiceWithOptions
+ * Date
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,27 +34,17 @@ use Dhl\Versenden\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class ServiceWithOptions extends Service
+abstract class Date extends Text
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_SELECT;
-    /** @var string[] */
-    public $options = '';
-
-    public function __construct($value = '', $options = [])
-    {
-        $this->options = $options;
-
-        parent::__construct($value);
-    }
+    protected $frontendInputType = 'date';
 
     /**
-     * Obtain the service's pre-defined setting options.
-     * @return string[]
+     * @return string
      */
-    public function getOptions()
+    public function getValueHtml()
     {
-        return $this->options;
+        // TODO: Render date picker
+        return parent::getValueHtml();
     }
 
 }

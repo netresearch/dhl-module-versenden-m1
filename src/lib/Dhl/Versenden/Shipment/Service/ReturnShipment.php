@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
+namespace Dhl\Versenden\Shipment\Service;
 
 /**
- * DeliveryTimeFrame
+ * ReturnShipment
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,18 +34,7 @@ use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class DeliveryTimeFrame extends OptionsService
+class ReturnShipment extends Type\Boolean
 {
-    /**
-     * DeliveryTimeFrame constructor.
-     * @param string $value
-     * @param array $options
-     */
-    public function __construct($value = '', $options = [])
-    {
-        parent::__construct($value, $options);
-
-        $this->name = 'Delivery Time Frame';
-        $this->isCustomerService = true;
-    }
+    const CODE = 'returnShipment';
 }

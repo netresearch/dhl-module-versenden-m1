@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\ServiceWithDetails as DetailsService;
+namespace Dhl\Versenden\Shipment\Service;
+
 /**
- * PreferredNeighbour
+ * VisualCheckOfAge
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,19 +34,10 @@ use \Dhl\Versenden\Service\ServiceWithDetails as DetailsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredNeighbour extends DetailsService
+class VisualCheckOfAge extends Type\Select
 {
-    /**
-     * PreferredNeighbour constructor.
-     *
-     * @param string $value
-     * @param string $placeholder
-     */
-    public function __construct($value = '', $placeholder = '')
-    {
-        parent::__construct($value, $placeholder);
+    const CODE = 'visualCheckOfAge';
 
-        $this->name              = 'Preferred Neighbour';
-        $this->isCustomerService = true;
-    }
+    const A16 = 'A16';
+    const A18 = 'A18';
 }
