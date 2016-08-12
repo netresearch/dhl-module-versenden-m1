@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use \Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service;
+use \Dhl\Versenden\Shipment\Service\Type\Generic as Service;
 /**
  * Collection
  *
@@ -36,7 +36,7 @@ use \Dhl\Versenden\Service\Type as Service;
  */
 class Collection implements \IteratorAggregate, \Countable
 {
-    /** @var  Service[] */
+    /** @var Service[] */
     protected $services = [];
 
     /**

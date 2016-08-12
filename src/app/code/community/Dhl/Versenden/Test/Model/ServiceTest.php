@@ -23,9 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Service\Collection as ServiceCollection;
-use \Dhl\Versenden\Service\Type as Service;
-use \Dhl\Versenden\Service\ServiceWithOptions;
+use \Dhl\Versenden\Shipment\Service\Collection as ServiceCollection;
+use \Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Test_Model_ServiceTest
  *
@@ -38,13 +37,13 @@ use \Dhl\Versenden\Service\ServiceWithOptions;
 class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * @return Service[]
+     * @return Service\Type\Generic[]
      */
     protected function getCustomerServices()
     {
         return [
-            new Service\DayOfDelivery(),
-            new Service\DeliveryTimeFrame('', [
+            new Service\DayOfDelivery('', true, false, ''),
+            new Service\DeliveryTimeFrame('', true, false, [
                 '10001200' => '10:00 - 12:00',
                 '12001400' => '12:00 - 14:00',
                 '14001600' => '14:00 - 16:00',
@@ -52,25 +51,25 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
                 '18002000' => '18:00 - 20:00',
                 '19002100' => '19:00 - 21:00',
             ]),
-            new Service\ParcelAnnouncement(),
-            new Service\PreferredLocation(),
-            new Service\PreferredNeighbour(),
+            new Service\ParcelAnnouncement('', true, false),
+            new Service\PreferredLocation('', true, false, ''),
+            new Service\PreferredNeighbour('', true, false, ''),
         ];
     }
 
     /**
-     * @return Service[]
+     * @return Service\Type\Generic[]
      */
     protected function getMerchantServices()
     {
         return [
-            new Service\BulkyGoods(),
-            new Service\Insurance('', [
+            new Service\BulkyGoods('', true, false),
+            new Service\Insurance('', true, false, [
                 Service\Insurance::TYPE_A => '2.500',
                 Service\Insurance::TYPE_B => '25.000'
             ]),
-            new Service\ReturnShipment(),
-            new Service\VisualCheckOfAge('', [
+            new Service\ReturnShipment('', true, false),
+            new Service\VisualCheckOfAge('', true, false, [
                 Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
                 Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
             ]),
@@ -78,7 +77,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     }
 
     /**
-     * @return Service[]
+     * @return Service\Type\Generic[]
      */
     protected function getServices()
     {
@@ -95,11 +94,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $customerServices = $this->getCustomerServices();
         $merchantServices = $this->getMerchantServices();
 
-        array_walk($customerServices, function (Service $service) {
-            $this->assertTrue($service->isCustomerService, get_class($service));
+        array_walk($customerServices, function (Service\Type\Generic $service) {
+            $this->assertTrue($service->isCustomerService(), get_class($service));
         });
-        array_walk($merchantServices, function (Service $service) {
-            $this->assertFalse($service->isCustomerService, get_class($service));
+        array_walk($merchantServices, function (Service\Type\Generic $service) {
+            $this->assertFalse($service->isCustomerService(), get_class($service));
         });
     }
 
@@ -111,8 +110,8 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function selectHasOptions()
     {
         $services = $this->getServices();
-        array_walk($services, function (Service $service) {
-            if ($service instanceof ServiceWithOptions) {
+        array_walk($services, function (Service\Type\Generic $service) {
+            if ($service instanceof Service\Type\Select) {
                 $serviceOptions = $service->getOptions();
                 $this->assertInternalType('array', $serviceOptions);
                 $this->assertNotEmpty($serviceOptions, get_class($service));
@@ -146,7 +145,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         // iterator
         foreach ($collection as $item) {
-            $this->assertInstanceOf(Service::class, $item);
+            $this->assertInstanceOf(Service\Type\Generic::class, $item);
         }
 
         $this->assertInstanceOf(
@@ -162,11 +161,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputBoolean()
     {
-        $boolService = new Service\BulkyGoods();
+        $boolService = new Service\BulkyGoods('', true, false);
 
-        $this->assertContains('type="checkbox"', $boolService->getRenderer()->getSelectorHtml());
-        $this->assertContains('label for', $boolService->getRenderer()->getLabelHtml($boolService->name));
-        $this->assertEquals('', $boolService->getRenderer()->getSettingsHtml());
+        $this->assertContains('type="checkbox"', $boolService->getSelectorHtml());
+        $this->assertContains('label for', $boolService->getLabelHtml());
+        $this->assertEquals('', $boolService->getValueHtml());
     }
 
     /**
@@ -174,12 +173,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputHidden()
     {
-        $hiddenService = new Service\ParcelAnnouncement();
-        $hiddenService->setIsRequired();
+        $hiddenService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_REQUIRED, false);
 
-        $this->assertContains('type="hidden"', $hiddenService->getRenderer()->getSelectorHtml());
-        $this->assertEmpty($hiddenService->getRenderer()->getLabelHtml($hiddenService->name));
-        $this->assertEquals('', $hiddenService->getRenderer()->getSettingsHtml());
+        $this->assertContains('type="hidden"', $hiddenService->getSelectorHtml());
+        $this->assertEmpty($hiddenService->getLabelHtml());
+        $this->assertEquals('', $hiddenService->getValueHtml());
     }
 
     /**
@@ -187,14 +185,14 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputSelect()
     {
-        $selectService = new Service\VisualCheckOfAge('', [
+        $selectService = new Service\VisualCheckOfAge('', true, false, [
             Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
             Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
         ]);
 
-        $this->assertContains('type="checkbox"', $selectService->getRenderer()->getSelectorHtml());
-        $this->assertContains('label for', $selectService->getRenderer()->getLabelHtml($selectService->name));
-        $this->assertContains('select', $selectService->getRenderer()->getSettingsHtml());
+        $this->assertContains('type="checkbox"', $selectService->getSelectorHtml());
+        $this->assertContains('label for', $selectService->getLabelHtml());
+        $this->assertContains('select', $selectService->getValueHtml());
     }
 
     /**
@@ -202,10 +200,10 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputText()
     {
-        $textService   = new Service\PreferredNeighbour();
+        $textService   = new Service\PreferredNeighbour('', true, false, '');
 
-        $this->assertContains('type="checkbox"', $textService->getRenderer()->getSelectorHtml());
-        $this->assertContains('label for', $textService->getRenderer()->getLabelHtml($textService->name));
-        $this->assertContains('type="text', $textService->getRenderer()->getSettingsHtml());
+        $this->assertContains('type="checkbox"', $textService->getSelectorHtml());
+        $this->assertContains('label for', $textService->getLabelHtml());
+        $this->assertContains('type="text', $textService->getValueHtml());
     }
 }

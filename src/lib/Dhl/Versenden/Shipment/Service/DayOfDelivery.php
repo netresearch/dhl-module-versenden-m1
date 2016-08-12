@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service;
 
 /**
  * DayOfDelivery
@@ -35,20 +34,25 @@ use \Dhl\Versenden\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class DayOfDelivery extends Service
+class DayOfDelivery extends Type\Date
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_DATE;
+    const CODE = 'dayOfDelivery';
 
     /**
      * DayOfDelivery constructor.
-     * @param string $value
+     *
+     * @param string $name
+     * @param bool $isEnabled
+     * @param bool $isSelected
+     * @param string $placeholder
+     * @param int $maxLength
      */
-    public function __construct($value = '')
+    public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 100)
     {
-        parent::__construct($value);
+        $this->customerService = true;
 
-        $this->name = 'Day Of Delivery';
-        $this->isCustomerService = true;
+        parent::__construct($name, $isEnabled, $isSelected, $placeholder, $maxLength);
     }
+
+
 }

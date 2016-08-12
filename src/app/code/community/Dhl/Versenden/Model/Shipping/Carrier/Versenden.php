@@ -144,6 +144,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
             return $this->getProducts();
         }
 
+        //TODO(nr): AT shippers have different products
         $isNationalShipping = ($params->getData('country_shipper') == 'DE')
             && ($params->getData('country_recipient') == 'DE');
 
@@ -171,12 +172,6 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         $response = new Varien_Object();
 
         try {
-            $requestData = new Webservice\RequestData\Version('2', '1', null);
-            $parser = new Webservice\Parser\Soap\Version();
-            $adapter = Mage::getModel('dhl_versenden/webservice_gateway_soap')
-                ->getAdapter(Mage::getModel('dhl_versenden/config_shipper'));
-            $adapter->getVersion($requestData, $parser);
-
             $result = Mage::getModel('dhl_versenden/webservice_gateway_soap')
                 ->createShipmentOrder($shipmentRequests);
             $shipmentNumber = $result->getShipmentNumber($sequenceNumber);

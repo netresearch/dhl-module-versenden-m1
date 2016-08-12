@@ -188,6 +188,19 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     }
 
     /**
+     * @param string $serviceCode
+     * @return mixed
+     */
+    public function getServiceValue($serviceCode)
+    {
+        if (property_exists(static::class, $serviceCode)) {
+            return $this->{$serviceCode};
+        }
+
+        return null;
+    }
+
+    /**
      * Specify data which should be serialized to JSON
      *
      * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php

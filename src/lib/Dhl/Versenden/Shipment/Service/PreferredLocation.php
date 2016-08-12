@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service;
+
 /**
- * BulkyGoods
+ * PreferredLocation
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,19 +34,24 @@ use \Dhl\Versenden\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class BulkyGoods extends Service
+class PreferredLocation extends Type\Text
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_BOOLEAN;
+    const CODE = 'preferredLocation';
 
     /**
-     * BulkyGoods constructor.
-     * @param string $value
+     * PreferredLocation constructor.
+     * @param string $name
+     * @param bool $isEnabled
+     * @param bool $isSelected
+     * @param string $placeholder
+     * @param int $maxLength
      */
-    public function __construct($value = '')
+    public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 100)
     {
-        parent::__construct($value);
+        $this->customerService = true;
 
-        $this->name = 'Bulky Goods';
+        parent::__construct($name, $isEnabled, $isSelected, $placeholder, $maxLength);
     }
+
+
 }

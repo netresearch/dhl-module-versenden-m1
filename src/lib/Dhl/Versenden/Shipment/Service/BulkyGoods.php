@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
+namespace Dhl\Versenden\Shipment\Service;
+
 /**
- * VisualCheckOfAge
+ * BulkyGoods
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,23 +34,7 @@ use \Dhl\Versenden\Service\ServiceWithOptions as OptionsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class VisualCheckOfAge extends OptionsService
+class BulkyGoods extends Type\Boolean
 {
-    const A16 = 'A16';
-    const A18 = 'A18';
-
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_SELECT;
-
-    /**
-     * VisualCheckOfAge constructor.
-     * @param string $value
-     */
-    public function __construct($value = '', $options = [])
-    {
-        parent::__construct($value, $options);
-
-        $this->name = 'Visual Check Of Age';
-        $this->isCustomerService = false;
-    }
+    const CODE = 'bulkyGoods';
 }

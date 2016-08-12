@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Service\Type as Service;
+use \Dhl\Versenden\Shipment\Service;
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 /**
  * Dhl_Versenden_Test_Model_ObserverTest
@@ -147,10 +147,12 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
         // SERVICE DEFINITION
         $preferredLocationValue = 'Garage Location';
-        $preferredLocation = new Service\PreferredLocation($preferredLocationValue);
+        $preferredLocation = new Service\PreferredLocation('', true, false, '');
+        $preferredLocation->setValue($preferredLocationValue);
 
         $preferredNeighbourValue = 'Foo Neighbour';
-        $preferredNeighbour = new Service\PreferredNeighbour($preferredNeighbourValue);
+        $preferredNeighbour = new Service\PreferredNeighbour('', true, false, '');
+        $preferredNeighbour->setValue($preferredNeighbourValue);
 
         // two settings, only one actually enabled
         $requestMock = $this->getMockBuilder(Mage_Core_Controller_Request_Http::class)
@@ -166,8 +168,8 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
                         $preferredLocation->getCode() => $preferredLocation->getCode()
                     )),
                     array('service_setting', array(), array(
-                        $preferredLocation->getCode() => $preferredLocation->value,
-                        $preferredNeighbour->getCode() => $preferredNeighbour->value,
+                        $preferredLocation->getCode() => $preferredLocation->getValue(),
+                        $preferredNeighbour->getCode() => $preferredNeighbour->getValue(),
                     ))
                 )
             );

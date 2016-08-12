@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service\Type;
-use \Dhl\Versenden\Service\ServiceWithDetails as DetailsService;
+namespace Dhl\Versenden\Shipment\Service\Type;
+
 /**
- * PreferredLocation
+ * Boolean
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,19 +34,42 @@ use \Dhl\Versenden\Service\ServiceWithDetails as DetailsService;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PreferredLocation extends DetailsService
+abstract class Boolean extends Generic
 {
-    /**
-     * PreferredLocation constructor.
-     *
-     * @param string $value
-     * @param string $placeholder
-     */
-    public function __construct($value = '', $placeholder = '')
-    {
-        parent::__construct($value, $placeholder);
+    protected $frontendInputType = 'boolean';
 
-        $this->name              = 'Preferred Location';
-        $this->isCustomerService = true;
+    /**
+     * @return string
+     */
+    public function getSelectorHtml()
+    {
+        $format = <<<'HTML'
+<input type="checkbox" id="shipment_service_%s" name="shipment_service[%s]" value="%s" class="checkbox" %s />
+HTML;
+
+        $selected = (bool)$this->isSelected() ? 'checked="checked"' : '';
+        return sprintf($format, $this->getCode(), $this->getCode(), $this->getCode(), $selected);
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelHtml()
+    {
+        $format = <<<'HTML'
+<label for="shipment_service_%s">%s</label>
+HTML;
+
+        return sprintf($format, $this->getCode(), $this->getName());
+    }
+
+    /**
+     * No service details for boolean form elements.
+     *
+     * @return string
+     */
+    public function getValueHtml()
+    {
+        return '';
     }
 }
