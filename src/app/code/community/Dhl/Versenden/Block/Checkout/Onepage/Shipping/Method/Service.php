@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Service\Type as Service;
+use \Dhl\Versenden\Shipment\Service\Type\Generic as Service;
 /**
  * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
  *
@@ -43,11 +43,11 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
      */
     public function getServices()
     {
-        $collection = Mage::getModel('dhl_versenden/config')->getEnabledServices();
+        $collection = Mage::getModel('dhl_versenden/config_service')->getEnabledServices();
         $services = $collection->getItems();
         $services = array_filter(
             $services, function (Service $service) {
-                return $service->isCustomerService;
+                return $service->isCustomerService();
             }
         );
 

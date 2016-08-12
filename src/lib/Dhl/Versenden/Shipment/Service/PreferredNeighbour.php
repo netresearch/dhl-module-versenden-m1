@@ -23,11 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Service;
-use \Dhl\Versenden\Service\Type as Service;
+namespace Dhl\Versenden\Shipment\Service;
 
 /**
- * ServiceWithDetails
+ * PreferredNeighbour
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -35,35 +34,22 @@ use \Dhl\Versenden\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class ServiceWithDetails extends Service
+class PreferredNeighbour extends Type\Text
 {
-    /** @var string */
-    public $frontendInputType = self::INPUT_TYPE_TEXT;
-    /** @var string */
-    public $placeholder = '';
-
-    public function __construct($value = '', $placeholder = '')
-    {
-        $this->placeholder = $placeholder;
-
-        parent::__construct($value);
-    }
+    const CODE = 'preferredNeighbour';
 
     /**
-     * Get Placeholder from Service
-     *
-     * @return string
+     * PreferredNeighbour constructor.
+     * @param string $name
+     * @param bool $isEnabled
+     * @param bool $isSelected
+     * @param string $placeholder
+     * @param int $maxLength
      */
-    public function getPlaceholder()
+    public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 100)
     {
-        return $this->placeholder;
-    }
+        $this->customerService = true;
 
-    /**
-     * @return int
-     */
-    public function getMaxLength()
-    {
-        return 100;
+        parent::__construct($name, $isEnabled, $isSelected, $placeholder, $maxLength);
     }
 }
