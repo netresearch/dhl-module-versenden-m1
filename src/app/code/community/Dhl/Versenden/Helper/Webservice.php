@@ -118,6 +118,11 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
     }
 
     /**
+     * Convert service information to standardized data object. Service info
+     * is usually derived from POST data in the following form:
+     * - selected_services: checkboxes
+     * - service_details: text input or dropdowns
+     *
      * @param bool[] $selectedServices
      * @param string[] $serviceDetails
      * @return ShipmentOrder\ServiceSelection

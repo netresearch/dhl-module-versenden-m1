@@ -84,13 +84,13 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
     {
         $selection = array(
             Service\ParcelAnnouncement::CODE => false,
-            Service\Insurance::CODE => 'bar',
+            Service\VisualCheckOfAge::CODE => 'bar',
         );
         $serviceSelection = \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection::fromArray($selection);
 
         $services = array(
             new Service\ParcelAnnouncement('', true, false),
-            new Service\Insurance('', true, false, array('foo' => 'fox', 'bar' => 'baz')),
+            new Service\VisualCheckOfAge('', true, false, array('foo' => 'fox', 'bar' => 'baz')),
         );
 
         $serviceCollection = new Service\Collection($services);
@@ -100,10 +100,10 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
 
         /** @var Service\ParcelAnnouncement $paService */
         $paService = $serviceCollection->getItem(Service\ParcelAnnouncement::CODE);
-        /** @var Service\Insurance $insuranceService */
-        $insuranceService = $serviceCollection->getItem(Service\Insurance::CODE);
+        /** @var Service\VisualCheckOfAge $ageCheckService */
+        $ageCheckService = $serviceCollection->getItem(Service\VisualCheckOfAge::CODE);
 
         $this->assertEquals($selection[Service\ParcelAnnouncement::CODE], $paService->getValue());
-        $this->assertEquals($selection[Service\Insurance::CODE], $insuranceService->getValue());
+        $this->assertEquals($selection[Service\VisualCheckOfAge::CODE], $ageCheckService->getValue());
     }
 }

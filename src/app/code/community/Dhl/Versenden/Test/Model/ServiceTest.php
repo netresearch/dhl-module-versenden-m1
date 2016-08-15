@@ -64,10 +64,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         return [
             new Service\BulkyGoods('', true, false),
-            new Service\Insurance('', true, false, [
-                Service\Insurance::TYPE_A => '2.500',
-                Service\Insurance::TYPE_B => '25.000'
-            ]),
+            new Service\Insurance('', true, false),
             new Service\ReturnShipment('', true, false),
             new Service\VisualCheckOfAge('', true, false, [
                 Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,

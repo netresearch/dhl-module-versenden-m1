@@ -126,37 +126,53 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
 
         // (2) prepared data derived from OPC
-        $shippingInfoJson = $shipment->getShippingAddress()->getDhlVersendenInfo();
+        $shippingInfoJson = $shipment->getShippingAddress()->getData('dhl_versenden_info');
         $shippingInfoObj = json_decode($shippingInfoJson);
         $shippingInfo = Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
         if (!$shippingInfo) {
             $receiver = $helper->shippingAddressToReceiver($shipment->getShippingAddress());
-            $serviceSelection = $helper->serviceSelectionToServiceSettings(
-                $serviceInfo['shipment_service'],
-                $serviceInfo['service_setting']
-            );
         } else {
             $receiver = $shippingInfo->getReceiver();
-            $serviceSelection = $shippingInfo->getServiceSelection();
         }
 
         // (3) data derived from shipment creation
         // add/override shipment and service settings from shipment creation
         $packageCollection = new RequestData\ShipmentOrder\PackageCollection();
-
         $productCode = '';
+        $packagesPrice = 0;
+
         foreach ($packageInfo as $idx => $packageDetails) {
-            $weight = $helper->getPackageWeight($globalSettings, $packageDetails['params']['weight']);
-            $package = new RequestData\ShipmentOrder\Package($idx, $weight);
+            $packageWeight = $helper->getPackageWeight($globalSettings, $packageDetails['params']['weight']);
+
+            $package = new RequestData\ShipmentOrder\Package($idx, $packageWeight);
             $packageCollection->addItem($package);
+
+            $packagePrice = array_reduce($packageDetails['items'], function ($carry, array $packageItem) {
+                $carry += $packageItem['price'];
+                return $carry;
+            }, 0);
 
             // note: dhl product is the same for all packages
             $productCode = $packageDetails['params']['container'];
+            $packagesPrice += $packagePrice;
         }
+
+        // add additional insurance service details
+        if ( isset($serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE])
+            && ($serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE])
+        ) {
+            $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $packagesPrice;
+        }
+
+        $serviceSelection = $helper->serviceSelectionToServiceSettings(
+            $serviceInfo['shipment_service'],
+            $serviceInfo['service_setting']
+        );
 
         // update shipping info
         $shippingInfo = new Webservice\RequestData\ShippingInfo($receiver, $serviceSelection, $packageCollection);
-        $shipment->getShippingAddress()->setDhlVersendenInfo(
+        $shipment->getShippingAddress()->setData(
+            'dhl_versenden_info',
             json_encode($shippingInfo, JSON_FORCE_OBJECT)
         );
 

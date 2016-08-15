@@ -98,11 +98,8 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
             $orderShipment = $shipmentRequest->getOrderShipment();
 
-            $packageInfo = $shipmentRequest->getPackages();
-            $serviceInfo = array(
-                'shipment_service' => array(),
-                'service_setting' => array(),
-            );
+            $packageInfo = $shipmentRequest->getData('packages');
+            $serviceInfo = $shipmentRequest->getData('services');
 
             try {
                 $shipmentOrder = $this->shipmentToShipmentOrder(
