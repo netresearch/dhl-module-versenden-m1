@@ -232,7 +232,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $request = new Mage_Shipping_Model_Shipment_Request();
         $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
-        $request->setPackages(array());
+        $request->setData('packages', array());
+        $request->setData('services', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
 
@@ -295,7 +296,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $request = new Mage_Shipping_Model_Shipment_Request();
         $request->setOrderShipment($shipment);
-        $request->setPackages(array());
+        $request->setData('packages', array());
+        $request->setData('services', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
         $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
@@ -329,7 +331,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $request = new Mage_Shipping_Model_Shipment_Request();
         $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
-        $request->setPackages(array());
+        $request->setData('packages', array());
+        $request->setData('services', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
 

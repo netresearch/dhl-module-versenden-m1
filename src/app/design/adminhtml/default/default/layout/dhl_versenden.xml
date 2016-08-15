@@ -26,7 +26,7 @@
  */
 -->
 <layout version="0.1.0">
-    <adminhtml_sales_order_shipment_new>
+    <packaging_popup>
         <reference name="form">
             <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
                    name="shipment_packaging"
@@ -43,5 +43,13 @@
                        template="dhl_versenden/sales/shipping_services.phtml"/>
             </block>
         </reference>
+    </packaging_popup>
+
+    <adminhtml_sales_order_shipment_new>
+        <update handle="packaging_popup"/>
     </adminhtml_sales_order_shipment_new>
+
+    <adminhtml_sales_order_shipment_view>
+        <update handle="packaging_popup"/>
+    </adminhtml_sales_order_shipment_view>
 </layout>

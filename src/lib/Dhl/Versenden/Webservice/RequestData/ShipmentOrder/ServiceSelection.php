@@ -45,8 +45,8 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     private $preferredLocation = false;
     /** @var bool|string false or neighbour address */
     private $preferredNeighbour = false;
-    /** @var int yes/no/optional */
-    private $parcelAnnouncement = 0;
+    /** @var bool false or true */
+    private $parcelAnnouncement = false;
     /** @var bool|string false or A16 or A18 */
     private $visualCheckOfAge = false;
     /** @var bool false or true */

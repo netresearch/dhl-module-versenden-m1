@@ -119,7 +119,7 @@ class Dhl_Versenden_Model_Observer
         );
 
         $shippingInfo = new \Dhl\Versenden\Webservice\RequestData\ShippingInfo($receiver, $serviceSettings);
-        $shippingAddress->setDhlVersendenInfo(json_encode($shippingInfo, JSON_FORCE_OBJECT));
+        $shippingAddress->setData('dhl_versenden_info', json_encode($shippingInfo, JSON_FORCE_OBJECT));
     }
 
     /**

@@ -59,46 +59,92 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     }
 
     /**
+     * @param string|null $recipientCountry
      * @return string[]
      */
-    protected function getProducts()
+    protected function getProductsGermany($recipientCountry = null)
     {
-        return array(
+        $products = array(
             self::PRODUCT_CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
             self::PRODUCT_CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('DHL Weltpaket'),
             self::PRODUCT_CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('DHL Europaket'),
             self::PRODUCT_CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('DHL Kurier Taggleich'),
             self::PRODUCT_CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__('DHL Kurier Wunschzeit'),
+        );
+
+        if (!$recipientCountry) {
+            return $products;
+        }
+
+        if ($recipientCountry == 'DE') {
+            // domestic germany
+            return array(
+                self::PRODUCT_CODE_PAKET_NATIONAL => $products[self::PRODUCT_CODE_PAKET_NATIONAL],
+            );
+        }
+
+        // row germany
+        return array(
+            self::PRODUCT_CODE_WELTPAKET => $products[self::PRODUCT_CODE_WELTPAKET],
+        );
+    }
+
+    /**
+     * @param string|null $recipientCountry
+     * @return string[]
+     */
+    protected function getProductsAustria($recipientCountry = null)
+    {
+        $products = array(
             self::PRODUCT_CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__('DHL Paket Austria'),
             self::PRODUCT_CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__('DHL PAKET Connect'),
             self::PRODUCT_CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__('DHL PAKET International'),
         );
-    }
 
-    /**
-     * Obtain DHL products for national shipping.
-     *
-     * @return string[]
-     */
-    protected function getNationalProducts()
-    {
-        $products = $this->getProducts();
+        if (!$recipientCountry) {
+            return $products;
+        }
+
+        if ($recipientCountry == 'AT') {
+            // domestic austria
+            return array(
+                self::PRODUCT_CODE_PAKET_AUSTRIA => $products[self::PRODUCT_CODE_PAKET_AUSTRIA],
+            );
+        }
+
+        if (Mage::helper('core/data')->isCountryInEU($recipientCountry) ) {
+            // eu austria
+            return array(
+                self::PRODUCT_CODE_PAKET_CONNECT => $products[self::PRODUCT_CODE_PAKET_CONNECT],
+            );
+        }
+
+        // row austria
         return array(
-            self::PRODUCT_CODE_PAKET_NATIONAL => $products[self::PRODUCT_CODE_PAKET_NATIONAL],
+            self::PRODUCT_CODE_PAKET_INTERNATIONAL => $products[self::PRODUCT_CODE_PAKET_INTERNATIONAL],
         );
     }
 
     /**
-     * Obtain DHL products for international shipping.
-     *
+     * @param string $shipperCountry
+     * @param string $recipientCountry
      * @return string[]
      */
-    protected function getInternationalProducts()
+    protected function getProducts($shipperCountry, $recipientCountry)
     {
-        $products = $this->getProducts();
-        return array(
-            self::PRODUCT_CODE_WELTPAKET  => $products[self::PRODUCT_CODE_WELTPAKET],
-        );
+        if (!$shipperCountry) {
+            return  $this->getProductsGermany() + $this->getProductsAustria();
+        }
+
+        if ($shipperCountry == 'DE') {
+            return $this->getProductsGermany($recipientCountry);
+        }
+
+        if ($shipperCountry == 'AT') {
+            return $this->getProductsAustria($recipientCountry);
+        }
+
+        return array();
     }
 
     /**
@@ -141,18 +187,14 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     public function getContainerTypes(Varien_Object $params = null)
     {
         if (!$params) {
-            return $this->getProducts();
-        }
-
-        //TODO(nr): AT shippers have different products
-        $isNationalShipping = ($params->getData('country_shipper') == 'DE')
-            && ($params->getData('country_recipient') == 'DE');
-
-        if ($isNationalShipping) {
-            return $this->getNationalProducts();
+            $countryShipper = null;
+            $countryRecipient = null;
         } else {
-            return $this->getInternationalProducts();
+            $countryShipper = $params->getData('country_shipper');
+            $countryRecipient = $params->getData('country_recipient');
         }
+
+        return $this->getProducts($countryShipper, $countryRecipient);
     }
 
     /**
@@ -164,6 +206,14 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function requestToShipment(Mage_Shipping_Model_Shipment_Request $request)
     {
+        $httpRequest = Mage::app()->getFrontController()->getRequest();
+
+        $serviceData = array(
+            'shipment_service' => $httpRequest->getPost('shipment_service', array()),
+            'service_setting'  => $httpRequest->getPost('service_setting', array()),
+        );
+        $request->setData('services', $serviceData);
+
         $sequenceNumber = 0;
         $shipmentRequests = array(
             $sequenceNumber => $request,
@@ -205,7 +255,19 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         $codes = array(
             'unit_of_measure' => array(
                 'G'   =>  Mage::helper('dhl_versenden')->__('Grams'),
-                'KG'   =>  Mage::helper('dhl_versenden')->__('Kilograms'),
+                'KG'  =>  Mage::helper('dhl_versenden')->__('Kilograms'),
+            ),
+            'product' => array(
+                'DE' => array(
+                    'national' => self::PRODUCT_CODE_PAKET_NATIONAL,
+                    'eu'       => self::PRODUCT_CODE_WELTPAKET,
+                    'row'      => self::PRODUCT_CODE_WELTPAKET,
+                ),
+                'AT' => array(
+                    'national' => self::PRODUCT_CODE_PAKET_AUSTRIA,
+                    'eu'       => self::PRODUCT_CODE_PAKET_CONNECT,
+                    'row'      => self::PRODUCT_CODE_PAKET_INTERNATIONAL,
+                )
             ),
         );
 
