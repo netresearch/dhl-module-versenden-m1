@@ -69,15 +69,15 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
     /**
      * @test
      */
-    public function getContainerTypes()
+    public function getContainerTypesGermany()
     {
         $paketNational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
         $paketInternational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_WELTPAKET;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
-
-        // national
         $shipperCountry = 'DE';
+
+        // national receiver
         $receiverCountry = 'DE';
         $params = new Varien_Object(array(
             'method' => 'dhlversenden_foo',
@@ -89,9 +89,56 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayHasKey($paketNational, $containerTypes);
         $this->assertArrayNotHasKey($paketInternational, $containerTypes);
 
+        // eu receiver
+        $receiverCountry = 'AT';
+        $params = new Varien_Object(array(
+            'method' => 'dhlversenden_foo',
+            'country_shipper' => $shipperCountry,
+            'country_recipient' => $receiverCountry,
+        ));
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertArrayNotHasKey($paketNational, $containerTypes);
+        $this->assertArrayHasKey($paketInternational, $containerTypes);
 
-        // international shipper, national receiver
+        // row receiver
+        $receiverCountry = 'NZ';
+        $params = new Varien_Object(array(
+            'method' => 'dhlversenden_foo',
+            'country_shipper' => $shipperCountry,
+            'country_recipient' => $receiverCountry,
+        ));
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertArrayNotHasKey($paketNational, $containerTypes);
+        $this->assertArrayHasKey($paketInternational, $containerTypes);
+    }
+    /**
+     * @test
+     */
+    public function getContainerTypesAustria()
+    {
+        $paketNational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_AUSTRIA;
+        $paketEu = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_CONNECT;
+        $paketInternational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_INTERNATIONAL;
+
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $shipperCountry = 'AT';
+
+        // national receiver
+        $receiverCountry = 'AT';
+        $params = new Varien_Object(array(
+            'method' => 'dhlversenden_foo',
+            'country_shipper' => $shipperCountry,
+            'country_recipient' => $receiverCountry,
+        ));
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertArrayHasKey($paketNational, $containerTypes);
+        $this->assertArrayNotHasKey($paketEu, $containerTypes);
+        $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+
+        // eu receiver
         $receiverCountry = 'DE';
         $params = new Varien_Object(array(
             'method' => 'dhlversenden_foo',
@@ -100,12 +147,51 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         ));
         $containerTypes = $carrier->getContainerTypes($params);
         $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayHasKey($paketInternational, $containerTypes);
         $this->assertArrayNotHasKey($paketNational, $containerTypes);
+        $this->assertArrayHasKey($paketEu, $containerTypes);
+        $this->assertArrayNotHasKey($paketInternational, $containerTypes);
 
+        // row receiver
+        $receiverCountry = 'NZ';
+        $params = new Varien_Object(array(
+            'method' => 'dhlversenden_foo',
+            'country_shipper' => $shipperCountry,
+            'country_recipient' => $receiverCountry,
+        ));
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertArrayNotHasKey($paketNational, $containerTypes);
+        $this->assertArrayNotHasKey($paketEu, $containerTypes);
+        $this->assertArrayHasKey($paketInternational, $containerTypes);
+    }
+
+    /**
+     * @test
+     */
+    public function getContainerTypesUnknownOrigin()
+    {
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
+
+        // no shipper or receiver info given
+        $params = null;
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertNotEmpty($containerTypes);
+
+        // international shipper, national receiver
+        $shipperCountry = 'CZ';
+        $receiverCountry = 'DE';
+        $params = new Varien_Object(array(
+            'method' => 'dhlversenden_foo',
+            'country_shipper' => $shipperCountry,
+            'country_recipient' => $receiverCountry,
+        ));
+        $containerTypes = $carrier->getContainerTypes($params);
+        $this->assertInternalType('array', $containerTypes);
+        $this->assertCount(0, $containerTypes);
 
         // international shipper, international receiver
-        $shipperCountry = 'AT';
+        $shipperCountry = 'CZ';
         $receiverCountry = 'CH';
         $params = new Varien_Object(array(
             'method' => 'dhlversenden_foo',
@@ -114,16 +200,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         ));
         $containerTypes = $carrier->getContainerTypes($params);
         $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayHasKey($paketInternational, $containerTypes);
-        $this->assertArrayNotHasKey($paketNational, $containerTypes);
-
-
-        // no shipper or receiver info given
-        $params = null;
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayHasKey($paketInternational, $containerTypes);
-        $this->assertArrayHasKey($paketNational, $containerTypes);
+        $this->assertCount(0, $containerTypes);
     }
 
     /**

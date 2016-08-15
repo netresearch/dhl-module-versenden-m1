@@ -94,6 +94,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDLOCATION, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER, $store);
+        $placeholder = Mage::helper('dhl_versenden/data')->__($placeholder);
 
         return new Service\PreferredLocation($name, $isAvailable, $isSelected, $placeholder);
     }
@@ -108,6 +109,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER, $store);
+        $placeholder = Mage::helper('dhl_versenden/data')->__($placeholder);
 
         return new Service\PreferredNeighbour($name, $isAvailable, $isSelected, $placeholder);
     }
@@ -164,12 +166,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $name        = Mage::helper('dhl_versenden/data')->__("Insurance");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_INSURANCE, $store);
         $isSelected  = false;
-        $options     = array(
-            Service\Insurance::TYPE_A => '2.500',
-            Service\Insurance::TYPE_B => '25.000'
-        );
 
-        return new Service\Insurance($name, $isAvailable, $isSelected, $options);
+        return new Service\Insurance($name, $isAvailable, $isSelected);
     }
 
     /**
@@ -181,6 +179,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $name        = Mage::helper('dhl_versenden/data')->__("Bulky Goods");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_BULKYGOODS, $store);
         $isSelected  = false;
+
         return new Service\BulkyGoods($name, $isAvailable, $isSelected);
     }
 

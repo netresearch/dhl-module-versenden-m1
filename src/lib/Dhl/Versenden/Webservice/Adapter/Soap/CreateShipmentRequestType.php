@@ -26,6 +26,7 @@
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
 use Dhl\Bcs\Api\ShipmentItemType;
+use Dhl\Bcs\Api\ShipmentService;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -41,6 +42,15 @@ class CreateShipmentRequestType implements RequestType
 {
     /**
      * @param RequestData\ShipmentOrder $shipmentOrder
+     * @return ShipmentService
+     */
+    protected static function prepareServices(RequestData\ShipmentOrder $shipmentOrder)
+    {
+        return new ShipmentService();
+    }
+
+    /**
+     * @param RequestData\ShipmentOrder $shipmentOrder
      * @return VersendenApi\ShipmentDetailsTypeType
      */
     protected static function prepareShipmentDetails(RequestData\ShipmentOrder $shipmentOrder)
@@ -51,6 +61,8 @@ class CreateShipmentRequestType implements RequestType
         $package = current($packages);
         $shipmentItemType = new ShipmentItemType($package->getWeightInKG());
 
+        $serviceType = ServiceType::prepare($shipmentOrder->getServiceSelection());
+
         $shipmentDetailsType = new VersendenApi\ShipmentDetailsTypeType(
             $shipmentOrder->getProductCode(),
             $shipmentOrder->getAccountNumber(),
@@ -58,6 +70,7 @@ class CreateShipmentRequestType implements RequestType
             $shipmentItemType
         );
         $shipmentDetailsType->setCustomerReference($shipmentOrder->getReference());
+        $shipmentDetailsType->setService($serviceType);
 
         return $shipmentDetailsType;
     }

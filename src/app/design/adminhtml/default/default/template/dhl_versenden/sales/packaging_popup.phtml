@@ -30,6 +30,22 @@
 document.observe("dom:loaded", function() {
     packaging = new Packaging(<?php echo $this->getConfigDataJson() ?>);
     packaging.changeContainerType($$('select[name=package_container]')[0]);
+
+    packaging.confirmPackagingWithServices = function () {
+        var requestData = {};
+
+        var serviceContainer = $('packaging-dhlversenden-services');
+        serviceContainer.select('input[type=checkbox]').each(function (elm) {
+            this[elm.name] = elm.getValue();
+        }, requestData);
+        serviceContainer.select('input[type=text]', 'select').each(function (elm) {
+            this[elm.name] = elm.getValue();
+        }, requestData);
+
+        // add service info to ajax request
+        packaging.setParamsCreateLabelRequest(requestData);
+        packaging.confirmPackaging();
+    };
 });
 //]]>
 </script>
@@ -180,7 +196,7 @@ document.observe("dom:loaded", function() {
             <div id="packages_content"></div>
         </div>
         <div class="buttons-set a-right">
-            <button type="button" class="scalable disabled SavePackagesBtn" disabled="disabled" onclick="packaging.confirmPackaging();" title="<?php echo Mage::helper('sales')->__('Products should be added to package(s)')?>">
+            <button type="button" class="scalable disabled SavePackagesBtn" disabled="disabled" onclick="packaging.confirmPackagingWithServices();" title="<?php echo Mage::helper('sales')->__('Products should be added to package(s)')?>">
                 <span><span><span><?php echo Mage::helper('sales')->__('OK') ?></span></span></span>
             </button>
             <button type="button" class="scalable" onclick="packaging.cancelPackaging();">
