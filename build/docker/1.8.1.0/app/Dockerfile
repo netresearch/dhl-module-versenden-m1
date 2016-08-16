@@ -1,4 +1,4 @@
-FROM couchi.nr:5001/magento-ci/base:1.8.1.0
+FROM registry.netresearch.de/magento-ci/base:1.8.1.0
 MAINTAINER Christoph Aßmann <christoph.assmann@netresearch.de>
 
 VOLUME ["/var/www/html", "/var/www/vendor"]

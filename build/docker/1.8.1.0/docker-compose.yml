@@ -1,7 +1,7 @@
 version: '2'
 services:
   db:
-    image: "couchi.nr:5001/magento-ci/db:${MAGENTO_VERSION}"
+    image: "registry.netresearch.de/magento-ci/db:${MAGENTO_VERSION}"
     container_name: magento_dbms
     environment:
       MYSQL_ROOT_PASSWORD: MagEC1
@@ -17,7 +17,7 @@ services:
     restart: always
 
   env:
-    image: "couchi.nr:5001/magento-ci/php-apache:${PHP_VERSION}"
+    image: "registry.netresearch.de/magento-ci/php-apache:${PHP_VERSION}"
     container_name: magento_env
     ports:
       - "80:80"
