@@ -13,3 +13,4 @@ src/lib/Dhl/Bcs/ lib/Dhl/Bcs/
 src/skin/frontend/base/default/css/dhl_versenden/ skin/frontend/base/default/css/dhl_versenden/
 src/skin/frontend/base/default/images/dhl_versenden/ skin/frontend/base/default/images/dhl_versenden/
 src/skin/frontend/base/default/js/dhl_versenden/ skin/frontend/base/default/js/dhl_versenden/
+src/skin/adminhtml/default/default/dhl_versenden.css skin/adminhtml/default/default/dhl_versenden.css
