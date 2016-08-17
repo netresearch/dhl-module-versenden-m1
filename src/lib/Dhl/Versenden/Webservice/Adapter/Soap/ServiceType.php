@@ -131,9 +131,8 @@ class ServiceType implements RequestType
             $service->setPreferredDay($pdConfig);
         }
 
-        if ($goGreen = false) {
-            //TODO(nr): handle GoGreen
-            $ggConfig = new Serviceconfiguration($goGreen);
+        if ($requestData->isGoGreen()) {
+            $ggConfig = new Serviceconfiguration($requestData->isGoGreen());
             $service->setGoGreen($ggConfig);
         }
 
@@ -168,18 +167,16 @@ class ServiceType implements RequestType
             $service->setPremium($pConfig);
         }
 
-        if ($cod = false) {
-            //TODO(nr): handle COD
-            $amount = 77;
-            $codConfig = new ServiceconfigurationCashOnDelivery($cod, true, $amount);
+        if ($requestData->getCod()) {
+            $codAmount = $requestData->getCod();
+            //TODO(nr): to add or not to add fee?
+            $codConfig = new ServiceconfigurationCashOnDelivery(true, true, $codAmount);
             $service->setCashOnDelivery($codConfig);
         }
 
         if ($requestData->getInsurance()) {
-            $iConfig = new ServiceconfigurationAdditionalInsurance(
-                true,
-                $requestData->getInsurance()
-            );
+            $insuranceAmount = $requestData->getInsurance();
+            $iConfig = new ServiceconfigurationAdditionalInsurance(true, $insuranceAmount);
             $service->setAdditionalInsurance($iConfig);
         }
 

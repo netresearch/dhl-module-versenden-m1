@@ -100,7 +100,7 @@ HTML;
      */
     public function getValueHtml()
     {
-        $format = '<select name="service_setting[%s]">%s</select>';
+        $format = '<select name="service_setting[%s]" id="shipment_service_%sDetails">%s</select>';
         $options = $this->getOptions();
         $values = array_keys($options);
 
@@ -115,6 +115,7 @@ HTML;
 
         return sprintf(
             $format,
+            $this->getCode(),
             $this->getCode(),
             $optionsHtml
         );
