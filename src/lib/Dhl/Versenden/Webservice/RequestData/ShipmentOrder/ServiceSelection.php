@@ -51,10 +51,14 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     private $visualCheckOfAge = false;
     /** @var bool false or true */
     private $returnShipment = false;
-    /** @var bool|string false or A or B */
+    /** @var bool|float false or amount */
     private $insurance = false;
     /** @var bool false or true */
     private $bulkyGoods = false;
+    /** @var bool|float false or amount */
+    private $cod = false;
+    /** @var bool false or true */
+    private $goGreen = false;
 
     /**
      * Constructs ServiceSettings object from array with values that differ from initial settings
@@ -91,15 +95,18 @@ class ServiceSelection extends RequestData implements \JsonSerializable
      * @param int         $parcelAnnouncement
      * @param bool|string $visualCheckOfAge
      * @param bool        $returnShipment
-     * @param bool|string $insurance
+     * @param bool|float  $insurance
      * @param bool        $bulkyGoods
+     * @param bool|float  $cod
+     * @param bool        $goGreen
      *
      * @return ServiceSelection
      */
 
     public static function fromProperties(
         $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
-        $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods
+        $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance,
+        $bulkyGoods, $cod, $goGreen
     ) {
         $instance = new self();
         $instance->dayOfDelivery = $dayOfDelivery;
@@ -111,6 +118,8 @@ class ServiceSelection extends RequestData implements \JsonSerializable
         $instance->returnShipment = $returnShipment;
         $instance->insurance = $insurance;
         $instance->bulkyGoods = $bulkyGoods;
+        $instance->cod = $cod;
+        $instance->goGreen = $goGreen;
 
         return $instance;
     }
@@ -172,7 +181,7 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     }
 
     /**
-     * @return bool|string
+     * @return bool|float
      */
     public function getInsurance()
     {
@@ -185,6 +194,22 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     public function isBulkyGoods()
     {
         return $this->bulkyGoods;
+    }
+
+    /**
+     * @return bool|float
+     */
+    public function getCod()
+    {
+        return $this->cod;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isGoGreen()
+    {
+        return $this->goGreen;
     }
 
     /**

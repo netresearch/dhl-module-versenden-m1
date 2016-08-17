@@ -111,9 +111,12 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $shippingAddress = new Mage_Sales_Model_Order_Address();
         $shippingAddress->setData('dhl_versenden_info', '');
+        $payment = new Mage_Sales_Model_Order_Payment();
+        $payment->setMethod('checkmo');
         $order = new Mage_Sales_Model_Order();
         $order->setIncrementId($incrementId);
         $order->setShippingAddress($shippingAddress);
+        $order->setPayment($payment);
         $shipment = new Mage_Sales_Model_Order_Shipment();
         $shipment->setOrder($order);
         $shipment->setStoreId(2);
@@ -173,9 +176,12 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $shippingAddress = new Mage_Sales_Model_Order_Address();
         $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
+        $payment = new Mage_Sales_Model_Order_Payment();
+        $payment->setMethod('checkmo');
         $order = new Mage_Sales_Model_Order();
         $order->setIncrementId($incrementId);
         $order->setShippingAddress($shippingAddress);
+        $order->setPayment($payment);
         $shipment = new Mage_Sales_Model_Order_Shipment();
         $shipment->setOrder($order);
         $shipment->setStoreId(2);
