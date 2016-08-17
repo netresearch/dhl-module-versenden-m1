@@ -133,7 +133,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initVisualCheckOfAge($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Visual Check Of Age");
+        $name        = Mage::helper('dhl_versenden/data')->__("Visual Check of Age");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_VISUALCHECKOFAGE, $store);
         $isSelected  = false;
         $options     = array(
@@ -163,7 +163,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initInsurance($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Insurance");
+        $name        = Mage::helper('dhl_versenden/data')->__("Additional Insurance");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_INSURANCE, $store);
         $isSelected  = false;
 

@@ -84,11 +84,23 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      * Check if the given shipping method should be processed with DHL Versenden.
      *
      * @param string $shippingMethod
+     * @param mixed $store
      * @return bool
      */
-    public function canProcessMethod($shippingMethod)
+    public function canProcessMethod($shippingMethod, $store = null)
     {
-        return in_array($shippingMethod, $this->getSettings()->getShippingMethods());
+        return in_array($shippingMethod, $this->getSettings($store)->getShippingMethods());
     }
 
+    /**
+     * Check if the given payment method is cash on delivery.
+     *
+     * @param string $paymentMethod
+     * @param mixed $store
+     * @return bool
+     */
+    public function isCodPaymentMethod($paymentMethod, $store = null)
+    {
+        return in_array($paymentMethod, $this->getSettings($store)->getCodPaymentMethods());
+    }
 }

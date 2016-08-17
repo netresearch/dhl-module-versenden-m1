@@ -57,6 +57,8 @@ class ObjectMapper
         $returnShipment = isset($object->returnShipment) ? $object->returnShipment : false;
         $insurance = isset($object->insurance) ? $object->insurance : false;
         $bulkyGoods = isset($object->bulkyGoods) ? $object->bulkyGoods : false;
+        $cod = isset($object->cod) ? $object->cod : false;
+        $goGreen = isset($object->goGreen) ? $object->goGreen : false;
 
         return ServiceSelection::fromProperties(
             $dayOfDelivery,
@@ -67,7 +69,9 @@ class ObjectMapper
             $visualCheckOfAge,
             $returnShipment,
             $insurance,
-            $bulkyGoods
+            $bulkyGoods,
+            $cod,
+            $goGreen
         );
     }
 

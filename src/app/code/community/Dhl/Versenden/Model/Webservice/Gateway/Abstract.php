@@ -101,6 +101,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
     /**
      * Create one shipment order from given shipment
+     * TODO(nr): refactor!
      *
      * @param int $sequenceNumber
      * @param Mage_Sales_Model_Order_Shipment $shipment
@@ -158,10 +159,24 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         }
 
         // add additional insurance service details
-        if ( isset($serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE])
-            && ($serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE])
-        ) {
+        $isInsurance = isset($serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE])
+            && $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE];
+        if ($isInsurance) {
+            $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $isInsurance;
             $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $packagesPrice;
+        }
+        // add gogreen service details
+        $isGoGreen = $shipperConfig->getAccountSettings($shipment->getStoreId())->isGoGreen();
+        if ($isGoGreen) {
+            $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
+            $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
+        }
+        // add cod service details
+        $paymentMethod = $shipment->getOrder()->getPayment()->getMethod();
+        $isCod = $shipmentConfig->isCodPaymentMethod($paymentMethod, $shipment->getStoreId());
+        if ($isCod) {
+            $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Cod::CODE] = $isCod;
+            $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\Cod::CODE] = $packagesPrice;
         }
 
         $serviceSelection = $helper->serviceSelectionToServiceSettings(
