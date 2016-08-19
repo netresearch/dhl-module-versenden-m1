@@ -71,8 +71,8 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
      */
     public function getContainerTypesGermany()
     {
-        $paketNational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
-        $paketInternational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_WELTPAKET;
+        $paketNational = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
+        $paketInternational = \Dhl\Versenden\Product::CODE_WELTPAKET;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $shipperCountry = 'DE';
@@ -118,9 +118,9 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
      */
     public function getContainerTypesAustria()
     {
-        $paketNational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_AUSTRIA;
-        $paketEu = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_CONNECT;
-        $paketInternational = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_INTERNATIONAL;
+        $paketNational = \Dhl\Versenden\Product::CODE_PAKET_AUSTRIA;
+        $paketEu = \Dhl\Versenden\Product::CODE_PAKET_CONNECT;
+        $paketInternational = \Dhl\Versenden\Product::CODE_PAKET_INTERNATIONAL;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $shipperCountry = 'AT';

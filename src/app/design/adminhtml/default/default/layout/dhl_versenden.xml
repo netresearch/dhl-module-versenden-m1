@@ -27,6 +27,12 @@
 -->
 <layout version="0.1.0">
     <packaging_popup>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>dhl_versenden.css</stylesheet>
+            </action>
+        </reference>
+
         <reference name="form">
             <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
                    name="shipment_packaging"
@@ -46,11 +52,6 @@
     </packaging_popup>
 
     <adminhtml_sales_order_shipment_new>
-        <reference name="head">
-            <action method="addCss">
-                <stylesheet>dhl_versenden.css</stylesheet>
-            </action>
-        </reference>
         <update handle="packaging_popup"/>
     </adminhtml_sales_order_shipment_new>
 

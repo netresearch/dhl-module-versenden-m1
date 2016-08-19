@@ -252,11 +252,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         ShipmentOrder\ServiceSelection $serviceSelection
     ) {
         $services = $serviceCollection->getItems();
-        array_walk(
-            $services,
-            function (Service\Type\Generic $service) use ($serviceSelection) {
-                $service->setValue($serviceSelection->getServiceValue($service->getCode()));
-            }
-        );
+        /** @var Service\Type\Generic $service */
+        foreach ($services as $service) {
+            $service->setValue($serviceSelection->getServiceValue($service->getCode()));
+        }
     }
 }

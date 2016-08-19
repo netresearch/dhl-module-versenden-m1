@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Product;
 /**
  * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
  *
@@ -59,11 +59,13 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
      */
     public function getServices()
     {
+        $storeId = $this->getShipment()->getStoreId();
+        $shippingAddress = $this->getShipment()->getShippingAddress();
         $serviceConfig = Mage::getModel('dhl_versenden/config_service');
 
         $enabledServices = $serviceConfig->getEnabledServices();
 
-        $shippingInfoJson = $this->getShipment()->getShippingAddress()->getData('dhl_versenden_info');
+        $shippingInfoJson = $shippingAddress->getData('dhl_versenden_info');
         $shippingInfoObj = json_decode($shippingInfoJson);
         $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
         if ($shippingInfo !== null) {
@@ -71,6 +73,17 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
             $serviceConfig->setServiceValues($enabledServices, $serviceSelection);
         }
 
-        return $enabledServices;
+        
+        $shipperCountry = Mage::getStoreConfig(Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID, $storeId);
+        $recipientCountry = $shippingAddress->getCountryId();
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
+
+        $shippingProducts = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $isPostalFacility = $this->helper('dhl_versenden/webservice')->isPostalFacility($shippingAddress);
+
+        $filter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
+        $filteredCollection = $filter->filterServiceCollection($enabledServices);
+
+        return $filteredCollection;
     }
 }
