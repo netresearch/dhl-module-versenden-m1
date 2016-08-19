@@ -78,4 +78,47 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $this->assertEmpty($block->renderView());
         $this->assertEquals($blockHtml, $block->renderView());
     }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     * @dataProvider dataProvider
+     *
+     * @param string $jsonInfo
+     */
+    public function getServices($jsonInfo)
+    {
+        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service';
+
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingMethod('dhlversenden_flatrate');
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setOrder($order);
+
+        $blockMock = $this->getBlockMock($blockType, array('getShipment'));
+        $blockMock
+            ->expects($this->any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+        $this->replaceByMock('block', $blockType, $blockMock);
+
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service $block */
+        $block = Mage::app()->getLayout()->createBlock($blockType);
+
+        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        $services = $block->getServices();
+        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+
+        // bulkyGoods disabled via config
+        $code = \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
+        $this->assertNull($services->getItem($code));
+
+        // preferredLocation enabled via config and preselected via dhl_versenden_info
+        $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
+        $this->assertEquals('Garage', $services->getItem($code)->getValue());
+    }
 }

@@ -317,4 +317,64 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $postalFacility = SoapAdapter\PostalFacilityType::prepare($facility);
         $this->assertNull($postalFacility);
     }
+
+    /**
+     * @test
+     */
+    public function parseServices()
+    {
+        $serviceSelection = array(
+            \Dhl\Versenden\Shipment\Service\DayOfDelivery::CODE => '2016-12-24',
+            \Dhl\Versenden\Shipment\Service\DeliveryTimeFrame::CODE => '19002100',
+            \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::CODE => 'A21',
+            \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE => 'Chimney',
+            \Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE => 'Santa Berger',
+            \Dhl\Versenden\Shipment\Service\GoGreen::CODE => true,
+            \Dhl\Versenden\Shipment\Service\Cod::CODE => 40.96,
+            \Dhl\Versenden\Shipment\Service\Insurance::CODE =>  34.06,
+            \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE => true,
+
+        );
+
+        $requestData = RequestData\ShipmentOrder\ServiceSelection::fromArray($serviceSelection);
+        $shipmentServices = SoapAdapter\ServiceType::prepare($requestData);
+        $this->assertInstanceOf(\Dhl\Bcs\Api\ShipmentService::class, $shipmentServices);
+
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\DayOfDelivery::CODE],
+            $shipmentServices->getDayOfDelivery()->getDetails()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\DeliveryTimeFrame::CODE],
+            $shipmentServices->getDeliveryTimeframe()->getType()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\VisualCheckOfAge::CODE],
+            $shipmentServices->getVisualCheckOfAge()->getType()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\PreferredLocation::CODE],
+            $shipmentServices->getPreferredLocation()->getDetails()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE],
+            $shipmentServices->getPreferredNeighbour()->getDetails()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\GoGreen::CODE],
+            $shipmentServices->getGoGreen()->getActive()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\Cod::CODE],
+            $shipmentServices->getCashOnDelivery()->getCodAmount()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\Insurance::CODE],
+            $shipmentServices->getAdditionalInsurance()->getInsuranceAmount()
+        );
+        $this->assertEquals(
+            $serviceSelection[\Dhl\Versenden\Shipment\Service\BulkyGoods::CODE],
+            $shipmentServices->getBulkyGoods()->getActive()
+        );
+    }
 }

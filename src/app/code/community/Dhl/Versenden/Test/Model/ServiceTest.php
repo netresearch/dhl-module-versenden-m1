@@ -92,10 +92,10 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $merchantServices = $this->getMerchantServices();
 
         array_walk($customerServices, function (Service\Type\Generic $service) {
-            $this->assertTrue($service->isCustomerService(), get_class($service));
+            $this->assertTrue($service->isCustomerService());
         });
         array_walk($merchantServices, function (Service\Type\Generic $service) {
-            $this->assertFalse($service->isCustomerService(), get_class($service));
+            $this->assertFalse($service->isCustomerService());
         });
     }
 
@@ -158,7 +158,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputBoolean()
     {
-        $boolService = new Service\BulkyGoods('', true, false);
+        $boolService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false);
 
         $this->assertContains('type="checkbox"', $boolService->getSelectorHtml());
         $this->assertContains('label for', $boolService->getLabelHtml());
@@ -197,10 +197,212 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputText()
     {
-        $textService   = new Service\PreferredNeighbour('', true, false, '');
+        $textService = new Service\PreferredNeighbour('', true, false, '');
 
         $this->assertContains('type="checkbox"', $textService->getSelectorHtml());
         $this->assertContains('label for', $textService->getLabelHtml());
         $this->assertContains('type="text', $textService->getValueHtml());
+    }
+
+    /**
+     * @test
+     */
+    public function typeTest()
+    {
+        // boolean
+        $name = 'Bool Foo';
+        $isEnabled = true;
+        $isSelected = false;
+
+        $service = new Service\BulkyGoods($name, $isEnabled, $isSelected);
+
+        $this->assertEquals(Service\BulkyGoods::CODE, $service->getCode());
+        $this->assertEquals('boolean', $service->getFrontendInputType());
+        $this->assertEquals($name, $service->getName());
+        $this->assertSame($isEnabled, $service->isEnabled());
+        $this->assertSame($isSelected, $service->isSelected());
+        $this->assertSame($isSelected, $service->getValue());
+        $this->assertFalse($service->isCustomerService());
+
+        $this->assertContains($service->getCode(), $service->getSelectorHtml());
+        $this->assertContains($service->getCode(), $service->getLabelHtml());
+        $this->assertEmpty($service->getValueHtml());
+
+        // date
+        $name = 'Date Foo';
+        $placeholder = 'XXX';
+        $isEnabled = true;
+        $isSelected = true;
+        $value = '2016-12-24';
+
+        $service = new Service\DayOfDelivery($name, $isEnabled, $isSelected, $placeholder);
+        $service->setValue($value);
+
+        $this->assertEquals(Service\DayOfDelivery::CODE, $service->getCode());
+        $this->assertEquals('date', $service->getFrontendInputType());
+        $this->assertEquals($name, $service->getName());
+        $this->assertSame($isEnabled, $service->isEnabled());
+        $this->assertSame($isSelected, $service->isSelected());
+        $this->assertSame($value, $service->getValue());
+        $this->assertTrue($service->isCustomerService());
+
+        $this->assertContains($service->getCode(), $service->getSelectorHtml());
+        $this->assertContains($service->getCode(), $service->getLabelHtml());
+        //TODO(nr): check for date picker element
+        $this->assertNotEmpty($service->getValueHtml());
+
+        // hidden
+        $name = 'Hidden Foo';
+        $isEnabled = true;
+        $isSelected = true;
+
+        $service = new Service\GoGreen($name, $isEnabled, $isSelected);
+
+        $this->assertEquals(Service\GoGreen::CODE, $service->getCode());
+        $this->assertEquals('hidden', $service->getFrontendInputType());
+        $this->assertEquals($name, $service->getName());
+        $this->assertSame($isEnabled, $service->isEnabled());
+        $this->assertSame($isSelected, $service->isSelected());
+        $this->assertSame($isSelected, $service->getValue());
+        $this->assertFalse($service->isCustomerService());
+
+        $this->assertContains($service->getCode(), $service->getSelectorHtml());
+        $this->assertEmpty($service->getLabelHtml());
+        $this->assertEmpty($service->getValueHtml());
+
+        // select
+        $name = 'Option Foo';
+        $isEnabled = true;
+        $isSelected = true;
+        $value = 'bar';
+        $options = array('foo' => 'fox', 'bar' => 'baz');
+
+        $service = new Service\VisualCheckOfAge($name, $isEnabled, $isSelected, $options);
+        $service->setValue($value);
+
+        $this->assertEquals(Service\VisualCheckOfAge::CODE, $service->getCode());
+        $this->assertEquals('select', $service->getFrontendInputType());
+        $this->assertEquals($name, $service->getName());
+        $this->assertSame($isEnabled, $service->isEnabled());
+        $this->assertSame($isSelected, $service->isSelected());
+        $this->assertSame($value, $service->getValue());
+        $this->assertFalse($service->isCustomerService());
+
+        $this->assertContains($service->getCode(), $service->getSelectorHtml());
+        $this->assertContains($service->getCode(), $service->getLabelHtml());
+        $this->assertContains('selected', $service->getValueHtml());
+
+        // text
+        $name = 'Text Foo';
+        $placeholder = 'XXX';
+        $isEnabled = true;
+        $isSelected = true;
+        $value = 'bar';
+
+        $service = new Service\PreferredLocation($name, $isEnabled, $isSelected, $placeholder);
+        $service->setValue($value);
+
+        $this->assertEquals(Service\PreferredLocation::CODE, $service->getCode());
+        $this->assertEquals('text', $service->getFrontendInputType());
+        $this->assertEquals($name, $service->getName());
+        $this->assertSame($isEnabled, $service->isEnabled());
+        $this->assertSame($isSelected, $service->isSelected());
+        $this->assertSame($value, $service->getValue());
+        $this->assertTrue($service->isCustomerService());
+
+        $this->assertContains($service->getCode(), $service->getSelectorHtml());
+        $this->assertContains($service->getCode(), $service->getLabelHtml());
+        $this->assertContains($value, $service->getValueHtml());
+    }
+
+    /**
+     * @test
+     */
+    public function filter()
+    {
+        $enabledServices = new Service\Collection($this->getServices());
+        $shippingProducts = array(\Dhl\Versenden\Product::CODE_PAKET_AUSTRIA);
+        $isPostalFacility = false;
+        $onlyCustomerServices = false;
+        $filter = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
+
+        $filteredCollection = $filter->filterServiceCollection($enabledServices);
+
+        $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
+        $this->assertCount(3, $filteredCollection);
+        $this->assertInstanceOf(
+            Service\BulkyGoods::class,
+            $filteredCollection->getItem(Service\BulkyGoods::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\Insurance::class,
+            $filteredCollection->getItem(Service\Insurance::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\ParcelAnnouncement::class,
+            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function filterPostalFacility()
+    {
+        $enabledServices = new Service\Collection($this->getServices());
+        $shippingProducts = array(\Dhl\Versenden\Product::CODE_PAKET_NATIONAL);
+        $isPostalFacility = true;
+        $onlyCustomerServices = false;
+        $filter = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
+
+        $filteredCollection = $filter->filterServiceCollection($enabledServices);
+
+        $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
+        $this->assertCount(4, $filteredCollection);
+        $this->assertInstanceOf(
+            Service\BulkyGoods::class,
+            $filteredCollection->getItem(Service\BulkyGoods::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\Insurance::class,
+            $filteredCollection->getItem(Service\Insurance::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\ParcelAnnouncement::class,
+            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\ReturnShipment::class,
+            $filteredCollection->getItem(Service\ReturnShipment::CODE)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function filterCustomerServices()
+    {
+        $enabledServices = new Service\Collection($this->getServices());
+        $shippingProducts = array(\Dhl\Versenden\Product::CODE_KURIER_WUNSCHZEIT);
+        $isPostalFacility = false;
+        $onlyCustomerServices = true;
+        $filter = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
+
+        $filteredCollection = $filter->filterServiceCollection($enabledServices);
+
+        $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
+        $this->assertCount(3, $filteredCollection);
+        $this->assertInstanceOf(
+            Service\DayOfDelivery::class,
+            $filteredCollection->getItem(Service\DayOfDelivery::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\DeliveryTimeFrame::class,
+            $filteredCollection->getItem(Service\DeliveryTimeFrame::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\ParcelAnnouncement::class,
+            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+        );
     }
 }

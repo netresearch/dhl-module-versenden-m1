@@ -160,21 +160,4 @@ abstract class Generic
      * @return string
      */
     abstract public function getValueHtml();
-
-    /**
-     * @return string
-     */
-    public function toHtml()
-    {
-        if (!$this->isEnabled()) {
-            return '';
-        }
-
-        return sprintf(
-            '%s%s%s',
-            $this->getSelectorHtml(),
-            $this->getLabelHtml(),
-            $this->getValueHtml()
-        );
-    }
 }
