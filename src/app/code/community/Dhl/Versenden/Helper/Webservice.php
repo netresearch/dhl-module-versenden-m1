@@ -118,6 +118,27 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
     }
 
     /**
+     * Check if the given address implies delivery to a postal facility.
+     *
+     * @param Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $address
+     * @return bool
+     */
+    public function isPostalFacility(Mage_Customer_Model_Address_Abstract $address)
+    {
+        // let 3rd party extensions add postal facility data
+        $facility = new Varien_Object();
+
+        Mage::dispatchEvent(
+            'dhl_versenden_set_postal_facility', array(
+                'quote_address'   => $address,
+                'postal_facility' => $facility,
+            )
+        );
+
+        return ($facility->getData('shop_type') !== null);
+    }
+
+    /**
      * Convert service information to standardized data object. Service info
      * is usually derived from POST data in the following form:
      * - selected_services: checkboxes

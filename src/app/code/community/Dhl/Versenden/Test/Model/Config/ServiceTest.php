@@ -70,7 +70,7 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         $storeServices = $storeServiceCollection->getItems();
         $this->assertInternalType('array', $storeServices);
 
-        /** @var \Dhl\Versenden\Service\Type\ParcelAnnouncement[] $paServices */
+        /** @var \Dhl\Versenden\Shipment\Service\ParcelAnnouncement[] $paServices */
         $paServices = array_filter($storeServices, function ($service) {
             return ($service instanceof Service\ParcelAnnouncement);
         });

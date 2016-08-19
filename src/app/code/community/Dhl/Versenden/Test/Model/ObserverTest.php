@@ -96,6 +96,20 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
     public function appendServices()
     {
         $this->setCurrentStore('store_two');
+        $serviceBlockHtml = 'checkout-dhlversenden-services';
+
+        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+        $blockMock = $this->getBlockMock(
+            $blockType,
+            array('renderView'),
+            false,
+            array(array('template' => 'dhl_versenden/checkout/shipping_services.phtml'))
+        );
+        $blockMock
+            ->expects($this->any())
+            ->method('renderView')
+            ->willReturn($serviceBlockHtml);
+        $this->replaceByMock('block', $blockType, $blockMock);
 
         $observer = new Varien_Event_Observer();
         $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
@@ -110,7 +124,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $dhlObserver->appendServices($observer);
 
         $this->assertStringStartsWith($blockHtml, $transport->getHtml());
-        $this->assertContains('checkout-dhlversenden-services', $transport->getHtml());
+        $this->assertStringEndsWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**

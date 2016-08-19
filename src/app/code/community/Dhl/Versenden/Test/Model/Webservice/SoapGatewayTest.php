@@ -85,7 +85,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $incrementId    = '808';
         $shipmentDate   = '2016-12-24';
 
-        $productCode    = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
+        $productCode    = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
         $packageWeight  = 1.2;
 
         $receiver         = $shipmentOrder->getReceiver();
@@ -161,7 +161,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $incrementId    = '808';
         $shipmentDate   = '2016-12-24';
 
-        $productCode    = Dhl_Versenden_Model_Shipping_Carrier_Versenden::PRODUCT_CODE_PAKET_NATIONAL;
+        $productCode    = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
         $packageWeight  = 1.2;
 
         $helperMock = $this->getHelperMock(

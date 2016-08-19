@@ -34,6 +34,7 @@ config:
 
   default/carriers/dhlversenden/service_bulkygoods_enabled: "0"
   default/carriers/dhlversenden/service_parcelannouncement_enabled: "1"
+  default/carriers/dhlversenden/service_preferredlocation_enabled: "1"
   stores/store_two/carriers/dhlversenden/service_parcelannouncement_enabled: "2"
 
   default/carriers/dhlversenden/webservice_auth_username:  "uFoo"
