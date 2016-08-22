@@ -197,18 +197,6 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 'G'   =>  Mage::helper('dhl_versenden')->__('Grams'),
                 'KG'  =>  Mage::helper('dhl_versenden')->__('Kilograms'),
             ),
-            'product' => array(
-                'DE' => array(
-                    'national' => Product::CODE_PAKET_NATIONAL,
-                    'eu'       => Product::CODE_WELTPAKET,
-                    'row'      => Product::CODE_WELTPAKET,
-                ),
-                'AT' => array(
-                    'national' => Product::CODE_PAKET_AUSTRIA,
-                    'eu'       => Product::CODE_PAKET_CONNECT,
-                    'row'      => Product::CODE_PAKET_INTERNATIONAL,
-                )
-            ),
         );
 
         if (!isset($codes[$type])) {

@@ -115,93 +115,62 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         array $packageInfo,
         array $serviceInfo
     ) {
-        $helper = Mage::helper('dhl_versenden/webservice');
-
-        // (1) data derived from config
-        $shipperConfig = Mage::getModel('dhl_versenden/config_shipper');
+        $helper         = Mage::helper('dhl_versenden/data');
+        $shipperConfig  = Mage::getModel('dhl_versenden/config_shipper');
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
-        $shipper        = $shipperConfig->getShipper($shipment->getStoreId());
-        /** @var RequestData\ShipmentOrder\GlobalSettings $globalSettings */
-        $globalSettings = $shipmentConfig->getSettings($shipment->getStoreId());
 
+        $shipperBuilder = Mage::getModel('dhl_versenden/webservice_builder_shipper', array(
+            'config' => $shipperConfig
+        ));
 
-        // (2) prepared data derived from OPC
-        $shippingInfoJson = $shipment->getShippingAddress()->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if (!$shippingInfo) {
-            $receiver = $helper->shippingAddressToReceiver($shipment->getShippingAddress());
-        } else {
-            $receiver = $shippingInfo->getReceiver();
-        }
+        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', array(
+            'country_directory' => Mage::getModel('directory/country'),
+            'helper' => $helper,
+        ));
 
-        // (3) data derived from shipment creation
-        // add/override shipment and service settings from shipment creation
-        $packageCollection = new RequestData\ShipmentOrder\PackageCollection();
-        $productCode = '';
-        $packagesPrice = 0;
+        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', array(
+            'shipper_config' => $shipperConfig,
+            'shipment_config' => $shipmentConfig,
+        ));
 
-        foreach ($packageInfo as $idx => $packageDetails) {
-            $packageWeight = $helper->getPackageWeight($globalSettings, $packageDetails['params']['weight']);
+        $packageBuilder = Mage::getModel('dhl_versenden/webservice_builder_package', array(
+            'unit_of_measure' => $shipmentConfig->getSettings($shipment->getStoreId())->getUnitOfMeasure(),
+            'min_weight'      => Dhl_Versenden_Model_Shipping_Carrier_Versenden::PACKAGE_MIN_WEIGHT,
+        ));
 
-            $package = new RequestData\ShipmentOrder\Package($idx, $packageWeight);
-            $packageCollection->addItem($package);
+        $settingsBuilder = Mage::getModel('dhl_versenden/webservice_builder_settings', array(
+            'config' => $shipmentConfig
+        ));
 
-            $packagePrice = array_reduce($packageDetails['items'], function ($carry, array $packageItem) {
-                $carry += $packageItem['price'];
-                return $carry;
-            }, 0);
+        $orderBuilder = Mage::getModel('dhl_versenden/webservice_builder_order', array(
+            'shipper_builder' => $shipperBuilder,
+            'receiver_builder' => $receiverBuilder,
+            'service_builder' => $serviceBuilder,
+            'package_builder' => $packageBuilder,
+            'settings_builder' => $settingsBuilder,
+        ));
 
-            // note: dhl product is the same for all packages
-            $productCode = $packageDetails['params']['container'];
-            $packagesPrice += $packagePrice;
-        }
-
-        // add additional insurance service details
-        $isInsurance = isset($serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE])
-            && $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE];
-        if ($isInsurance) {
-            $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $isInsurance;
-            $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $packagesPrice;
-        }
-        // add gogreen service details
-        $isGoGreen = $shipperConfig->getAccountSettings($shipment->getStoreId())->isGoGreen();
-        if ($isGoGreen) {
-            $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
-            $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
-        }
-        // add cod service details
-        $paymentMethod = $shipment->getOrder()->getPayment()->getMethod();
-        $isCod = $shipmentConfig->isCodPaymentMethod($paymentMethod, $shipment->getStoreId());
-        if ($isCod) {
-            $serviceInfo['shipment_service'][\Dhl\Versenden\Shipment\Service\Cod::CODE] = $isCod;
-            $serviceInfo['service_setting'][\Dhl\Versenden\Shipment\Service\Cod::CODE] = $packagesPrice;
-        }
-
-        $serviceSelection = $helper->serviceSelectionToServiceSettings(
-            $serviceInfo['shipment_service'],
-            $serviceInfo['service_setting']
+        // build shipment order request data
+        $shipmentOrder = $orderBuilder->getShipmentOrder(
+            $sequenceNumber,
+            $helper->utcToCet(null, 'Y-m-d'),
+            $shipment,
+            $packageInfo,
+            $serviceInfo
         );
 
         // update shipping info
-        $shippingInfo = new Webservice\RequestData\ShippingInfo($receiver, $serviceSelection, $packageCollection);
+        $shippingInfo = new Webservice\RequestData\ShippingInfo(
+            $shipmentOrder->getReceiver(),
+            $shipmentOrder->getServiceSelection(),
+            $shipmentOrder->getPackages()
+        );
         $shipment->getShippingAddress()->setData(
             'dhl_versenden_info',
             json_encode($shippingInfo, JSON_FORCE_OBJECT)
         );
 
-        return new Webservice\RequestData\ShipmentOrder(
-            $sequenceNumber,
-            $shipment->getOrder()->getIncrementId(),
-            $shipper,
-            $receiver,
-            $serviceSelection,
-            $packageCollection,
-            $productCode,
-            $helper->utcToCet(null, 'Y-m-d'),
-            $globalSettings->isPrintOnlyIfCodable(),
-            $globalSettings->getLabelType()
-        );
+        return $shipmentOrder;
     }
 }

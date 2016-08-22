@@ -17,6 +17,9 @@ scope:
 
 config:
   default/dhl_versenden/dev/autoload_enabled: "0"
+  default/shipping/origin/country_id: "AT"
+
+  stores/store_one/carriers/dhlversenden/shipment_dhlmethods:         "flatrate_flatrate"
 
   stores/store_two/carriers/dhlversenden/shipment_printonlyifcodable: "0"
   stores/store_two/carriers/dhlversenden/shipment_unitofmeasure:      "KG"

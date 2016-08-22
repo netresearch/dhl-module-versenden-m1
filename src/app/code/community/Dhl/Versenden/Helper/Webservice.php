@@ -165,6 +165,7 @@ class Dhl_Versenden_Helper_Webservice extends Dhl_Versenden_Helper_Data
      * Find highest value, package weight or package min weight.
      * Weight is returned with respect to the global unit_of_measure setting (g or kg).
      *
+     * @deprecated (no replacement)
      * @param float $packageWeight
      * @return float
      */
