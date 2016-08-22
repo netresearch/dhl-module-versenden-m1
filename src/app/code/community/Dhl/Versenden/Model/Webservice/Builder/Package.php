@@ -1,0 +1,86 @@
+<?php
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 5
+ *
+ * @category  Dhl
+ * @package   Dhl_Versenden
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
+/**
+ * Dhl_Versenden_Model_Webservice_Builder_Package
+ *
+ * @category Dhl
+ * @package  Dhl_Versenden
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
+class Dhl_Versenden_Model_Webservice_Builder_Package
+{
+    /** @var string */
+    protected $unitOfMeasure;
+
+    /** @var float */
+    protected $minWeight;
+
+    public function __construct($args)
+    {
+        $argName = 'unit_of_measure';
+        if (!isset($args[$argName])) {
+            Mage::throwException("required argument missing: $argName");
+        }
+        if (!is_string($args[$argName])) {
+            Mage::throwException("invalid argument: $argName");
+        }
+        $this->unitOfMeasure = $args[$argName];
+
+        $argName = 'min_weight';
+        if (!isset($args[$argName])) {
+            Mage::throwException("required argument missing: $argName");
+        }
+        if (!is_numeric($args[$argName])) {
+            Mage::throwException("invalid argument: $argName");
+        }
+        $this->minWeight = $args[$argName];
+
+        if ($this->unitOfMeasure == 'G') {
+            $this->minWeight *= 1000;
+        }
+    }
+
+    /**
+     * @return ShipmentOrder\PackageCollection
+     */
+    public function getPackages(array $packageInfo)
+    {
+        $packageCollection = new ShipmentOrder\PackageCollection();
+
+        foreach ($packageInfo as $idx => $packageDetails) {
+            $packageWeight = max($packageDetails['params']['weight'], $this->minWeight);
+
+            $package = new ShipmentOrder\Package($idx, $packageWeight);
+
+            $packageCollection->addItem($package);
+        }
+
+        return $packageCollection;
+    }
+}
