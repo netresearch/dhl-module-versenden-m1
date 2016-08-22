@@ -197,4 +197,67 @@ class Dhl_Versenden_Model_Observer
             );
         }
     }
+
+    /**
+     * Disable COD in case it is not available for the current destination.
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function disableCodPayment(Varien_Event_Observer $observer)
+    {
+        $checkResult = $observer->getData('result');
+        if (!$checkResult->isAvailable) {
+            // payment method not available anyway
+            return;
+        }
+
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = $observer->getData('quote');
+        if (!$quote) {
+            $quote = Mage::getSingleton('checkout/session')->getQuote();
+        }
+        if (!$quote) {
+            // no quote, cannot check whether cod is allowed or not.
+            return;
+        }
+
+        /** @var Mage_Payment_Model_Method_Abstract $methodInstance */
+        $methodInstance = $observer->getData('method_instance');
+
+        $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
+        $paymentMethod  = $methodInstance->getCode();
+
+        $config = Mage::getModel('dhl_versenden/config_shipment');
+        if (!$config->canProcessMethod($shippingMethod, $quote->getStoreId())) {
+            // no dhl shipping method
+            return;
+        }
+
+        if (!$config->isCodPaymentMethod($paymentMethod, $quote->getStoreId())) {
+            // no cod payment method
+            return;
+        }
+
+        // obtain possible dhl products (national, weltpaket, …) and check if
+        // the filter allows cod for these them
+        $shipperCountry = Mage::getStoreConfig(
+            Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID,
+            $quote->getStoreId()
+        );
+        $recipientCountry = $quote->getShippingAddress()->getCountryId();
+        $euCountries = Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $quote->getStoreId());
+        $euCountries = explode(',', $euCountries);
+
+        $availableProducts = \Dhl\Versenden\Product::getCodesByCountry(
+            $shipperCountry,
+            $recipientCountry,
+            $euCountries
+        );
+
+        $filter = new \Dhl\Versenden\Shipment\Service\Filter($availableProducts, false, false);
+        $codService = $filter->filterService(new \Dhl\Versenden\Shipment\Service\Cod('cod', true, true));
+        if ($codService === null) {
+            $checkResult->isAvailable = false;
+        }
+    }
 }

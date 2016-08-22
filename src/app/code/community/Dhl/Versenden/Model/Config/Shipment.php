@@ -82,6 +82,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
 
     /**
      * Check if the given shipping method should be processed with DHL Versenden.
+     * TODO(nr): check if shipping origin is DE or AT
      *
      * @param string $shippingMethod
      * @param mixed $store
