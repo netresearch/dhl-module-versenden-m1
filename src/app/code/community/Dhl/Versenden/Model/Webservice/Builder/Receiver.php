@@ -43,7 +43,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Receiver constructor.
-     * 
+     *
      * @param stdClass[] $args
      */
     public function __construct($args)
@@ -75,6 +75,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
      */
     public function getReceiver(Mage_Customer_Model_Address_Abstract $address)
     {
+        $this->countryDirectory->loadByCode($address->getCountryId());
         $country        = $this->countryDirectory->getName();
         $countryISOCode = $this->countryDirectory->getIso2Code();
 

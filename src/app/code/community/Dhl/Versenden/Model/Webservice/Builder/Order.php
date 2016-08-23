@@ -127,12 +127,12 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $receiver = $shippingInfo->getReceiver();
         }
 
-        $serviceSelection = $this->serviceBuilder->getServiceSelection($shipment, $serviceInfo);
+        $serviceSelection = $this->serviceBuilder->getServiceSelection($shipment->getOrder(), $serviceInfo);
 
         $packageCollection = $this->packageBuilder->getPackages($packageInfo);
 
-        //TODO(nr): read product code from packageInfo
-        $productCode = '';
+        $package = current($packageInfo);
+        $productCode = $package['params']['container'];
 
         $globalSettings = $this->settingsBuilder->getSettings($shipment->getStoreId());
 
@@ -149,39 +149,5 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $globalSettings->isPrintOnlyIfCodable(),
             $globalSettings->getLabelType()
         );
-
-
-
-
-
-
-
-
-        $shippingInfoJson = $shipment->getShippingAddress()->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if (!$shippingInfo) {
-            $receiver = $this->receiverBuilder->getReceiver($shipment->getShippingAddress());
-        } else {
-            $receiver = $shippingInfo->getReceiver();
-        }
-
-
-        $shipper = $this->getShipper($shipment);
-        $receiver = $this->getReceiver($shipment);
-
-        return new RequestData\ShipmentOrder(
-            $sequenceNumber,
-            $shipment->getOrder()->getIncrementId(),
-            $shipper,
-            $receiver,
-            $serviceSelection,
-            $packageCollection,
-            $productCode,
-            $helper->utcToCet(null, 'Y-m-d'),
-            $globalSettings->isPrintOnlyIfCodable(),
-            $globalSettings->getLabelType()
-        );
-
     }
 }

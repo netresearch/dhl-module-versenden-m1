@@ -182,7 +182,6 @@
                 <shipment_unitofmeasure>G</shipment_unitofmeasure>
                 <shipment_defaultweight>200</shipment_defaultweight>
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
-                <shipment_codcharge>2</shipment_codcharge>
                 <service_dayofdelivery_enabled>0</service_dayofdelivery_enabled>
                 <service_deliverytimeframe_enabled>0</service_deliverytimeframe_enabled>
                 <service_preferredlocation_enabled>0</service_preferredlocation_enabled>

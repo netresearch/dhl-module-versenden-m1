@@ -47,8 +47,6 @@ class GlobalSettings extends RequestData
     private $shippingMethods;
     /** @var string[] */
     private $codPaymentMethods;
-    /** @var float */
-    private $codCharge;
     /** @var string */
     private $labelType;
 
@@ -59,19 +57,17 @@ class GlobalSettings extends RequestData
      * @param float $productWeight
      * @param \string[] $shippingMethods
      * @param \string[] $codPaymentMethods
-     * @param float $codCharge
      * @param string $labelType
      */
     public function __construct(
         $printOnlyIfCodable, $unitOfMeasure, $productWeight,
-        array $shippingMethods, array $codPaymentMethods, $codCharge, $labelType
+        array $shippingMethods, array $codPaymentMethods, $labelType
     ) {
         $this->printOnlyIfCodable = $printOnlyIfCodable;
         $this->unitOfMeasure = $unitOfMeasure;
         $this->productWeight = $productWeight;
         $this->shippingMethods = $shippingMethods;
         $this->codPaymentMethods = $codPaymentMethods;
-        $this->codCharge = $codCharge;
         $this->labelType = $labelType;
     }
 
@@ -113,14 +109,6 @@ class GlobalSettings extends RequestData
     public function getCodPaymentMethods()
     {
         return $this->codPaymentMethods;
-    }
-
-    /**
-     * @return float
-     */
-    public function getCodCharge()
-    {
-        return $this->codCharge;
     }
 
     /**

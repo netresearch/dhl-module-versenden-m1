@@ -92,22 +92,42 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $serviceSelection = $shipmentOrder->getServiceSelection();
 
         $helperMock = $this->getHelperMock(
-            'dhl_versenden/webservice',
+            'dhl_versenden/data',
             array('utcToCet', 'serviceSelectionToServiceSettings', 'shippingAddressToReceiver')
         );
         $helperMock
             ->expects($this->once())
             ->method('utcToCet')
             ->willReturn($shipmentDate);
-        $helperMock
+        $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
+
+        $receiverBuilderMock = $this->getModelMock(
+            'dhl_versenden/webservice_builder_receiver',
+            array('getReceiver'),
+            false,
+            array(),
+            '',
+            false
+        );
+        $receiverBuilderMock
             ->expects($this->once())
-            ->method('serviceSelectionToServiceSettings')
-            ->willReturn($serviceSelection);
-        $helperMock
-            ->expects($this->once())
-            ->method('shippingAddressToReceiver')
+            ->method('getReceiver')
             ->willReturn($receiver);
-        $this->replaceByMock('helper', 'dhl_versenden/webservice', $helperMock);
+        $this->replaceByMock('model', 'dhl_versenden/webservice_builder_receiver', $receiverBuilderMock);
+
+        $serviceBuilderMock = $this->getModelMock(
+            'dhl_versenden/webservice_builder_service',
+            array('getServiceSelection'),
+            false,
+            array(),
+            '',
+            false
+        );
+        $serviceBuilderMock
+            ->expects($this->once())
+            ->method('getServiceSelection')
+            ->willReturn($serviceSelection);
+        $this->replaceByMock('model', 'dhl_versenden/webservice_builder_service', $serviceBuilderMock);
 
         $shippingAddress = new Mage_Sales_Model_Order_Address();
         $shippingAddress->setData('dhl_versenden_info', '');
@@ -165,14 +185,14 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $packageWeight  = 1.2;
 
         $helperMock = $this->getHelperMock(
-            'dhl_versenden/webservice',
+            'dhl_versenden/data',
             array('utcToCet')
         );
         $helperMock
             ->expects($this->once())
             ->method('utcToCet')
             ->willReturn($shipmentDate);
-        $this->replaceByMock('helper', 'dhl_versenden/webservice', $helperMock);
+        $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
 
         $shippingAddress = new Mage_Sales_Model_Order_Address();
         $shippingAddress->setData('dhl_versenden_info', $jsonInfo);

@@ -40,7 +40,6 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_PRINTONLYIFCODABLE = 'shipment_printonlyifcodable';
     const CONFIG_XML_FIELD_UNITOFMEASURE = 'shipment_unitofmeasure';
     const CONFIG_XML_FIELD_PRODUCTWEIGHT = 'shipment_defaultweight';
-    const CONFIG_XML_FIELD_CODCHARGE = 'shipment_codcharge';
     const CONFIG_XML_FIELD_DHLMETHODS = 'shipment_dhlmethods';
     const CONFIG_XML_FIELD_CODMETHODS = 'shipment_dhlcodmethods';
 
@@ -53,7 +52,6 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
         $printOnlyIfCodable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PRINTONLYIFCODABLE, $store);
         $unitOfMeasure = $this->getStoreConfig(self::CONFIG_XML_FIELD_UNITOFMEASURE, $store);
         $productWeight = $this->getStoreConfig(self::CONFIG_XML_FIELD_PRODUCTWEIGHT, $store);
-        $codCharge = $this->getStoreConfig(self::CONFIG_XML_FIELD_CODCHARGE, $store);
 
         $shippingMethods = $this->getStoreConfig(self::CONFIG_XML_FIELD_DHLMETHODS, $store);
         if (empty($shippingMethods)) {
@@ -75,7 +73,6 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
             $productWeight,
             $shippingMethods,
             $codPaymentMethods,
-            $codCharge,
             ShipmentOrder::LABEL_TYPE_B64
         );
     }

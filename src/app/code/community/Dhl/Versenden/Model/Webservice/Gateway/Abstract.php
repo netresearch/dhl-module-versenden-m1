@@ -101,7 +101,6 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
     /**
      * Create one shipment order from given shipment
-     * TODO(nr): refactor!
      *
      * @param int $sequenceNumber
      * @param Mage_Sales_Model_Order_Shipment $shipment
