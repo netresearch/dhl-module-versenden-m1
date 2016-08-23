@@ -60,18 +60,18 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
         if (!isset($args[$argName])) {
             Mage::throwException("required argument missing: $argName");
         }
-        if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipper) {
+        if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipment) {
             Mage::throwException("invalid argument: $argName");
         }
         $this->shipmentConfig = $args[$argName];
     }
 
     /**
-     * @param Mage_Sales_Model_Order_Shipment $shipment
+     * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
      * @param array $serviceInfo
      * @return ServiceSelection
      */
-    public function getServiceSelection(Mage_Sales_Model_Order_Shipment $shipment, array $serviceInfo)
+    public function getServiceSelection(Mage_Core_Model_Abstract $salesEntity, array $serviceInfo)
     {
         $selectedServices = $serviceInfo['shipment_service'];
         $serviceDetails = $serviceInfo['service_setting'];
@@ -80,25 +80,25 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
         $isInsurance = isset($selectedServices[\Dhl\Versenden\Shipment\Service\Insurance::CODE])
             && $selectedServices[\Dhl\Versenden\Shipment\Service\Insurance::CODE];
         if ($isInsurance) {
+            $insuranceAmount = number_format($salesEntity->getBaseGrandTotal(), 2);
             $selectedServices[\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $isInsurance;
-            //TODO(nr): calculate package totals from shipment
-            $serviceDetails[\Dhl\Versenden\Shipment\Service\Insurance::CODE] = 99;
+            $serviceDetails[\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $insuranceAmount;
         }
 
         // add gogreen service details
-        $isGoGreen = $this->shipperConfig->getAccountSettings($shipment->getStoreId())->isGoGreen();
+        $isGoGreen = $this->shipperConfig->getAccountSettings($salesEntity->getStoreId())->isGoGreen();
         if ($isGoGreen) {
             $selectedServices[\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
             $serviceDetails[\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
         }
 
         // add cod service details
-        $paymentMethod = $shipment->getOrder()->getPayment()->getMethod();
-        $isCod = $this->shipmentConfig->isCodPaymentMethod($paymentMethod, $shipment->getStoreId());
+        $paymentMethod = $salesEntity->getPayment()->getMethod();
+        $isCod = $this->shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId());
         if ($isCod) {
+            $codAmount = number_format($salesEntity->getBaseGrandTotal(), 2);
             $selectedServices[\Dhl\Versenden\Shipment\Service\Cod::CODE] = $isCod;
-            //TODO(nr): calculate package totals from shipment
-            $serviceDetails[\Dhl\Versenden\Shipment\Service\Cod::CODE] = 99;
+            $serviceDetails[\Dhl\Versenden\Shipment\Service\Cod::CODE] = $codAmount;
         }
 
 
