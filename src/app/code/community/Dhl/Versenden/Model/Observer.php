@@ -111,12 +111,20 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
 
-        $webserviceHelper = Mage::helper('dhl_versenden/webservice');
-        $receiver = $webserviceHelper->shippingAddressToReceiver($shippingAddress);
-        $serviceSettings = $webserviceHelper->serviceSelectionToServiceSettings(
-            $request->getPost('shipment_service', array()),
-            $request->getPost('service_setting', array())
-        );
+        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', array(
+            'country_directory' => Mage::getModel('directory/country'),
+            'helper' => Mage::helper('dhl_versenden/data'),
+        ));
+        $receiver = $receiverBuilder->getReceiver($shippingAddress);
+
+        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', array(
+            'shipper_config' => Mage::getModel('dhl_versenden/config_shipper'),
+            'shipment_config' => $shipmentConfig,
+        ));
+        $serviceSettings = $serviceBuilder->getServiceSelection($quote, array(
+            'shipment_service' => $request->getPost('shipment_service', array()),
+            'service_setting' => $request->getPost('service_setting', array())
+        ));
 
         $shippingInfo = new \Dhl\Versenden\Webservice\RequestData\ShippingInfo($receiver, $serviceSettings);
         $shippingAddress->setData('dhl_versenden_info', json_encode($shippingInfo, JSON_FORCE_OBJECT));

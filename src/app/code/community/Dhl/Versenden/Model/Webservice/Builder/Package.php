@@ -41,6 +41,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     /** @var float */
     protected $minWeight;
 
+    /**
+     * Dhl_Versenden_Model_Webservice_Builder_Package constructor.
+     * @param mixed[] $args
+     */
     public function __construct($args)
     {
         $argName = 'unit_of_measure';
@@ -67,6 +71,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     }
 
     /**
+     * @param array $packageInfo
      * @return ShipmentOrder\PackageCollection
      */
     public function getPackages(array $packageInfo)
@@ -74,9 +79,26 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
         $packageCollection = new ShipmentOrder\PackageCollection();
 
         foreach ($packageInfo as $idx => $packageDetails) {
-            $packageWeight = max($packageDetails['params']['weight'], $this->minWeight);
+            $lenghtInCM = null;
+            if (isset($packageDetails['params']['length']) && $packageDetails['params']['length']) {
+                $lenghtInCM = $packageDetails['params']['length'];
+            }
+            $widthInCM = null;
+            if (isset($packageDetails['params']['width']) && $packageDetails['params']['width']) {
+                $widthInCM = $packageDetails['params']['width'];
+            }
+            $heightInCM = null;
+            if (isset($packageDetails['params']['height']) && $packageDetails['params']['height']) {
+                $heightInCM = $packageDetails['params']['height'];
+            }
 
-            $package = new ShipmentOrder\Package($idx, $packageWeight);
+            $package = new ShipmentOrder\Package(
+                $idx,
+                max($packageDetails['params']['weight'], $this->minWeight),
+                $lenghtInCM,
+                $heightInCM,
+                $widthInCM
+            );
 
             $packageCollection->addItem($package);
         }

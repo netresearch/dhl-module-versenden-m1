@@ -48,7 +48,6 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
         $this->assertTrue($settings->isPrintOnlyIfCodable());
         $this->assertEquals('G', $settings->getUnitOfMeasure());
         $this->assertEquals(200, $settings->getProductWeight());
-        $this->assertEquals(2, $settings->getCodCharge());
 
         $this->assertInternalType('array', $settings->getShippingMethods());
         $this->assertCount(0, $settings->getShippingMethods());
@@ -63,7 +62,6 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
         $this->assertFalse($storeSettings->isPrintOnlyIfCodable());
         $this->assertEquals('KG', $storeSettings->getUnitOfMeasure());
         $this->assertEquals(0.2, $storeSettings->getProductWeight());
-        $this->assertEquals(11, $storeSettings->getCodCharge());
 
         $this->assertInternalType('array', $storeSettings->getShippingMethods());
         $this->assertCount(2, $storeSettings->getShippingMethods());

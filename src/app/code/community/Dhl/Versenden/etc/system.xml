@@ -252,16 +252,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_dhlcodmethods>
-                        <shipment_codcharge translate="label tooltip">
-                            <label>COD Charge</label>
-                            <tooltip>Set the COD charge (€) to be added to the total order amount during shipping order requests.</tooltip>
-                            <frontend_type>text</frontend_type>
-                            <validate>required-entry validate-not-negative-number</validate>
-                            <sort_order>360</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </shipment_codcharge>
 
                         <dhlversenden_fields_service translate="label">
                             <label>Additional Services</label>
