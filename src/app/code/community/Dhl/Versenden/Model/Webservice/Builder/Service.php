@@ -43,32 +43,33 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Service constructor.
-     * @param $args
+     * @param stdClass[] $args
+     * @throws Mage_Core_Exception
      */
     public function __construct($args)
     {
         $argName = 'shipper_config';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipper) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->shipperConfig = $args[$argName];
 
         $argName = 'shipment_config';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipment) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->shipmentConfig = $args[$argName];
     }
 
     /**
      * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
-     * @param array $serviceInfo
+     * @param mixed[] $serviceInfo
      * @return ServiceSelection
      */
     public function getServiceSelection(Mage_Core_Model_Abstract $salesEntity, array $serviceInfo)

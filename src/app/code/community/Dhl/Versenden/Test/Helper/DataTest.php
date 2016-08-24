@@ -82,51 +82,6 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
     /**
      * @test
      */
-    public function calculateItemsWeight()
-    {
-        $helper = Mage::helper('dhl_versenden/data');
-
-        $defaultWeight =  0.2;
-
-        $weightOne = 0.2;
-        $weightTwo = 1.2;
-        $weightThree = null;
-
-        $weightInKg = $weightOne + $weightTwo + $defaultWeight;
-
-        $itemOne = new Mage_Sales_Model_Order_Shipment_Item();
-        $itemOne->setWeight($weightOne);
-
-        $itemTwo = new Mage_Sales_Model_Order_Shipment_Item();
-        $itemTwo->setWeight($weightTwo);
-
-        $itemThree = new Mage_Sales_Model_Order_Shipment_Item();
-        $itemThree->setWeight($weightThree);
-
-        $items = array($itemOne, $itemTwo, $itemThree);
-        $this->assertEquals($weightInKg, $helper->calculateItemsWeight($items));
-
-
-        $weightOne = 200;
-        $weightTwo = 1200;
-        $weightThree = null;
-
-        $itemOne = new Mage_Sales_Model_Order_Shipment_Item();
-        $itemOne->setWeight($weightOne);
-
-        $itemTwo = new Mage_Sales_Model_Order_Shipment_Item();
-        $itemTwo->setWeight($weightTwo);
-
-        $itemThree = new Mage_Sales_Model_Order_Shipment_Item();
-        $itemThree->setWeight($weightThree);
-
-        $items = array($itemOne, $itemTwo, $itemThree);
-        $this->assertEquals($weightInKg, $helper->calculateItemsWeight($items, 200, 'G'));
-    }
-
-    /**
-     * @test
-     */
     public function getPackagingPopupTemplateVersendenCarrier()
     {
         $helper = Mage::helper('dhl_versenden/data');
@@ -189,5 +144,40 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 
         $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
         $this->assertEquals($defaultTemplate, $template);
+    }
+
+    /**
+     * @test
+     */
+    public function addStatusHistoryComment()
+    {
+        $helper = new Dhl_Versenden_Helper_Data();
+
+        $history = $this->getMockBuilder(Mage_Sales_Model_Resource_Order_Status_History_Collection::class)
+            ->setMethods(array('save'))
+            ->getMock();
+
+        $order = $this->getMockBuilder(Mage_Sales_Model_Order::class)
+            ->setMethods(array('getStatusHistoryCollection'))
+            ->getMock();
+        $order
+            ->expects($this->exactly(2))
+            ->method('getStatusHistoryCollection')
+            ->willReturn($history);
+
+        $comment = 'status comment';
+
+        /** @var Mage_Sales_Model_Order $order */
+        /** @var Mage_Sales_Model_Resource_Order_Status_History_Collection $history */
+        $this->assertCount(0, $history);
+        $helper->addStatusHistoryInfo($order, $comment);
+        $this->assertCount(1, $history);
+        $helper->addStatusHistoryError($order, $comment);
+        $this->assertCount(2, $history);
+
+        /** @var Mage_Sales_Model_Order_Status_History $item */
+        foreach ($history as $item) {
+            $this->assertStringEndsWith($comment, $item->getComment());
+        }
     }
 }

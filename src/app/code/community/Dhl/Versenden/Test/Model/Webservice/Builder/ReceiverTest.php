@@ -38,6 +38,52 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
 {
     /**
      * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgCountryDirectoryMissing()
+    {
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+            'helper' => Mage::helper('dhl_versenden/data')
+        ));
+    }
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgCountryDirectoryWrongType()
+    {
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+            'country_directory' => new stdClass(),
+            'helper' => Mage::helper('dhl_versenden/data')
+        ));
+    }
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgHelperMissing()
+    {
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+            'country_directory' => Mage::getModel('directory/country'),
+        ));
+    }
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgHelperWrongType()
+    {
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+            'country_directory' => Mage::getModel('directory/country'),
+            'helper' => new stdClass()
+        ));
+    }
+
+    /**
+     * @test
      */
     public function getReceiver()
     {

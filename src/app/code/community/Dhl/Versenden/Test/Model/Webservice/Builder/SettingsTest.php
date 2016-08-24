@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Test_Model_Webservice_RequestData_VersionTest
+ * Dhl_Versenden_Test_Model_Webservice_Builder_SettingsTest
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -33,35 +33,42 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_Webservice_RequestData_VersionTest
+class Dhl_Versenden_Test_Model_Webservice_Builder_SettingsTest
     extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
+     * @expectedException Mage_Core_Exception
      */
-    public function createVersion()
+    public function constructorArgShipmentConfigMissing()
     {
-        $major = '303';
-        $minor = '808';
-        $build = '909';
-
-        $version = new \Dhl\Versenden\Webservice\RequestData\Version($major, $minor, $build);
-        $this->assertEquals($major, $version->getMajorRelease());
-        $this->assertEquals($minor, $version->getMinorRelease());
-        $this->assertEquals($build, $version->getBuild());
+        new Dhl_Versenden_Model_Webservice_Builder_Settings(array(
+        ));
     }
 
     /**
      * @test
+     * @expectedException Mage_Core_Exception
      */
-    public function createVersionSkipBuild()
+    public function constructorArgShipmentConfigWrongType()
     {
-        $major = '303';
-        $minor = '808';
+        new Dhl_Versenden_Model_Webservice_Builder_Settings(array(
+            'config' => new stdClass(),
+        ));
+    }
 
-        $version = new \Dhl\Versenden\Webservice\RequestData\Version($major, $minor);
-        $this->assertEquals($major, $version->getMajorRelease());
-        $this->assertEquals($minor, $version->getMinorRelease());
-        $this->assertNull($version->getBuild());
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
+    public function getShipper()
+    {
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Settings(array(
+            'config' => Mage::getModel('dhl_versenden/config_shipment'),
+        ));
+        $settings = $builder->getSettings(2);
+
+        $this->assertInstanceOf(\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\GlobalSettings::class, $settings);
+        $this->assertEquals("KG", $settings->getUnitOfMeasure());
     }
 }

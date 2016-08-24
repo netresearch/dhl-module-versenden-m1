@@ -57,7 +57,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 
         $shippingProducts = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
-        $isPostalFacility = $this->helper('dhl_versenden/webservice')->isPostalFacility($shippingAddress);
+        $isPostalFacility = $this->helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
         $filter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, true);
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
