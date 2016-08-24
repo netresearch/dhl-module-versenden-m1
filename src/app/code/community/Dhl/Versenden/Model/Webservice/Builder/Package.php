@@ -44,24 +44,25 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Package constructor.
      * @param mixed[] $args
+     * @throws Mage_Core_Exception
      */
     public function __construct($args)
     {
         $argName = 'unit_of_measure';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!is_string($args[$argName])) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->unitOfMeasure = $args[$argName];
 
         $argName = 'min_weight';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!is_numeric($args[$argName])) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->minWeight = $args[$argName];
 
@@ -71,7 +72,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     }
 
     /**
-     * @param array $packageInfo
+     * @param mixed[] $packageInfo
      * @return ShipmentOrder\PackageCollection
      */
     public function getPackages(array $packageInfo)
@@ -96,8 +97,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
                 $idx,
                 max($packageDetails['params']['weight'], $this->minWeight),
                 $lenghtInCM,
-                $heightInCM,
-                $widthInCM
+                $widthInCM,
+                $heightInCM
             );
 
             $packageCollection->addItem($package);

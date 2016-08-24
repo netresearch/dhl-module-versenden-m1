@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Test_Model_Webservice_RequestData_VersionTest
+ * Dhl_Versenden_Test_Model_Webservice_Builder_ShipperTest
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -33,35 +33,42 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_Webservice_RequestData_VersionTest
+class Dhl_Versenden_Test_Model_Webservice_Builder_ShipperTest
     extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
+     * @expectedException Mage_Core_Exception
      */
-    public function createVersion()
+    public function constructorArgShipperConfigMissing()
     {
-        $major = '303';
-        $minor = '808';
-        $build = '909';
-
-        $version = new \Dhl\Versenden\Webservice\RequestData\Version($major, $minor, $build);
-        $this->assertEquals($major, $version->getMajorRelease());
-        $this->assertEquals($minor, $version->getMinorRelease());
-        $this->assertEquals($build, $version->getBuild());
+        new Dhl_Versenden_Model_Webservice_Builder_Shipper(array(
+        ));
     }
 
     /**
      * @test
+     * @expectedException Mage_Core_Exception
      */
-    public function createVersionSkipBuild()
+    public function constructorArgShipperConfigWrongType()
     {
-        $major = '303';
-        $minor = '808';
+        new Dhl_Versenden_Model_Webservice_Builder_Shipper(array(
+            'config' => new stdClass(),
+        ));
+    }
 
-        $version = new \Dhl\Versenden\Webservice\RequestData\Version($major, $minor);
-        $this->assertEquals($major, $version->getMajorRelease());
-        $this->assertEquals($minor, $version->getMinorRelease());
-        $this->assertNull($version->getBuild());
+    /**
+     * @test
+     * @loadFixture Model_ShipperConfigTest
+     */
+    public function getShipper()
+    {
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Shipper(array(
+            'config' => Mage::getModel('dhl_versenden/config_shipper'),
+        ));
+        $shipper = $builder->getShipper(2);
+
+        $this->assertInstanceOf(\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper::class, $shipper);
+        $this->assertEquals("Bar Name", $shipper->getContact()->getName1());
     }
 }

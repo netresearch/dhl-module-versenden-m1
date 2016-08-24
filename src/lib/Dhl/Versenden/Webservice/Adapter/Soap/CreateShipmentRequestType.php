@@ -42,15 +42,6 @@ class CreateShipmentRequestType implements RequestType
 {
     /**
      * @param RequestData\ShipmentOrder $shipmentOrder
-     * @return ShipmentService
-     */
-    protected static function prepareServices(RequestData\ShipmentOrder $shipmentOrder)
-    {
-        return new ShipmentService();
-    }
-
-    /**
-     * @param RequestData\ShipmentOrder $shipmentOrder
      * @return VersendenApi\ShipmentDetailsTypeType
      */
     protected static function prepareShipmentDetails(RequestData\ShipmentOrder $shipmentOrder)

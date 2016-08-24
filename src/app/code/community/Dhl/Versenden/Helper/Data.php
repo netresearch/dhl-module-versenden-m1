@@ -106,28 +106,6 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Sum up all given shipment items' weight and convert to KG
-     *
-     * @param Mage_Sales_Model_Order_Shipment_Item[] $shipmentItems
-     * @param float $defaultWeight
-     * @param string $unit
-     * @return float
-     */
-    public function calculateItemsWeight($shipmentItems = array(), $defaultWeight = 0.2, $unit = 'KG')
-    {
-        $sumWeight = function ($totalWeight, Mage_Sales_Model_Order_Shipment_Item $item) use ($defaultWeight) {
-            $totalWeight += $item->getWeight() ? $item->getWeight() : $defaultWeight;
-            return $totalWeight;
-        };
-        $totalWeight = array_reduce($shipmentItems, $sumWeight, 0);
-
-        if ($unit === 'G') {
-            $totalWeight *= 0.001;
-        }
-        return $totalWeight;
-    }
-
-    /**
      * Get template name for packaging popup.
      *
      * @param string $template dhl template
@@ -146,5 +124,69 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         return $template;
+    }
+    /**
+     * Check if the given address implies delivery to a postal facility.
+     *
+     * @param Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $address
+     * @return bool
+     */
+    public function isPostalFacility(Mage_Customer_Model_Address_Abstract $address)
+    {
+        // let 3rd party extensions add postal facility data
+        $facility = new Varien_Object();
+
+        Mage::dispatchEvent(
+            'dhl_versenden_set_postal_facility', array(
+                'quote_address'   => $address,
+                'postal_facility' => $facility,
+            )
+        );
+
+        return ($facility->getData('shop_type') !== null);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     * @param string $messageType
+     */
+    public function addStatusHistoryComment(Mage_Sales_Model_Order $order, $message, $messageType)
+    {
+        // TODO(nr): use psr log types
+        // TODO(nr): add dhl message type indicator, i.e. some icon
+        if ($messageType === Zend_Log::ERR) {
+            $message = sprintf('%s %s', '(x)', $message);
+        } else {
+            $message = sprintf('%s %s', '(i)', $message);
+        }
+
+        $history = Mage::getModel('sales/order_status_history')
+            ->setOrder($order)
+            ->setStatus($order->getStatus())
+            ->setComment($message)
+            ->setData('entity_name', Mage_Sales_Model_Order::HISTORY_ENTITY_NAME);
+
+        $historyCollection = $order->getStatusHistoryCollection();
+        $historyCollection->addItem($history);
+        $historyCollection->save();
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     */
+    public function addStatusHistoryError(Mage_Sales_Model_Order $order, $message)
+    {
+        $this->addStatusHistoryComment($order, $message, Zend_Log::ERR);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     */
+    public function addStatusHistoryInfo(Mage_Sales_Model_Order $order, $message)
+    {
+        $this->addStatusHistoryComment($order, $message, Zend_Log::INFO);
     }
 }

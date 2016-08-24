@@ -301,22 +301,17 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
     /**
      * @test
-     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
-     * @expectedException Webservice\RequestData\ValidationException
-     *
-     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
-     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
      */
-    public function createShipmentOrderRequestDataException($shipmentOrder, $expectation)
+    public function createShipmentOrderRequestDataException()
     {
         $customerReference = '303';
         $validationError   = 'too erroneous!';
         $frontendMessage   = "The shipment request(s) had errors. #$customerReference: $validationError";
 
-        $shipmentOrder = new Mage_Sales_Model_Order();
-        $shipmentOrder->setIncrementId($customerReference);
+        $order = new Mage_Sales_Model_Order();
+        $order->setIncrementId($customerReference);
         $shipment = new Mage_Sales_Model_Order_Shipment();
-        $shipment->setOrder($shipmentOrder);
+        $shipment->setOrder($order);
 
         $sequenceNumber = 'foo';
 
@@ -334,6 +329,59 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->method('shipmentToShipmentOrder')
             ->willThrowException(new Webservice\RequestData\ValidationException($validationError));
 
+
+        $this->setExpectedException(
+            Webservice\RequestData\ValidationException::class,
+            $frontendMessage
+        );
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $gateway->createShipmentOrder($shipmentRequests);
+    }
+
+    /**
+     * @test
+     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
+     *
+     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
+     */
+    public function createShipmentOrderPartialShipmentException($shipmentOrder, $expectation)
+    {
+        $customerReference = '303';
+        $validationError   = 'Cannot do partial shipment with COD or Additional Insurance.';
+        $frontendMessage   = "The shipment request(s) had errors. #$customerReference: $validationError";
+
+        $order = new Mage_Sales_Model_Order();
+        $order->setIncrementId($customerReference);
+        $order->setTotalQtyOrdered(77);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setTotalQty(22);
+        $shipment->setOrder($order);
+
+        $sequenceNumber = 'foo';
+        $serviceInfo = array(
+            'shipment_service' => array(\Dhl\Versenden\Shipment\Service\Insurance::CODE),
+        );
+
+        $request = new Mage_Shipping_Model_Shipment_Request();
+        $request->setOrderShipment($shipment);
+        $request->setData('packages', array());
+        $request->setData('services', $serviceInfo);
+        $shipmentRequests = array($sequenceNumber => $request);
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('shipmentToShipmentOrder', 'logRequest', 'logResponse'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('shipmentToShipmentOrder')
+            ->willReturn($shipmentOrder);
+        $gateway
+            ->expects($this->never())
+            ->method('logRequest');
+        $gateway
+            ->expects($this->never())
+            ->method('logResponse');
 
         $this->setExpectedException(
             Webservice\RequestData\ValidationException::class,
