@@ -87,76 +87,12 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
     }
 
     /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return RequestData\ShipmentOrderCollection
-     */
-    protected function prepareShipmentOrders(array $shipmentRequests)
-    {
-        $shipmentOrderCollection = new RequestData\ShipmentOrderCollection();
-
-        /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
-        foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
-            $orderShipment = $shipmentRequest->getOrderShipment();
-
-            $packageInfo = $shipmentRequest->getData('packages');
-            $serviceInfo = $shipmentRequest->getData('services');
-
-            try {
-                $shipmentOrder = $this->shipmentToShipmentOrder(
-                    $sequenceNumber,
-                    $orderShipment,
-                    $packageInfo,
-                    $serviceInfo
-                );
-
-                $canShipPartially = ($shipmentOrder->getServiceSelection()->getCod() === null)
-                    && ($shipmentOrder->getServiceSelection()->getInsurance() === null);
-                $isPartial = ($orderShipment->getOrder()->getTotalQtyOrdered() != $orderShipment->getTotalQty());
-                if (!$canShipPartially && $isPartial) {
-                    $message = 'Cannot do partial shipment with COD or Additional Insurance.';
-                    $message = Mage::helper('dhl_versenden/data')->__($message);
-                    throw new RequestData\ValidationException($message);
-                }
-
-                $shipmentOrderCollection->addItem($shipmentOrder);
-            } catch (RequestData\ValidationException $e) {
-                $shipmentRequest->setData('request_data_exception', $e->getMessage());
-            }
-        }
-
-        return $shipmentOrderCollection;
-    }
-
-    /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     * @param RequestData\CreateShipment $requestData
      * @return ResponseData\CreateShipment
      * @throws SoapFault
-     * @throws RequestData\ValidationException
      */
-    protected function _createShipmentOrder(array $shipmentRequests)
+    protected function doCreateShipmentOrder(RequestData\CreateShipment $requestData)
     {
-        $wsVersion = new RequestData\Version('2', '1');
-        $shipmentOrderCollection = $this->prepareShipmentOrders($shipmentRequests);
-
-        // handle validation errors in shipment request data
-        $shipmentOrderErrors = array();
-        foreach ($shipmentRequests as $shipmentRequest) {
-            if ($shipmentRequest->hasData('request_data_exception')) {
-                $shipmentOrderErrors[]= sprintf(
-                    '#%s: %s',
-                    $shipmentRequest->getOrderShipment()->getOrder()->getIncrementId(),
-                    $shipmentRequest->getData('request_data_exception')
-                );
-            }
-        }
-
-        if (count($shipmentOrderErrors)) {
-            $msg = sprintf('%s %s', 'The shipment request(s) had errors.', implode("\n", $shipmentOrderErrors));
-            throw new RequestData\ValidationException($msg);
-        }
-
-        /** @var RequestData\CreateShipment $requestData */
-        $requestData = new RequestData\CreateShipment($wsVersion, $shipmentOrderCollection);
         /** @var SoapParser\CreateShipmentOrder $parser */
         $parser = $this->getParser(self::OPERATION_CREATE_SHIPMENT_ORDER);
         /** @var SoapAdapter $adapter */

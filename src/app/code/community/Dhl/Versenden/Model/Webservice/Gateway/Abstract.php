@@ -63,15 +63,15 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     abstract public function getParser($operation);
 
     /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     * @param RequestData\CreateShipment $requestData
      * @return ResponseData\CreateShipment
      */
-    abstract protected function _createShipmentOrder(array $shipmentRequests);
+    abstract protected function doCreateShipmentOrder(RequestData\CreateShipment $requestData);
 
     /**
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
      */
-    protected function _createShipmentOrderBefore(array $shipmentRequests)
+    protected function createShipmentOrderBefore(array $shipmentRequests)
     {
         $eventData = array('shipment_requests' => $shipmentRequests);
         Mage::dispatchEvent('dhl_versenden_create_shipment_order_before', $eventData);
@@ -80,10 +80,82 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     /**
      * @param ResponseData\CreateShipment $result
      */
-    protected function _createShipmentOrderAfter(ResponseData\CreateShipment $result)
+    protected function createShipmentOrderAfter(ResponseData\CreateShipment $result)
     {
         $eventData = array('result' => $result);
         Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
+    }
+
+    /**
+     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     * @return RequestData\ShipmentOrderCollection
+     */
+    protected function prepareShipmentOrders(array $shipmentRequests)
+    {
+        $shipmentOrderCollection = new RequestData\ShipmentOrderCollection();
+
+        /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
+        foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
+            $orderShipment = $shipmentRequest->getOrderShipment();
+
+            $packageInfo = $shipmentRequest->getData('packages');
+            $serviceInfo = $shipmentRequest->getData('services');
+
+            try {
+                $shipmentOrder = $this->shipmentToShipmentOrder(
+                    $sequenceNumber,
+                    $orderShipment,
+                    $packageInfo,
+                    $serviceInfo
+                );
+
+                $canShipPartially = ($shipmentOrder->getServiceSelection()->getCod() === null)
+                    && ($shipmentOrder->getServiceSelection()->getInsurance() === null);
+                $isPartial = ($orderShipment->getOrder()->getTotalQtyOrdered() != $orderShipment->getTotalQty());
+                if (!$canShipPartially && $isPartial) {
+                    $message = 'Cannot do partial shipment with COD or Additional Insurance.';
+                    $message = Mage::helper('dhl_versenden/data')->__($message);
+                    throw new RequestData\ValidationException($message);
+                }
+
+                $shipmentOrderCollection->addItem($shipmentOrder);
+            } catch (RequestData\ValidationException $e) {
+                $shipmentRequest->setData('request_data_exception', $e->getMessage());
+            }
+        }
+
+        return $shipmentOrderCollection;
+    }
+
+    /**
+     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
+     * @return RequestData\CreateShipment
+     * @throws RequestData\ValidationException
+     */
+    protected function prepareCreateShipmentOrderData(array $shipmentRequests)
+    {
+        $wsVersion = new RequestData\Version('2', '1');
+        $shipmentOrders = $this->prepareShipmentOrders($shipmentRequests);
+
+        // handle validation errors in shipment request data
+        $shipmentOrderErrors = array();
+        foreach ($shipmentRequests as $shipmentRequest) {
+            if ($shipmentRequest->hasData('request_data_exception')) {
+                $shipmentOrderErrors[]= sprintf(
+                    '#%s: %s',
+                    $shipmentRequest->getOrderShipment()->getOrder()->getIncrementId(),
+                    $shipmentRequest->getData('request_data_exception')
+                );
+            }
+        }
+
+        if (count($shipmentOrderErrors)) {
+            $msg = sprintf('%s %s', 'The shipment request(s) had errors.', implode("\n", $shipmentOrderErrors));
+            throw new RequestData\ValidationException($msg);
+        }
+
+        /** @var RequestData\CreateShipment $requestData */
+        return new RequestData\CreateShipment($wsVersion, $shipmentOrders);
     }
 
     /**
@@ -92,9 +164,12 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      */
     public function createShipmentOrder(array $shipmentRequests)
     {
-        $this->_createShipmentOrderBefore($shipmentRequests);
-        $result = $this->_createShipmentOrder($shipmentRequests);
-        $this->_createShipmentOrderAfter($result);
+        $this->createShipmentOrderBefore($shipmentRequests);
+
+        $requestData = $this->prepareCreateShipmentOrderData($shipmentRequests);
+        $result = $this->doCreateShipmentOrder($requestData);
+
+        $this->createShipmentOrderAfter($result);
 
         return $result;
     }
