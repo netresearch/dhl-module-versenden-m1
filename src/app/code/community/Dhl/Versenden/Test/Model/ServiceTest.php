@@ -207,6 +207,54 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     /**
      * @test
      */
+    public function rendererReadOnly()
+    {
+        // assert passthrough
+        $boolService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false);
+        $renderer = new Service\Type\Renderer($boolService);
+
+        $this->assertEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
+        $this->assertEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        $this->assertEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+
+        // assert readonly values, service not selected
+        $yesValue = 'Foo';
+        $noValue = 'Bar';
+        $renderer = new Service\Type\Renderer($boolService, true);
+        $renderer->setSelectedYes($yesValue);
+        $renderer->setSelectedNo($noValue);
+
+        $this->assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
+        $this->assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        $this->assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        $this->assertEquals($noValue, $renderer->getValueHtml());
+
+        // assert readonly values, service not selected
+        $boolService = new Service\Insurance('', true, true);
+        $renderer = new Service\Type\Renderer($boolService, true);
+        $renderer->setSelectedYes($yesValue);
+        $renderer->setSelectedNo($noValue);
+
+        $this->assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
+        $this->assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        $this->assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        $this->assertEquals($yesValue, $renderer->getValueHtml());
+
+        // assert readonly values, service with details
+        $neighbour = 'Alf';
+        $textService = new Service\PreferredNeighbour('', true, true, '');
+        $textService->setValue($neighbour);
+        $renderer = new Service\Type\Renderer($textService, true);
+
+        $this->assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
+        $this->assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        $this->assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        $this->assertEquals($neighbour, $renderer->getValueHtml());
+    }
+
+    /**
+     * @test
+     */
     public function typeTest()
     {
         // boolean

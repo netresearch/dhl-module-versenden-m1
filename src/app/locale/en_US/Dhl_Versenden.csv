@@ -29,6 +29,8 @@
 "If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.","If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds."
 "Weight Unit","Weight Unit"
 "Configure the product weight unit that is used in the Catalog.","Configure the product weight unit that is used in the Catalog."
+"Yes","Yes"
+"No","No"
 "Grams","Grams"
 "Kilograms","Kilograms"
 "Default Product Weight","Default Product Weight"

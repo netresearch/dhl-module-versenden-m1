@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Product;
+use \Dhl\Versenden\Shipment\Service\Type as Service;
 /**
  * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
  *
@@ -85,5 +86,20 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
         return $filteredCollection;
+    }
+
+    /**
+     * @param Service\Generic $service
+     * @return Service\Renderer
+     */
+    public function getRenderer(Service\Generic $service)
+    {
+        $readOnly = (bool)$this->getData('read_only');
+        $renderer = new Service\Renderer($service, $readOnly);
+        if ($readOnly) {
+            $renderer->setSelectedYes($this->__('Yes'));
+            $renderer->setSelectedNo($this->__('No'));
+        }
+        return $renderer;
     }
 }
