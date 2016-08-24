@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Product;
 use \Dhl\Versenden\Shipment\Service\Type as Service;
 /**
  * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
@@ -34,7 +33,7 @@ use \Dhl\Versenden\Shipment\Service\Type as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
+abstract class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
     extends Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging
 {
     /**
@@ -53,53 +52,13 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
     }
 
     /**
-     * Obtain the services that are enabled via config. Customer's service
-     * selection from checkout is read from shipping address.
-     *
      * @return \Dhl\Versenden\Shipment\Service\Type\Generic[]
      */
-    public function getServices()
-    {
-        $storeId = $this->getShipment()->getStoreId();
-        $shippingAddress = $this->getShipment()->getShippingAddress();
-        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
-
-        $enabledServices = $serviceConfig->getEnabledServices();
-
-        $shippingInfoJson = $shippingAddress->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if ($shippingInfo !== null) {
-            $serviceSelection = $shippingInfo->getServiceSelection();
-            $serviceConfig->setServiceValues($enabledServices, $serviceSelection);
-        }
-
-
-        $shipperCountry = Mage::getStoreConfig(Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID, $storeId);
-        $recipientCountry = $shippingAddress->getCountryId();
-        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
-
-        $shippingProducts = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
-        $isPostalFacility = $this->helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
-
-        $filter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
-        $filteredCollection = $filter->filterServiceCollection($enabledServices);
-
-        return $filteredCollection;
-    }
+    abstract public function getServices();
 
     /**
      * @param Service\Generic $service
      * @return Service\Renderer
      */
-    public function getRenderer(Service\Generic $service)
-    {
-        $readOnly = (bool)$this->getData('read_only');
-        $renderer = new Service\Renderer($service, $readOnly);
-        if ($readOnly) {
-            $renderer->setSelectedYes($this->__('Yes'));
-            $renderer->setSelectedNo($this->__('No'));
-        }
-        return $renderer;
-    }
+    abstract public function getRenderer(Service\Generic $service);
 }

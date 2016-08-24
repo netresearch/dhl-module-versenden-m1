@@ -44,7 +44,7 @@
                         <block>shipment_packaging</block>
                     </template>
                 </action>
-                <block type="dhl_versenden/adminhtml_sales_order_shipment_service"
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_service_edit"
                        name="shipping_services"
                        template="dhl_versenden/sales/shipping_services.phtml"/>
             </block>
@@ -59,14 +59,9 @@
                         <block>shipment_packed</block>
                     </template>
                 </action>
-                <block type="dhl_versenden/adminhtml_sales_order_shipment_service"
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_service_view"
                        name="shipping_services"
-                       template="dhl_versenden/sales/shipping_services.phtml">
-                    <action method="setData">
-                        <key>read_only</key>
-                        <value>1</value>
-                    </action>
-                </block>
+                       template="dhl_versenden/sales/shipping_services.phtml"/>
             </block>
         </reference>
     </packaging_popup>
