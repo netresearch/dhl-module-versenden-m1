@@ -29,6 +29,8 @@
 "If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.","Ist diese Option auf <em>Ja</em> gestellt, so wird nur dann ein kostenpflichtiges Label erstellt, wenn die DHL-Adressprüfung erfolgreich ist."
 "Weight Unit","Gewichtseinheit"
 "Configure the product weight unit that is used in the Catalog.","Geben Sie die Einheit für das im Katalog verwendete Produktgewicht an."
+"Yes","Ja"
+"No","Nein"
 "Grams","Gramm"
 "Kilograms","Kilogramm"
 "Default Product Weight","Standard-Produktgewicht"

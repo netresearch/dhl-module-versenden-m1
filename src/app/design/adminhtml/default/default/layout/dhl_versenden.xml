@@ -34,6 +34,7 @@
         </reference>
 
         <reference name="form">
+            <!-- packaging popup -->
             <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
                    name="shipment_packaging"
                    template="sales/order/shipment/packaging/popup.phtml">
@@ -46,6 +47,26 @@
                 <block type="dhl_versenden/adminhtml_sales_order_shipment_service"
                        name="shipping_services"
                        template="dhl_versenden/sales/shipping_services.phtml"/>
+            </block>
+
+            <!-- packaging info -->
+            <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
+                   name="shipment_packed"
+                   template="sales/order/shipment/packaging/packed.phtml">
+                <action method="setTemplate">
+                    <template helper="dhl_versenden/data/getPackagingPackedTemplate">
+                        <name>dhl_versenden/sales/packaging_packed.phtml</name>
+                        <block>shipment_packed</block>
+                    </template>
+                </action>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_service"
+                       name="shipping_services"
+                       template="dhl_versenden/sales/shipping_services.phtml">
+                    <action method="setData">
+                        <key>read_only</key>
+                        <value>1</value>
+                    </action>
+                </block>
             </block>
         </reference>
     </packaging_popup>
