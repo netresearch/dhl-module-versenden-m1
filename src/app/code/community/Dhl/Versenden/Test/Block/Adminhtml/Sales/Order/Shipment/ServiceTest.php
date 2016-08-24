@@ -48,7 +48,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
      */
     public function renderView()
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service';
+        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
         $blockHtml = 'foo';
 
         $orderOne = new Mage_Sales_Model_Order();
@@ -86,9 +86,9 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
      *
      * @param string $jsonInfo
      */
-    public function getServices($jsonInfo)
+    public function getServicesForEdit($jsonInfo)
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service';
+        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
 
         $shippingAddress = new Mage_Sales_Model_Order_Address();
         $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
@@ -124,10 +124,53 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
 
     /**
      * @test
+     * @loadFixture Model_ConfigTest
+     * @dataProvider dataProvider
+     *
+     * @param string $jsonInfo
      */
-    public function getRenderer()
+    public function getServicesForView($jsonInfo)
     {
-        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service');
+        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service_view';
+
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingMethod('dhlversenden_flatrate');
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setOrder($order);
+
+        $blockMock = $this->getBlockMock($blockType, array('getShipment'));
+        $blockMock
+            ->expects($this->any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+        $this->replaceByMock('block', $blockType, $blockMock);
+
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service $block */
+        $block = Mage::app()->getLayout()->createBlock($blockType);
+
+        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        $services = $block->getServices();
+        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+
+        // bulkyGoods disabled via config but preselected via dhl_versenden_info
+        $code = \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
+        $this->assertTrue($services->getItem($code)->getValue());
+
+        // preferredLocation enabled via config and preselected via dhl_versenden_info
+        $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
+        $this->assertEquals('Garage', $services->getItem($code)->getValue());
+    }
+
+        /**
+     * @test
+     */
+    public function getRendererForEdit()
+    {
+        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service_edit');
 
         $location = 'Melmac';
         $service = new \Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
@@ -135,8 +178,19 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
 
         $renderer = $block->getRenderer($service);
         $this->assertNotEquals($location, $renderer->getValueHtml());
+    }
 
-        $block->setData('read_only', '1');
+    /**
+     * @test
+     */
+    public function getRendererForView()
+    {
+        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service_view');
+
+        $location = 'Melmac';
+        $service = new \Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
+        $service->setValue($location);
+
         $renderer = $block->getRenderer($service);
         $this->assertEquals($location, $renderer->getValueHtml());
     }
