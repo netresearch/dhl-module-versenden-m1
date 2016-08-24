@@ -45,24 +45,25 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
      * Dhl_Versenden_Model_Webservice_Builder_Receiver constructor.
      *
      * @param stdClass[] $args
+     * @throws Mage_Core_Exception
      */
     public function __construct($args)
     {
         $argName = 'country_directory';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!$args[$argName] instanceof Mage_Directory_Model_Country) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->countryDirectory = $args[$argName];
 
         $argName = 'helper';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!$args[$argName] instanceof Dhl_Versenden_Helper_Data) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->helper = $args[$argName];
     }

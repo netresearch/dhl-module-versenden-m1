@@ -40,16 +40,17 @@ class Dhl_Versenden_Model_Webservice_Builder_Shipper
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Shipper constructor.
-     * @param $args
+     * @param Dhl_Versenden_Model_Config[] $args
+     * @throws Mage_Core_Exception
      */
     public function __construct($args)
     {
         $argName = 'config';
         if (!isset($args[$argName])) {
-            Mage::throwException("required argument missing: $argName");
+            throw new Mage_Core_Exception("required argument missing: $argName");
         }
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipper) {
-            Mage::throwException("invalid argument: $argName");
+            throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->config = $args[$argName];
     }

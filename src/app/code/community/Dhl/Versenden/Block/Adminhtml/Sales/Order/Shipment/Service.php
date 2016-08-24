@@ -73,13 +73,13 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
             $serviceConfig->setServiceValues($enabledServices, $serviceSelection);
         }
 
-        
+
         $shipperCountry = Mage::getStoreConfig(Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID, $storeId);
         $recipientCountry = $shippingAddress->getCountryId();
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 
         $shippingProducts = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
-        $isPostalFacility = $this->helper('dhl_versenden/webservice')->isPostalFacility($shippingAddress);
+        $isPostalFacility = $this->helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
         $filter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
