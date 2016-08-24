@@ -82,7 +82,7 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
     /**
      * @test
      */
-    public function getPackagingPopupTemplateVersendenCarrier()
+    public function getPackagingTemplatesVersendenCarrier()
     {
         $helper = Mage::helper('dhl_versenden/data');
 
@@ -101,19 +101,22 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
             array('getShipment')
         );
         $blockMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getShipment')
             ->willReturn($shipment);
         Mage::getSingleton('core/layout')->setBlock($blockType, $blockMock);
 
         $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
         $this->assertEquals($customTemplate, $template);
+
+        $template = $helper->getPackagingPackedTemplate($customTemplate, $blockType);
+        $this->assertEquals($customTemplate, $template);
     }
 
     /**
      * @test
      */
-    public function getPackagingPopupTemplateSomeCarrier()
+    public function getPackagingTemplatesSomeCarrier()
     {
         $helper = Mage::helper('dhl_versenden/data');
 
@@ -133,16 +136,19 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
             array('getShipment', 'getTemplate')
         );
         $blockMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getShipment')
             ->willReturn($shipment);
         $blockMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getTemplate')
             ->willReturn($defaultTemplate);
         Mage::getSingleton('core/layout')->setBlock($blockType, $blockMock);
 
         $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
+        $this->assertEquals($defaultTemplate, $template);
+
+        $template = $helper->getPackagingPackedTemplate($customTemplate, $blockType);
         $this->assertEquals($defaultTemplate, $template);
     }
 

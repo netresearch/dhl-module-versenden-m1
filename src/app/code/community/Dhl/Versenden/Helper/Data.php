@@ -125,6 +125,28 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
 
         return $template;
     }
+
+    /**
+     * Get template name for packaging packed info.
+     *
+     * @param string $template dhl template
+     * @param string $block block name
+     * @return string
+     */
+    public function getPackagingPackedTemplate($template, $block)
+    {
+        /** @var Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging $blockObject */
+        $blockObject = Mage::getSingleton('core/layout')->getBlock($block);
+        $shippingMethod = $blockObject->getShipment()->getOrder()->getShippingMethod(true);
+
+        if ($shippingMethod->getData('carrier_code') !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            // different carrier, return standard template
+            return $blockObject->getTemplate();
+        }
+
+        return $template;
+    }
+
     /**
      * Check if the given address implies delivery to a postal facility.
      *

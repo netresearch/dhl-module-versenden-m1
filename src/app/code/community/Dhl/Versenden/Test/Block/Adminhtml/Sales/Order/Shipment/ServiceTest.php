@@ -121,4 +121,23 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
         $this->assertEquals('Garage', $services->getItem($code)->getValue());
     }
+
+    /**
+     * @test
+     */
+    public function getRenderer()
+    {
+        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service');
+
+        $location = 'Melmac';
+        $service = new \Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
+        $service->setValue($location);
+
+        $renderer = $block->getRenderer($service);
+        $this->assertNotEquals($location, $renderer->getValueHtml());
+
+        $block->setData('read_only', '1');
+        $renderer = $block->getRenderer($service);
+        $this->assertEquals($location, $renderer->getValueHtml());
+    }
 }
