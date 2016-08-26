@@ -58,9 +58,12 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
             $serviceConfig->setServiceValues($services, $serviceSelection);
         }
 
-        $services = array_filter($services->getItems(), function (Service\Generic $service) {
-            return $service->isSelected();
-        });
+        $services = array_filter(
+            $services->getItems(),
+            function (Service\Generic $service) {
+                return $service->isSelected();
+            }
+        );
 
         return new \Dhl\Versenden\Shipment\Service\Collection($services);
     }
