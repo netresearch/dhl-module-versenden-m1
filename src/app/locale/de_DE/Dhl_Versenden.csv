@@ -102,3 +102,4 @@
 "DHL Additional Services","DHL Zusatzleistungen"
 "e.g. garage, terrace","z.B. Garage, Terrasse"
 "name, street and street number","Name, Straße und Hausnr."
+"Cannot do partial shipment with COD or Additional Insurance.", "Für Teillieferungen ist weder Nachnahme noch Transportversicherung verfügbar."
