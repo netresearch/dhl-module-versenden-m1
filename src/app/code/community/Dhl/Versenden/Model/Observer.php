@@ -45,6 +45,7 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
+        /** @var Dhl_Versenden_Helper_Autoloader $autoloader */
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
         $dhlLibs = array('Versenden', 'Bcs');
@@ -101,6 +102,7 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = $observer->getQuote();
         $shippingAddress = $quote->getShippingAddress();
+        /** @var Dhl_Versenden_Model_Config_Shipment $shipmentConfig */
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
         if (!$shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
@@ -111,20 +113,28 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
 
-        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', array(
+        /** @var Dhl_Versenden_Model_Webservice_Builder_Receiver $receiverBuilder */
+        $receiverBuilder = Mage::getModel(
+            'dhl_versenden/webservice_builder_receiver', array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/data'),
-        ));
+            'helper'            => Mage::helper('dhl_versenden/data'),
+            )
+        );
         $receiver = $receiverBuilder->getReceiver($shippingAddress);
 
-        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', array(
-            'shipper_config' => Mage::getModel('dhl_versenden/config_shipper'),
+        /** @var Dhl_Versenden_Model_Webservice_Builder_Service $serviceBuilder */
+        $serviceBuilder = Mage::getModel(
+            'dhl_versenden/webservice_builder_service', array(
+            'shipper_config'  => Mage::getModel('dhl_versenden/config_shipper'),
             'shipment_config' => $shipmentConfig,
-        ));
-        $serviceSettings = $serviceBuilder->getServiceSelection($quote, array(
+            )
+        );
+        $serviceSettings = $serviceBuilder->getServiceSelection(
+            $quote, array(
             'shipment_service' => $request->getPost('shipment_service', array()),
-            'service_setting' => $request->getPost('service_setting', array())
-        ));
+            'service_setting'  => $request->getPost('service_setting', array())
+            )
+        );
 
         $shippingInfo = new \Dhl\Versenden\Webservice\RequestData\ShippingInfo($receiver, $serviceSettings);
         $shippingAddress->setData('dhl_versenden_info', json_encode($shippingInfo, JSON_FORCE_OBJECT));
@@ -142,6 +152,7 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Sales_Model_Order $order */
         $order          = $observer->getOrder();
         $shippingMethod = $order->getShippingMethod();
+        /** @var Dhl_Versenden_Model_Config_Shipment $config */
         $config         = Mage::getModel('dhl_versenden/config_shipment');
 
         if ($config->canProcessMethod($shippingMethod)) {
@@ -235,6 +246,7 @@ class Dhl_Versenden_Model_Observer
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         $paymentMethod  = $methodInstance->getCode();
 
+        /** @var Dhl_Versenden_Model_Config_Shipment $config */
         $config = Mage::getModel('dhl_versenden/config_shipment');
         if (!$config->canProcessMethod($shippingMethod, $quote->getStoreId())) {
             // no dhl shipping method
