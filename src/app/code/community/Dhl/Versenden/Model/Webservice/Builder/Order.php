@@ -54,50 +54,33 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
      */
     public function __construct($args)
     {
-        $argName = 'shipper_builder';
-        if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
-        }
-        if (!$args[$argName] instanceof Dhl_Versenden_Model_Webservice_Builder_Shipper) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
-        }
-        $this->shipperBuilder = $args[$argName];
+        $argDef = array(
+            'shipper_builder'  => Dhl_Versenden_Model_Webservice_Builder_Shipper::class,
+            'receiver_builder' => Dhl_Versenden_Model_Webservice_Builder_Receiver::class,
+            'service_builder'  => Dhl_Versenden_Model_Webservice_Builder_Service::class,
+            'package_builder'  => Dhl_Versenden_Model_Webservice_Builder_Package::class,
+            'settings_builder' => Dhl_Versenden_Model_Webservice_Builder_Settings::class
+        );
 
-        $argName = 'receiver_builder';
-        if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+        $missingArguments = array_diff_key($argDef, $args);
+        if (count($missingArguments)) {
+            $message = sprintf('required arguments missing: %s', implode(', ', array_keys($missingArguments)));
+            // @codingStandardsIgnoreStart
+            throw new Mage_Core_Exception($message);
+            // @codingStandardsIgnoreEnd
         }
-        if (!$args[$argName] instanceof Dhl_Versenden_Model_Webservice_Builder_Receiver) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
-        }
-        $this->receiverBuilder = $args[$argName];
 
-        $argName = 'service_builder';
-        if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
-        }
-        if (!$args[$argName] instanceof Dhl_Versenden_Model_Webservice_Builder_Service) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
-        }
-        $this->serviceBuilder = $args[$argName];
+        $invalidArgumentFilter = function ($key) use ($args, $argDef) {
+            return !$args[$key] instanceof $argDef[$key];
+        };
+        $invalidArguments = array_filter(array_keys($args), $invalidArgumentFilter);
 
-        $argName = 'package_builder';
-        if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+        if (count($invalidArguments)) {
+            $message = sprintf('invalid arguments: %s', implode(', ', $invalidArguments));
+            // @codingStandardsIgnoreStart
+            throw new Mage_Core_Exception($message);
+            // @codingStandardsIgnoreEnd
         }
-        if (!$args[$argName] instanceof Dhl_Versenden_Model_Webservice_Builder_Package) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
-        }
-        $this->packageBuilder = $args[$argName];
-
-        $argName = 'settings_builder';
-        if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
-        }
-        if (!$args[$argName] instanceof Dhl_Versenden_Model_Webservice_Builder_Settings) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
-        }
-        $this->settingsBuilder = $args[$argName];
     }
 
     /**
@@ -114,7 +97,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         Mage_Sales_Model_Order_Shipment $shipment,
         array $packageInfo,
         array $serviceInfo
-    ) {
+    )
+    {
         $shipper = $this->shipperBuilder->getShipper($shipment->getStoreId());
 
         $shippingInfoJson = $shipment->getShippingAddress()->getData('dhl_versenden_info');
