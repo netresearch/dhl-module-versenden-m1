@@ -170,6 +170,7 @@ class CreateShipmentRequestType implements RequestType
     protected static function prepareShipmentOrder(RequestData\ShipmentOrder $shipmentOrder)
     {
         $shipment           = static::prepareShipment($shipmentOrder);
+        //TODO(nr): override setting on shipment level
         $printOnlyIfCodable = new VersendenApi\Serviceconfiguration($shipmentOrder->isPrintOnlyIfCodable());
 
         $requestType = new VersendenApi\ShipmentOrderType(
