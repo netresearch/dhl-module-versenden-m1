@@ -73,7 +73,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         $invalidArgumentFilter = function ($key) use ($args, $argDef) {
             return !$args[$key] instanceof $argDef[$key];
         };
-        $invalidArguments = array_filter(array_keys($args), $invalidArgumentFilter);
+        $invalidArguments = array_filter(array_keys($argDef), $invalidArgumentFilter);
 
         if (count($invalidArguments)) {
             $message = sprintf('invalid arguments: %s', implode(', ', $invalidArguments));
