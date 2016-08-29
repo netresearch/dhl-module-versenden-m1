@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="DHL Versenden" default="build" basedir=".">
-    <property name="phpunit" value="phpunit" />
+    <property name="php" value="/opt/phpfarm/inst/php-5.5.23/bin/php" />
+    <property name="phpunit" value="/var/lib/jenkins/.composer/vendor/bin/phpunit" />
     <property name="jumpstorm" value="jumpstorm" />
 
     <!-- prepare jumpstorm commands for reuse -->
@@ -85,7 +86,8 @@
 
     <!-- dynamic evaluations (require runtime env) -->
     <target name="phpunit">
-        <exec failonerror="true" executable="${phpunit}">
+        <exec failonerror="true" executable="${php}">
+            <arg value="${phpunit}"/>
             <arg value="--stderr"/>
             <arg line="-c ${basedir}/build/phpunit.xml"/>
             <arg line="--filter /^${vendor}/"/>
@@ -93,7 +95,8 @@
     </target>
 
     <target name="phpunit-report">
-        <exec failonerror="true" executable="${phpunit}">
+        <exec failonerror="true" executable="${php}">
+            <arg value="${phpunit}"/>
             <arg value="--stderr"/>
             <arg line="-c ${basedir}/build/phpunit.xml"/>
             <arg line="--filter /^${vendor}/"/>

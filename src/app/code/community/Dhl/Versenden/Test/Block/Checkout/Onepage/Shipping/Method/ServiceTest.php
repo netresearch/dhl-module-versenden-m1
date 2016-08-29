@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
  *
@@ -38,27 +38,75 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
 {
     /**
      * @test
+     * @loadFixture Model_ConfigTest
      */
     public function getServices()
     {
-        $serviceOne = new \Dhl\Versenden\Service\BulkyGoods();
-        $serviceTwo = new \Dhl\Versenden\Service\PreferredLocation();
-        $collection = new \Dhl\Versenden\Service\Collection([
+        $this->setCurrentStore('store_two');
+
+        $shippingAddress = new Mage_Sales_Model_Quote_Address();
+        $shippingAddress->setCountryId('DE');
+        $quote = new Mage_Sales_Model_Quote();
+        $quote->setStoreId(Mage::app()->getStore()->getId());
+        $quote->setShippingAddress($shippingAddress);
+
+        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+        $blockMock = $this->getBlockMock($blockType, array('getQuote'));
+        $blockMock
+            ->expects($this->exactly(2))
+            ->method('getQuote')
+            ->willReturn($quote);
+        $this->replaceByMock('block', $blockType, $blockMock);
+
+        $serviceOne = new Service\BulkyGoods('', true, false);
+        $serviceTwo = new Service\PreferredLocation('', true, false, '');
+        $collection = new Service\Collection([
             $serviceOne, $serviceTwo
         ]);
 
-        $configMock = $this->getModelMock('dhl_versenden/config', ['getEnabledServices']);
+        $configMock = $this->getModelMock('dhl_versenden/config_service', ['getEnabledServices']);
         $configMock
             ->expects($this->once())
             ->method('getEnabledServices')
             ->willReturn($collection);
-        $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
+        $this->replaceByMock('model', 'dhl_versenden/config_service', $configMock);
 
         $block = Mage::app()->getLayout()->createBlock('dhl_versenden/checkout_onepage_shipping_method_service');
 
         $frontendServices = $block->getServices();
-        $this->assertInternalType('array', $frontendServices);
+        $this->assertInstanceOf(Service\Collection::class, $frontendServices);
         $this->assertCount(1, $frontendServices);
         $this->assertContains($serviceTwo, $frontendServices);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
+    public function getDhlMethods()
+    {
+        $this->setCurrentStore('store_two');
+
+        $shippingAddress = new Mage_Sales_Model_Quote_Address();
+        $shippingAddress->setCountryId('DE');
+        $quote = new Mage_Sales_Model_Quote();
+        $quote->setStoreId(Mage::app()->getStore()->getId());
+        $quote->setShippingAddress($shippingAddress);
+
+        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+        $blockMock = $this->getBlockMock($blockType, array('getQuote'));
+        $blockMock
+            ->expects($this->exactly(1))
+            ->method('getQuote')
+            ->willReturn($quote);
+        $this->replaceByMock('block', $blockType, $blockMock);
+
+        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/checkout_onepage_shipping_method_service');
+        $json = $block->getDhlMethods();
+        $methods = Mage::helper('core/data')->jsonDecode($json);
+        $this->assertInternalType('array', $methods);
+        $this->assertCount(2, $methods);
+        $this->assertContains('flatrate_flatrate', $methods);
+        $this->assertContains('tablerate_bestway', $methods);
     }
 }
