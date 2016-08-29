@@ -1,4 +1,5 @@
 src/app/code/community/Dhl/Versenden/ app/code/community/Dhl/Versenden/
+src/app/design/adminhtml/default/default/layout/dhl_versenden.xml app/design/adminhtml/default/default/layout/dhl_versenden.xml
 src/app/design/adminhtml/default/default/template/dhl_versenden/ app/design/adminhtml/default/default/template/dhl_versenden/
 src/app/design/frontend/base/default/layout/dhl_versenden.xml app/design/frontend/base/default/layout/dhl_versenden.xml
 src/app/design/frontend/base/default/template/dhl_versenden/ app/design/frontend/base/default/template/dhl_versenden/
@@ -7,7 +8,9 @@ src/app/locale/de_DE/Dhl_Versenden.csv app/locale/de_DE/Dhl_Versenden.csv
 src/app/locale/en_US/Dhl_Versenden.csv app/locale/en_US/Dhl_Versenden.csv
 
 src/lib/Dhl/Versenden/ lib/Dhl/Versenden/
+src/lib/Dhl/Bcs/ lib/Dhl/Bcs/
 
 src/skin/frontend/base/default/css/dhl_versenden/ skin/frontend/base/default/css/dhl_versenden/
 src/skin/frontend/base/default/images/dhl_versenden/ skin/frontend/base/default/images/dhl_versenden/
 src/skin/frontend/base/default/js/dhl_versenden/ skin/frontend/base/default/js/dhl_versenden/
+src/skin/adminhtml/default/default/dhl_versenden.css skin/adminhtml/default/default/dhl_versenden.css

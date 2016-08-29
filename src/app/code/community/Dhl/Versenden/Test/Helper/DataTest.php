@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\ShippingInfo;
+
 /**
  * Dhl_Versenden_Test_Helper_DataTest
  *
@@ -62,176 +62,128 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture getReceiver
      */
-    public function getReceiverNoPostalFacility()
+    public function utcToCet()
     {
-        $address = Mage::getModel('sales/quote_address')->load(100);
-        $helper = new Dhl_Versenden_Helper_Data();
-        $receiver = $helper->getReceiver($address);
-        $this->assertEquals('Charles-de-Gaulle-Straße', $receiver->streetName);
-        $this->assertEquals('20', $receiver->streetNumber);
-        $this->assertEmpty($receiver->packstation);
-        $this->assertEmpty($receiver->postfiliale);
-        $this->assertEmpty($receiver->parcelShop);
+        $helper   = Mage::helper('dhl_versenden/data');
+
+        $gmtDate = '2015-01-01 12:00:00';
+        $cetDate = '2015-01-01 13:00:00';
+        $this->assertSame($cetDate, $helper->utcToCet(strtotime($gmtDate)));
+
+
+        $gmtDate = '2015-06-15 12:00:00';
+        $cetDate = '2015-06-15 14:00:00';
+        $this->assertSame($cetDate, $helper->utcToCet(strtotime($gmtDate)));
+
+        $this->assertInternalType('string', $helper->utcToCet());
     }
 
     /**
      * @test
-     * @loadFixture getReceiver
      */
-    public function getReceiverWithPackstation()
+    public function getPackagingTemplatesVersendenCarrier()
     {
-        $stationType = 'Packstation';
-        $stationId   = '987';
-
-        $street = "{$stationType} {$stationId}";
-        $company = '1234567890';
-
-        $address = Mage::getModel('sales/quote_address')->load(100);
-        $address->setStreet($street);
-        $address->setCompany($company);
-
-        $helper = new Dhl_Versenden_Helper_Data();
-        $receiver = $helper->getReceiver($address);
-
-        $this->assertNotEmpty($receiver->packstation);
-        $this->assertEquals($stationId, $receiver->packstation->packstationNumber);
-        $this->assertEquals($company, $receiver->packstation->postNumber);
-
-        $this->assertEmpty($receiver->postfiliale);
-        $this->assertEmpty($receiver->parcelShop);
-    }
-
-    /**
-     * @test
-     * @loadFixture getReceiver
-     */
-    public function getReceiverWithPostfiliale()
-    {
-        $stationType = 'Postfiliale';
-        $stationId   = '987';
-
-        $street = "{$stationType} {$stationId}";
-        $company = '1234567890';
-
-        $address = Mage::getModel('sales/quote_address')->load(100);
-        $address->setStreet($street);
-        $address->setCompany($company);
-
-        $helper = new Dhl_Versenden_Helper_Data();
-        $receiver = $helper->getReceiver($address);
-
-        $this->assertNotEmpty($receiver->postfiliale);
-        $this->assertEquals($stationId, $receiver->postfiliale->postfilialNumber);
-        $this->assertEquals($company, $receiver->postfiliale->postNumber);
-
-        $this->assertEmpty($receiver->packstation);
-        $this->assertEmpty($receiver->parcelShop);
-    }
-
-    /**
-     * @test
-     * @loadFixture getReceiver
-     */
-    public function getReceiverWithParcelShop()
-    {
-        // set "Postfiliale" temporarily to get through the observer method
-        $stationType = 'Postfiliale';
-        $stationId   = '987';
-
-        $street = "{$stationType} {$stationId}";
-        $company = '1234567890';
-
-        $parcelShop = new ShippingInfo\ParcelShop();
-        $parcelShop->parcelShopNumber = $stationId;
-        $parcelShop->streetName = $stationType;
-        $parcelShop->streetNumber = $stationId;
-
-        $helperMock = $this->getHelperMock('dhl_versenden/data', array('preparePostalFacility'));
-        $helperMock
-            ->expects($this->once())
-            ->method('preparePostalFacility')
-            ->willReturn($parcelShop);
-        $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
-
-
-
-        $address = Mage::getModel('sales/quote_address')->load(100);
-        $address->setStreet($street);
-        $address->setCompany($company);
-
         $helper = Mage::helper('dhl_versenden/data');
-        $receiver = $helper->getReceiver($address);
 
-        // The Dhl_Versenden module does not handle ParcelShops, use Dhl_LocationFinder
-        $this->assertNotEmpty($receiver->parcelShop);
-        $this->assertSame($stationId, $receiver->parcelShop->parcelShopNumber);
-        $this->assertSame($stationType, $receiver->parcelShop->streetName);
-        $this->assertSame($stationId, $receiver->parcelShop->streetNumber);
-        $this->assertEmpty($receiver->packstation);
-        $this->assertEmpty($receiver->postfiliale);
+        $shippingMethod = 'dhlversenden_bar';
+        $customTemplate = 'foo';
+        $blockType      = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
+
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingMethod($shippingMethod);
+
+        $shipment = new Varien_Object();
+        $shipment->setData('order', $order);
+
+        $blockMock = $this->getBlockMock(
+            $blockType,
+            array('getShipment')
+        );
+        $blockMock
+            ->expects($this->exactly(2))
+            ->method('getShipment')
+            ->willReturn($shipment);
+        Mage::getSingleton('core/layout')->setBlock($blockType, $blockMock);
+
+        $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
+        $this->assertEquals($customTemplate, $template);
+
+        $template = $helper->getPackagingPackedTemplate($customTemplate, $blockType);
+        $this->assertEquals($customTemplate, $template);
     }
 
     /**
      * @test
-     * @loadFixture getReceiver
      */
-    public function prepareParcelShop()
+    public function getPackagingTemplatesSomeCarrier()
     {
-        $address = Mage::getModel('sales/quote_address')->load(100);
-        $streetName = 'Foo';
-        $streetNumber = '909';
+        $helper = Mage::helper('dhl_versenden/data');
 
-        $facility = new Varien_Object(array(
-            'shop_type' => 'ParcelShop',
-            'shop_number' => '808',
-        ));
+        $shippingMethod  = 'foo_bar';
+        $customTemplate  = 'foo';
+        $defaultTemplate = 'fox';
+        $blockType       = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
 
-        $receiver = new ShippingInfo\Receiver();
-        $receiver->zip = $address->getPostcode();
-        $receiver->city = $address->getCity();
-        $receiver->country = $address->getCountry();
-        $receiver->countryISOCode = $address->getCountryId();
-        $receiver->state = $address->getRegion();
-        $receiver->streetName = $streetName;
-        $receiver->streetNumber = $streetNumber;
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingMethod($shippingMethod);
 
-        $helper = new Dhl_Versenden_Helper_Data();
-        /** @var ShippingInfo\ParcelShop $station */
-        $station = $helper->preparePostalFacility($facility, $receiver);
-        $this->assertInstanceOf(ShippingInfo\ParcelShop::class, $station);
-        $this->assertEquals($streetName, $station->streetName);
-        $this->assertEquals($streetNumber, $station->streetNumber);
+        $shipment = new Varien_Object();
+        $shipment->setData('order', $order);
+
+        $blockMock = $this->getBlockMock(
+            $blockType,
+            array('getShipment', 'getTemplate')
+        );
+        $blockMock
+            ->expects($this->exactly(2))
+            ->method('getShipment')
+            ->willReturn($shipment);
+        $blockMock
+            ->expects($this->exactly(2))
+            ->method('getTemplate')
+            ->willReturn($defaultTemplate);
+        Mage::getSingleton('core/layout')->setBlock($blockType, $blockMock);
+
+        $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
+        $this->assertEquals($defaultTemplate, $template);
+
+        $template = $helper->getPackagingPackedTemplate($customTemplate, $blockType);
+        $this->assertEquals($defaultTemplate, $template);
     }
 
     /**
      * @test
-     * @loadFixture getReceiver
      */
-    public function preparePostBox()
+    public function addStatusHistoryComment()
     {
-        $address = Mage::getModel('sales/quote_address')->load(100);
-        $streetName = 'Foo';
-        $streetNumber = '909';
-
-        $facility = new Varien_Object(array(
-            'shop_type' => 'PostBox', // unrecognized station type
-            'shop_number' => '808',
-        ));
-
-        $receiver = new ShippingInfo\Receiver();
-        $receiver->zip = $address->getPostcode();
-        $receiver->city = $address->getCity();
-        $receiver->country = $address->getCountry();
-        $receiver->countryISOCode = $address->getCountryId();
-        $receiver->state = $address->getRegion();
-        $receiver->streetName = $streetName;
-        $receiver->streetNumber = $streetNumber;
-
         $helper = new Dhl_Versenden_Helper_Data();
-        /** @var ShippingInfo\ParcelShop $station */
-        $station = $helper->preparePostalFacility($facility, $receiver);
-        $this->assertNull($station);
+
+        $history = $this->getMockBuilder(Mage_Sales_Model_Resource_Order_Status_History_Collection::class)
+            ->setMethods(array('save'))
+            ->getMock();
+
+        $order = $this->getMockBuilder(Mage_Sales_Model_Order::class)
+            ->setMethods(array('getStatusHistoryCollection'))
+            ->getMock();
+        $order
+            ->expects($this->exactly(2))
+            ->method('getStatusHistoryCollection')
+            ->willReturn($history);
+
+        $comment = 'status comment';
+
+        /** @var Mage_Sales_Model_Order $order */
+        /** @var Mage_Sales_Model_Resource_Order_Status_History_Collection $history */
+        $this->assertCount(0, $history);
+        $helper->addStatusHistoryInfo($order, $comment);
+        $this->assertCount(1, $history);
+        $helper->addStatusHistoryError($order, $comment);
+        $this->assertCount(2, $history);
+
+        /** @var Mage_Sales_Model_Order_Status_History $item */
+        foreach ($history as $item) {
+            $this->assertStringEndsWith($comment, $item->getComment());
+        }
     }
 }
