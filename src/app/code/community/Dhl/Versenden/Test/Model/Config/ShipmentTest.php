@@ -45,9 +45,8 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
 
         $settings = $config->getSettings();
         $this->assertInstanceOf(GlobalSettings::class, $settings);
-        $this->assertTrue($settings->isPrintOnlyIfCodable());
-        $this->assertEquals('G', $settings->getUnitOfMeasure());
-        $this->assertEquals(200, $settings->getProductWeight());
+        $this->assertTrue($settings->isPrintOnlyIfCodeable());
+        $this->assertEquals('KG', $settings->getUnitOfMeasure());
 
         $this->assertInternalType('array', $settings->getShippingMethods());
         $this->assertCount(0, $settings->getShippingMethods());
@@ -59,9 +58,8 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
 
         $storeSettings = $config->getSettings('store_two');
         $this->assertInstanceOf(GlobalSettings::class, $storeSettings);
-        $this->assertFalse($storeSettings->isPrintOnlyIfCodable());
-        $this->assertEquals('KG', $storeSettings->getUnitOfMeasure());
-        $this->assertEquals(0.2, $storeSettings->getProductWeight());
+        $this->assertFalse($storeSettings->isPrintOnlyIfCodeable());
+        $this->assertEquals('G', $storeSettings->getUnitOfMeasure());
 
         $this->assertInternalType('array', $storeSettings->getShippingMethods());
         $this->assertCount(2, $storeSettings->getShippingMethods());
@@ -80,7 +78,7 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
         $dhlMethod = 'dhl_ftw';
         $fooMethod = 'foo_bar';
 
-        $settings = new GlobalSettings(false, 'G', 0.25, array($dhlMethod), array(), 2, 'B64');
+        $settings = new GlobalSettings(false, 'G', array($dhlMethod), array(), 2, 'B64');
 
         $configMock = $this->getModelMock('dhl_versenden/config_shipment', array('getSettings'));
         $configMock

@@ -201,8 +201,8 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </dhlversenden_fields_shipment>
-                        <shipment_printonlyifcodable translate="label tooltip">
-                            <label>Print Only If Codable</label>
+                        <shipment_printonlyifcodeable translate="label tooltip">
+                            <label>Print Only If Codeable</label>
                             <tooltip><![CDATA[If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -210,7 +210,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_printonlyifcodable>
+                        </shipment_printonlyifcodeable>
                         <shipment_unitofmeasure translate="label comment">
                             <label>Weight Unit</label>
                             <tooltip>Configure the product weight unit that is used in the Catalog.</tooltip>

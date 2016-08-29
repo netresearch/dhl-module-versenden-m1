@@ -133,7 +133,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $packageCollection,
             $productCode,
             $shipmentDate,
-            $globalSettings->isPrintOnlyIfCodable(),
+            $globalSettings->isPrintOnlyIfCodeable(),
             $globalSettings->getLabelType()
         );
     }

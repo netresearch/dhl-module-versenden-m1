@@ -71,8 +71,8 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
 
         $this->assertEquals(14, strlen($order->getAccountNumber()));
         $this->assertEquals(
-            $expectation->isGlobalSettingsPrintOnlyIfCodable(),
-            $order->isPrintOnlyIfCodable()
+            $expectation->isGlobalSettingsPrintOnlyIfCodeable(),
+            $order->isPrintOnlyIfCodeable()
         );
         $this->assertEquals(
             $expectation->getLabelResponseType(),
@@ -104,12 +104,8 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
             $order->getShipper()->getAccount()->isGoGreen()
         );
         $this->assertEquals(
-            $expectation->getShipperAccountParticipationDefault(),
-            $order->getShipper()->getAccount()->getParticipationDefault()
-        );
-        $this->assertEquals(
-            $expectation->getShipperAccountParticipationReturn(),
-            $order->getShipper()->getAccount()->getParticipationReturn()
+            $expectation->getShipperAccountParticipation(),
+            $order->getShipper()->getAccount()->getParticipation()
         );
 
         $this->assertEquals(
@@ -339,8 +335,8 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
         $this->assertNull($order->getReceiver()->getParcelShop());
 
         $this->assertEquals(
-            $expectation->isGlobalSettingsPrintOnlyIfCodable(),
-            $order->isPrintOnlyIfCodable()
+            $expectation->isGlobalSettingsPrintOnlyIfCodeable(),
+            $order->isPrintOnlyIfCodeable()
         );
         $this->assertEquals(
             $expectation->getGlobalSettingsLabelType(),

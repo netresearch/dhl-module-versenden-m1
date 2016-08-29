@@ -105,7 +105,8 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ObjectMapperTest
             $insurance,
             $bulkyGoods,
             false,
-            false
+            false,
+            true
         );
 
         return $serviceSettings;

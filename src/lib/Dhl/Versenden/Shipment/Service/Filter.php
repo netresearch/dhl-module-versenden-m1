@@ -81,6 +81,7 @@ class Filter
                 ParcelAnnouncement::CODE,
                 PreferredLocation::CODE,
                 PreferredNeighbour::CODE,
+                PrintOnlyIfCodeable::CODE,
                 ReturnShipment::CODE,
                 VisualCheckOfAge::CODE,
             ],
@@ -90,11 +91,13 @@ class Filter
                 GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
             ],
             Product::CODE_EUROPAKET => [
                 GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
             ],
             Product::CODE_KURIER_TAGGLEICH => [
                 DayOfDelivery::CODE,
@@ -102,6 +105,7 @@ class Filter
                 GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
                 ReturnShipment::CODE,
             ],
             Product::CODE_KURIER_WUNSCHZEIT => [
@@ -110,6 +114,7 @@ class Filter
                 GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
                 ReturnShipment::CODE,
             ],
             Product::CODE_PAKET_AUSTRIA => [
@@ -117,17 +122,20 @@ class Filter
                 Cod::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
             ],
             Product::CODE_PAKET_CONNECT => [
                 BulkyGoods::CODE,
                 Cod::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
             ],
             Product::CODE_PAKET_INTERNATIONAL => [
                 BulkyGoods::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                PrintOnlyIfCodeable::CODE,
             ],
         ];
 

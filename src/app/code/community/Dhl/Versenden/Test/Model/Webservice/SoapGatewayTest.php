@@ -182,7 +182,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentDate   = '2016-12-24';
 
         $productCode    = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
-        $packageWeight  = 1.2;
+        $packageWeight  = 1200;
 
         $helperMock = $this->getHelperMock(
             'dhl_versenden/data',
