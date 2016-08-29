@@ -140,11 +140,11 @@ class Filter
         ];
 
         $this->postalFacilityServices = [
-            BulkyGoods::CODE,
             Cod::CODE, // up to 1500 euro
             GoGreen::CODE,
             Insurance::CODE,
             ParcelAnnouncement::CODE,
+            PrintOnlyIfCodeable::CODE,
             ReturnShipment::CODE,
         ];
     }
