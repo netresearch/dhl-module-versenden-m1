@@ -221,16 +221,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_unitofmeasure>
-                        <shipment_defaultweight translate="label tooltip">
-                            <label>Default Product Weight</label>
-                            <tooltip>If the product weight is not configured in the catalog, use this value as fallback.</tooltip>
-                            <frontend_type>text</frontend_type>
-                            <validate>required-entry validate-digits</validate>
-                            <sort_order>330</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </shipment_defaultweight>
                         <shipment_dhlmethods translate="label tooltip comment">
                             <label>Shipping Methods for DHL Versenden</label>
                             <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
@@ -301,16 +291,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </service_preferredneighbour_enabled>
-                        <service_packstation_enabled>
-                            <label>Enable Packstation</label>
-                            <tooltip>Allow customers have their parcels delivered to Packstation machines or parcel shops.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>440</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </service_packstation_enabled>
                         <service_parcelannouncement_enabled>
                             <label>Enable Parcel Announcement</label>
                             <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
