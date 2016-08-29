@@ -196,45 +196,51 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
 
         $shipperBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_shipper', array(
+            'dhl_versenden/webservice_builder_shipper',
+            array(
                 'config' => $shipperConfig
             )
         );
 
         $receiverBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_receiver', array(
-            'country_directory' => Mage::getModel('directory/country'),
-            'helper'            => $helper,
+            'dhl_versenden/webservice_builder_receiver',
+            array(
+                'country_directory' => Mage::getModel('directory/country'),
+                'helper'            => $helper,
             )
         );
 
         $serviceBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_service', array(
-            'shipper_config'  => $shipperConfig,
-            'shipment_config' => $shipmentConfig,
+            'dhl_versenden/webservice_builder_service',
+            array(
+                'shipper_config'  => $shipperConfig,
+                'shipment_config' => $shipmentConfig,
             )
         );
 
         $packageBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_package', array(
-            'unit_of_measure' => $shipmentConfig->getSettings($shipment->getStoreId())->getUnitOfMeasure(),
-            'min_weight'      => Dhl_Versenden_Model_Shipping_Carrier_Versenden::PACKAGE_MIN_WEIGHT,
+            'dhl_versenden/webservice_builder_package',
+            array(
+                'unit_of_measure' => $shipmentConfig->getSettings($shipment->getStoreId())->getUnitOfMeasure(),
+                'min_weight'      => Dhl_Versenden_Model_Shipping_Carrier_Versenden::PACKAGE_MIN_WEIGHT,
             )
         );
 
         $settingsBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_settings', array(
-            'config' => $shipmentConfig
+            'dhl_versenden/webservice_builder_settings',
+            array(
+                'config' => $shipmentConfig
             )
         );
 
         $orderBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_order', array(
-            'shipper_builder'  => $shipperBuilder,
-            'receiver_builder' => $receiverBuilder,
-            'service_builder'  => $serviceBuilder,
-            'package_builder'  => $packageBuilder,
-            'settings_builder' => $settingsBuilder,
+            'dhl_versenden/webservice_builder_order',
+            array(
+                'shipper_builder'  => $shipperBuilder,
+                'receiver_builder' => $receiverBuilder,
+                'service_builder'  => $serviceBuilder,
+                'package_builder'  => $packageBuilder,
+                'settings_builder' => $settingsBuilder,
             )
         );
 
