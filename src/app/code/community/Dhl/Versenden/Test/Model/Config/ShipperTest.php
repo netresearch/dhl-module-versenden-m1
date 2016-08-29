@@ -53,8 +53,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertEquals('pass', $testAccount->getSignature());
         $this->assertEquals('2222222222', $testAccount->getEkp());
         $this->assertTrue($testAccount->isGoGreen());
-        $this->assertEquals('01', $testAccount->getParticipationDefault());
-        $this->assertEquals('01', $testAccount->getParticipationReturn());
+        $this->assertEquals('01', $testAccount->getParticipation());
 
         $prodAccount = $config->getAccountSettings('store_two');
         $this->assertInstanceOf(ShipperAccount::class, $prodAccount);
@@ -62,8 +61,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertEquals('magento', $prodAccount->getSignature());
         $this->assertEquals('4711xx4711', $prodAccount->getEkp());
         $this->assertFalse($prodAccount->isGoGreen());
-        $this->assertEquals('98', $prodAccount->getParticipationDefault());
-        $this->assertEquals('99', $prodAccount->getParticipationReturn());
+        $this->assertEquals('98', $prodAccount->getParticipation());
     }
 
     /**

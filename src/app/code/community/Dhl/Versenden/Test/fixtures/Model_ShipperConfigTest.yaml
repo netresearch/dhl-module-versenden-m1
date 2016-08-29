@@ -20,12 +20,11 @@ config:
   default/carriers/dhlversenden/sandbox_mode:          "1"
   stores/store_two/carriers/dhlversenden/sandbox_mode: "0"
 
-  default/carriers/dhlversenden/account_user:                         "303"
-  default/carriers/dhlversenden/account_signature:                    "magento"
-  default/carriers/dhlversenden/account_ekp:                          "4711xx4711"
-  default/carriers/dhlversenden/account_gogreen_enabled:              "0"
-  default/carriers/dhlversenden/account_participation_dhlpaket:       "98"
-  default/carriers/dhlversenden/account_participation_returnshipment: "99"
+  default/carriers/dhlversenden/account_user:            "303"
+  default/carriers/dhlversenden/account_signature:       "magento"
+  default/carriers/dhlversenden/account_ekp:             "4711xx4711"
+  default/carriers/dhlversenden/account_gogreen_enabled: "0"
+  default/carriers/dhlversenden/account_participation:   "98"
 
   default/carriers/dhlversenden/contact_name1:          "Foo Name"
   stores/store_two/carriers/dhlversenden/contact_name1: "Bar Name"

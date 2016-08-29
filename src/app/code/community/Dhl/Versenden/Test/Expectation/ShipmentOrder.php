@@ -44,9 +44,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /** @var string */
     protected $shipperAccountGoGreen;
     /** @var string */
-    protected $shipperAccountParticipationDefault;
-    /** @var string */
-    protected $shipperAccountParticipationReturn;
+    protected $shipperAccountParticipation;
 
     /** @var string */
     protected $shipperBankDataAccountOwner;
@@ -163,7 +161,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     protected $packstationPostNumber;
 
     /** @var bool */
-    protected $globalSettingsPrintOnlyIfCodable;
+    protected $globalSettingsPrintOnlyIfCodeable;
     /** @var string */
     protected $globalSettingsLabelType;
 
@@ -205,8 +203,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $shipperAccountSignature
      * @param string $shipperAccountEkp
      * @param string $shipperAccountGoGreen
-     * @param string $shipperAccountParticipationDefault
-     * @param string $shipperAccountParticipationReturn
+     * @param string $shipperAccountParticipation
      * @param string $shipperBankDataAccountOwner
      * @param string $shipperBankDataBankName
      * @param string $shipperBankDataIban
@@ -263,7 +260,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $packstationCity
      * @param string $packstationPackstationNumber
      * @param string $packstationPostNumber
-     * @param bool $globalSettingsPrintOnlyIfCodable
+     * @param bool $globalSettingsPrintOnlyIfCodeable
      * @param string $globalSettingsLabelType
      * @param string $shipmentSettingsDate
      * @param string $shipmentSettingsReference
@@ -283,8 +280,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      */
     public function __construct(
         $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-        $shipperAccountGoGreen, $shipperAccountParticipationDefault,
-        $shipperAccountParticipationReturn,
+        $shipperAccountGoGreen, $shipperAccountParticipation,
 
         $shipperBankDataAccountOwner, $shipperBankDataBankName, $shipperBankDataIban,
         $shipperBankDataBic, $shipperBankDataNote1, $shipperBankDataNote2,
@@ -313,7 +309,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $receiverPhone, $receiverEmail, $receiverContactPerson, $packstationZip,
         $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
 
-        $globalSettingsPrintOnlyIfCodable, $globalSettingsLabelType,
+        $globalSettingsPrintOnlyIfCodeable, $globalSettingsLabelType,
 
         $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight, $shipmentSettingsProduct,
 
@@ -329,8 +325,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->shipperAccountSignature = $shipperAccountSignature;
         $this->shipperAccountEkp = $shipperAccountEkp;
         $this->shipperAccountGoGreen = $shipperAccountGoGreen;
-        $this->shipperAccountParticipationDefault = $shipperAccountParticipationDefault;
-        $this->shipperAccountParticipationReturn = $shipperAccountParticipationReturn;
+        $this->shipperAccountParticipation = $shipperAccountParticipation;
         $this->shipperBankDataAccountOwner = $shipperBankDataAccountOwner;
         $this->shipperBankDataBankName = $shipperBankDataBankName;
         $this->shipperBankDataIban = $shipperBankDataIban;
@@ -387,7 +382,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->packstationCity = $packstationCity;
         $this->packstationPackstationNumber = $packstationPackstationNumber;
         $this->packstationPostNumber = $packstationPostNumber;
-        $this->globalSettingsPrintOnlyIfCodable = $globalSettingsPrintOnlyIfCodable;
+        $this->globalSettingsPrintOnlyIfCodeable = $globalSettingsPrintOnlyIfCodeable;
         $this->globalSettingsLabelType = $globalSettingsLabelType;
         $this->shipmentSettingsDate = $shipmentSettingsDate;
         $this->shipmentSettingsReference = $shipmentSettingsReference;
@@ -441,17 +436,9 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /**
      * @return string
      */
-    public function getShipperAccountParticipationDefault()
+    public function getShipperAccountParticipation()
     {
-        return $this->shipperAccountParticipationDefault;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShipperAccountParticipationReturn()
-    {
-        return $this->shipperAccountParticipationReturn;
+        return $this->shipperAccountParticipation;
     }
 
     /**
@@ -905,9 +892,9 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /**
      * @return boolean
      */
-    public function isGlobalSettingsPrintOnlyIfCodable()
+    public function isGlobalSettingsPrintOnlyIfCodeable()
     {
-        return $this->globalSettingsPrintOnlyIfCodable;
+        return $this->globalSettingsPrintOnlyIfCodeable;
     }
 
     /**

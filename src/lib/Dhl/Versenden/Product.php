@@ -45,6 +45,16 @@ class Product
     const CODE_PAKET_CONNECT        = 'V87PARCEL';
     const CODE_PAKET_INTERNATIONAL  = 'V82PARCEL';
 
+    const PROCEDURE_PAKET_NATIONAL      = '01';
+    const PROCEDURE_WELTPAKET           = '53';
+    const PROCEDURE_EUROPAKET           = '54';
+    const PROCEDURE_KURIER_TAGGLEICH    = '01';
+    const PROCEDURE_KURIER_WUNSCHZEIT   = '01';
+    const PROCEDURE_PAKET_AUSTRIA       = '86';
+    const PROCEDURE_PAKET_CONNECT       = '87';
+    const PROCEDURE_PAKET_INTERNATIONAL = '82';
+    const PROCEDURE_RETURNSHIPMENT      = '07';
+
     /**
      * Obtain all product codes.
      *
@@ -62,6 +72,42 @@ class Product
             self::CODE_PAKET_CONNECT,
             self::CODE_PAKET_INTERNATIONAL,
         ];
+    }
+
+    /**
+     * Obtain procedure number by product code.
+     *
+     * @param $code
+     * @return string
+     */
+    public static function getProcedure($code)
+    {
+        $participations = array(
+            self::CODE_PAKET_NATIONAL => self::PROCEDURE_PAKET_NATIONAL,
+            self::CODE_WELTPAKET => self::PROCEDURE_WELTPAKET,
+            self::CODE_EUROPAKET => self::PROCEDURE_EUROPAKET,
+            self::CODE_KURIER_TAGGLEICH => self::PROCEDURE_KURIER_TAGGLEICH,
+            self::CODE_KURIER_WUNSCHZEIT => self::PROCEDURE_KURIER_WUNSCHZEIT,
+            self::CODE_PAKET_AUSTRIA => self::PROCEDURE_PAKET_AUSTRIA,
+            self::CODE_PAKET_CONNECT => self::PROCEDURE_PAKET_CONNECT,
+            self::CODE_PAKET_INTERNATIONAL => self::PROCEDURE_PAKET_INTERNATIONAL,
+        );
+
+        if (!isset($participations[$code])) {
+            return '';
+        }
+
+        return $participations[$code];
+    }
+
+    /**
+     * Obtain procedure number for return shipments.
+     *
+     * @return string
+     */
+    public static function getProcedureReturn()
+    {
+        return self::PROCEDURE_RETURNSHIPMENT;
     }
 
     /**

@@ -52,8 +52,6 @@ class CreateShipmentRequestType implements RequestType
         $package = current($packages);
         $shipmentItemType = new ShipmentItemType($package->getWeightInKG());
 
-        $serviceType = ServiceType::prepare($shipmentOrder->getServiceSelection());
-
         $shipmentDetailsType = new VersendenApi\ShipmentDetailsTypeType(
             $shipmentOrder->getProductCode(),
             $shipmentOrder->getAccountNumber(),
@@ -61,6 +59,12 @@ class CreateShipmentRequestType implements RequestType
             $shipmentItemType
         );
         $shipmentDetailsType->setCustomerReference($shipmentOrder->getReference());
+
+        if ($shipmentOrder->getServiceSelection()->isReturnShipment()) {
+            $shipmentDetailsType->setReturnShipmentAccountNumber($shipmentOrder->getReturnShipmentAccountNumber());
+        }
+
+        $serviceType = ServiceType::prepare($shipmentOrder->getServiceSelection());
         $shipmentDetailsType->setService($serviceType);
 
         return $shipmentDetailsType;
@@ -115,7 +119,6 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareReturnReceiver(RequestData\ShipmentOrder\Shipper\Contact $returnReceiver)
     {
-        //TODO(nr): check if return service was chosen
         $nameType          = NameType::prepare($returnReceiver);
         $addressType       = AddressType::prepare($returnReceiver);
         $communicationType = CommunicationType::prepare($returnReceiver);
@@ -170,15 +173,16 @@ class CreateShipmentRequestType implements RequestType
     protected static function prepareShipmentOrder(RequestData\ShipmentOrder $shipmentOrder)
     {
         $shipment           = static::prepareShipment($shipmentOrder);
-        //TODO(nr): override setting on shipment level
-        $printOnlyIfCodable = new VersendenApi\Serviceconfiguration($shipmentOrder->isPrintOnlyIfCodable());
 
         $requestType = new VersendenApi\ShipmentOrderType(
             $shipmentOrder->getSequenceNumber(),
             $shipment
         );
 
-        $requestType->setPrintOnlyIfCodeable($printOnlyIfCodable);
+        $printOnlyIfCodeable = $shipmentOrder->getServiceSelection()->isPrintOnlyIfCodeable();
+        $printOnlyIfCodeable = new VersendenApi\Serviceconfiguration($printOnlyIfCodeable);
+        $requestType->setPrintOnlyIfCodeable($printOnlyIfCodeable);
+
         $requestType->setLabelResponseType($shipmentOrder->getLabelResponseType());
 
         return $requestType;

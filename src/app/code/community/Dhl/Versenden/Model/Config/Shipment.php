@@ -37,9 +37,8 @@ use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\GlobalSettings;
  */
 class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
 {
-    const CONFIG_XML_FIELD_PRINTONLYIFCODABLE = 'shipment_printonlyifcodable';
+    const CONFIG_XML_FIELD_PRINTONLYIFCODEABLE = 'shipment_printonlyifcodeable';
     const CONFIG_XML_FIELD_UNITOFMEASURE = 'shipment_unitofmeasure';
-    const CONFIG_XML_FIELD_PRODUCTWEIGHT = 'shipment_defaultweight';
     const CONFIG_XML_FIELD_DHLMETHODS = 'shipment_dhlmethods';
     const CONFIG_XML_FIELD_CODMETHODS = 'shipment_dhlcodmethods';
 
@@ -49,9 +48,8 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      */
     public function getSettings($store = null)
     {
-        $printOnlyIfCodable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PRINTONLYIFCODABLE, $store);
+        $printOnlyIfCodeable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE, $store);
         $unitOfMeasure = $this->getStoreConfig(self::CONFIG_XML_FIELD_UNITOFMEASURE, $store);
-        $productWeight = $this->getStoreConfig(self::CONFIG_XML_FIELD_PRODUCTWEIGHT, $store);
 
         $shippingMethods = $this->getStoreConfig(self::CONFIG_XML_FIELD_DHLMETHODS, $store);
         if (empty($shippingMethods)) {
@@ -68,9 +66,8 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
         }
 
         return new GlobalSettings(
-            $printOnlyIfCodable,
+            $printOnlyIfCodeable,
             $unitOfMeasure,
-            $productWeight,
             $shippingMethods,
             $codPaymentMethods,
             ShipmentOrder::LABEL_TYPE_B64
@@ -79,7 +76,6 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
 
     /**
      * Check if the given shipping method should be processed with DHL Versenden.
-     * TODO(nr): check if shipping origin is DE or AT
      *
      * @param string $shippingMethod
      * @param mixed $store
@@ -87,6 +83,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      */
     public function canProcessMethod($shippingMethod, $store = null)
     {
+        //TODO(nr): check if shipping origin is DE or AT
         return in_array($shippingMethod, $this->getSettings($store)->getShippingMethods());
     }
 

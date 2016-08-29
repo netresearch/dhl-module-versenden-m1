@@ -46,9 +46,7 @@ final class Account extends RequestData
     /** @var bool */
     private $goGreen;
     /** @var string */
-    private $participationDefault;
-    /** @var string */
-    private $participationReturn;
+    private $participation;
 
     /**
      * Account constructor.
@@ -56,21 +54,18 @@ final class Account extends RequestData
      * @param string $signature
      * @param string $ekp
      * @param bool $goGreen
-     * @param string $participationDefault
-     * @param string $participationReturn
+     * @param string $participation
      */
-    public function __construct($user, $signature, $ekp, $goGreen, $participationDefault, $participationReturn)
+    public function __construct($user, $signature, $ekp, $goGreen, $participation)
     {
         $this->validateLength('EKP', $ekp, 10, 10);
-        $this->validateLength('Participation', $participationDefault, 2, 2);
-        $this->validateLength('Participation', $participationReturn, 2, 2);
+        $this->validateLength('Participation', $participation, 2, 2);
 
         $this->user = $user;
         $this->signature = $signature;
         $this->ekp = $ekp;
         $this->goGreen = $goGreen;
-        $this->participationDefault = $participationDefault;
-        $this->participationReturn = $participationReturn;
+        $this->participation = $participation;
     }
 
     /**
@@ -108,16 +103,8 @@ final class Account extends RequestData
     /**
      * @return string
      */
-    public function getParticipationDefault()
+    public function getParticipation()
     {
-        return $this->participationDefault;
-    }
-
-    /**
-     * @return string
-     */
-    public function getParticipationReturn()
-    {
-        return $this->participationReturn;
+        return $this->participation;
     }
 }

@@ -69,7 +69,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
     /**
      * @test
      */
-    public function getContainerTypesGermany()
+    public function getContainerTypesGermanShipper()
     {
         $paketNational = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
         $paketInternational = \Dhl\Versenden\Product::CODE_WELTPAKET;
@@ -88,6 +88,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertInternalType('array', $containerTypes);
         $this->assertArrayHasKey($paketNational, $containerTypes);
         $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketNational));
 
         // eu receiver
         $receiverCountry = 'AT';
@@ -112,11 +113,12 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertInternalType('array', $containerTypes);
         $this->assertArrayNotHasKey($paketNational, $containerTypes);
         $this->assertArrayHasKey($paketInternational, $containerTypes);
+        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketInternational));
     }
     /**
      * @test
      */
-    public function getContainerTypesAustria()
+    public function getContainerTypesAustrianShipper()
     {
         $paketNational = \Dhl\Versenden\Product::CODE_PAKET_AUSTRIA;
         $paketEu = \Dhl\Versenden\Product::CODE_PAKET_CONNECT;
@@ -137,6 +139,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayHasKey($paketNational, $containerTypes);
         $this->assertArrayNotHasKey($paketEu, $containerTypes);
         $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketNational));
 
         // eu receiver
         $receiverCountry = 'DE';
@@ -150,6 +153,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayNotHasKey($paketNational, $containerTypes);
         $this->assertArrayHasKey($paketEu, $containerTypes);
         $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketEu));
 
         // row receiver
         $receiverCountry = 'NZ';
@@ -163,12 +167,13 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayNotHasKey($paketNational, $containerTypes);
         $this->assertArrayNotHasKey($paketEu, $containerTypes);
         $this->assertArrayHasKey($paketInternational, $containerTypes);
+        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketInternational));
     }
 
     /**
      * @test
      */
-    public function getContainerTypesUnknownOrigin()
+    public function getContainerTypesInvalidShipper()
     {
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
 
@@ -201,6 +206,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $containerTypes = $carrier->getContainerTypes($params);
         $this->assertInternalType('array', $containerTypes);
         $this->assertCount(0, $containerTypes);
+        $this->assertEmpty(\Dhl\Versenden\Product::getProcedure('V77FOO'));
     }
 
     /**

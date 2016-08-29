@@ -38,11 +38,9 @@ use Dhl\Versenden\Webservice\RequestData;
 class GlobalSettings extends RequestData
 {
     /** @var bool */
-    private $printOnlyIfCodable;
+    private $printOnlyIfCodeable;
     /** @var string  */
     private $unitOfMeasure;
-    /** @var float */
-    private $productWeight;
     /** @var string[] */
     private $shippingMethods;
     /** @var string[] */
@@ -52,20 +50,18 @@ class GlobalSettings extends RequestData
 
     /**
      * GlobalSettings constructor.
-     * @param bool $printOnlyIfCodable
+     * @param bool $printOnlyIfCodeable
      * @param string $unitOfMeasure
-     * @param float $productWeight
      * @param \string[] $shippingMethods
      * @param \string[] $codPaymentMethods
      * @param string $labelType
      */
     public function __construct(
-        $printOnlyIfCodable, $unitOfMeasure, $productWeight,
+        $printOnlyIfCodeable, $unitOfMeasure,
         array $shippingMethods, array $codPaymentMethods, $labelType
     ) {
-        $this->printOnlyIfCodable = $printOnlyIfCodable;
+        $this->printOnlyIfCodeable = $printOnlyIfCodeable;
         $this->unitOfMeasure = $unitOfMeasure;
-        $this->productWeight = $productWeight;
         $this->shippingMethods = $shippingMethods;
         $this->codPaymentMethods = $codPaymentMethods;
         $this->labelType = $labelType;
@@ -74,9 +70,9 @@ class GlobalSettings extends RequestData
     /**
      * @return boolean
      */
-    public function isPrintOnlyIfCodable()
+    public function isPrintOnlyIfCodeable()
     {
-        return $this->printOnlyIfCodable;
+        return $this->printOnlyIfCodeable;
     }
 
     /**
@@ -85,14 +81,6 @@ class GlobalSettings extends RequestData
     public function getUnitOfMeasure()
     {
         return $this->unitOfMeasure;
-    }
-
-    /**
-     * @return float
-     */
-    public function getProductWeight()
-    {
-        return $this->productWeight;
     }
 
     /**
