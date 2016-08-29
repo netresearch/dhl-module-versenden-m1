@@ -77,7 +77,8 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
             false,
             false,
             false,
-            false
+            false,
+            true
         );
 
 

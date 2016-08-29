@@ -41,8 +41,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $shipperAccountSignature = 'ABCDEF1234567890=';
         $shipperAccountEkp = '1234567890';
         $shipperAccountGoGreen = true;
-        $shipperAccountParticipationDefault = '77';
-        $shipperAccountParticipationReturn = '99';
+        $shipperAccountParticipation = '77';
 
         $shipperBankDataAccountOwner = 'Shipper BankData Account Owner';
         $shipperBankDataBankName = 'Shipper BankData Bank Name';
@@ -104,13 +103,13 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $packstationPackstationNumber = 'Packstation 808';
         $packstationPostNumber = '654321';
 
-        $globalSettingsPrintOnlyIfCodable = true;
+        $globalSettingsPrintOnlyIfCodeable = true;
         $globalSettingsLabelType = 'R2D2';
 
         $shipmentSettingsDate = '2012-12-12';
         $shipmentSettingsReference = 'Foo Ref';
         $shipmentSettingsWeight = 2.4;
-        $shipmentSettingsProduct = 'DHL00PAK';
+        $shipmentSettingsProduct = \Dhl\Versenden\Product::CODE_WELTPAKET;
 
         $serviceSettingsDayOfDelivery = '2012-12-24';
         $serviceSettingsDeliveryTimeFrame = '19002100';
@@ -127,8 +126,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
 
         $expectation = new Dhl_Versenden_Test_Expectation_ShipmentOrder(
             $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-            $shipperAccountGoGreen, $shipperAccountParticipationDefault,
-            $shipperAccountParticipationReturn,
+            $shipperAccountGoGreen, $shipperAccountParticipation,
 
             $shipperBankDataAccountOwner, $shipperBankDataBankName, $shipperBankDataIban,
             $shipperBankDataBic, $shipperBankDataNote1, $shipperBankDataNote2,
@@ -155,7 +153,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $receiverState, $receiverPhone, $receiverEmail, $receiverContactPerson,
             $packstationZip, $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
 
-            $globalSettingsPrintOnlyIfCodable, $globalSettingsLabelType,
+            $globalSettingsPrintOnlyIfCodeable, $globalSettingsLabelType,
 
             $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight,
             $shipmentSettingsProduct, $serviceSettingsDayOfDelivery,
@@ -169,8 +167,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
 
         $shipperAccount = new RequestData\ShipmentOrder\Shipper\Account(
             $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-            $shipperAccountGoGreen, $shipperAccountParticipationDefault,
-            $shipperAccountParticipationReturn
+            $shipperAccountGoGreen, $shipperAccountParticipation
         );
         $shipperBankData = new RequestData\ShipmentOrder\Shipper\BankData(
             $shipperBankDataAccountOwner, $shipperBankDataBankName,
@@ -236,7 +233,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $packageCollection,
             $shipmentSettingsProduct,
             $shipmentSettingsDate,
-            $globalSettingsPrintOnlyIfCodable,
+            $globalSettingsPrintOnlyIfCodeable,
             $labelResponseType
         );
 

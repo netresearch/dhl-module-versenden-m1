@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\RequestData;
+use Dhl\Versenden\Product;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -33,7 +34,7 @@ use Dhl\Versenden\Webservice\RequestData;
  * - general
  *   -- billing number (EKP + Procedure + Participation)
  *   -- return billing number (EKP + Procedure + Participation)
- *   -- printOnlyIfCodable flag
+ *   -- printOnlyIfCodeable flag
  *   -- labelResponseType
  *   -- product code
  * - shipper
@@ -80,8 +81,10 @@ class ShipmentOrder extends RequestData
     private $shipmentDate;
     /** @var string */
     private $accountNumber;
+    /** @var string */
+    private $returnShipmentAccountNumber;
     /** @var bool */
-    private $printOnlyIfCodable;
+    private $printOnlyIfCodeable;
     /** @var string */
     private $labelResponseType;
 
@@ -96,7 +99,7 @@ class ShipmentOrder extends RequestData
      * @param ShipmentOrder\PackageCollection $packages
      * @param string                          $productCode
      * @param string                          $shipmentDate
-     * @param bool                            $printOnlyIfCodable
+     * @param bool                            $printOnlyIfCodeable
      * @param string                          $labelType
      */
     public function __construct(
@@ -108,7 +111,7 @@ class ShipmentOrder extends RequestData
         ShipmentOrder\PackageCollection $packages,
         $productCode,
         $shipmentDate,
-        $printOnlyIfCodable,
+        $printOnlyIfCodeable,
         $labelType = self::LABEL_TYPE_B64
     ) {
         $this->sequenceNumber = $sequenceNumber;
@@ -123,13 +126,19 @@ class ShipmentOrder extends RequestData
         $this->accountNumber = sprintf(
             '%s%s%s',
             $shipper->getAccount()->getEkp(),
-            preg_filter('/[^\d]/', '', $productCode),
-            $shipper->getAccount()->getParticipationDefault()
+            Product::getProcedure($productCode),
+            $shipper->getAccount()->getParticipation()
+        );
+        $this->returnShipmentAccountNumber = sprintf(
+            '%s%s%s',
+            $shipper->getAccount()->getEkp(),
+            Product::getProcedureReturn(),
+            $shipper->getAccount()->getParticipation()
         );
 
         $this->productCode        = $productCode;
         $this->shipmentDate       = $shipmentDate;
-        $this->printOnlyIfCodable = $printOnlyIfCodable;
+        $this->printOnlyIfCodeable = $printOnlyIfCodeable;
         $this->labelResponseType  = $labelType;
     }
 
@@ -192,6 +201,14 @@ class ShipmentOrder extends RequestData
     /**
      * @return string
      */
+    public function getReturnShipmentAccountNumber()
+    {
+        return $this->returnShipmentAccountNumber;
+    }
+
+    /**
+     * @return string
+     */
     public function getProductCode()
     {
         return $this->productCode;
@@ -208,9 +225,9 @@ class ShipmentOrder extends RequestData
     /**
      * @return boolean
      */
-    public function isPrintOnlyIfCodable()
+    public function isPrintOnlyIfCodeable()
     {
-        return $this->printOnlyIfCodable;
+        return $this->printOnlyIfCodeable;
     }
 
     /**

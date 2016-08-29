@@ -142,7 +142,6 @@ class ServiceType implements RequestType
         }
 
         if ($personally = false) {
-            //TODO(nr): handle Personally?
             $pConfig = new Serviceconfiguration($personally);
             $service->setPersonally($pConfig);
         }
@@ -169,7 +168,6 @@ class ServiceType implements RequestType
 
         if ($requestData->getCod()) {
             $codAmount = $requestData->getCod();
-            //TODO(nr): to add or not to add fee?
             $codConfig = new ServiceconfigurationCashOnDelivery(true, true, $codAmount);
             $service->setCashOnDelivery($codConfig);
         }

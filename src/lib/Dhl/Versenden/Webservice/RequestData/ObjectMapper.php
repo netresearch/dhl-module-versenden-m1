@@ -59,6 +59,7 @@ class ObjectMapper
         $bulkyGoods = isset($object->bulkyGoods) ? $object->bulkyGoods : false;
         $cod = isset($object->cod) ? $object->cod : false;
         $goGreen = isset($object->goGreen) ? $object->goGreen : false;
+        $printOnlyIfCodeable = isset($object->printOnlyIfCodeable) ? $object->printOnlyIfCodeable : false;
 
         return ServiceSelection::fromProperties(
             $dayOfDelivery,
@@ -71,7 +72,8 @@ class ObjectMapper
             $insurance,
             $bulkyGoods,
             $cod,
-            $goGreen
+            $goGreen,
+            $printOnlyIfCodeable
         );
     }
 

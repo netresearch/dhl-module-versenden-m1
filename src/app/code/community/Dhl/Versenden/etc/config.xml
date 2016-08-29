@@ -175,12 +175,10 @@
                 <sandbox_mode>1</sandbox_mode>
                 <logging_enabled>1</logging_enabled>
                 <log_level>3</log_level>
-                <account_participation_dhlpaket>01</account_participation_dhlpaket>
-                <account_participation_returnshipment>07</account_participation_returnshipment>
+                <account_participation>01</account_participation>
                 <account_gogreen_enabled>0</account_gogreen_enabled>
-                <shipment_printonlyifcodable>1</shipment_printonlyifcodable>
-                <shipment_unitofmeasure>G</shipment_unitofmeasure>
-                <shipment_defaultweight>200</shipment_defaultweight>
+                <shipment_printonlyifcodeable>1</shipment_printonlyifcodeable>
+                <shipment_unitofmeasure>KG</shipment_unitofmeasure>
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
                 <service_dayofdelivery_enabled>0</service_dayofdelivery_enabled>
                 <service_deliverytimeframe_enabled>0</service_deliverytimeframe_enabled>
@@ -203,8 +201,7 @@
                 <sandbox_account_user>2222222222_01</sandbox_account_user>
                 <sandbox_account_signature>pass</sandbox_account_signature>
                 <sandbox_account_ekp>2222222222</sandbox_account_ekp>
-                <sandbox_account_participation_dhlpaket>01</sandbox_account_participation_dhlpaket>
-                <sandbox_account_participation_returnshipment>01</sandbox_account_participation_returnshipment>
+                <sandbox_account_participation>01</sandbox_account_participation>
                 <sandbox_account_gogreen_enabled>1</sandbox_account_gogreen_enabled>
             </dhlversenden>
         </carriers>

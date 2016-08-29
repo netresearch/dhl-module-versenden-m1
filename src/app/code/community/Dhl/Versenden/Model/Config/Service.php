@@ -184,6 +184,22 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * @param mixed $store
+     * @return Service\PrintOnlyIfCodeable
+     */
+    protected function initPrintOnlyIfCodeable($store = null)
+    {
+        $name = Mage::helper('dhl_versenden/data')->__("Address Validation");
+        $isAvailable = true;
+        $isSelected  = $this->getStoreConfigFlag(
+            Dhl_Versenden_Model_Config_Shipment::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE,
+            $store
+        );
+
+        return new Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable($name, $isAvailable, $isSelected);
+    }
+
+    /**
      * Load all DHL additional service models.
      *
      * @param mixed $store
@@ -219,6 +235,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
         $bulkyGoods = $this->initBulkyGoods($store);
         $collection->addItem($bulkyGoods);
+
+        $printOnlyIfCodeable = $this->initPrintOnlyIfCodeable($store);
+        $collection->addItem($printOnlyIfCodeable);
 
         return $collection;
     }

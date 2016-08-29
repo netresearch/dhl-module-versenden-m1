@@ -59,6 +59,8 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     private $cod = false;
     /** @var bool false or true */
     private $goGreen = false;
+    /** @var bool false or true */
+    private $printOnlyIfCodeable = true;
 
     /**
      * Constructs ServiceSettings object from array with values that differ from initial settings
@@ -99,6 +101,7 @@ class ServiceSelection extends RequestData implements \JsonSerializable
      * @param bool        $bulkyGoods
      * @param bool|float  $cod
      * @param bool        $goGreen
+     * @param bool        $printOnlyIfCodeable
      *
      * @return ServiceSelection
      */
@@ -106,7 +109,7 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     public static function fromProperties(
         $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
         $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance,
-        $bulkyGoods, $cod, $goGreen
+        $bulkyGoods, $cod, $goGreen, $printOnlyIfCodeable
     ) {
         $instance = new self();
         $instance->dayOfDelivery = $dayOfDelivery;
@@ -120,6 +123,7 @@ class ServiceSelection extends RequestData implements \JsonSerializable
         $instance->bulkyGoods = $bulkyGoods;
         $instance->cod = $cod;
         $instance->goGreen = $goGreen;
+        $instance->printOnlyIfCodeable = $printOnlyIfCodeable;
 
         return $instance;
     }
@@ -210,6 +214,14 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     public function isGoGreen()
     {
         return $this->goGreen;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPrintOnlyIfCodeable()
+    {
+        return $this->printOnlyIfCodeable;
     }
 
     /**
