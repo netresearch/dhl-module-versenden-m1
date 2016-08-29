@@ -65,9 +65,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         $missingArguments = array_diff_key($argDef, $args);
         if (count($missingArguments)) {
             $message = sprintf('required arguments missing: %s', implode(', ', array_keys($missingArguments)));
-            // @codingStandardsIgnoreStart
             throw new Mage_Core_Exception($message);
-            // @codingStandardsIgnoreEnd
         }
 
         $invalidArgumentFilter = function ($key) use ($args, $argDef) {
@@ -77,10 +75,16 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         if (count($invalidArguments)) {
             $message = sprintf('invalid arguments: %s', implode(', ', $invalidArguments));
-            // @codingStandardsIgnoreStart
             throw new Mage_Core_Exception($message);
-            // @codingStandardsIgnoreEnd
         }
+
+        $this->packageBuilder = $args['package_builder'];
+        $this->serviceBuilder = $args['service_builder'];
+        $this->shipperBuilder = $args['shipper_builder'];
+        $this->settingsBuilder = $args['settings_builder'];
+        $this->receiverBuilder = $args['receiver_builder'];
+
+        return $this;
     }
 
     /**
