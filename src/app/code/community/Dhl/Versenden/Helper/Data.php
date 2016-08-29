@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\ShippingInfo;
+
 /**
  * Dhl_Versenden_Helper_Data
  *
@@ -43,44 +44,8 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     public function getModuleVersion()
     {
         $moduleName = $this->_getModuleName();
+
         return (string)Mage::getConfig()->getModuleConfig($moduleName)->version;
-    }
-
-    /**
-     * split street into street name, number and care of
-     *
-     * @param string $street
-     *
-     * @return array
-     */
-    public function splitStreet($street)
-    {
-        /*
-         * first pattern  | street_name             | required | ([^0-9]+)         | all characters != 0-9
-         * second pattern | additional street value | optional | ([0-9]+[ ])*      | numbers + white spaces
-         * ignore         |                         |          | [ \t]*            | white spaces and tabs
-         * second pattern | street_number           | optional | ([0-9]+[-\w^.]+)? | numbers + any word character
-         * ignore         |                         |          | [, \t]*           | comma, white spaces and tabs
-         * third pattern  | supplement              | optional | ([^0-9]+.*)?      | all characters != 0-9 + any character except newline
-         */
-        if (preg_match("/^([^0-9]+)([0-9]+[ ])*[ \t]*([0-9]*[-\w^.]*)?[, \t]*([^0-9]+.*)?\$/", $street, $matches)) {
-
-            //check if street has additional value and add it to streetname
-            if (preg_match("/^([0-9]+)?\$/", trim($matches[2]))) {
-                $matches[1] = $matches[1] . $matches[2];
-
-            }
-            return array(
-                'street_name'   => trim($matches[1]),
-                'street_number' => isset($matches[3]) ? $matches[3] : '',
-                'supplement'    => isset($matches[4]) ? trim($matches[4]) : ''
-            );
-        }
-        return array(
-            'street_name'   => $street,
-            'street_number' => '',
-            'supplement'    => ''
-        );
     }
 
     /**
@@ -88,6 +53,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param string[] $services
      * @param string[] $settings
+     *
      * @return ShippingInfo\ServiceSettings
      */
     public function getServiceSettings(array $services, array $settings)
@@ -96,6 +62,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         foreach ($services as $service) {
             $serviceSettings->{$service} = isset($settings[$service]) ? $settings[$service] : true;
         }
+
         return $serviceSettings;
     }
 
@@ -103,35 +70,37 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      * Prepare receiver from OPC shipping address.
      *
      * @param Mage_Sales_Model_Quote_Address $address
+     *
      * @return ShippingInfo\Receiver
      */
     public function getReceiver(Mage_Sales_Model_Quote_Address $address)
     {
-        $receiver = new ShippingInfo\Receiver();
+        $receiver        = new ShippingInfo\Receiver();
         $receiver->name1 = $address->getName();
         $receiver->name2 = $address->getCompany();
 
-        $street = $this->splitStreet($address->getStreetFull());
+        $street                    = Mage::helper('dhl_versenden/address')->splitStreet($address->getStreetFull());
         $receiver->streetName      = $street['street_name'];
         $receiver->streetNumber    = $street['street_number'];
         $receiver->addressAddition = $street['supplement'];
 
-        $receiver->zip = $address->getPostcode();
+        $receiver->zip  = $address->getPostcode();
         $receiver->city = $address->getCity();
 
-        $country = Mage::getModel('directory/country')->loadByCode($address->getCountry());
-        $receiver->country = $country->getName();
+        $country                  = Mage::getModel('directory/country')->loadByCode($address->getCountry());
+        $receiver->country        = $country->getName();
         $receiver->countryISOCode = $country->getIso2Code();
-        $receiver->state = $address->getRegion();
+        $receiver->state          = $address->getRegion();
 
         $receiver->phone = $address->getTelephone();
         $receiver->email = $address->getEmail();
 
         $facility = new Varien_Object();
         Mage::dispatchEvent('dhl_versenden_set_postal_facility', array(
-            'quote_address' => $address,
-            'postal_facility' => $facility,
-        ));
+                'quote_address'   => $address,
+                'postal_facility' => $facility,
+            )
+        );
 
         if ($facility->hasData()) {
             // someone added facility info, shift it to receiver
@@ -151,32 +120,36 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Obtain an instance of PostalFacility with properties loaded from given arguments.
      *
-     * @param Varien_Object $facility
+     * @param Varien_Object         $facility
      * @param ShippingInfo\Receiver $receiver
+     *
      * @return ShippingInfo\PostalFacility
      */
     public function preparePostalFacility(Varien_Object $facility, ShippingInfo\Receiver $receiver)
     {
-        $stationData = new stdClass();
-        $stationData->zip = $receiver->zip;
-        $stationData->city = $receiver->city;
-        $stationData->country = $receiver->country;
+        $stationData                 = new stdClass();
+        $stationData->zip            = $receiver->zip;
+        $stationData->city           = $receiver->city;
+        $stationData->country        = $receiver->country;
         $stationData->countryISOCode = $receiver->countryISOCode;
-        $stationData->state = $receiver->state;
+        $stationData->state          = $receiver->state;
 
         switch ($facility->getData('shop_type')) {
             case ShippingInfo\PostalFacility::TYPE_PACKSTATION:
                 $stationData->packstationNumber = $facility->getData('shop_number');
-                $stationData->postNumber = $facility->getData('post_number');
+                $stationData->postNumber        = $facility->getData('post_number');
+
                 return new ShippingInfo\Packstation($stationData);
             case ShippingInfo\PostalFacility::TYPE_POSTFILIALE:
                 $stationData->postfilialNumber = $facility->getData('shop_number');
-                $stationData->postNumber = $facility->getData('post_number');
+                $stationData->postNumber       = $facility->getData('post_number');
+
                 return new ShippingInfo\Postfiliale($stationData);
             case ShippingInfo\PostalFacility::TYPE_PAKETSHOP:
                 $stationData->parcelShopNumber = $facility->getData('shop_number');
-                $stationData->streetName = $receiver->streetName;
-                $stationData->streetNumber = $receiver->streetNumber;
+                $stationData->streetName       = $receiver->streetName;
+                $stationData->streetNumber     = $receiver->streetNumber;
+
                 return new ShippingInfo\ParcelShop($stationData);
         }
 
