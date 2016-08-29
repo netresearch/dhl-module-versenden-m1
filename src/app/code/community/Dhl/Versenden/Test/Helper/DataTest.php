@@ -45,22 +45,6 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
     }
 
     /**
-     * @param string $street
-     *
-     * @test
-     * @loadExpectation
-     * @dataProvider dataProvider
-     */
-    public function splitStreet($street)
-    {
-        $helper   = Mage::helper('dhl_versenden/data');
-        $split    = $helper->splitStreet($street);
-        $expected = $this->expected('auto')->getData();
-
-        $this->assertEquals($expected, $split);
-    }
-
-    /**
      * @test
      * @loadFixture getReceiver
      */
