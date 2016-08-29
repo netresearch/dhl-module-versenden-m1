@@ -23,7 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Shipment\Service;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 /**
  * Dhl_Versenden_Test_Model_ObserverTest
  *
@@ -35,6 +36,15 @@
  */
 class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 {
+    protected function getLocationTypes()
+    {
+        return array(
+            Receiver\PostalFacility::TYPE_PACKSTATION => 'Packstation',
+            Receiver\PostalFacility::TYPE_POSTFILIALE => 'Postfiliale',
+            Receiver\PostalFacility::TYPE_PAKETSHOP =>   'Paketshop',
+        );
+    }
+
     /**
      * @test
      */
@@ -81,11 +91,25 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture ../../ConfigTest/fixtures/ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function appendServices()
     {
         $this->setCurrentStore('store_two');
+        $serviceBlockHtml = 'checkout-dhlversenden-services';
+
+        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+        $blockMock = $this->getBlockMock(
+            $blockType,
+            array('renderView'),
+            false,
+            array(array('template' => 'dhl_versenden/checkout/shipping_services.phtml'))
+        );
+        $blockMock
+            ->expects($this->any())
+            ->method('renderView')
+            ->willReturn($serviceBlockHtml);
+        $this->replaceByMock('block', $blockType, $blockMock);
 
         $observer = new Varien_Event_Observer();
         $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
@@ -100,14 +124,14 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $dhlObserver->appendServices($observer);
 
         $this->assertStringStartsWith($blockHtml, $transport->getHtml());
-        $this->assertContains('checkout-dhlversenden-services', $transport->getHtml());
+        $this->assertStringEndsWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**
      * Assert early return.
      *
      * @test
-     * @loadFixture ../../ConfigTest/fixtures/ConfigTest
+     * @loadFixture Model_ConfigTest
      */
     public function appendNoServices()
     {
@@ -129,7 +153,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @loadFixture Quotes
+     * @loadFixture Model_ObserverTest
      */
     public function saveShippingSettings()
     {
@@ -137,10 +161,12 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
 
         // SERVICE DEFINITION
         $preferredLocationValue = 'Garage Location';
-        $preferredLocation = new \Dhl\Versenden\Service\PreferredLocation($preferredLocationValue);
+        $preferredLocation = new Service\PreferredLocation('', true, false, '');
+        $preferredLocation->setValue($preferredLocationValue);
 
         $preferredNeighbourValue = 'Foo Neighbour';
-        $preferredNeighbour = new \Dhl\Versenden\Service\PreferredNeighbour($preferredNeighbourValue);
+        $preferredNeighbour = new Service\PreferredNeighbour('', true, false, '');
+        $preferredNeighbour->setValue($preferredNeighbourValue);
 
         // two settings, only one actually enabled
         $requestMock = $this->getMockBuilder(Mage_Core_Controller_Request_Http::class)
@@ -156,8 +182,8 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
                         $preferredLocation->getCode() => $preferredLocation->getCode()
                     )),
                     array('service_setting', array(), array(
-                        $preferredLocation->getCode() => $preferredLocation->value,
-                        $preferredNeighbour->getCode() => $preferredNeighbour->value,
+                        $preferredLocation->getCode() => $preferredLocation->getValue(),
+                        $preferredNeighbour->getCode() => $preferredNeighbour->getValue(),
                     ))
                 )
             );
@@ -191,7 +217,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      * Assert early return (wrong shipping method).
      *
      * @test
-     * @loadFixture Quotes
+     * @loadFixture Model_ObserverTest
      */
     public function saveNoShippingSettings()
     {
@@ -224,12 +250,12 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $order->setShippingMethod("{$fooCarrier}_{$method}");
         $observer->setOrder($order);
 
-        $configMock = $this->getModelMock('dhl_versenden/config', array('canProcessMethod'));
+        $configMock = $this->getModelMock('dhl_versenden/config_shipment', array('canProcessMethod'));
         $configMock
             ->expects($this->any())
             ->method('canProcessMethod')
             ->willReturnOnConsecutiveCalls(false, true);
-        $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
+        $this->replaceByMock('model', 'dhl_versenden/config_shipment', $configMock);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
 
@@ -245,10 +271,16 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePackstation()
     {
-        $stationType = 'Packstation';
-        $stationId   = '987';
+        $stationTypes = $this->getLocationTypes();
+        $stationType  = Receiver\PostalFacility::TYPE_PACKSTATION;
 
-        $street = "{$stationType} {$stationId}"; // valid shop, recognized type
+        $stationId = '987';
+        // valid shop, recognized type:
+        $street = sprintf(
+            '%s %s',
+            $stationTypes[$stationType],
+            $stationId
+        );
         $company = '1234567890'; // valid post number
 
         $postalFacility = new Varien_Object();
@@ -276,10 +308,16 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePostfiliale()
     {
-        $stationType = 'Postfiliale';
-        $stationId   = '123';
+        $stationTypes = $this->getLocationTypes();
+        $stationType = Receiver\PostalFacility::TYPE_POSTFILIALE;
 
-        $street = "{$stationType} {$stationId}"; // valid shop, recognized type
+        $stationId   = '123';
+        // valid shop, recognized type
+        $street = sprintf(
+            '%s %s',
+            $stationTypes[$stationType],
+            $stationId
+        );
         $company = '1234567890'; // valid post number
 
         $postalFacility = new Varien_Object();
@@ -307,7 +345,16 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
      */
     public function preparePostalFacilityWrongType()
     {
-        $street = 'ParcelShop 123'; // valid shop, but unrecognized type
+        $stationTypes = $this->getLocationTypes();
+        $stationType = Receiver\PostalFacility::TYPE_PAKETSHOP;
+
+        $stationId   = '123';
+        // valid shop, but unrecognized type
+        $street = sprintf(
+            '%s %s',
+            $stationTypes[$stationType],
+            $stationId
+        );
         $company = '1234567890'; // valid post number
 
         $postalFacility = new Varien_Object();
@@ -371,5 +418,190 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $dhlObserver->preparePostalFacility($observer);
 
         $this->assertSame($thirdPartyData, $observer->getPostalFacility()->getData());
+    }
+
+    /**
+     * @test
+     */
+    public function disableCodPaymentNotAvailable()
+    {
+        $checkResult = new stdClass();
+        $checkResult->isAvailable = false;
+
+        $observer = new Varien_Event_Observer();
+        $observer->setData('result', $checkResult);
+
+        $sessionMock = $this->getModelMock(
+            'checkout/session',
+            array('getQuote'),
+            false,
+            array(),
+            '',
+            false
+        );
+        $sessionMock
+            ->expects($this->never())
+            ->method('getQuote');
+        $this->replaceByMock('singleton', 'checkout/session', $sessionMock);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->disableCodPayment($observer);
+    }
+
+    /**
+     * @test
+     */
+    public function disableCodPaymentNoQuote()
+    {
+        $checkResult = new stdClass();
+        $checkResult->isAvailable = true;
+
+        $observer = new Varien_Event_Observer();
+        $observer->setData('result', $checkResult);
+
+        $sessionMock = $this->getModelMock(
+            'checkout/session',
+            array('getQuote'),
+            false,
+            array(),
+            '',
+            false
+        );
+        $sessionMock
+            ->expects($this->once())
+            ->method('getQuote')
+            ->willReturn(null);
+        $this->replaceByMock('singleton', 'checkout/session', $sessionMock);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->disableCodPayment($observer);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
+    public function disableCodPaymentWrongShippingMethod()
+    {
+        $methodInstance = new Mage_Payment_Model_Method_Cashondelivery();
+
+        $shippingMethod  = 'foo_bar';
+        $shippingAddress = new Mage_Sales_Model_Quote_Address();
+        $shippingAddress->setShippingMethod($shippingMethod);
+        $quote = new Mage_Sales_Model_Quote();
+        $quote->setStoreId(1);
+        $quote->setShippingAddress($shippingAddress);
+
+        $checkResult = new stdClass();
+        $checkResult->isAvailable = true;
+
+        $observer = new Varien_Event_Observer();
+        $observer->setData('result', $checkResult);
+        $observer->setData('quote', $quote);
+        $observer->setData('method_instance', $methodInstance);
+
+        $configMock = $this->getModelMock('shipping/config', array('getCarrierInstance'));
+        $configMock
+            ->expects($this->never())
+            ->method('getCarrierInstance');
+        $this->replaceByMock('model', 'shipping/config', $configMock);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->disableCodPayment($observer);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
+    public function disableCodPaymentWrongPaymentMethod()
+    {
+        $methodInstance = new Mage_Payment_Model_Method_Checkmo();
+
+        $shippingMethod  = 'flatrate_flatrate';
+        $shippingAddress = new Mage_Sales_Model_Quote_Address();
+        $shippingAddress->setShippingMethod($shippingMethod);
+        $quote = new Mage_Sales_Model_Quote();
+        $quote->setStoreId(1);
+        $quote->setShippingAddress($shippingAddress);
+
+        $checkResult = new stdClass();
+        $checkResult->isAvailable = true;
+
+        $observer = new Varien_Event_Observer();
+        $observer->setData('result', $checkResult);
+        $observer->setData('quote', $quote);
+        $observer->setData('method_instance', $methodInstance);
+
+        $configMock = $this->getModelMock('shipping/config', array('getCarrierInstance'));
+        $configMock
+            ->expects($this->never())
+            ->method('getCarrierInstance');
+        $this->replaceByMock('model', 'shipping/config', $configMock);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->disableCodPayment($observer);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
+    public function disableCodPaymentCodAllowed()
+    {
+        $isAvailable = 'foo';
+        $methodInstance = new Mage_Payment_Model_Method_Cashondelivery();
+
+        $shippingMethod  = 'flatrate_flatrate';
+        $shippingAddress = new Mage_Sales_Model_Quote_Address();
+        $shippingAddress->setShippingMethod($shippingMethod);
+        $shippingAddress->setCountryId('PL');
+        $quote = new Mage_Sales_Model_Quote();
+        $quote->setStoreId(1);
+        $quote->setShippingAddress($shippingAddress);
+
+        $checkResult = new stdClass();
+        $checkResult->isAvailable = $isAvailable;
+
+        $observer = new Varien_Event_Observer();
+        $observer->setData('result', $checkResult);
+        $observer->setData('quote', $quote);
+        $observer->setData('method_instance', $methodInstance);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->disableCodPayment($observer);
+
+        $this->assertEquals($isAvailable, $observer->getData('result')->isAvailable);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
+    public function disableCodPaymentCodNotAllowed()
+    {
+        $isAvailable = 'foo';
+        $methodInstance = new Mage_Payment_Model_Method_Cashondelivery();
+
+        $shippingMethod  = 'flatrate_flatrate';
+        $shippingAddress = new Mage_Sales_Model_Quote_Address();
+        $shippingAddress->setShippingMethod($shippingMethod);
+        $shippingAddress->setCountryId('NZ');
+        $quote = new Mage_Sales_Model_Quote();
+        $quote->setStoreId(1);
+        $quote->setShippingAddress($shippingAddress);
+
+        $checkResult = new stdClass();
+        $checkResult->isAvailable = $isAvailable;
+
+        $observer = new Varien_Event_Observer();
+        $observer->setData('result', $checkResult);
+        $observer->setData('quote', $quote);
+        $observer->setData('method_instance', $methodInstance);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->disableCodPayment($observer);
+
+        $this->assertFalse($observer->getData('result')->isAvailable);
     }
 }

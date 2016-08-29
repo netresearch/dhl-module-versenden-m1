@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\ShippingInfo;
+
 /**
  * Dhl_Versenden_Helper_Data
  *
@@ -84,102 +84,131 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Prepare service settings from OPC form data.
+     * Convert a timestamp to a CE(S)T time string.
      *
-     * @param string[] $services
-     * @param string[] $settings
-     * @return ShippingInfo\ServiceSettings
+     * @param string $timestamp The timestamp to convert
+     * @param string $format The output format
+     * @return string
      */
-    public function getServiceSettings(array $services, array $settings)
+    public function utcToCet($timestamp = null, $format = 'Y-m-d H:i:s')
     {
-        $serviceSettings = new ShippingInfo\ServiceSettings();
-        foreach ($services as $service) {
-            $serviceSettings->{$service} = isset($settings[$service]) ? $settings[$service] : true;
+        if (null === $timestamp) {
+            $timestamp = time();
         }
-        return $serviceSettings;
+
+        $date = new DateTime("@$timestamp");
+        $timezoneCet = new DateTimeZone('Europe/Berlin');
+
+        $intervalSpec = sprintf("PT%dS", $timezoneCet->getOffset($date));
+        $date->add(new DateInterval($intervalSpec));
+
+        return $date->format($format);
     }
 
     /**
-     * Prepare receiver from OPC shipping address.
+     * Get template name for packaging popup.
      *
-     * @param Mage_Sales_Model_Quote_Address $address
-     * @return ShippingInfo\Receiver
+     * @param string $template dhl template
+     * @param string $block block name
+     * @return string
      */
-    public function getReceiver(Mage_Sales_Model_Quote_Address $address)
+    public function getPackagingPopupTemplate($template, $block)
     {
-        $receiver = new ShippingInfo\Receiver();
-        $receiver->name1 = $address->getName();
-        $receiver->name2 = $address->getCompany();
+        /** @var Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging $blockObject */
+        $blockObject = Mage::getSingleton('core/layout')->getBlock($block);
+        $shippingMethod = $blockObject->getShipment()->getOrder()->getShippingMethod(true);
 
-        $street = $this->splitStreet($address->getStreetFull());
-        $receiver->streetName      = $street['street_name'];
-        $receiver->streetNumber    = $street['street_number'];
-        $receiver->addressAddition = $street['supplement'];
+        if ($shippingMethod->getData('carrier_code') !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            // different carrier, return standard template
+            return $blockObject->getTemplate();
+        }
 
-        $receiver->zip = $address->getPostcode();
-        $receiver->city = $address->getCity();
+        return $template;
+    }
 
-        $country = Mage::getModel('directory/country')->loadByCode($address->getCountry());
-        $receiver->country = $country->getName();
-        $receiver->countryISOCode = $country->getIso2Code();
-        $receiver->state = $address->getRegion();
+    /**
+     * Get template name for packaging packed info.
+     *
+     * @param string $template dhl template
+     * @param string $block block name
+     * @return string
+     */
+    public function getPackagingPackedTemplate($template, $block)
+    {
+        /** @var Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging $blockObject */
+        $blockObject = Mage::getSingleton('core/layout')->getBlock($block);
+        $shippingMethod = $blockObject->getShipment()->getOrder()->getShippingMethod(true);
 
-        $receiver->phone = $address->getTelephone();
-        $receiver->email = $address->getEmail();
+        if ($shippingMethod->getData('carrier_code') !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            // different carrier, return standard template
+            return $blockObject->getTemplate();
+        }
 
+        return $template;
+    }
+
+    /**
+     * Check if the given address implies delivery to a postal facility.
+     *
+     * @param Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $address
+     * @return bool
+     */
+    public function isPostalFacility(Mage_Customer_Model_Address_Abstract $address)
+    {
+        // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
-        Mage::dispatchEvent('dhl_versenden_set_postal_facility', array(
-            'quote_address' => $address,
-            'postal_facility' => $facility,
-        ));
 
-        if ($facility->hasData()) {
-            // someone added facility info, shift it to receiver
-            $station = $this->preparePostalFacility($facility, $receiver);
-            if ($station instanceof ShippingInfo\Packstation) {
-                $receiver->packstation = $station;
-            } elseif ($station instanceof ShippingInfo\Postfiliale) {
-                $receiver->postfiliale = $station;
-            } elseif ($station instanceof ShippingInfo\ParcelShop) {
-                $receiver->parcelShop = $station;
-            }
-        }
+        Mage::dispatchEvent(
+            'dhl_versenden_set_postal_facility', array(
+                'quote_address'   => $address,
+                'postal_facility' => $facility,
+            )
+        );
 
-        return $receiver;
+        return ($facility->getData('shop_type') !== null);
     }
 
     /**
-     * Obtain an instance of PostalFacility with properties loaded from given arguments.
-     *
-     * @param Varien_Object $facility
-     * @param ShippingInfo\Receiver $receiver
-     * @return ShippingInfo\PostalFacility
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     * @param string $messageType
      */
-    public function preparePostalFacility(Varien_Object $facility, ShippingInfo\Receiver $receiver)
+    public function addStatusHistoryComment(Mage_Sales_Model_Order $order, $message, $messageType)
     {
-        $stationData = new stdClass();
-        $stationData->zip = $receiver->zip;
-        $stationData->city = $receiver->city;
-        $stationData->country = $receiver->country;
-        $stationData->countryISOCode = $receiver->countryISOCode;
-        $stationData->state = $receiver->state;
-
-        switch ($facility->getData('shop_type')) {
-            case ShippingInfo\PostalFacility::TYPE_PACKSTATION:
-                $stationData->packstationNumber = $facility->getData('shop_number');
-                $stationData->postNumber = $facility->getData('post_number');
-                return new ShippingInfo\Packstation($stationData);
-            case ShippingInfo\PostalFacility::TYPE_POSTFILIALE:
-                $stationData->postfilialNumber = $facility->getData('shop_number');
-                $stationData->postNumber = $facility->getData('post_number');
-                return new ShippingInfo\Postfiliale($stationData);
-            case ShippingInfo\PostalFacility::TYPE_PAKETSHOP:
-                $stationData->parcelShopNumber = $facility->getData('shop_number');
-                $stationData->streetName = $receiver->streetName;
-                $stationData->streetNumber = $receiver->streetNumber;
-                return new ShippingInfo\ParcelShop($stationData);
+        // TODO(nr): use psr log types
+        // TODO(nr): add dhl message type indicator, i.e. some icon
+        if ($messageType === Zend_Log::ERR) {
+            $message = sprintf('%s %s', '(x)', $message);
+        } else {
+            $message = sprintf('%s %s', '(i)', $message);
         }
 
-        return null;
+        $history = Mage::getModel('sales/order_status_history')
+            ->setOrder($order)
+            ->setStatus($order->getStatus())
+            ->setComment($message)
+            ->setData('entity_name', Mage_Sales_Model_Order::HISTORY_ENTITY_NAME);
+
+        $historyCollection = $order->getStatusHistoryCollection();
+        $historyCollection->addItem($history);
+        $historyCollection->save();
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     */
+    public function addStatusHistoryError(Mage_Sales_Model_Order $order, $message)
+    {
+        $this->addStatusHistoryComment($order, $message, Zend_Log::ERR);
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     */
+    public function addStatusHistoryInfo(Mage_Sales_Model_Order $order, $message)
+    {
+        $this->addStatusHistoryComment($order, $message, Zend_Log::INFO);
     }
 }

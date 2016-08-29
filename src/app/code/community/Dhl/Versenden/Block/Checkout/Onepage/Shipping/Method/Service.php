@@ -23,7 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Shipment\Service as Service;
+use \Dhl\Versenden\Shipment\Service\Type\Generic as ServiceItem;
+use \Dhl\Versenden\Product;
 /**
  * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
  *
@@ -39,18 +41,28 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     /**
      * Obtain the services that are enabled via config and can be chosen by customer.
      *
-     * @return \Dhl\Versenden\Service[]
+     * @return Service\Collection
      */
     public function getServices()
     {
-        $collection = Mage::getModel('dhl_versenden/config')->getEnabledServices();
-        $services = $collection->getItems();
+        $storeId = $this->getQuote()->getStoreId();
+        $shippingAddress = $this->getQuote()->getShippingAddress();
+        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
 
-        $services = array_filter($services, function (\Dhl\Versenden\Service $service) {
-            return $service->isCustomerService;
-        });
+        $enabledServices = $serviceConfig->getEnabledServices($storeId);
 
-        return $services;
+
+        $shipperCountry = Mage::getStoreConfig(Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID, $storeId);
+        $recipientCountry = $shippingAddress->getCountryId();
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
+
+        $shippingProducts = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $isPostalFacility = $this->helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
+
+        $filter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, true);
+        $filteredCollection = $filter->filterServiceCollection($enabledServices);
+
+        return $filteredCollection;
     }
 
     /**
@@ -60,8 +72,10 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
      */
     public function getDhlMethods()
     {
-        $config = Mage::getModel('dhl_versenden/config');
-        $dhlMethods = $config->getShipmentSettings()->shippingMethods;
+        $storeId = $this->getQuote()->getStoreId();
+
+        $config = Mage::getModel('dhl_versenden/config_shipment');
+        $dhlMethods = $config->getSettings($storeId)->getShippingMethods();
         return $this->helper('core/data')->jsonEncode($dhlMethods);
     }
 }
