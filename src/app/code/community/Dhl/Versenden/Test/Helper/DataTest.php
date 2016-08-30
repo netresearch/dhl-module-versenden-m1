@@ -168,7 +168,7 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $streetNumber = '909';
 
         $facility = new Varien_Object(array(
-            'shop_type' => 'ParcelShop',
+            'shop_type' => 'parcelShop',
             'shop_number' => '808',
         ));
 

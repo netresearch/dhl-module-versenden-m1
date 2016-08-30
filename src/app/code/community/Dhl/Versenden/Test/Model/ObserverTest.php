@@ -1,4 +1,7 @@
 <?php
+
+use Dhl\Versenden\ShippingInfo;
+
 /**
  * Dhl Versenden
  *
@@ -266,7 +269,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->preparePostalFacility($observer);
 
-        $this->assertEquals($stationType, $postalFacility->getData('shop_type'));
+        $this->assertEquals(ShippingInfo\PostalFacility::TYPE_PACKSTATION, $postalFacility->getData('shop_type'));
         $this->assertEquals($stationId, $postalFacility->getData('shop_number'));
         $this->assertEquals($company, $postalFacility->getData('post_number'));
     }
@@ -297,7 +300,7 @@ class Dhl_Versenden_Test_Model_ObserverTest extends EcomDev_PHPUnit_Test_Case
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->preparePostalFacility($observer);
 
-        $this->assertEquals($stationType, $postalFacility->getData('shop_type'));
+        $this->assertEquals(ShippingInfo\PostalFacility::TYPE_POSTFILIALE, $postalFacility->getData('shop_type'));
         $this->assertEquals($stationId, $postalFacility->getData('shop_number'));
         $this->assertEquals($company, $postalFacility->getData('post_number'));
     }
