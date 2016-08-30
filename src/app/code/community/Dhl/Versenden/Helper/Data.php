@@ -150,6 +150,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
                 $stationData->streetName       = $receiver->streetName;
                 $stationData->streetNumber     = $receiver->streetNumber;
 
+
                 return new ShippingInfo\ParcelShop($stationData);
         }
 
