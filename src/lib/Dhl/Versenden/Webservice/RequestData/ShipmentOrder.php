@@ -75,6 +75,8 @@ class ShipmentOrder extends RequestData
     private $serviceSelection;
     /** @var ShipmentOrder\PackageCollection */
     private $packages;
+    /** @var ShipmentOrder\ExportDocument */
+    private $exportDocument;
     /** @var string */
     private $productCode;
     /** @var string */
@@ -97,6 +99,7 @@ class ShipmentOrder extends RequestData
      * @param ShipmentOrder\Receiver          $receiver
      * @param ShipmentOrder\ServiceSelection  $serviceSelection
      * @param ShipmentOrder\PackageCollection $packages
+     * @param ShipmentOrder\Export\Document   $exportDocument
      * @param string                          $productCode
      * @param string                          $shipmentDate
      * @param bool                            $printOnlyIfCodeable
@@ -109,6 +112,7 @@ class ShipmentOrder extends RequestData
         ShipmentOrder\Receiver $receiver,
         ShipmentOrder\ServiceSelection $serviceSelection,
         ShipmentOrder\PackageCollection $packages,
+        ShipmentOrder\Export\Document $exportDocument,
         $productCode,
         $shipmentDate,
         $printOnlyIfCodeable,
@@ -122,6 +126,7 @@ class ShipmentOrder extends RequestData
         $this->receiver = $receiver;
 
         $this->serviceSelection = $serviceSelection;
+        $this->exportDocument = $exportDocument;
 
         $this->accountNumber = sprintf(
             '%s%s%s',
@@ -136,10 +141,10 @@ class ShipmentOrder extends RequestData
             $shipper->getAccount()->getParticipation()
         );
 
-        $this->productCode        = $productCode;
-        $this->shipmentDate       = $shipmentDate;
+        $this->productCode         = $productCode;
+        $this->shipmentDate        = $shipmentDate;
         $this->printOnlyIfCodeable = $printOnlyIfCodeable;
-        $this->labelResponseType  = $labelType;
+        $this->labelResponseType   = $labelType;
     }
 
     /**
@@ -188,6 +193,14 @@ class ShipmentOrder extends RequestData
     public function getPackages()
     {
         return $this->packages;
+    }
+
+    /**
+     * @return ShipmentOrder\Export\Document
+     */
+    public function getExportDocument()
+    {
+        return $this->exportDocument;
     }
 
     /**
