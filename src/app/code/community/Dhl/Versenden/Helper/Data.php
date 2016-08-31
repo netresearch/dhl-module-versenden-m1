@@ -69,6 +69,26 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Check if customs data must be collected for export documents.
+     *
+     * @param string $shipperCountry
+     * @param string $recipientCountry
+     * @return bool
+     */
+    public function isCollectCustomsData($shipperCountry, $recipientCountry)
+    {
+        // are shipper and receiver located in different countries?
+        $diffCountry = ($shipperCountry != $recipientCountry);
+
+        // are shipper and receiver both located in EU country?
+        $bothEu = Mage::helper('core/data')->isCountryInEU($shipperCountry)
+            && Mage::helper('core/data')->isCountryInEU($recipientCountry);
+
+
+        return $diffCountry && !$bothEu;
+    }
+
+    /**
      * Get template name for packaging popup.
      *
      * @param string $template dhl template

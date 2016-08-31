@@ -41,6 +41,16 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     const CODE = 'dhlversenden';
     const PACKAGE_MIN_WEIGHT = 0.2;
 
+    const EXPORT_TYPE_COMMERCIAL_SAMPLE = 'COMMERCIAL_SAMPLE';
+    const EXPORT_TYPE_DOCUMENT          = 'DOCUMENT';
+    const EXPORT_TYPE_OTHER             = 'OTHER';
+    const EXPORT_TYPE_PRESENT           = 'PRESENT';
+    const EXPORT_TYPE_RETURN_OF_GOODS   = 'RETURN_OF_GOODS';
+
+    const TOT_DDP = 'DDP';
+    const TOT_DXV = 'DXV';
+    const TOT_DDU = 'DDU';
+    const TOT_DDX = 'DDX';
 
     /**
      * Init carrier code
@@ -119,22 +129,31 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     }
 
     /**
-     * Return container types of carrier
+     * Return content types of package
      *
-     * @param Varien_Object|null $params
-     * @return string[]
+     * @param Varien_Object $params
+     * @return array
      */
-    public function getContainerTypes(Varien_Object $params = null)
+    public function getContentTypes(Varien_Object $params)
     {
-        if (!$params) {
-            $countryShipper = null;
-            $countryRecipient = null;
-        } else {
-            $countryShipper = $params->getData('country_shipper');
-            $countryRecipient = $params->getData('country_recipient');
+        $contentTypes = array();
+
+        $isInternational = Mage::helper('dhl_versenden/data')->isCollectCustomsData(
+            $params->getData('country_shipper'),
+            $params->getData('country_recipient')
+        );
+
+        if ($isInternational) {
+            $contentTypes = array(
+                self::EXPORT_TYPE_COMMERCIAL_SAMPLE => Mage::helper('dhl_versenden/data')->__('Commercial Sample'),
+                self::EXPORT_TYPE_DOCUMENT => Mage::helper('dhl_versenden/data')->__('Document'),
+                self::EXPORT_TYPE_OTHER => Mage::helper('dhl_versenden/data')->__('Other'),
+                self::EXPORT_TYPE_PRESENT => Mage::helper('dhl_versenden/data')->__('Present'),
+                self::EXPORT_TYPE_RETURN_OF_GOODS => Mage::helper('dhl_versenden/data')->__('Return Of Goods'),
+            );
         }
 
-        return $this->getProducts($countryShipper, $countryRecipient);
+        return $contentTypes;
     }
 
     /**
@@ -148,11 +167,23 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     {
         $httpRequest = Mage::app()->getFrontController()->getRequest();
 
+        // add selected services to request
         $serviceData = array(
             'shipment_service' => $httpRequest->getPost('shipment_service', array()),
             'service_setting'  => $httpRequest->getPost('service_setting', array()),
         );
         $request->setData('services', $serviceData);
+
+        // add dhl product to request
+        $shipperCountry = Mage::getModel('dhl_versenden/config')
+            ->getShipperCountry($request->getOrderShipment()->getStoreId());
+        $recipientCountry = $request->getOrderShipment()->getShippingAddress()->getCountryId();
+        $products = $this->getProducts($shipperCountry, $recipientCountry);
+        $productCodes = array_keys($products);
+        $request->setData('gk_api_product', $productCodes[0]);
+
+        // add customs information to request
+        $request->setData('customs', $httpRequest->getPost('customs', array()));
 
         $sequenceNumber = 0;
         $shipmentRequests = array(
@@ -196,6 +227,12 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
             'unit_of_measure' => array(
                 'G'   =>  Mage::helper('dhl_versenden')->__('Grams'),
                 'KG'  =>  Mage::helper('dhl_versenden')->__('Kilograms'),
+            ),
+            'terms_of_trade' => array(
+                self::TOT_DDP => self::TOT_DDP,
+                self::TOT_DXV => self::TOT_DXV,
+                self::TOT_DDU => self::TOT_DDU,
+                self::TOT_DDX => self::TOT_DDX,
             ),
         );
 
