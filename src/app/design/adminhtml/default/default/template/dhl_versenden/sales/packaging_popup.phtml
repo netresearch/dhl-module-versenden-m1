@@ -35,14 +35,36 @@ document.observe("dom:loaded", function() {
         var requestData = {};
 
         var serviceContainer = $('packaging-dhlversenden-services');
-        serviceContainer.select('input[type=checkbox]').each(function (elm) {
-            this[elm.name] = elm.getValue();
-        }, requestData);
-        serviceContainer.select('input[type=text]', 'select').each(function (elm) {
-            this[elm.name] = elm.getValue();
-        }, requestData);
+        if (serviceContainer) {
+            serviceContainer.select('input[type=checkbox]', 'input[type=text]', 'select').each(function (elm) {
+                this[elm.name] = elm.getValue();
+            }, requestData);
+        }
 
-        // add service info to ajax request
+        for (var packageId in packaging.packages) {
+            if (!isNaN(packageId)) {
+                console.log(packaging.packages[packageId]);
+                for (var packedItemId in packaging.packages[packageId]['items']) {
+                    if (!isNaN(packedItemId)) {
+                        requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[description]']
+                            = $('package_block_' + packageId).select("input[name=customs_description]")[0].value;
+                        requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[country_of_origin]']
+                            = $('package_block_' + packageId).select("select[name=customs_origin]")[0].value;
+                        requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[tariff_number]']
+                            = $('package_block_' + packageId).select("input[name=customs_tariff_number]")[0].value;
+                    }
+                }
+            }
+        }
+
+        var customsContainer = $('packaging-dhlversenden-customs');
+        if (customsContainer) {
+            customsContainer.select('input[type=checkbox]', 'input[type=text]', 'select').each(function (elm) {
+                this[elm.name] = elm.getValue();
+            }, requestData);
+        }
+
+        // add service and customs info to ajax request
         packaging.setParamsCreateLabelRequest(requestData);
         packaging.confirmPackaging();
     };
@@ -63,10 +85,13 @@ document.observe("dom:loaded", function() {
             <div id="package_template" style="display:none;">
                 <div class="package-number"><?php echo Mage::helper('sales')->__('Package') ?><span></span></div>
                 <table class="package-options" cellspacing="0">
+                    <?php $customsValueStyle = $this->displayCustomsValue() ? '' : 'style="display: none;"' ?>
                     <thead>
-                        <th><label for="package_container"><?php echo Mage::helper('dhl_versenden/data')->__('Product') ?></label></th>
-                        <th <?php echo $this->displayCustomsValue() ? '' : 'style="display: none;"' ?>>
-                            <?php echo Mage::helper('sales')->__('Customs Value') ?>
+                        <th style="display: none;">
+                            <label for="package_container"><?php echo Mage::helper('sales')->__('Type') ?></label>
+                        </th>
+                        <th <?php echo $customsValueStyle ?>>
+                            <label for="package_customs_value"><?php echo Mage::helper('sales')->__('Customs Value') ?></label>
                         </th>
                         <th><?php echo Mage::helper('sales')->__('Total Weight') ?></th>
                         <th><?php echo Mage::helper('sales')->__('Length') ?></th>
@@ -80,7 +105,7 @@ document.observe("dom:loaded", function() {
                         <th>&nbsp;</th>
                     </thead>
                     <tbody>
-                        <td>
+                        <td style="display: none;">
                             <?php $containers = $this->getContainers(); ?>
                             <select id="package_container" name="package_container"
                                     onchange="packaging.changeContainerType(this);">
@@ -91,17 +116,9 @@ document.observe("dom:loaded", function() {
                                 <?php endforeach; ?>
                             </select>
                         </td>
-                        <?php
-                            if ($this->displayCustomsValue()) {
-                                $customsValueDisplay = '';
-                                $customsValueValidation = ' validate-zero-or-greater ';
-                            } else {
-                                $customsValueDisplay = ' style="display: none;" ';
-                                $customsValueValidation = '';
-                            }
-                        ?>
-                        <td <?php echo $customsValueDisplay ?>>
-                            <input type="text" class="customs-value input-text <?php echo $customsValueValidation ?>" name="package_customs_value" />
+                        <?php $customsValueValidation = $this->displayCustomsValue() ? 'validate-zero-or-greater' : '' ?>
+                        <td <?php echo $customsValueStyle ?>>
+                            <input id="package_customs_value" type="text" class="customs-value input-text <?php echo $customsValueValidation ?>" name="package_customs_value" />
                             <span class="customs-value-currency">[<?php echo $this->getCustomValueCurrencyCode(); ?>]</span>
                         </td>
                         <td>
@@ -153,7 +170,7 @@ document.observe("dom:loaded", function() {
                     </tbody>
                 </table>
 
-                <?php if ($this->getContentTypes()): ?>
+                <?php if ($this->getContentTypes() && $this->displayCustomsValue()): ?>
                 <table class="package-options package-options-contents" cellspacing="0">
                     <colgroup>
                         <col width="150">
@@ -194,6 +211,9 @@ document.observe("dom:loaded", function() {
             </div>
             <?php echo $this->getChildHtml('shipping_services'); ?>
             <div id="packages_content"></div>
+            <?php if ($this->displayCustomsValue()): ?>
+                <?php echo $this->getChildHtml('shipping_customs'); ?>
+            <?php endif; ?>
         </div>
         <div class="buttons-set a-right">
             <button type="button" class="scalable disabled SavePackagesBtn" disabled="disabled" onclick="packaging.confirmPackagingWithServices();" title="<?php echo Mage::helper('sales')->__('Products should be added to package(s)')?>">

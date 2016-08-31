@@ -133,12 +133,39 @@ class CreateShipmentRequestType implements RequestType
     }
 
     /**
-     * @param RequestData\ExportDocument $document
+     * @param RequestData\ShipmentOrder\Export\Document $document
      * @return VersendenApi\ExportDocumentType
      */
-    protected static function prepareExportDocument(RequestData\ExportDocument $document)
+    protected static function prepareExportDocument(RequestData\ShipmentOrder\Export\Document $document)
     {
-        return new VersendenApi\ExportDocumentType('bla', 'bla', 'bla');
+        $exportDocType = new VersendenApi\ExportDocumentType(
+            $document->getExportType(),
+            $document->getPlaceOfCommital(),
+            $document->getAdditionalFee()
+        );
+        $exportDocType->setInvoiceNumber($document->getInvoiceNumber());
+        $exportDocType->setExportTypeDescription($document->getExportTypeDescription());
+        $exportDocType->setTermsOfTrade($document->getTermsOfTrade());
+        $exportDocType->setPermitNumber($document->getPermitNumber());
+        $exportDocType->setAttestationNumber($document->getAttestationNumber());
+        $exportDocType->setWithElectronicExportNtfctn($document->isElectronicExportNotification());
+
+        $exportDocPositions = [];
+        /** @var RequestData\ShipmentOrder\Export\Position $position */
+        foreach ($document->getPositions() as $position) {
+            $exportDocPosition = new VersendenApi\ExportDocPosition(
+                $position->getDescription(),
+                $position->getCountryCodeOrigin(),
+                $position->getTariffNumber(),
+                $position->getAmount(),
+                $position->getNetWeightInKG(),
+                $position->getValue()
+            );
+            $exportDocPositions[]= $exportDocPosition;
+        }
+        $exportDocType->setExportDocPosition($exportDocPositions);
+
+        return $exportDocType;
     }
 
     /**
@@ -152,15 +179,14 @@ class CreateShipmentRequestType implements RequestType
         $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
         $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
 
-        //TODO(nr): DHLGKP-22
-//        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
+        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
 
         $shipment = new VersendenApi\Shipment(
             $details,
             $shipper,
             $receiver,
             $returnReceiver,
-            null
+            $exportDocument
         );
 
         return $shipment;

@@ -1,9 +1,21 @@
-#packaging-dhlversenden-services dl {
+#packaging-dhlversenden-services,
+#packaging-dhlversenden-customs {
     background: #f6f6f6;
     border: 2px solid #d4d4d4;
     margin: 0 0 10px;
     padding: 10px;
     overflow: hidden;
+}
+#packaging-dhlversenden-services > div,
+#packaging-dhlversenden-customs > div {
+    font-weight: bold;
+}
+#packaging-dhlversenden-services > dl,
+#packaging-dhlversenden-customs > table {
+    border-top: 1px solid #ccc;
+    padding: 10px 0 0;
+    margin: 3px 0 0;
+    width: 100%;
 }
 #packaging-dhlversenden-services dt,
 #packaging-dhlversenden-services dd {

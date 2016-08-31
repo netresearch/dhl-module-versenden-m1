@@ -174,4 +174,19 @@ class Dhl_Versenden_Model_Config
         return null;
     }
 
+    /**
+     * Obtain shipper country from shipping origin configuration.
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getShipperCountry($store = null)
+    {
+        $shipperCountry = Mage::getStoreConfig(
+            Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID,
+            $store
+        );
+
+        return $shipperCountry;
+    }
 }
