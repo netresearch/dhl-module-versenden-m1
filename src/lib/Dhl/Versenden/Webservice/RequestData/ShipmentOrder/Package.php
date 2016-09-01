@@ -38,7 +38,7 @@ use Dhl\Versenden\Webservice\RequestData;
 class Package extends RequestData implements \JsonSerializable
 {
     /** @var int */
-    private $sequenceNumber;
+    private $packageId;
     /** @var float */
     private $weightInKG;
     /** @var int */
@@ -50,16 +50,15 @@ class Package extends RequestData implements \JsonSerializable
 
     /**
      * Package constructor.
-     * @param $sequenceNumber
-     * @param $weightInKG
+     * @param int $packageId
+     * @param float $weightInKG
      * @param null $lengthInCM
      * @param null $widthInCM
      * @param null $heightInCM
      */
-    public function __construct($sequenceNumber,
-        $weightInKG, $lengthInCM = null, $widthInCM = null, $heightInCM = null
-    ) {
-        $this->sequenceNumber = $sequenceNumber;
+    public function __construct($packageId, $weightInKG, $lengthInCM = null, $widthInCM = null, $heightInCM = null)
+    {
+        $this->packageId  = $packageId;
         $this->weightInKG = $weightInKG;
         $this->lengthInCM = $lengthInCM;
         $this->widthInCM  = $widthInCM;
@@ -69,9 +68,9 @@ class Package extends RequestData implements \JsonSerializable
     /**
      * @return int
      */
-    public function getSequenceNumber()
+    public function getPackageId()
     {
-        return $this->sequenceNumber;
+        return $this->packageId;
     }
 
     /**

@@ -133,11 +133,17 @@ class CreateShipmentRequestType implements RequestType
     }
 
     /**
-     * @param RequestData\ShipmentOrder\Export\Document $document
-     * @return VersendenApi\ExportDocumentType
+     * @param RequestData\ShipmentOrder\Export\DocumentCollection $documents
+     * @return VersendenApi\ExportDocumentType|null
      */
-    protected static function prepareExportDocument(RequestData\ShipmentOrder\Export\Document $document)
+    protected static function prepareExportDocument(RequestData\ShipmentOrder\Export\DocumentCollection $documents)
     {
+        // the API apparently supports exactly one ExportDocumentType, no list
+        $document = current($documents->getItems());
+        if (!$document) {
+            return null;
+        }
+
         $exportDocType = new VersendenApi\ExportDocumentType(
             $document->getExportType(),
             $document->getPlaceOfCommital(),
@@ -150,7 +156,6 @@ class CreateShipmentRequestType implements RequestType
         $exportDocType->setAttestationNumber($document->getAttestationNumber());
         $exportDocType->setWithElectronicExportNtfctn($document->isElectronicExportNotification());
 
-        $exportDocPositions = [];
         /** @var RequestData\ShipmentOrder\Export\Position $position */
         foreach ($document->getPositions() as $position) {
             $exportDocPosition = new VersendenApi\ExportDocPosition(
@@ -179,7 +184,7 @@ class CreateShipmentRequestType implements RequestType
         $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
         $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
 
-        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
+        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocuments());
 
         $shipment = new VersendenApi\Shipment(
             $details,

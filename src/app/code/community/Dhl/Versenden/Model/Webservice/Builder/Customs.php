@@ -25,7 +25,7 @@
  */
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Export;
 /**
- * Dhl_Versenden_Model_Webservice_Builder_Service
+ * Dhl_Versenden_Model_Webservice_Builder_Customs
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -39,15 +39,19 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
      * @param string $invoiceNumber
      * @param string[] $customsInfo
      * @param string[] $packageInfo
-     * @return Export\Document
+     * @return Export\Document|null
      */
-    public function getExportDocument($invoiceNumber, array $customsInfo, array $packageInfo)
+    public function getExportDocuments($invoiceNumber, array $customsInfo, array $packageInfo)
     {
-        $collection = new Export\PositionCollection();
+        $documentCollection = new Export\DocumentCollection();
+
+        if (!count($customsInfo)) {
+            return $documentCollection;
+        }
 
         foreach ($packageInfo as $packageId => $package) {
+            $exportPositions = new Export\PositionCollection();
             foreach ($package['items'] as $item) {
-                $itemCustomsInfo = $item['customs'];
                 $position = new Export\Position(
                     $packageId,
                     $item['customs']['description'],
@@ -57,25 +61,26 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                     $item['weight'],
                     $item['customs_value']
                 );
-                $collection->addItem($position);
+                $exportPositions->addItem($position);
             }
+
+            $document = new Export\Document(
+                $packageId,
+                $invoiceNumber,
+                $package['params']['content_type'],
+                $package['params']['content_type_other'],
+                $customsInfo['terms_of_trade'],
+                $customsInfo['additional_fee'],
+                $customsInfo['place_of_commital'],
+                $customsInfo['permit_number'],
+                $customsInfo['attestation_number'],
+                $customsInfo['export_notification'],
+                $exportPositions
+            );
+
+            $documentCollection->addItem($document);
         }
 
-        //TODO(nr): how to add one export document per parcel/package?
-        reset($packageInfo);
-        $package = current($packageInfo);
-
-        return new Export\Document(
-            $invoiceNumber,
-            $package['params']['content_type'],
-            $package['params']['content_type_other'],
-            $customsInfo['terms_of_trade'],
-            $customsInfo['additional_fee'],
-            $customsInfo['place_of_commital'],
-            $customsInfo['permit_number'],
-            $customsInfo['attestation_number'],
-            $customsInfo['export_notification'],
-            $collection
-        );
+        return $documentCollection;
     }
 }
