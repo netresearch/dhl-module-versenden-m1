@@ -24,8 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Webservice;
-use \Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
-use \Dhl\Versenden\Webservice\Parser\Soap as SoapParser;
 use \Dhl\Versenden\Webservice\RequestData;
 use \Dhl\Versenden\Webservice\ResponseData;
 /**

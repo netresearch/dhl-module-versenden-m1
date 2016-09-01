@@ -124,14 +124,14 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $serviceSelection = $this->serviceBuilder->getServiceSelection($shipment->getOrder(), $serviceInfo);
 
-        $packageCollection = $this->packageBuilder->getPackages($packageInfo);
+        $packages = $this->packageBuilder->getPackages($packageInfo);
 
         /** @var Mage_Sales_Model_Resource_Order_Invoice_Collection $invoiceCollection */
         $invoiceCollection = $shipment->getOrder()->getInvoiceCollection();
         /** @var Mage_Sales_Model_Order_Invoice $invoice */
         $invoice = $invoiceCollection->getFirstItem();
 
-        $exportDocument = $this->customsBuilder->getExportDocument(
+        $exportDocuments = $this->customsBuilder->getExportDocuments(
             $invoice->getIncrementId(),
             $customsInfo,
             $packageInfo
@@ -146,8 +146,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $shipper,
             $receiver,
             $serviceSelection,
-            $packageCollection,
-            $exportDocument,
+            $packages,
+            $exportDocuments,
             $gkApiProduct,
             $shipmentDate,
             $globalSettings->isPrintOnlyIfCodeable(),

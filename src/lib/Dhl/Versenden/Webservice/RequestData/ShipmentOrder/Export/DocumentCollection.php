@@ -25,7 +25,7 @@
  */
 namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Export;
 /**
- * PositionCollection
+ * DocumentCollection
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
@@ -33,19 +33,19 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Export;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PositionCollection implements \IteratorAggregate, \Countable, \JsonSerializable
+class DocumentCollection implements \IteratorAggregate, \Countable, \JsonSerializable
 {
     /**
-     * @var Position[]
+     * @var Document[]
      */
-    protected $positions = [];
+    protected $documents = [];
 
     /**
      * @return int
      */
     public function count()
     {
-        return count($this->positions);
+        return count($this->documents);
     }
 
     /**
@@ -53,20 +53,20 @@ class PositionCollection implements \IteratorAggregate, \Countable, \JsonSeriali
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->positions);
+        return new \ArrayIterator($this->documents);
     }
 
     /**
      * Set all shipment orders to the collection.
      *
-     * @param Position[] $positions
+     * @param Document[] $documents
      * @return $this
      */
-    public function setItems(array $positions)
+    public function setItems(array $documents)
     {
-        $this->positions = [];
-        foreach ($positions as $position) {
-            $this->addItem($position);
+        $this->documents = [];
+        foreach ($documents as $document) {
+            $this->addItem($document);
         }
 
         return $this;
@@ -75,37 +75,37 @@ class PositionCollection implements \IteratorAggregate, \Countable, \JsonSeriali
     /**
      * Obtain all shipment orders from collection
      *
-     * @return Position[]
+     * @return Document[]
      */
     public function getItems()
     {
-        return $this->positions;
+        return $this->documents;
     }
 
     /**
      * Add a shipment order to the collection.
      *
-     * @param Position $position
+     * @param Document $document
      * @return $this
      */
-    public function addItem(Position $position)
+    public function addItem(Document $document)
     {
-        $this->positions[$position->getSequenceNumber()] = $position;
+        $this->documents[$document->getPackageId()] = $document;
 
         return $this;
     }
 
     /**
-     * @param $sequenceNumber
-     * @return Position|null
+     * @param int $packageId
+     * @return Document|null
      */
-    public function getItem($sequenceNumber)
+    public function getItem($packageId)
     {
-        if (!isset($this->positions[$sequenceNumber])) {
+        if (!isset($this->documents[$packageId])) {
             return null;
         }
 
-        return $this->positions[$sequenceNumber];
+        return $this->documents[$packageId];
     }
 
     /**

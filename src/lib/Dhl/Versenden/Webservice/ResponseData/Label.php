@@ -24,6 +24,8 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\ResponseData;
+use Dhl\Versenden\Pdf\Adapter;
+
 /**
  * Label
  *
@@ -119,5 +121,18 @@ final class Label
     public function isCreated()
     {
         return ($this->getStatus()->getStatusCode() === '0');
+    }
+
+    /**
+     * @param Adapter $pdfLib
+     */
+    public function getAllLabels(Adapter $pdfLib)
+    {
+        return $pdfLib->merge([
+            $this->getLabel(),
+            $this->getReturnLabel(),
+            $this->getCodLabel(),
+            $this->getExportLabel(),
+        ]);
     }
 }

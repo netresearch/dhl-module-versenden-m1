@@ -66,7 +66,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      * @param string $recipientCountry
      * @return string[]
      */
-    protected function getProducts($shipperCountry, $recipientCountry)
+    public function getProducts($shipperCountry, $recipientCountry)
     {
         $products = array(
             Product::CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
@@ -202,10 +202,11 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 throw new Webservice\ResponseData\StatusException($shipmentStatus);
             }
 
+            $pdfLib = new \Dhl\Versenden\Pdf\Adapter\Zend();
             $responseData = array(
                 'info' => array(array(
                     'tracking_number' => $shipmentNumber,
-                    'label_content'   => $result->getLabels()->getItem($shipmentNumber)->getLabel(),
+                    'label_content'   => $result->getLabels()->getItem($shipmentNumber)->getAllLabels($pdfLib),
                 ))
             );
             $response->setData($responseData);

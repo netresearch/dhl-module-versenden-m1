@@ -41,27 +41,27 @@ document.observe("dom:loaded", function() {
             }, requestData);
         }
 
-        for (var packageId in packaging.packages) {
-            if (!isNaN(packageId)) {
-                console.log(packaging.packages[packageId]);
-                for (var packedItemId in packaging.packages[packageId]['items']) {
-                    if (!isNaN(packedItemId)) {
-                        requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[description]']
-                            = $('package_block_' + packageId).select("input[name=customs_description]")[0].value;
-                        requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[country_of_origin]']
-                            = $('package_block_' + packageId).select("select[name=customs_origin]")[0].value;
-                        requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[tariff_number]']
-                            = $('package_block_' + packageId).select("input[name=customs_tariff_number]")[0].value;
-                    }
-                }
-            }
-        }
-
         var customsContainer = $('packaging-dhlversenden-customs');
         if (customsContainer) {
             customsContainer.select('input[type=checkbox]', 'input[type=text]', 'select').each(function (elm) {
                 this[elm.name] = elm.getValue();
             }, requestData);
+
+            for (var packageId in packaging.packages) {
+                if (!isNaN(packageId)) {
+                    console.log(packaging.packages[packageId]);
+                    for (var packedItemId in packaging.packages[packageId]['items']) {
+                        if (!isNaN(packedItemId)) {
+                            requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[description]']
+                                = $('package_block_' + packageId).select("input[name=customs_description]")[0].value;
+                            requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[country_of_origin]']
+                                = $('package_block_' + packageId).select("select[name=customs_origin]")[0].value;
+                            requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[tariff_number]']
+                                = $('package_block_' + packageId).select("input[name=customs_tariff_number]")[0].value;
+                        }
+                    }
+                }
+            }
         }
 
         // add service and customs info to ajax request

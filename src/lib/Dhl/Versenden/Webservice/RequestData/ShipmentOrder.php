@@ -75,8 +75,8 @@ class ShipmentOrder extends RequestData
     private $serviceSelection;
     /** @var ShipmentOrder\PackageCollection */
     private $packages;
-    /** @var ShipmentOrder\ExportDocument */
-    private $exportDocument;
+    /** @var ShipmentOrder\Export\DocumentCollection */
+    private $exportDocuments;
     /** @var string */
     private $productCode;
     /** @var string */
@@ -93,17 +93,17 @@ class ShipmentOrder extends RequestData
     /**
      * ShipmentOrder constructor.
      *
-     * @param int                             $sequenceNumber
-     * @param string                          $reference
-     * @param ShipmentOrder\Shipper           $shipper
-     * @param ShipmentOrder\Receiver          $receiver
-     * @param ShipmentOrder\ServiceSelection  $serviceSelection
-     * @param ShipmentOrder\PackageCollection $packages
-     * @param ShipmentOrder\Export\Document   $exportDocument
-     * @param string                          $productCode
-     * @param string                          $shipmentDate
-     * @param bool                            $printOnlyIfCodeable
-     * @param string                          $labelType
+     * @param int                                       $sequenceNumber
+     * @param string                                    $reference
+     * @param ShipmentOrder\Shipper                     $shipper
+     * @param ShipmentOrder\Receiver                    $receiver
+     * @param ShipmentOrder\ServiceSelection            $serviceSelection
+     * @param ShipmentOrder\PackageCollection           $packages
+     * @param ShipmentOrder\Export\DocumentCollection   $exportDocuments
+     * @param string                                    $productCode
+     * @param string                                    $shipmentDate
+     * @param bool                                      $printOnlyIfCodeable
+     * @param string                                    $labelType
      */
     public function __construct(
         $sequenceNumber,
@@ -112,7 +112,7 @@ class ShipmentOrder extends RequestData
         ShipmentOrder\Receiver $receiver,
         ShipmentOrder\ServiceSelection $serviceSelection,
         ShipmentOrder\PackageCollection $packages,
-        ShipmentOrder\Export\Document $exportDocument,
+        ShipmentOrder\Export\DocumentCollection $exportDocuments,
         $productCode,
         $shipmentDate,
         $printOnlyIfCodeable,
@@ -126,7 +126,7 @@ class ShipmentOrder extends RequestData
         $this->receiver = $receiver;
 
         $this->serviceSelection = $serviceSelection;
-        $this->exportDocument = $exportDocument;
+        $this->exportDocuments = $exportDocuments;
 
         $this->accountNumber = sprintf(
             '%s%s%s',
@@ -196,11 +196,11 @@ class ShipmentOrder extends RequestData
     }
 
     /**
-     * @return ShipmentOrder\Export\Document
+     * @return ShipmentOrder\Export\DocumentCollection
      */
-    public function getExportDocument()
+    public function getExportDocuments()
     {
-        return $this->exportDocument;
+        return $this->exportDocuments;
     }
 
     /**
