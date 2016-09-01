@@ -127,13 +127,13 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingTest
 
         $blockMock = $this->getBlockMock($blockType, array('getShipment'));
         $blockMock
-            ->expects($this->exactly(16))
+            ->expects($this->exactly(8))
             ->method('getShipment')
             ->willReturnOnConsecutiveCalls(
-                $shipmentOne, $shipmentOne, $shipmentOne, $shipmentOne,
-                $shipmentTwo, $shipmentTwo, $shipmentTwo, $shipmentTwo,
-                $shipmentThree, $shipmentThree, $shipmentThree, $shipmentThree,
-                $shipmentFour, $shipmentFour, $shipmentFour, $shipmentFour
+                $shipmentOne, $shipmentOne,
+                $shipmentTwo, $shipmentTwo,
+                $shipmentThree, $shipmentThree,
+                $shipmentFour, $shipmentFour
             );
         $this->replaceByMock('block', $blockType, $blockMock);
 

@@ -90,22 +90,22 @@ class PackageCollection implements \IteratorAggregate, \Countable, \JsonSerializ
      */
     public function addItem(Package $package)
     {
-        $this->packages[$package->getSequenceNumber()] = $package;
+        $this->packages[$package->getPackageId()] = $package;
 
         return $this;
     }
 
     /**
-     * @param $sequenceNumber
+     * @param $packageId
      * @return Package|null
      */
-    public function getItem($sequenceNumber)
+    public function getItem($packageId)
     {
-        if (!isset($this->packages[$sequenceNumber])) {
+        if (!isset($this->packages[$packageId])) {
             return null;
         }
 
-        return $this->packages[$sequenceNumber];
+        return $this->packages[$packageId];
     }
 
     /**

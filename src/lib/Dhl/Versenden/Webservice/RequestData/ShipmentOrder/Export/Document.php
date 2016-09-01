@@ -37,6 +37,8 @@ use Dhl\Versenden\Webservice\RequestData;
  */
 class Document extends RequestData
 {
+    /** @var int */
+    private $packageId;
     /** @var string */
     private $invoiceNumber;
     /** @var string */
@@ -60,6 +62,7 @@ class Document extends RequestData
 
     /**
      * Document constructor.
+     * @param int $packageId
      * @param string $invoiceNumber
      * @param string $exportType
      * @param string $exportTypeDescription
@@ -72,10 +75,11 @@ class Document extends RequestData
      * @param PositionCollection $positions
      */
     public function __construct(
-        $invoiceNumber, $exportType, $exportTypeDescription, $termsOfTrade,
+        $packageId, $invoiceNumber, $exportType, $exportTypeDescription, $termsOfTrade,
         $additionalFee, $placeOfCommital, $permitNumber, $attestationNumber,
         $electronicExportNotification, PositionCollection $positions
     ) {
+        $this->packageId = $packageId;
         $this->invoiceNumber = $invoiceNumber;
         $this->exportType = $exportType;
         $this->exportTypeDescription = $exportTypeDescription;
@@ -86,6 +90,14 @@ class Document extends RequestData
         $this->attestationNumber = $attestationNumber;
         $this->electronicExportNotification = $electronicExportNotification;
         $this->positions = $positions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPackageId()
+    {
+        return $this->packageId;
     }
 
     /**
