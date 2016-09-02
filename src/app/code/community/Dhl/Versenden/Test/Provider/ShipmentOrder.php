@@ -106,10 +106,25 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $globalSettingsPrintOnlyIfCodeable = true;
         $globalSettingsLabelType = 'R2D2';
 
+        $packageId = '1';
+
         $shipmentSettingsDate = '2012-12-12';
         $shipmentSettingsReference = 'Foo Ref';
         $shipmentSettingsWeight = 2.4;
         $shipmentSettingsProduct = \Dhl\Versenden\Product::CODE_WELTPAKET;
+
+        $exportInvoiceNumber = '103000002';
+        $exportType = Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_DOCUMENT;
+        $exportTypeDescription = '';
+        $exportTermsOfTrade = Dhl_Versenden_Model_Shipping_Carrier_Versenden::TOT_DDX;
+        $exportAdditionalFee = 2.95;
+        $exportPlaceOfCommittal = 'Postfiliale 520, 04229 Leipzig, GERMANY';
+        $exportPermitNumber = '';
+        $exportAttestationNumber = '';
+        $exportElectronicNotification = true;
+        $exportPositionDescription = 'Socks';
+        $exportPositionOrigin = 'TR';
+        $exportPositionTarriffNumber = '61159500';
 
         $serviceSettingsDayOfDelivery = '2012-12-24';
         $serviceSettingsDeliveryTimeFrame = '19002100';
@@ -214,6 +229,34 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $package = new RequestData\ShipmentOrder\Package(0, $shipmentSettingsWeight);
         $packageCollection->addItem($package);
 
+        $exportPositionCollection = new RequestData\ShipmentOrder\Export\PositionCollection();
+        $exportPosition = new RequestData\ShipmentOrder\Export\Position(
+            1,
+            $exportPositionDescription,
+            $exportPositionOrigin,
+            $exportPositionTarriffNumber,
+            2,
+            0.400,
+            9.95
+        );
+        $exportPositionCollection->addItem($exportPosition);
+
+        $exportDocumentCollection = new RequestData\ShipmentOrder\Export\DocumentCollection();
+        $exportDocument = new RequestData\ShipmentOrder\Export\Document(
+            $packageId,
+            $exportInvoiceNumber,
+            $exportType,
+            $exportTypeDescription,
+            $exportTermsOfTrade,
+            $exportAdditionalFee,
+            $exportPlaceOfCommittal,
+            $exportPermitNumber,
+            $exportAttestationNumber,
+            $exportElectronicNotification,
+            $exportPositionCollection
+        );
+        $exportDocumentCollection->addItem($exportDocument);
+
         $serviceSelection = RequestData\ShipmentOrder\ServiceSelection::fromProperties(
             $serviceSettingsDayOfDelivery, $serviceSettingsDeliveryTimeFrame,
             $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
@@ -231,6 +274,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $receiver,
             $serviceSelection,
             $packageCollection,
+            $exportDocumentCollection,
             $shipmentSettingsProduct,
             $shipmentSettingsDate,
             $globalSettingsPrintOnlyIfCodeable,

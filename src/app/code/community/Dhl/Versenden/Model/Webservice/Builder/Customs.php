@@ -39,7 +39,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
      * @param string $invoiceNumber
      * @param string[] $customsInfo
      * @param string[] $packageInfo
-     * @return Export\Document|null
+     * @return Export\DocumentCollection|null
      */
     public function getExportDocuments($invoiceNumber, array $customsInfo, array $packageInfo)
     {
@@ -51,9 +51,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
 
         foreach ($packageInfo as $packageId => $package) {
             $exportPositions = new Export\PositionCollection();
-            foreach ($package['items'] as $item) {
+            foreach ($package['items'] as $itemId => $item) {
                 $position = new Export\Position(
-                    $packageId,
+                    $itemId,
                     $item['customs']['description'],
                     $item['customs']['country_of_origin'],
                     $item['customs']['tariff_number'],

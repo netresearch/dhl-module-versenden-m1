@@ -43,5 +43,4 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_View
     {
         return false;
     }
-
 }
