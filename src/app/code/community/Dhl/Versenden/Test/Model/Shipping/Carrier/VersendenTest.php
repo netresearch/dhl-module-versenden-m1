@@ -169,6 +169,32 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
     /**
      * @test
+     */
+    public function getContentTypes()
+    {
+        $params = new Varien_Object();
+        $contentTypes = array(
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_COMMERCIAL_SAMPLE,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_DOCUMENT,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_OTHER,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_PRESENT,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_RETURN_OF_GOODS,
+        );
+
+        $helperMock = $this->getHelperMock('dhl_versenden/data', array('isCollectCustomsData'));
+        $helperMock
+            ->expects($this->exactly(2))
+            ->method('isCollectCustomsData')
+            ->willReturnOnConsecutiveCalls(false, true);
+        $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
+
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
+        $this->assertEmpty($carrier->getContentTypes($params));
+        $this->assertEquals($contentTypes, array_keys($carrier->getContentTypes($params)));
+    }
+
+    /**
+     * @test
      * @loadFixture Model_ShipmentConfigTest
      */
     public function requestToShipmentOk()
@@ -331,6 +357,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $units = $carrier->getCode('unit_of_measure');
         $this->assertInternalType('array', $units);
         $this->assertNotEmpty($units);
+        $this->assertCount(2, $units);
         $this->assertArrayHasKey('G', $units);
         $this->assertArrayHasKey('KG', $units);
 

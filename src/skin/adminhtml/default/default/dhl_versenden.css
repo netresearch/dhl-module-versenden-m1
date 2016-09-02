@@ -1,3 +1,11 @@
+/* size up the packaging popup for additional service and customs info */
+.packaging-window {
+    margin:-300px 0 0 -571px;
+}
+.packaging-window .packaging-content {
+    max-height: 600px;
+}
+
 #packaging-dhlversenden-services,
 #packaging-dhlversenden-customs {
     background: #f6f6f6;

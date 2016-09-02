@@ -210,10 +210,10 @@ document.observe("dom:loaded", function() {
                 </div>
             </div>
             <?php echo $this->getChildHtml('shipping_services'); ?>
-            <div id="packages_content"></div>
             <?php if ($this->displayCustomsValue()): ?>
                 <?php echo $this->getChildHtml('shipping_customs'); ?>
             <?php endif; ?>
+            <div id="packages_content"></div>
         </div>
         <div class="buttons-set a-right">
             <button type="button" class="scalable disabled SavePackagesBtn" disabled="disabled" onclick="packaging.confirmPackagingWithServices();" title="<?php echo Mage::helper('sales')->__('Products should be added to package(s)')?>">
