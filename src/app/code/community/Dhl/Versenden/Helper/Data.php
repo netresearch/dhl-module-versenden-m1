@@ -47,43 +47,6 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * split street into street name, number and care of
-     *
-     * @param string $street
-     *
-     * @return array
-     */
-    public function splitStreet($street)
-    {
-        /*
-         * first pattern  | street_name             | required | ([^0-9]+)         | all characters != 0-9
-         * second pattern | additional street value | optional | ([0-9]+[ ])*      | numbers + white spaces
-         * ignore         |                         |          | [ \t]*            | white spaces and tabs
-         * second pattern | street_number           | optional | ([0-9]+[-\w^.]+)? | numbers + any word character
-         * ignore         |                         |          | [, \t]*           | comma, white spaces and tabs
-         * third pattern  | supplement              | optional | ([^0-9]+.*)?      | all characters != 0-9 + any character except newline
-         */
-        if (preg_match("/^([^0-9]+)([0-9]+[ ])*[ \t]*([0-9]*[-\w^.]*)?[, \t]*([^0-9]+.*)?\$/", $street, $matches)) {
-
-            //check if street has additional value and add it to streetname
-            if (preg_match("/^([0-9]+)?\$/", trim($matches[2]))) {
-                $matches[1] = $matches[1] . $matches[2];
-
-            }
-            return array(
-                'street_name'   => trim($matches[1]),
-                'street_number' => isset($matches[3]) ? $matches[3] : '',
-                'supplement'    => isset($matches[4]) ? trim($matches[4]) : ''
-            );
-        }
-        return array(
-            'street_name'   => $street,
-            'street_number' => '',
-            'supplement'    => ''
-        );
-    }
-
-    /**
      * Convert a timestamp to a CE(S)T time string.
      *
      * @param string $timestamp The timestamp to convert
