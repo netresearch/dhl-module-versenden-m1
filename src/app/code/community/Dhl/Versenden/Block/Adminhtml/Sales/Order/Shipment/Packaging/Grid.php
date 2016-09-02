@@ -70,7 +70,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
      */
     public function getCountries()
     {
-        return Mage::getModel('adminhtml/system_config_source_country')->toOptionArray(true);
+        return Mage::getSingleton('adminhtml/system_config_source_country')->toOptionArray(true);
     }
 
     /**
@@ -81,7 +81,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
      */
     public function getCountryOfManufacture($productId)
     {
-        if (!$this->countriesOfManufacture) {
+        if (!count($this->countriesOfManufacture)) {
             /** @var Mage_Sales_Model_Resource_Order_Shipment_Item_Collection|Mage_Sales_Model_Order_Shipment_Item[] $items */
             $items = $this->getCollection();
             if (!is_array($items)) {
@@ -97,6 +97,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
                 ->addStoreFilter($this->getShipment()->getStoreId())
                 ->addFieldToFilter('entity_id', array('in' => $productIds))
                 ->addAttributeToSelect('country_of_manufacture');
+            ;
 
             while ($product = $productCollection->fetchItem()) {
                 $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');

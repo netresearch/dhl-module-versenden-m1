@@ -36,33 +36,48 @@
 class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingTest
     extends EcomDev_PHPUnit_Test_Case
 {
+    const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
+
+    /**
+     * Mock getShipment registry access
+     * @see Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging::getShipment()
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $shippingAddress = Mage::getModel('sales/order_address');
+        $shippingAddress->setCountryId('DE');
+
+        $order = Mage::getModel('sales/order');
+        $order->setShippingAddress($shippingAddress);
+
+        $shipment = Mage::getModel('sales/order_shipment');
+        $shipment->setStoreId(1);
+        $shipment->setOrder($order);
+
+        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getShipment'));
+        $blockMock
+            ->expects($this->any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+        $this->replaceByMock('block', self::BLOCK_ALIAS, $blockMock);
+    }
+
     /**
      * @test
      * @loadFixture Block_PackagingTest
      */
     public function getStoreUnit()
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
-
-        $shipmentOne = new Mage_Sales_Model_Order_Shipment();
-        $shipmentOne->setStoreId(1);
-        $shipmentTwo = new Mage_Sales_Model_Order_Shipment();
-        $shipmentTwo->setStoreId(2);
-
-        $blockMock = $this->getBlockMock($blockType, array('getShipment'));
-        $blockMock
-            ->expects($this->exactly(2))
-            ->method('getShipment')
-            ->willReturnOnConsecutiveCalls($shipmentOne, $shipmentTwo);
-        $this->replaceByMock('block', $blockType, $blockMock);
-
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging $block */
-        $block = Mage::app()->getLayout()->createBlock($blockType);
-        $storeUnitOne = $block->getStoreUnit();
-        $storeUnitTwo = $block->getStoreUnit();
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
-        $this->assertEquals($storeUnitOne, 'G');
-        $this->assertEquals($storeUnitTwo, 'KG');
+        $block->getShipment()->setStoreId(1);
+        $this->assertEquals('G', $block->getStoreUnit());
+
+        $block->getShipment()->setStoreId(2);
+        $this->assertEquals('KG', $block->getStoreUnit());
     }
 
     /**
@@ -70,15 +85,19 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingTest
      */
     public function getWeightUnits()
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging $block */
-        $block = Mage::app()->getLayout()->createBlock($blockType);
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
-        $weightUnits = $block->getWeightUnits();
-        $this->assertInternalType('array', $weightUnits);
-        $this->assertCount(2, $weightUnits);
-        $this->assertArrayHasKey('G', $weightUnits);
-        $this->assertArrayHasKey('KG', $weightUnits);
+        $units = array('foo', 'bar');
+        $carrierMock = $this->getModelMock('dhl_versenden/shipping_carrier_versenden', array('getCode'));
+        $carrierMock
+            ->expects($this->once())
+            ->method('getCode')
+            ->with($this->equalTo('unit_of_measure'))
+            ->willReturn($units);
+        $this->replaceByMock('singleton', 'dhl_versenden/shipping_carrier_versenden', $carrierMock);
+
+        $this->assertSame($units, $block->getWeightUnits());
     }
 
     /**
@@ -87,61 +106,20 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingTest
      */
     public function displayCustomsValue()
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
-
-        // shipper EU, receiver EU
-        $shipmentOne = new Mage_Sales_Model_Order_Shipment();
-        $shippingAddressOne = new Mage_Sales_Model_Order_Address();
-        $shippingAddressOne->setCountryId('ES');
-        $orderOne = new Mage_Sales_Model_Order();
-        $orderOne->setStoreId(1);
-        $orderOne->setShippingAddress($shippingAddressOne);
-        $shipmentOne->setOrder($orderOne);
-
-        // shipper EU, receiver not EU
-        $shipmentTwo = new Mage_Sales_Model_Order_Shipment();
-        $shippingAddressTwo = new Mage_Sales_Model_Order_Address();
-        $shippingAddressTwo->setCountryId('NZ');
-        $orderTwo = new Mage_Sales_Model_Order();
-        $orderTwo->setStoreId(1);
-        $orderTwo->setShippingAddress($shippingAddressTwo);
-        $shipmentTwo->setOrder($orderTwo);
-
-        // shipper not EU, receiver not EU, same country
-        $shipmentThree = new Mage_Sales_Model_Order_Shipment();
-        $shippingAddressThree = new Mage_Sales_Model_Order_Address();
-        $shippingAddressThree->setCountryId('NZ');
-        $orderThree = new Mage_Sales_Model_Order();
-        $orderThree->setStoreId(2);
-        $orderThree->setShippingAddress($shippingAddressThree);
-        $shipmentThree->setOrder($orderThree);
-
-        // shipper not EU, receiver not EU, different countries
-        $shipmentFour = new Mage_Sales_Model_Order_Shipment();
-        $shippingAddressFour = new Mage_Sales_Model_Order_Address();
-        $shippingAddressFour->setCountryId('AU');
-        $orderFour = new Mage_Sales_Model_Order();
-        $orderFour->setStoreId(2);
-        $orderFour->setShippingAddress($shippingAddressFour);
-        $shipmentFour->setOrder($orderFour);
-
-        $blockMock = $this->getBlockMock($blockType, array('getShipment'));
-        $blockMock
-            ->expects($this->exactly(8))
-            ->method('getShipment')
-            ->willReturnOnConsecutiveCalls(
-                $shipmentOne, $shipmentOne,
-                $shipmentTwo, $shipmentTwo,
-                $shipmentThree, $shipmentThree,
-                $shipmentFour, $shipmentFour
-            );
-        $this->replaceByMock('block', $blockType, $blockMock);
-
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging $block */
-        $block = Mage::app()->getLayout()->createBlock($blockType);
-        $this->assertFalse($block->displayCustomsValue());
-        $this->assertTrue($block->displayCustomsValue());
-        $this->assertFalse($block->displayCustomsValue());
-        $this->assertTrue($block->displayCustomsValue());
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        $eu  = false;
+        $row = true;
+
+        $helperMock = $this->getHelperMock('dhl_versenden/data', array('isCollectCustomsData'));
+        $helperMock
+            ->expects($this->exactly(2))
+            ->method('isCollectCustomsData')
+            ->willReturnOnConsecutiveCalls($eu, $row);
+        $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
+
+        $this->assertSame($eu, $block->displayCustomsValue());
+        $this->assertSame($row, $block->displayCustomsValue());
     }
 }

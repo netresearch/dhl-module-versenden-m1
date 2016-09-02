@@ -144,10 +144,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $packageInfo = array(
             array(
-                'params' => array(
-                    'container' => $productCode,
-                    'weight'    => $packageWeight,
-                ),
+                'params' => array('weight' => $packageWeight),
                 'items' => array()
             )
         );
@@ -155,9 +152,16 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             'shipment_service' => array(),
             'service_setting' => array(),
         );
+        $customsInfo = array();
 
-        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')
-            ->shipmentToShipmentOrder($sequenceNumber, $shipment, $packageInfo, $serviceInfo);
+        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')->shipmentToShipmentOrder(
+            $sequenceNumber,
+            $shipment,
+            $packageInfo,
+            $serviceInfo,
+            $customsInfo,
+            $productCode
+        );
 
         $this->assertEquals($shipmentOrder->getReceiver()->getName1(), $expectation->getReceiverName1());
         $this->assertEquals(
@@ -209,10 +213,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $packageInfo = array(
             array(
-                'params' => array(
-                    'container' => $productCode,
-                    'weight'    => $packageWeight,
-                ),
+                'params' => array('weight' => $packageWeight),
                 'items' => array()
             )
         );
@@ -220,9 +221,16 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             'shipment_service' => array(),
             'service_setting' => array(),
         );
+        $customsInfo = array();
 
-        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')
-            ->shipmentToShipmentOrder($sequenceNumber, $shipment, $packageInfo, $serviceInfo);
+        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')->shipmentToShipmentOrder(
+            $sequenceNumber,
+            $shipment,
+            $packageInfo,
+            $serviceInfo,
+            $customsInfo,
+            $productCode
+        );
 
         $this->assertEquals($sequenceNumber, $shipmentOrder->getSequenceNumber());
         $this->assertEquals($incrementId, $shipmentOrder->getReference());
@@ -260,6 +268,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
         $request->setData('packages', array());
         $request->setData('services', array());
+        $request->setData('customs', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
 
@@ -319,6 +328,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $request->setOrderShipment($shipment);
         $request->setData('packages', array());
         $request->setData('services', array());
+        $request->setData('customs', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
         $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
@@ -367,6 +377,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $request->setOrderShipment($shipment);
         $request->setData('packages', array());
         $request->setData('services', $serviceInfo);
+        $request->setData('customs', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
         $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
@@ -407,6 +418,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
         $request->setData('packages', array());
         $request->setData('services', array());
+        $request->setData('customs', array());
         $shipmentRequests = array($sequenceNumber => $request);
 
 

@@ -36,46 +36,92 @@
 class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
     extends EcomDev_PHPUnit_Test_Case
 {
+    const EDIT_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
+    const VIEW_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_view';
+
+    protected function mockEditBlock()
+    {
+        $shippingAddress = Mage::getModel('sales/order_address');
+        $shippingAddress->setCountryId('DE');
+
+        $order = Mage::getModel('sales/order');
+        $order->setShippingAddress($shippingAddress);
+        $order->setShippingMethod('dhlversenden_flatrate');
+
+        $shipment = Mage::getModel('sales/order_shipment');
+        $shipment->setStoreId(1);
+        $shipment->setOrder($order);
+
+        $editBlockMock = $this->getBlockMock(self::EDIT_BLOCK_ALIAS, array('getShipment', 'fetchView'));
+        $editBlockMock
+            ->expects($this->any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+        $this->replaceByMock('block', self::EDIT_BLOCK_ALIAS, $editBlockMock);
+    }
+
+    protected function mockViewBlock()
+    {
+        $shippingAddress = Mage::getModel('sales/order_address');
+        $shippingAddress->setCountryId('DE');
+
+        $order = Mage::getModel('sales/order');
+        $order->setShippingAddress($shippingAddress);
+        $order->setShippingMethod('dhlversenden_flatrate');
+
+        $shipment = Mage::getModel('sales/order_shipment');
+        $shipment->setStoreId(1);
+        $shipment->setOrder($order);
+
+        $editBlockMock = $this->getBlockMock(self::VIEW_BLOCK_ALIAS, array('getShipment'));
+        $editBlockMock
+            ->expects($this->any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+        $this->replaceByMock('block', self::VIEW_BLOCK_ALIAS, $editBlockMock);
+    }
+
     protected function setUp()
     {
-        $this->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
         parent::setUp();
+
+        $this->mockEditBlock();
+        $this->mockViewBlock();
     }
 
     /**
      * @test
      * @loadFixture Model_ConfigTest
      */
-    public function renderView()
+    public function renderViewWrongShippingMethod()
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('flatrate_flatrate');
+        $block
+            ->expects($this->never())
+            ->method('fetchView');
+
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $this->assertEmpty($block->renderView());
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function renderViewDhlShippingMethod()
+    {
         $blockHtml = 'foo';
 
-        $orderOne = new Mage_Sales_Model_Order();
-        $orderOne->setShippingMethod('flatrate_flatrate');
-        $shipmentOne = new Mage_Sales_Model_Order_Shipment();
-        $shipmentOne->setOrder($orderOne);
-
-        $orderTwo = new Mage_Sales_Model_Order();
-        $orderTwo->setShippingMethod('dhlversenden_flatrate');
-        $shipmentTwo = new Mage_Sales_Model_Order_Shipment();
-        $shipmentTwo->setOrder($orderTwo);
-
-        $blockMock = $this->getBlockMock($blockType, array('getShipment', 'fetchView'));
-        $blockMock
-            ->expects($this->exactly(2))
-            ->method('getShipment')
-            ->willReturnOnConsecutiveCalls($shipmentOne, $shipmentTwo);
-        $blockMock
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+        $block
             ->expects($this->exactly(1))
             ->method('fetchView')
             ->willReturn($blockHtml);
-        $this->replaceByMock('block', $blockType, $blockMock);
 
-        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service $block */
-        $block = Mage::app()->getLayout()->createBlock($blockType);
-
-        $this->assertEmpty($block->renderView());
         $this->assertEquals($blockHtml, $block->renderView());
     }
 
@@ -88,25 +134,10 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
      */
     public function getServicesForEdit($jsonInfo)
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
-
-        $shippingAddress = new Mage_Sales_Model_Order_Address();
-        $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
-        $order = new Mage_Sales_Model_Order();
-        $order->setShippingMethod('dhlversenden_flatrate');
-        $order->setShippingAddress($shippingAddress);
-        $shipment = new Mage_Sales_Model_Order_Shipment();
-        $shipment->setOrder($order);
-
-        $blockMock = $this->getBlockMock($blockType, array('getShipment'));
-        $blockMock
-            ->expects($this->any())
-            ->method('getShipment')
-            ->willReturn($shipment);
-        $this->replaceByMock('block', $blockType, $blockMock);
-
-        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service $block */
-        $block = Mage::app()->getLayout()->createBlock($blockType);
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $jsonInfo);
 
         /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
@@ -131,25 +162,10 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
      */
     public function getServicesForView($jsonInfo)
     {
-        $blockType = 'dhl_versenden/adminhtml_sales_order_shipment_service_view';
-
-        $shippingAddress = new Mage_Sales_Model_Order_Address();
-        $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
-        $order = new Mage_Sales_Model_Order();
-        $order->setShippingMethod('dhlversenden_flatrate');
-        $order->setShippingAddress($shippingAddress);
-        $shipment = new Mage_Sales_Model_Order_Shipment();
-        $shipment->setOrder($order);
-
-        $blockMock = $this->getBlockMock($blockType, array('getShipment'));
-        $blockMock
-            ->expects($this->any())
-            ->method('getShipment')
-            ->willReturn($shipment);
-        $this->replaceByMock('block', $blockType, $blockMock);
-
-        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service $block */
-        $block = Mage::app()->getLayout()->createBlock($blockType);
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View $block */
+        $block = Mage::app()->getLayout()->createBlock(self::VIEW_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $jsonInfo);
 
         /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
@@ -165,7 +181,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $this->assertEquals('Garage', $services->getItem($code)->getValue());
     }
 
-        /**
+    /**
      * @test
      */
     public function getRendererForEdit()
