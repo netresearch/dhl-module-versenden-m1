@@ -38,7 +38,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
     /** @var Mage_Directory_Model_Country */
     protected $countryDirectory;
 
-    /** @var Dhl_Versenden_Helper_Data */
+    /** @var Dhl_Versenden_Helper_Address */
     protected $helper;
 
     /**
@@ -62,7 +62,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         if (!isset($args[$argName])) {
             throw new Mage_Core_Exception("required argument missing: $argName");
         }
-        if (!$args[$argName] instanceof Dhl_Versenden_Helper_Data) {
+        if (!$args[$argName] instanceof Dhl_Versenden_Helper_Address) {
             throw new Mage_Core_Exception("invalid argument: $argName");
         }
         $this->helper = $args[$argName];
