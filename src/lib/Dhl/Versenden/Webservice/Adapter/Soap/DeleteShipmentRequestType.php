@@ -17,38 +17,46 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl\Versenden\Webservice
+ * @package   Dhl\Versenden\Webservice\Soap
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\ResponseData;
-use \Dhl\Versenden\Webservice\Exception;
+namespace Dhl\Versenden\Webservice\Adapter\Soap;
+use Dhl\Bcs\Api as VersendenApi;
+use Dhl\Versenden\Webservice\RequestData;
+
 /**
- * StatusException
+ * DeleteShipmentRequestType
  *
  * @category Dhl
- * @package  Dhl\Versenden\Webservice
+ * @package  Dhl\Versenden\Webservice\Soap
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class StatusException extends Exception
+class DeleteShipmentRequestType implements RequestType
 {
     /**
-     * StatusException constructor.
-     * @param Status $status
+     * @param RequestData\DeleteShipment $requestData
+     * @return VersendenApi\DeleteShipmentOrderRequest
      */
-    public function __construct(Status $status)
+    public static function prepare(RequestData $requestData)
     {
-        $messages = $status->getStatusMessage();
-        if (!is_array($messages)) {
-            $messages = [$messages];
-        }
+        $version = new VersendenApi\Version(
+            $requestData->getVersion()->getMajorRelease(),
+            $requestData->getVersion()->getMinorRelease(),
+            $requestData->getVersion()->getBuild()
+        );
 
-        array_unshift($messages, $status->getStatusText());
-        $messages = implode("\n", $messages);
-        parent::__construct($messages, $status->getStatusCode());
+        $shipmentNumbers = $requestData->getShipmentNumbers();
+
+        $requestType = new VersendenApi\DeleteShipmentOrderRequest(
+            $version,
+            $shipmentNumbers
+        );
+
+        return $requestType;
     }
 }

@@ -81,6 +81,8 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
                 return new Webservice\Parser\Soap\Version();
             case self::OPERATION_CREATE_SHIPMENT_ORDER:
                 return new Webservice\Parser\Soap\CreateShipmentOrder();
+            case self::OPERATION_DELETE_SHIPMENT_ORDER:
+                return new Webservice\Parser\Soap\DeleteShipmentOrder();
             default:
                 return null;
         }
@@ -124,6 +126,30 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->createShipmentOrder($requestData, $parser);
+            $logger->debug($adapter);
+        } catch (SoapFault $fault) {
+            $logger->error($adapter);
+            throw $fault;
+        }
+
+        return $result;
+    }
+
+    protected function doDeleteShipmentOrder(RequestData\DeleteShipment $requestData)
+    {
+        /** @var SoapParser\CreateShipmentOrder $parser */
+        $parser = $this->getParser(self::OPERATION_DELETE_SHIPMENT_ORDER);
+        /** @var SoapAdapter $adapter */
+        $adapter = $this->getAdapter(Mage::getModel('dhl_versenden/config_shipper'));
+        /** @var Dhl_Versenden_Model_Webservice_Logger_Soap $logger */
+        $logger = $this->getLogger(
+            Mage::getModel('dhl_versenden/config'),
+            Mage::getModel('dhl_versenden/logger_writer'))
+        ;
+
+        try {
+            /** @var ResponseData\CreateShipment $result */
+            $result = $adapter->deleteShipmentOrder($requestData, $parser);
             $logger->debug($adapter);
         } catch (SoapFault $fault) {
             $logger->error($adapter);

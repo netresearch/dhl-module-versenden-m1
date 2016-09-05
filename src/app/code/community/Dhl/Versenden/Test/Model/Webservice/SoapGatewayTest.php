@@ -271,8 +271,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentNumber = 'bar';
 
         $wsResponse = new Webservice\ResponseData\CreateShipment(
-            new Webservice\ResponseData\Status(0, 'ok', 'ok'),
-            new Webservice\ResponseData\LabelCollection(),
+            new Webservice\ResponseData\Status\Response(0, 'ok', 'ok'),
+            new Webservice\ResponseData\CreateShipment\LabelCollection(),
             array($sequenceNumber => $shipmentNumber)
         );
 

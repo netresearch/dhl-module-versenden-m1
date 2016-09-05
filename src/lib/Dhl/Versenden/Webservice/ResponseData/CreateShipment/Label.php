@@ -23,8 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\ResponseData;
+namespace Dhl\Versenden\Webservice\ResponseData\CreateShipment;
 use Dhl\Versenden\Pdf\Adapter;
+use Dhl\Versenden\Webservice\ResponseData\Status\Item as CreationState;
 
 /**
  * Label
@@ -37,7 +38,7 @@ use Dhl\Versenden\Pdf\Adapter;
  */
 class Label
 {
-    /** @var Status */
+    /** @var CreationState */
     private $status;
     /** @var string */
     private $shipmentNumber;
@@ -52,15 +53,15 @@ class Label
 
     /**
      * Label constructor.
-     * @param Status $status
+     * @param CreationState $status
      * @param string $shipmentNumber
      * @param string $label
      * @param string $returnLabel
      * @param string $exportLabel
      * @param string $codLabel
      */
-    public function __construct(Status $status, $shipmentNumber, $label,
-        $returnLabel = null, $exportLabel = null, $codLabel = null
+    public function __construct(CreationState $status, $shipmentNumber, $label,
+                                $returnLabel = null, $exportLabel = null, $codLabel = null
     ) {
         $this->status = $status;
         $this->shipmentNumber = $shipmentNumber;
@@ -71,7 +72,7 @@ class Label
     }
 
     /**
-     * @return Status
+     * @return CreationState
      */
     public function getStatus()
     {

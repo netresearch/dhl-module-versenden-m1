@@ -47,11 +47,27 @@ abstract class Shipment implements Parser
 
     /**
      * @param VersendenApi\Statusinformation $statusInfo
-     * @return ResponseData\Status
+     * @return ResponseData\Status\Response
      */
     protected function parseResponseStatus(VersendenApi\Statusinformation $statusInfo)
     {
-        $status = new ResponseData\Status(
+        $status = new ResponseData\Status\Response(
+            $statusInfo->getStatusCode(),
+            $statusInfo->getStatusText(),
+            $statusInfo->getStatusMessage()
+        );
+        return $status;
+    }
+
+    /**
+     * @param string $itemId Sequence number or shipment number
+     * @param VersendenApi\Statusinformation $statusInfo
+     * @return ResponseData\Status\Item
+     */
+    protected function parseItemStatus($itemId, VersendenApi\Statusinformation $statusInfo)
+    {
+        $status = new ResponseData\Status\Item(
+            $itemId,
             $statusInfo->getStatusCode(),
             $statusInfo->getStatusText(),
             $statusInfo->getStatusMessage()
