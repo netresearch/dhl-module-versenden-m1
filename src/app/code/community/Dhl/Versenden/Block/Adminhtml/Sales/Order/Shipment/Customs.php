@@ -33,14 +33,9 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
+class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
     extends Mage_Core_Block_Template
 {
-    /**
-     * @return boolean
-     */
-    abstract public function canEdit();
-
     /**
      * Retrieve shipment model instance
      *
@@ -78,18 +73,5 @@ abstract class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
     {
         $orderInfo = $this->getShipment()->getOrder();
         return $orderInfo->getBaseCurrency()->getCurrencyCode();
-    }
-
-    /**
-     * @return \Dhl\Versenden\Webservice\RequestData\ShippingInfo|null
-     */
-    public function getExportInfo()
-    {
-        $infoJson = $this->getShipment()->getShippingAddress()->getData('dhl_versenden_info');
-        $infoObj  = json_decode($infoJson);
-
-        //TODO(nr): add export data to dhl_versenden_info. see also DHLGKP-24
-        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo($infoObj);
-        return new Varien_Object();
     }
 }

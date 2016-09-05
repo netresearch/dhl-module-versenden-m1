@@ -35,7 +35,7 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-final class Account extends RequestData
+class Account extends RequestData
 {
     /** @var string */
     private $user;

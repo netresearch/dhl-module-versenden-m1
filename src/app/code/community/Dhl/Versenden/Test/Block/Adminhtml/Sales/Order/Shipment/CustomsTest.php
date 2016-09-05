@@ -36,8 +36,7 @@
 class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
     extends EcomDev_PHPUnit_Test_Case
 {
-    const EDIT_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_customs_edit';
-    const VIEW_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_customs_view';
+    const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_customs';
 
     protected function mockCustomsBlock()
     {
@@ -51,12 +50,12 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         $shipment->setStoreId(1);
         $shipment->setOrder($order);
 
-        $editBlockMock = $this->getBlockMock(self::EDIT_BLOCK_ALIAS, array('getShipment', 'fetchView'));
+        $editBlockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getShipment', 'fetchView'));
         $editBlockMock
             ->expects($this->any())
             ->method('getShipment')
             ->willReturn($shipment);
-        $this->replaceByMock('block', self::EDIT_BLOCK_ALIAS, $editBlockMock);
+        $this->replaceByMock('block', self::BLOCK_ALIAS, $editBlockMock);
     }
 
     /**
@@ -66,20 +65,8 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
     {
         $shipment = 'foo';
         Mage::register('current_shipment', $shipment);
-        $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit();
+        $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs();
         $this->assertSame($shipment, $block->getShipment());
-    }
-
-    /**
-     * @test
-     */
-    public function canEdit()
-    {
-        $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit();
-        $this->assertTrue($block->canEdit());
-
-        $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_View();
-        $this->assertFalse($block->canEdit());
     }
 
     /**
@@ -103,7 +90,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         $this->replaceByMock('singleton', 'dhl_versenden/shipping_carrier_versenden', $carrierMock);
 
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit $block */
-        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
         $blockTerms = $block->getTermsOfTrade();
         $this->assertInternalType('array', $blockTerms);
         $this->assertCount(1 + count($carrierTerms), $blockTerms);
@@ -130,17 +117,9 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         $currencyCode = 'xxx';
 
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit $block */
-        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setBaseCurrencyCode($currencyCode);
 
         $this->assertEquals($currencyCode, $block->getCustomValueCurrencyCode());
-    }
-
-    /**
-     * @test
-     */
-    public function getExportInfo()
-    {
-        $this->markTestIncomplete('Export settings are not yet displayed in admin panel.');
     }
 }

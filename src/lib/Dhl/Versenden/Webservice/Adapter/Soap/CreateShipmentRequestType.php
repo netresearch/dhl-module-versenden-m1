@@ -25,8 +25,6 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
-use Dhl\Bcs\Api\ShipmentItemType;
-use Dhl\Bcs\Api\ShipmentService;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -50,7 +48,7 @@ class CreateShipmentRequestType implements RequestType
         $packages = $shipmentOrder->getPackages()->getItems();
         /** @var RequestData\ShipmentOrder\Package $package */
         $package = current($packages);
-        $shipmentItemType = new ShipmentItemType($package->getWeightInKG());
+        $shipmentItemType = new VersendenApi\ShipmentItemType($package->getWeightInKG());
 
         $shipmentDetailsType = new VersendenApi\ShipmentDetailsTypeType(
             $shipmentOrder->getProductCode(),
@@ -154,7 +152,9 @@ class CreateShipmentRequestType implements RequestType
         $exportDocType->setTermsOfTrade($document->getTermsOfTrade());
         $exportDocType->setPermitNumber($document->getPermitNumber());
         $exportDocType->setAttestationNumber($document->getAttestationNumber());
-        $exportDocType->setWithElectronicExportNtfctn($document->isElectronicExportNotification());
+        $exportDocType->setWithElectronicExportNtfctn(
+            new VersendenApi\Serviceconfiguration($document->isElectronicExportNotification())
+        );
 
         /** @var RequestData\ShipmentOrder\Export\Position $position */
         foreach ($document->getPositions() as $position) {
