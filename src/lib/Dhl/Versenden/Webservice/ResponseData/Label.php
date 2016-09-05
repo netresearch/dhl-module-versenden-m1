@@ -35,7 +35,7 @@ use Dhl\Versenden\Pdf\Adapter;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-final class Label
+class Label
 {
     /** @var Status */
     private $status;

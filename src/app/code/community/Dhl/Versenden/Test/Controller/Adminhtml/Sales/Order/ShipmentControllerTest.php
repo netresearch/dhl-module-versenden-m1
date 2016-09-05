@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit
+ * Dhl_Versenden_Test_Controller_Adminhtml_Sales_Order_ShipmentControllerTest
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -33,14 +33,29 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit
-    extends Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
+class Dhl_Versenden_Test_Controller_Adminhtml_Sales_Order_ShipmentControllerTest
+    extends Dhl_Versenden_Test_Case_AdminController
 {
     /**
-     * @return boolean
+     * @test
+     * @registry current_shipment
+     * @loadFixture Controller_ConfigTest
      */
-    public function canEdit()
+    public function getShippingItemsGridAction()
     {
-        return true;
+        $grid = '<table></table>';
+
+        $blockMock = $this->getBlockMock(
+            'dhl_versenden/adminhtml_sales_order_shipment_packaging_grid',
+            array('renderView', 'displayCustomsValue')
+        );
+        $blockMock
+            ->expects($this->once())
+            ->method('renderView')
+            ->willReturn($grid);
+        $this->replaceByMock('block', 'dhl_versenden/adminhtml_sales_order_shipment_packaging_grid', $blockMock);
+
+        $this->dispatch('adminhtml/sales_order_shipment/getShippingItemsGrid');
+        $this->assertResponseBody($this->equalTo($grid));
     }
 }

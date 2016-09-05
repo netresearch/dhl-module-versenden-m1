@@ -40,51 +40,40 @@
         </thead>
 
         <tbody>
-            <?php if ($this->canEdit()): ?>
-                <tr>
-                    <td>
-                        <select id="customs_terms_of_trade" name="customs[terms_of_trade]"
-                                title="<?php echo $this->helper('dhl_versenden/data')->__('Terms of Trade') ?>">
-                            <?php foreach ($this->getTermsOfTrade() as $termInfo): ?>
-                                <option value="<?php echo $termInfo['value'] ?>">
-                                    <?php echo $termInfo['label']; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </td>
-                    <td>
-                        <input id="customs_additional_fee" name="customs[additional_fee]" type="text"
-                               title="" value="0"
-                               class="input-text required-entry validate-number"/>
-                        <span class="customs-value-currency">[<?php echo $this->getCustomValueCurrencyCode(); ?>]</span>
-                    </td>
-                    <td>
-                        <input id="customs_place_of_commital" name="customs[place_of_commital]" type="text"
-                               class="input-text required-entry validate-length maximum-length-35" maxlength="35" />
-                    </td>
-                    <td>
-                        <input id="customs_permit_number" name="customs[permit_number]" type="text"
-                               class="input-text validate-length maximum-length-10" maxlength="10" />
-                    </td>
-                    <td>
-                        <input id="customs_attestation_number" name="customs[attestation_number]" type="text"
-                               class="input-text validate-length maximum-length-35" maxlength="35" />
-                    </td>
-                    <td>
-                        <input id="customs_export_notification" name="customs[export_notification]" type="checkbox"
-                               class="input-text validate-length maximum-length-35" maxlength="35" />
-                    </td>
-                </tr>
-            <?php else: ?>
-                <?php $export = $this->getExportInfo(); ?>
-                <tr>
-                    <td><?php echo $export->getTermsOfTrade(); ?></td>
-                    <td><?php echo $export->getPaceOfCommital(); ?></td>
-                    <td><?php echo $export->getPermitNumber(); ?></td>
-                    <td><?php echo $export->getAttestationNumber(); ?></td>
-                    <td><?php echo $export->isElectronicExportNotification(); ?></td>
-                </tr>
-            <?php endif; ?>
+            <tr>
+                <td>
+                    <select id="customs_terms_of_trade" name="customs[terms_of_trade]"
+                            title="<?php echo $this->helper('dhl_versenden/data')->__('Terms of Trade') ?>">
+                        <?php foreach ($this->getTermsOfTrade() as $termInfo): ?>
+                            <option value="<?php echo $termInfo['value'] ?>">
+                                <?php echo $termInfo['label']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td>
+                    <input id="customs_additional_fee" name="customs[additional_fee]" type="text"
+                           title="" value="0"
+                           class="input-text required-entry validate-number"/>
+                    <span class="customs-value-currency">[<?php echo $this->getCustomValueCurrencyCode(); ?>]</span>
+                </td>
+                <td>
+                    <input id="customs_place_of_commital" name="customs[place_of_commital]" type="text"
+                           class="input-text required-entry validate-length maximum-length-35" maxlength="35" />
+                </td>
+                <td>
+                    <input id="customs_permit_number" name="customs[permit_number]" type="text"
+                           class="input-text validate-length maximum-length-10" maxlength="10" />
+                </td>
+                <td>
+                    <input id="customs_attestation_number" name="customs[attestation_number]" type="text"
+                           class="input-text validate-length maximum-length-35" maxlength="35" />
+                </td>
+                <td>
+                    <input id="customs_export_notification" name="customs[export_notification]" type="checkbox"
+                           class="input-text validate-length maximum-length-35" maxlength="35" />
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
