@@ -30,12 +30,12 @@
     <table cellspacing="0" class="data">
         <thead>
             <tr class="headings">
-                <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Terms of Trade') ?></span></th>
-                <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Additional Fee') ?></span></th>
-                <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Place of Commital') ?></span></th>
-                <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Permit Number') ?></span></th>
-                <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Attestation Number') ?></span></th>
-                <th class="no-link last"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Electronic Export Notification') ?></span></th>
+                <th class="no-link"><span class="nobr"><?php echo $this->__('Terms of Trade') ?></span></th>
+                <th class="no-link"><span class="nobr"><?php echo $this->__('Additional Fee') ?></span></th>
+                <th class="no-link"><span class="nobr"><?php echo $this->__('Place of Commital') ?></span></th>
+                <th class="no-link"><span class="nobr"><?php echo $this->__('Permit Number') ?></span></th>
+                <th class="no-link"><span class="nobr"><?php echo $this->__('Attestation Number') ?></span></th>
+                <th class="no-link last"><span class="nobr"><?php echo $this->__('Electronic Export Notification') ?></span></th>
             </tr>
         </thead>
 
@@ -43,7 +43,7 @@
             <tr>
                 <td>
                     <select id="customs_terms_of_trade" name="customs[terms_of_trade]"
-                            title="<?php echo $this->helper('dhl_versenden/data')->__('Terms of Trade') ?>">
+                            title="<?php echo $this->__('Terms of Trade') ?>">
                         <?php foreach ($this->getTermsOfTrade() as $termInfo): ?>
                             <option value="<?php echo $termInfo['value'] ?>">
                                 <?php echo $termInfo['label']; ?>
