@@ -17,33 +17,48 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Webservice\ResponseData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\ResponseData;
+namespace Dhl\Versenden\Webservice\ResponseData\Status;
 /**
- * Dhl_Versenden_Model_Webservice_Gateway
+ * Item
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Webservice\ResponseData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface Dhl_Versenden_Model_Webservice_Gateway
+class Item extends Response
 {
     /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return ResponseData\CreateShipment
+     * Status identifier, either sequence number or shipment number.
+     * @var string
      */
-    public function createShipmentOrder(array $shipmentRequests);
+    protected $identifier;
 
     /**
-     * @param string[] $shipmentNumbers
-     * @return ResponseData\DeleteShipment
+     * Status constructor.
+     * @param string $identifier
+     * @param string $statusCode
+     * @param string $statusText
+     * @param string $statusMessage
      */
-    public function deleteShipmentOrder(array $shipmentNumbers);
+    public function __construct($identifier, $statusCode, $statusText, $statusMessage)
+    {
+        $this->identifier = $identifier;
+        parent::__construct($statusCode, $statusText, $statusMessage);
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
+    }
 }

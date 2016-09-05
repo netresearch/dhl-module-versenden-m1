@@ -17,33 +17,55 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Webservice\RequestData
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\ResponseData;
+namespace Dhl\Versenden\Webservice\RequestData;
+use Dhl\Versenden\Webservice\RequestData;
+
 /**
- * Dhl_Versenden_Model_Webservice_Gateway
+ * DeleteShipment
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface Dhl_Versenden_Model_Webservice_Gateway
+class DeleteShipment extends RequestData
 {
-    /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return ResponseData\CreateShipment
-     */
-    public function createShipmentOrder(array $shipmentRequests);
+    /** @var Version */
+    private $version;
+    /** @var string[] */
+    private $shipmentNumbers;
 
     /**
-     * @param string[] $shipmentNumbers
-     * @return ResponseData\DeleteShipment
+     * DeleteShipment constructor.
+     * @param Version $version
+     * @param \string[] $shipmentNumbers
      */
-    public function deleteShipmentOrder(array $shipmentNumbers);
+    public function __construct(Version $version, array $shipmentNumbers)
+    {
+        $this->version = $version;
+        $this->shipmentNumbers = $shipmentNumbers;
+    }
+
+    /**
+     * @return Version
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getShipmentNumbers()
+    {
+        return $this->shipmentNumbers;
+    }
 }

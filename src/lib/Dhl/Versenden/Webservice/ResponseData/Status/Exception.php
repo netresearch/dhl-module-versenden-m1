@@ -17,33 +17,38 @@
  * PHP version 5
  *
  * @category  Dhl
- * @package   Dhl_Versenden
+ * @package   Dhl\Versenden\Webservice
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\ResponseData;
+namespace Dhl\Versenden\Webservice\ResponseData\Status;
+use Dhl\Versenden\Webservice\ResponseData\Status\Response as ReponseStatus;
 /**
- * Dhl_Versenden_Model_Webservice_Gateway
+ * Exception
  *
  * @category Dhl
- * @package  Dhl_Versenden
+ * @package  Dhl\Versenden\Webservice
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface Dhl_Versenden_Model_Webservice_Gateway
+class Exception extends \Dhl\Versenden\Webservice\Exception
 {
     /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return ResponseData\CreateShipment
+     * Exception constructor.
+     * @param ReponseStatus $status
      */
-    public function createShipmentOrder(array $shipmentRequests);
+    public function __construct(ReponseStatus $status)
+    {
+        $messages = $status->getStatusMessage();
+        if (!is_array($messages)) {
+            $messages = [$messages];
+        }
 
-    /**
-     * @param string[] $shipmentNumbers
-     * @return ResponseData\DeleteShipment
-     */
-    public function deleteShipmentOrder(array $shipmentNumbers);
+        array_unshift($messages, $status->getStatusText());
+        $messages = implode("\n", $messages);
+        parent::__construct($messages, $status->getStatusCode());
+    }
 }

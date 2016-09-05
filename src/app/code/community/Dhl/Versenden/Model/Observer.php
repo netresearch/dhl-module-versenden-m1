@@ -303,4 +303,32 @@ class Dhl_Versenden_Model_Observer
             $checkResult->isAvailable = false;
         }
     }
+
+    /**
+     * Cancel the shipping label via DHL Business Customer Shipping API.
+     * The track will not be deleted if shipping label deletion fails.
+     * - event: sales_order_shipment_track_delete_before
+     *
+     * @param Varien_Event_Observer $observer
+     * @throws Mage_Core_Exception
+     */
+    public function deleteShippingLabel(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Order_Shipment_Track $track */
+        $track = $observer->getData('track');
+        if ($track->getCarrierCode() !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            return;
+        }
+
+        //TODO(nr): check what happens it label is already manifested
+        $gateway = new Dhl_Versenden_Model_Webservice_Gateway_Soap();
+        $shipmentNumbers = array($track->getData('track_number'));
+        $response = $gateway->deleteShipmentOrder($shipmentNumbers);
+        if ($response->getStatus()->isError()) {
+            throw new Mage_Core_Exception($response->getStatus()->getStatusText());
+        }
+
+        //TODO(nr): save shipment?
+        $track->getShipment()->unsetData('shipping_label');
+    }
 }

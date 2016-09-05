@@ -102,10 +102,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\Adapter\NotImplementedException
      */
     public function deleteShipmentOrder()
     {
+        $this->markTestIncomplete('Do not actually perform webservice call.');
+
         $major = '2';
         $minor = '1';
         $requestData = new RequestData\Version($major, $minor, null);

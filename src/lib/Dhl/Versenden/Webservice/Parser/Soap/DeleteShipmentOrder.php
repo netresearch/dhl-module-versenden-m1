@@ -28,7 +28,7 @@ use \Dhl\Bcs\Api as VersendenApi;
 use \Dhl\Versenden\Webservice;
 
 /**
- * CreateShipmentOrder
+ * DeleteShipmentOrder
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\Soap
@@ -36,32 +36,30 @@ use \Dhl\Versenden\Webservice;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
+class DeleteShipmentOrder extends Shipment implements Webservice\Parser
 {
     /**
-     * @param VersendenApi\CreateShipmentOrderResponse $response
-     * @return Webservice\ResponseData\CreateShipment
+     * @param VersendenApi\DeleteShipmentOrderResponse $response
+     * @return Webservice\ResponseData\DeleteShipment
      */
     public function parse($response)
     {
         $status = $this->parseResponseStatus($response->getStatus());
 
-        $creationStates = $response->getCreationState();
-        if ($creationStates instanceof VersendenApi\CreationState) {
-            $creationStates = array($creationStates);
+        $deletionStates = $response->getDeletionState();
+        if ($deletionStates instanceof VersendenApi\DeletionState) {
+            $deletionStates = array($deletionStates);
         }
 
-        $sequence = [];
-        $labels = new Webservice\ResponseData\CreateShipment\LabelCollection();
+        $deletedItems = new Webservice\ResponseData\DeleteShipment\StatusCollection();
 
-        /** @var VersendenApi\CreationState $creationState */
-        foreach ($creationStates as $creationState) {
-            $sequence[$creationState->getSequenceNumber()] = $creationState->getLabelData()->getShipmentNumber();
-            $label = $this->parseLabel($creationState->getLabelData());
-            $labels->addItem($label);
+        /** @var VersendenApi\DeletionState $deletionState */
+        foreach ($deletionStates as $deletionState) {
+            $deletedItem = $this->parseItemStatus($deletionState->getShipmentNumber(), $deletionState->getStatus());
+            $deletedItems->addItem($deletedItem);
         }
 
-        return new Webservice\ResponseData\CreateShipment($status, $labels, $sequence);
+        return new Webservice\ResponseData\DeleteShipment($status, $deletedItems);
     }
 }
 
