@@ -74,7 +74,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                 $customsInfo['place_of_commital'],
                 $customsInfo['permit_number'],
                 $customsInfo['attestation_number'],
-                $customsInfo['export_notification'],
+                isset($customsInfo['export_notification']) && $customsInfo['export_notification'],
                 $exportPositions
             );
 

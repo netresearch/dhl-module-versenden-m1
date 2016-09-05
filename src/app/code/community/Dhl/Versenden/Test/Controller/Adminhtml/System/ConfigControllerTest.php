@@ -25,7 +25,7 @@
  */
 
 /**
- * Dhl_Versenden_Test_Case_AdminController
+ * Dhl_Versenden_Test_Controller_Adminhtml_System_ConfigControllerTest
  *
  * @category Dhl
  * @package  Dhl_Versenden

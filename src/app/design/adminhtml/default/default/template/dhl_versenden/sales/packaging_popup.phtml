@@ -49,15 +49,19 @@ document.observe("dom:loaded", function() {
 
             for (var packageId in packaging.packages) {
                 if (!isNaN(packageId)) {
-                    console.log(packaging.packages[packageId]);
                     for (var packedItemId in packaging.packages[packageId]['items']) {
                         if (!isNaN(packedItemId)) {
-                            requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[description]']
-                                = $('package_block_' + packageId).select("input[name=customs_description]")[0].value;
-                            requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[country_of_origin]']
-                                = $('package_block_' + packageId).select("select[name=customs_origin]")[0].value;
-                            requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[tariff_number]']
-                                = $('package_block_' + packageId).select("input[name=customs_tariff_number]")[0].value;
+                            $('package_block_' + packageId).select('.package_items .grid tbody tr').each(function (packedItemRow) {
+                                var itemId = packedItemRow.select('[type="checkbox"]')[0].value;
+                                if (itemId == packedItemId) {
+                                    requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[description]']
+                                        = packedItemRow.select("input[name=customs_description]")[0].value;
+                                    requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[country_of_origin]']
+                                        = packedItemRow.select("select[name=customs_origin]")[0].value;
+                                    requestData['packages['+packageId+']'+'[items]'+'['+packedItemId+']'+'[customs]'+'[tariff_number]']
+                                        = packedItemRow.select("input[name=customs_tariff_number]")[0].value;
+                                }
+                            });
                         }
                     }
                 }
