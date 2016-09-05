@@ -195,7 +195,6 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $gkApiProduct
     )
     {
-        $helper         = Mage::helper('dhl_versenden/data');
         $shipperConfig  = Mage::getModel('dhl_versenden/config_shipper');
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
@@ -205,7 +204,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
         $args = array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper'            => $helper,
+            'helper'            => Mage::helper('dhl_versenden/address'),
         );
         $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', $args);
 
@@ -240,7 +239,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         // build shipment order request data
         $shipmentOrder = $orderBuilder->getShipmentOrder(
             $sequenceNumber,
-            $helper->utcToCet(null, 'Y-m-d'),
+            Mage::helper('dhl_versenden/data')->utcToCet(null, 'Y-m-d'),
             $shipment,
             $packageInfo,
             $serviceInfo,
