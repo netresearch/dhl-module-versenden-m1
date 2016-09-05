@@ -31,10 +31,10 @@
             <table cellspacing="0" class="data">
                 <thead>
                 <tr class="headings">
-                    <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Customs Description') ?></span></th>
-                    <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Country of Origin') ?></span></th>
-                    <th class="no-link"><span class="nobr"><?php echo $this->helper('dhl_versenden/data')->__('Tariff Number') ?></span></th>
-                    <th class="no-link"><span class="nobr"><?php echo $this->helper('sales')->__('Weight') ?></span></th>
+                    <th class="no-link"><span class="nobr"><?php echo $this->__('Customs Description') ?></span></th>
+                    <th class="no-link"><span class="nobr"><?php echo $this->__('Country of Origin') ?></span></th>
+                    <th class="no-link"><span class="nobr"><?php echo $this->__('Tariff Number') ?></span></th>
+                    <th class="no-link"><span class="nobr"><?php echo $this->__('Weight') ?></span></th>
                     <th class="no-link" width="100"><span class="nobr"><?php echo $this->helper('sales')->__('Customs Value') ?></span></th>
                     <th class="a-center no-link" width="100">
                         <span class="nobr">
@@ -67,7 +67,7 @@
                         </td>
                         <td class="country-of-origin">
                             <select name="customs_origin"
-                                    title="<?php echo $this->helper('dhl_versenden/data')->__('Country of Origin') ?>">
+                                    title="<?php echo $this->__('Country of Origin') ?>">
                                 <?php $selectedCountry = $this->getCountryOfManufacture($_orderItem->getProductId()); ?>
                                 <?php foreach ($this->getCountries() as $countryInfo): ?>
                                     <option value="<?php echo $countryInfo['value'] ?>" <?php if ($countryInfo['value'] == $selectedCountry): echo 'selected="selected"'; endif; ?>>
@@ -79,7 +79,7 @@
                         <td class="tariff-number">
                             <input name="customs_tariff_number"
                                    type="text" class="input-text required-entry validate-length maximum-length-10"
-                                   title="<?php echo $this->__('Customs Description') ?>" maxlength="10" />
+                                   title="<?php echo $this->__('Tariff Number') ?>" maxlength="10" />
                         </td>
                         <td class="a-center weight ">
                             <?php echo $item->getWeight(); ?>
