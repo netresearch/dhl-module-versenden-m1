@@ -77,8 +77,6 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
                     );
                 }
 
-                return $result ;
-
                 // Pattern B
             } elseif (isset($matches[self::OPTION_B_STREET_NAME]) && !empty($matches[self::OPTION_B_STREET_NAME])) {
 
@@ -93,9 +91,6 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
                         . $matches[self::OPTION_B_ADDITION_2]
                     );
                 }
-
-
-                return $result;
             }
         }
 

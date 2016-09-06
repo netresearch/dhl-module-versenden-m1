@@ -476,4 +476,56 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
         $gateway->createShipmentOrder($shipmentRequests);
     }
+
+    /**
+     * @test
+     */
+    public function deleteShipmentOrderOk()
+    {
+        $this->markTestIncomplete('No recorded successful deletions available yet.');
+    }
+
+    /**
+     * @test
+     * @expectedException SoapFault
+     */
+    public function deleteShipmentOrderLogFault()
+    {
+        $shipmentNumbers = array('123', '456');
+
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
+            ->disableOriginalConstructor()
+            ->setMethods(array('deleteShipmentOrder'))
+            ->getMock();
+        $adapter
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willThrowException(new SoapFault('soap:Server', 'my bad :('));
+
+        $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
+            ->setMethods(array('debug', 'error'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger
+            ->expects($this->never())
+            ->method('debug');
+        $logger
+            ->expects($this->once())
+            ->method('error');
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('getAdapter', 'getLogger'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('getAdapter')
+            ->willReturn($adapter);
+        $gateway
+            ->expects($this->once())
+            ->method('getLogger')
+            ->willReturn($logger);
+
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $gateway->deleteShipmentOrder($shipmentNumbers);
+    }
 }
