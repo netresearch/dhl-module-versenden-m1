@@ -225,7 +225,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      */
     public function deleteShipmentOrder(array $shipmentNumbers)
     {
-        $this->createShipmentOrderBefore($shipmentNumbers);
+        $this->deleteShipmentOrderBefore($shipmentNumbers);
 
         $requestData = $this->prepareDeleteShipmentOrderData($shipmentNumbers);
         $result = $this->doDeleteShipmentOrder($requestData);

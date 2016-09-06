@@ -29,7 +29,7 @@ use \Dhl\Versenden\Webservice\Parser;
 use Dhl\Versenden\Webservice\ResponseData;
 
 /**
- * ShipmentParser
+ * Shipment
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\Soap
