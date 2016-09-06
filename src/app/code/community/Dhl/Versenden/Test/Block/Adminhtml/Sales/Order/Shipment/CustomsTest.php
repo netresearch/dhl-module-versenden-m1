@@ -67,6 +67,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         Mage::register('current_shipment', $shipment);
         $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs();
         $this->assertSame($shipment, $block->getShipment());
+        Mage::unregister('current_shipment');
     }
 
     /**
