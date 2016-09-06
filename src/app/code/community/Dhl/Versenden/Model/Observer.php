@@ -49,11 +49,21 @@ class Dhl_Versenden_Model_Observer
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
         $dhlLibs = array('Versenden', 'Bcs');
-        array_walk(
-            $dhlLibs, function ($libDir) use ($autoloader) {
+        array_walk($dhlLibs,
+            function($libDir) use ($autoloader) {
                 $autoloader->addNamespace(
                     "Dhl\\$libDir\\", // prefix
                     sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
+                );
+            }
+        );
+
+        $externalLibs = array('Psr');
+        array_walk($externalLibs,
+            function($libDir) use ($autoloader) {
+                $autoloader->addNamespace(
+                    "$libDir\\", // prefix
+                    sprintf('%s/Netresearch/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
                 );
             }
         );

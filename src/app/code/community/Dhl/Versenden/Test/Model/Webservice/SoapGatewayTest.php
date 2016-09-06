@@ -433,7 +433,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
 
         $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
-            ->setMethods(array('shipmentToShipmentOrder', 'getAdapter', 'logRequest', 'logResponse'))
+            ->setMethods(array('shipmentToShipmentOrder', 'getAdapter'))
             ->getMock();
         $gateway
             ->expects($this->once())
@@ -443,58 +443,20 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->expects($this->once())
             ->method('getAdapter')
             ->willReturn($adapter);
-        $gateway
-            ->expects($this->once())
-            ->method('logRequest');
-        $gateway
-            ->expects($this->once())
-            ->method('logResponse');
 
+        $modelType    = 'dhl_versenden/webservice_logger';
+        $logModelMock = $this->getModelMock($modelType, array('logDebug', 'logError'));
+        $logModelMock
+            ->expects($this->any())
+            ->method('logDebug')
+            ->willReturnSelf();
+        $logModelMock
+            ->expects($this->any())
+            ->method('logError')
+            ->willReturnSelf();
+        $this->replaceByMock('model', $modelType, $logModelMock);
 
         /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
         $gateway->createShipmentOrder($shipmentRequests);
-    }
-
-    /**
-     * @test
-     */
-    public function log()
-    {
-        $lastRequest = 'last request';
-        $lastResponse = 'last response';
-        $lastResponseHeaders = 'last response headers';
-
-        $clientMock = $this->getMockBuilder(SoapClient::class)
-            ->disableOriginalConstructor()
-            ->setMethods(array('__getLastRequest', '__getLastResponse', '__getLastResponseHeaders'))
-            ->getMock();
-        $clientMock
-            ->expects($this->once())
-            ->method('__getLastRequest')
-            ->willReturn($lastRequest);
-        $clientMock
-            ->expects($this->once())
-            ->method('__getLastResponse')
-            ->willReturn($lastResponse);
-        $clientMock
-            ->expects($this->once())
-            ->method('__getLastResponseHeaders')
-            ->willReturn($lastResponseHeaders);
-
-        $loggerMock = $this->getModelMock('core/logger', array('log'));
-        $loggerMock
-            ->expects($this->exactly(2))
-            ->method('log')
-            ->withConsecutive(
-                $this->equalTo($lastRequest),
-                $this->equalTo($lastResponse . "\n\n" . $lastResponseHeaders)
-            );
-        $this->replaceByMock('singleton', 'core/logger', $loggerMock);
-
-        $adapter = new Webservice\Adapter\Soap($clientMock);
-
-        $gateway = new Dhl_Versenden_Model_Webservice_Gateway_Soap();
-        $gateway->logRequest($adapter);
-        $gateway->logResponse($adapter);
     }
 }

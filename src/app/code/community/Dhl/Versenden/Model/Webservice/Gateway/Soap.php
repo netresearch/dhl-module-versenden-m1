@@ -97,35 +97,18 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         $parser = $this->getParser(self::OPERATION_CREATE_SHIPMENT_ORDER);
         /** @var SoapAdapter $adapter */
         $adapter = $this->getAdapter(Mage::getModel('dhl_versenden/config_shipper'));
+        /** @var Dhl_Versenden_Model_Webservice_Logger $webserviceLogger */
+        $webserviceLogger = Mage::getSingleton('dhl_versenden/webservice_logger');
 
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->createShipmentOrder($requestData, $parser);
+            $webserviceLogger->logDebug($adapter);
         } catch (SoapFault $fault) {
-            $this->logRequest($adapter);
-            $this->logResponse($adapter);
+            $webserviceLogger->logError($adapter);
             throw $fault;
         }
 
         return $result;
-    }
-
-    /**
-     * @param SoapAdapter $adapter
-     */
-    public function logRequest(SoapAdapter $adapter)
-    {
-        $request = $adapter->getClient()->__getLastRequest();
-        Mage::getSingleton('core/logger')->log($request);
-    }
-
-    /**
-     * @param SoapAdapter $adapter
-     */
-    public function logResponse(SoapAdapter $adapter)
-    {
-        $headers = $adapter->getClient()->__getLastResponseHeaders();
-        $response = $adapter->getClient()->__getLastResponse();
-        Mage::getSingleton('core/logger')->log($headers . "\n\n" . $response);
     }
 }

@@ -10,7 +10,7 @@ if (version_compare(PHP_VERSION, '5.3', '<')) {
 if (isset($_SERVER['MAGENTO_DIRECTORY'])) {
     $_baseDir = $_SERVER['MAGENTO_DIRECTORY'];
 } else {
-    $_baseDir = getcwd(). '/../magento';
+    $_baseDir = getcwd() . '/../magento';
 }
 
 // Include Mage file by detecting app root
@@ -22,7 +22,7 @@ if (!Mage::isInstalled()) {
 }
 
 /* Replace server variables for proper file naming */
-$_SERVER['SCRIPT_NAME'] = $_baseDir . DS . 'index.php';
+$_SERVER['SCRIPT_NAME']     = $_baseDir . DS . 'index.php';
 $_SERVER['SCRIPT_FILENAME'] = $_baseDir . DS . 'index.php';
 
 Mage::app('admin');
@@ -46,6 +46,13 @@ if (!defined('ECOMDEV_PHPUNIT_NO_AUTOLOADER')) {
                     '\\' => '/',
                 )
             );
+        } elseif (strpos($className, "Psr\Log") !== false) {
+            $filePath = 'Netresearch/' . strtr(
+                    ltrim($className, '\\'),
+                    array(
+                        '\\' => '/',
+                    )
+                );
         } else {
             $filePath = strtr(
                 ltrim($className, '\\'),
