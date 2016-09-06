@@ -135,6 +135,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $serviceSettingsReturnShipment = true;
         $serviceSettingsInsurance = 'B';
         $serviceSettingsBulkyGoods = true;
+        $serviceSettingsCod = false;
 
         $sequenceNumber = 77;
         $labelResponseType = $globalSettingsLabelType;
@@ -264,7 +265,8 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
             $serviceSettingsParcelAnnouncement,
             $serviceSettingsVisualCheckOfAge, $serviceSettingsReturnShipment,
-            $serviceSettingsInsurance, $serviceSettingsBulkyGoods
+            $serviceSettingsInsurance, $serviceSettingsBulkyGoods, $serviceSettingsCod,
+            $shipperAccountGoGreen, $globalSettingsPrintOnlyIfCodeable
         );
 
 

@@ -321,7 +321,7 @@ class Dhl_Versenden_Model_Observer
         }
 
         //TODO(nr): check what happens it label is already manifested
-        $gateway = new Dhl_Versenden_Model_Webservice_Gateway_Soap();
+        $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
         $shipmentNumbers = array($track->getData('track_number'));
         $response = $gateway->deleteShipmentOrder($shipmentNumbers);
         if ($response->getStatus()->isError()) {
