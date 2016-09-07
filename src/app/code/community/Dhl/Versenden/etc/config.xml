@@ -177,6 +177,18 @@
             </modules>
         </translate>
     </frontend>
+    <crontab>
+    <jobs>
+        <dhlversenden_cronQueue>
+            <schedule>
+                <cron_expr>*/5 * * * *</cron_expr>
+            </schedule>
+            <run>
+                <model>dhl_versenden/cron::autoCreateShippment</model>
+            </run>
+        </dhlversenden_cronQueue>
+    </jobs>
+    </crontab>
     <default>
         <dhl_versenden>
             <dev>
@@ -214,6 +226,8 @@
                 <service_insurance_enabled>1</service_insurance_enabled>
                 <service_bulkygoods_enabled>1</service_bulkygoods_enabled>
                 <returnshipment_use_shipper>1</returnshipment_use_shipper>
+
+                <shipment_creation_order_status>pending,processing</shipment_creation_order_status>
 
                 <webservice_auth_username>magento_1</webservice_auth_username>
                 <webservice_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</webservice_auth_password>
