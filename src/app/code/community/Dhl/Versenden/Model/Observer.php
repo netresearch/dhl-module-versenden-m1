@@ -49,11 +49,21 @@ class Dhl_Versenden_Model_Observer
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
         $dhlLibs = array('Versenden', 'Bcs');
-        array_walk(
-            $dhlLibs, function ($libDir) use ($autoloader) {
+        array_walk($dhlLibs,
+            function($libDir) use ($autoloader) {
                 $autoloader->addNamespace(
                     "Dhl\\$libDir\\", // prefix
                     sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
+                );
+            }
+        );
+
+        $externalLibs = array('Psr');
+        array_walk($externalLibs,
+            function($libDir) use ($autoloader) {
+                $autoloader->addNamespace(
+                    "$libDir\\", // prefix
+                    sprintf('%s/Netresearch/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
                 );
             }
         );
@@ -114,25 +124,24 @@ class Dhl_Versenden_Model_Observer
         $request = $observer->getRequest();
 
         /** @var Dhl_Versenden_Model_Webservice_Builder_Receiver $receiverBuilder */
-        $receiverBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_receiver', array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper'            => Mage::helper('dhl_versenden/data'),
-            )
+            'helper'            => Mage::helper('dhl_versenden/address'),
         );
+        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', $args);
         $receiver = $receiverBuilder->getReceiver($shippingAddress);
 
         /** @var Dhl_Versenden_Model_Webservice_Builder_Service $serviceBuilder */
-        $serviceBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_service', array(
+        $args = array(
             'shipper_config'  => Mage::getModel('dhl_versenden/config_shipper'),
             'shipment_config' => $shipmentConfig,
-            )
         );
+        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', $args);
         $serviceSettings = $serviceBuilder->getServiceSelection(
-            $quote, array(
-            'shipment_service' => $request->getPost('shipment_service', array()),
-            'service_setting'  => $request->getPost('service_setting', array())
+            $quote,
+            array(
+                'shipment_service' => $request->getPost('shipment_service', array()),
+                'service_setting'  => $request->getPost('service_setting', array())
             )
         );
 

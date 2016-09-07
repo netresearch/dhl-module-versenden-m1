@@ -47,6 +47,9 @@
                 <block type="dhl_versenden/adminhtml_sales_order_shipment_service_edit"
                        name="shipping_services"
                        template="dhl_versenden/sales/shipping_services.phtml"/>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_customs"
+                       name="shipping_customs"
+                       template="dhl_versenden/sales/shipping_customs.phtml"/>
             </block>
 
             <!-- packaging info -->

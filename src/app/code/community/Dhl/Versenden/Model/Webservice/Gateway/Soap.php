@@ -87,6 +87,24 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
     }
 
     /**
+     * @param Dhl_Versenden_Model_Config $config
+     * @param Dhl_Versenden_Model_Logger_Writer $writer
+     * @return Dhl_Versenden_Model_Webservice_Logger_Soap
+     */
+    public function getLogger(Dhl_Versenden_Model_Config $config, Dhl_Versenden_Model_Logger_Writer $writer)
+    {
+        // hellcome to the world of composition over inheritance.
+        $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
+
+        $dhlLogger = Mage::getSingleton('dhl_versenden/log', array('config' => $config));
+        $dhlLogger->setLogger($psrLogger);
+
+        $soapLogger = new Dhl_Versenden_Model_Webservice_Logger_Soap($dhlLogger);
+        return $soapLogger;
+    }
+
+
+    /**
      * @param RequestData\CreateShipment $requestData
      * @return ResponseData\CreateShipment
      * @throws SoapFault
@@ -97,35 +115,21 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         $parser = $this->getParser(self::OPERATION_CREATE_SHIPMENT_ORDER);
         /** @var SoapAdapter $adapter */
         $adapter = $this->getAdapter(Mage::getModel('dhl_versenden/config_shipper'));
+        /** @var Dhl_Versenden_Model_Webservice_Logger_Soap $logger */
+        $logger = $this->getLogger(
+            Mage::getModel('dhl_versenden/config'),
+            Mage::getModel('dhl_versenden/logger_writer'))
+        ;
 
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->createShipmentOrder($requestData, $parser);
+            $logger->debug($adapter);
         } catch (SoapFault $fault) {
-            $this->logRequest($adapter);
-            $this->logResponse($adapter);
+            $logger->error($adapter);
             throw $fault;
         }
 
         return $result;
-    }
-
-    /**
-     * @param SoapAdapter $adapter
-     */
-    public function logRequest(SoapAdapter $adapter)
-    {
-        $request = $adapter->getClient()->__getLastRequest();
-        Mage::getSingleton('core/logger')->log($request);
-    }
-
-    /**
-     * @param SoapAdapter $adapter
-     */
-    public function logResponse(SoapAdapter $adapter)
-    {
-        $headers = $adapter->getClient()->__getLastResponseHeaders();
-        $response = $adapter->getClient()->__getLastResponse();
-        Mage::getSingleton('core/logger')->log($headers . "\n\n" . $response);
     }
 }

@@ -406,11 +406,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
         $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
-        $this->assertCount(4, $filteredCollection);
-        $this->assertInstanceOf(
-            Service\BulkyGoods::class,
-            $filteredCollection->getItem(Service\BulkyGoods::CODE)
-        );
+        $this->assertCount(3, $filteredCollection);
         $this->assertInstanceOf(
             Service\Insurance::class,
             $filteredCollection->getItem(Service\Insurance::CODE)

@@ -48,8 +48,16 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
 
         $sequenceNumber = '1000';
         $shipmentNumber = '0001';
-        $labelData = '%PDF-1.5';
-        $label = new ResponseData\Label($status, $shipmentNumber, $labelData);
+
+        $defaultLabel = new Zend_Pdf();
+        $defaultLabel->pages[]= new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
+        $defaultLabelData = $defaultLabel->render();
+
+        $returnLabel = new Zend_Pdf();
+        $returnLabel->pages[]= new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
+        $returnLabelData = $defaultLabel->render();
+
+        $label = new ResponseData\Label($status, $shipmentNumber, $defaultLabelData, $returnLabelData);
 
         $sequence = array($sequenceNumber => $shipmentNumber);
 
@@ -68,9 +76,14 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $labelCollection->setItems(array($label));
         $this->assertCount(1, $labelCollection->getItems());
 
+        /** @var ResponseData\Label $item */
         foreach ($labelCollection as $idx => $item) {
             $this->assertEquals($shipmentNumber, $idx);
-            $this->assertSame($labelData, $item->getLabel());
+            $this->assertSame($defaultLabelData, $item->getLabel());
+            $this->assertSame($returnLabelData, $item->getReturnLabel());
+            $allLabels = $item->getAllLabels(new \Dhl\Versenden\Pdf\Adapter\Zend());
+            $allLabelsPdf = Zend_Pdf::parse($allLabels);
+            $this->assertCount(2, $allLabelsPdf->pages);
         }
 
         $createShipment = new ResponseData\CreateShipment($status, $labelCollection, $sequence);
@@ -87,8 +100,8 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $this->assertNull($createShipment->getShipmentNumber('9999'));
 
         $this->assertTrue($createShipment->getLabels()->getItem($shipmentNumber)->isCreated());
-        $this->assertSame($labelData, $createShipment->getLabels()->getItem($shipmentNumber)->getLabel());
-        $this->assertEmpty($createShipment->getLabels()->getItem($shipmentNumber)->getReturnLabel());
+        $this->assertSame($defaultLabelData, $createShipment->getLabels()->getItem($shipmentNumber)->getLabel());
+        $this->assertSame($returnLabelData, $createShipment->getLabels()->getItem($shipmentNumber)->getReturnLabel());
         $this->assertEmpty($createShipment->getLabels()->getItem($shipmentNumber)->getExportLabel());
         $this->assertEmpty($createShipment->getLabels()->getItem($shipmentNumber)->getCodLabel());
     }
