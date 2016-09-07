@@ -39,18 +39,17 @@ class Dhl_Versenden_Test_Model_Webservice_LoggerTest
 {
     /**
      * @test
-     * @loadFixture Model_ConfigTest
      */
     public function log()
     {
-        $lastRequest         = 'last request';
-        $lastResponse        = 'last response';
+        $lastRequest = 'last request';
+        $lastResponse = 'last response';
         $lastResponseHeaders = 'last response headers';
 
         $clientMock = $this->getMockBuilder(SoapClient::class)
-                           ->disableOriginalConstructor()
-                           ->setMethods(array('__getLastRequest', '__getLastResponse', '__getLastResponseHeaders'))
-                           ->getMock();
+            ->disableOriginalConstructor()
+            ->setMethods(array('__getLastRequest', '__getLastResponse', '__getLastResponseHeaders'))
+            ->getMock();
         $clientMock
             ->expects($this->exactly(2))
             ->method('__getLastRequest')
@@ -64,19 +63,32 @@ class Dhl_Versenden_Test_Model_Webservice_LoggerTest
             ->method('__getLastResponseHeaders')
             ->willReturn($lastResponseHeaders);
 
+        $logMock = $this->getMockBuilder(Dhl_Versenden_Model_Log::class)
+            ->setMethods(array('error', 'debug'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logMock
+            ->expects($this->exactly(3))
+            ->method('error')
+            ->withConsecutive(
+                array($lastRequest, array()),
+                array($lastResponseHeaders, array()),
+                array($lastResponse, array())
+            );
+        $logMock
+            ->expects($this->exactly(3))
+            ->method('debug')
+            ->withConsecutive(
+                array($lastRequest, array()),
+                array($lastResponseHeaders, array()),
+                array($lastResponse, array())
+            );
+
+        $soapLogger = new Dhl_Versenden_Model_Webservice_Logger_Soap($logMock);
         $adapter = new SoapAdapter($clientMock);
 
-        $logger = new Dhl_Versenden_Model_Webservice_Logger();
-        $logger->logDebug($adapter);
-        $logger->logError($adapter);
-    }
-
-    /**
-     * @test
-     */
-    public function setFile()
-    {
-        $logger = new Dhl_Versenden_Model_Webservice_Logger();
-        $this->assertInstanceOf('Dhl_Versenden_Model_Webservice_Logger', $logger->setFile('foo_log.log'));
+        // assert messages being passed through to logger
+        $soapLogger->debug($adapter);
+        $soapLogger->error($adapter);
     }
 }
