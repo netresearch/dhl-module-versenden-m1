@@ -52,7 +52,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
         $enabledServices = $serviceConfig->getEnabledServices($storeId);
 
 
-        $shipperCountry = Mage::getStoreConfig(Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID, $storeId);
+        $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
         $recipientCountry = $shippingAddress->getCountryId();
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 

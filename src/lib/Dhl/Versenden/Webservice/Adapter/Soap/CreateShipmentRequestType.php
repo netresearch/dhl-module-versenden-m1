@@ -25,8 +25,6 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
-use Dhl\Bcs\Api\ShipmentItemType;
-use Dhl\Bcs\Api\ShipmentService;
 use Dhl\Versenden\Webservice\RequestData;
 
 /**
@@ -50,7 +48,7 @@ class CreateShipmentRequestType implements RequestType
         $packages = $shipmentOrder->getPackages()->getItems();
         /** @var RequestData\ShipmentOrder\Package $package */
         $package = current($packages);
-        $shipmentItemType = new ShipmentItemType($package->getWeightInKG());
+        $shipmentItemType = new VersendenApi\ShipmentItemType($package->getWeightInKG());
 
         $shipmentDetailsType = new VersendenApi\ShipmentDetailsTypeType(
             $shipmentOrder->getProductCode(),
@@ -133,12 +131,46 @@ class CreateShipmentRequestType implements RequestType
     }
 
     /**
-     * @param RequestData\ExportDocument $document
-     * @return VersendenApi\ExportDocumentType
+     * @param RequestData\ShipmentOrder\Export\DocumentCollection $documents
+     * @return VersendenApi\ExportDocumentType|null
      */
-    protected static function prepareExportDocument(RequestData\ExportDocument $document)
+    protected static function prepareExportDocument(RequestData\ShipmentOrder\Export\DocumentCollection $documents)
     {
-        return new VersendenApi\ExportDocumentType('bla', 'bla', 'bla');
+        // the API apparently supports exactly one ExportDocumentType, no list
+        $document = current($documents->getItems());
+        if (!$document) {
+            return null;
+        }
+
+        $exportDocType = new VersendenApi\ExportDocumentType(
+            $document->getExportType(),
+            $document->getPlaceOfCommital(),
+            $document->getAdditionalFee()
+        );
+        $exportDocType->setInvoiceNumber($document->getInvoiceNumber());
+        $exportDocType->setExportTypeDescription($document->getExportTypeDescription());
+        $exportDocType->setTermsOfTrade($document->getTermsOfTrade());
+        $exportDocType->setPermitNumber($document->getPermitNumber());
+        $exportDocType->setAttestationNumber($document->getAttestationNumber());
+        $exportDocType->setWithElectronicExportNtfctn(
+            new VersendenApi\Serviceconfiguration($document->isElectronicExportNotification())
+        );
+
+        /** @var RequestData\ShipmentOrder\Export\Position $position */
+        foreach ($document->getPositions() as $position) {
+            $exportDocPosition = new VersendenApi\ExportDocPosition(
+                $position->getDescription(),
+                $position->getCountryCodeOrigin(),
+                $position->getTariffNumber(),
+                $position->getAmount(),
+                $position->getNetWeightInKG(),
+                $position->getValue()
+            );
+            $exportDocPositions[]= $exportDocPosition;
+        }
+        $exportDocType->setExportDocPosition($exportDocPositions);
+
+        return $exportDocType;
     }
 
     /**
@@ -152,15 +184,14 @@ class CreateShipmentRequestType implements RequestType
         $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
         $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
 
-        //TODO(nr): DHLGKP-22
-//        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocument());
+        $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocuments());
 
         $shipment = new VersendenApi\Shipment(
             $details,
             $shipper,
             $receiver,
             $returnReceiver,
-            null
+            $exportDocument
         );
 
         return $shipment;

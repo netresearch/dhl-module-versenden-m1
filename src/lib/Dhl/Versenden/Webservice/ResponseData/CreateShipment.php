@@ -33,7 +33,7 @@ namespace Dhl\Versenden\Webservice\ResponseData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-final class CreateShipment
+class CreateShipment
 {
     /** @var Status */
     private $status;

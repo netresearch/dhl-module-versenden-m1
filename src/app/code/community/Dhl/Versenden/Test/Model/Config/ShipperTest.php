@@ -202,4 +202,16 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertEquals("Bar City", $storeShipper->getContact()->getCity());
         $this->assertEquals("Return City", $storeShipper->getReturnReceiver()->getCity());
     }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipperConfigTest
+     */
+    public function getShipperCountry()
+    {
+        $config = new Dhl_Versenden_Model_Config_Shipper();
+
+        $this->assertEquals('DE', $config->getShipperCountry());
+        $this->assertEquals('AT', $config->getShipperCountry('store_two'));
+    }
 }

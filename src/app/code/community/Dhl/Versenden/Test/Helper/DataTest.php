@@ -35,6 +35,22 @@
  */
 class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 {
+    const PACKAGING_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
+
+    protected function mockPackagingBlock()
+    {
+        $order = Mage::getModel('sales/order');
+        $shipment = new Varien_Object();
+        $shipment->setData('order', $order);
+
+        $blockMock = $this->getBlockMock(self::PACKAGING_BLOCK_ALIAS, array('getShipment', 'getTemplate'));
+        $blockMock
+            ->expects($this->any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+        Mage::getSingleton('core/layout')->setBlock(self::PACKAGING_BLOCK_ALIAS, $blockMock);
+    }
+
     /**
      * @test
      */
@@ -66,34 +82,52 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
     /**
      * @test
      */
-    public function getPackagingTemplatesVersendenCarrier()
+    public function isCollectCustomsData()
     {
         $helper = Mage::helper('dhl_versenden/data');
 
+        // shipper EU, receiver EU
+        $shipperCountry = 'DE';
+        $recipientCountry = 'ES';
+        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+
+        // shipper EU, receiver not EU
+        $shipperCountry = 'DE';
+        $recipientCountry = 'NZ';
+        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+
+        // shipper not EU, receiver not EU, yet same country
+        $shipperCountry = 'NZ';
+        $recipientCountry = 'NZ';
+        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+
+        // shipper not EU, receiver not EU, different countries
+        $shipperCountry = 'AU';
+        $recipientCountry = 'NZ';
+        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+    }
+
+    /**
+     * @test
+     */
+    public function getPackagingTemplatesVersendenCarrier()
+    {
+        $this->mockPackagingBlock();
+
         $shippingMethod = 'dhlversenden_bar';
         $customTemplate = 'foo';
-        $blockType      = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
 
-        $order = new Mage_Sales_Model_Order();
-        $order->setShippingMethod($shippingMethod);
+        /** @var Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging $block */
+        $block = Mage::getSingleton('core/layout')->getBlock(self::PACKAGING_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod($shippingMethod);
 
-        $shipment = new Varien_Object();
-        $shipment->setData('order', $order);
 
-        $blockMock = $this->getBlockMock(
-            $blockType,
-            array('getShipment')
-        );
-        $blockMock
-            ->expects($this->exactly(2))
-            ->method('getShipment')
-            ->willReturn($shipment);
-        Mage::getSingleton('core/layout')->setBlock($blockType, $blockMock);
+        $helper = new Dhl_Versenden_Helper_Data();
 
-        $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
+        $template = $helper->getPackagingPopupTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
         $this->assertEquals($customTemplate, $template);
 
-        $template = $helper->getPackagingPackedTemplate($customTemplate, $blockType);
+        $template = $helper->getPackagingPackedTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
         $this->assertEquals($customTemplate, $template);
     }
 
@@ -102,37 +136,27 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
      */
     public function getPackagingTemplatesSomeCarrier()
     {
-        $helper = Mage::helper('dhl_versenden/data');
+        $this->mockPackagingBlock();
 
         $shippingMethod  = 'foo_bar';
         $customTemplate  = 'foo';
         $defaultTemplate = 'fox';
-        $blockType       = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
 
-        $order = new Mage_Sales_Model_Order();
-        $order->setShippingMethod($shippingMethod);
-
-        $shipment = new Varien_Object();
-        $shipment->setData('order', $order);
-
-        $blockMock = $this->getBlockMock(
-            $blockType,
-            array('getShipment', 'getTemplate')
-        );
-        $blockMock
-            ->expects($this->exactly(2))
-            ->method('getShipment')
-            ->willReturn($shipment);
-        $blockMock
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging $block */
+        $block = Mage::getSingleton('core/layout')->getBlock(self::PACKAGING_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod($shippingMethod);
+        $block
             ->expects($this->exactly(2))
             ->method('getTemplate')
             ->willReturn($defaultTemplate);
-        Mage::getSingleton('core/layout')->setBlock($blockType, $blockMock);
 
-        $template = $helper->getPackagingPopupTemplate($customTemplate, $blockType);
+
+        $helper = new Dhl_Versenden_Helper_Data();
+
+        $template = $helper->getPackagingPopupTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
         $this->assertEquals($defaultTemplate, $template);
 
-        $template = $helper->getPackagingPackedTemplate($customTemplate, $blockType);
+        $template = $helper->getPackagingPackedTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
         $this->assertEquals($defaultTemplate, $template);
     }
 

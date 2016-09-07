@@ -262,4 +262,16 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $this->getReturnReceiver($store)
         );
     }
+
+    /**
+     * Obtain shipper country from module configuration.
+     * 
+     * @see Dhl_Versenden_Model_Config::getShipperCountry()
+     * @param mixed $store
+     * @return string
+     */
+    public function getShipperCountry($store = null)
+    {
+        return $this->getContact($store)->getCountryISOCode();
+    }
 }
