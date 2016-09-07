@@ -38,40 +38,17 @@
 class Dhl_Versenden_Model_Cron
 {
     /**
+     * trigger auto creation of shipments by cron
+     *
      * @param Varien_Event_Observer $observer
      * @return $this
      */
-    public function autoCreateShippment(Varien_Event_Observer $observer)
+    public function autoCreateShippment()
     {
-        $orderCollection = Mage::helper('dhl_versenden/data')->getOrdersForAutoCreateShippment();
-
-        /** @var Mage_Sales_Model_Order $order */
-        foreach ($orderCollection as $order) {
-
-            try {
-                $shipment = $order->prepareShipment();
-                $shipment->register();
-                $order->setIsInProcess(true);
-
-                Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
-                    $order,
-                    'Automatically shipped by DHL_Versenden.',
-                    Zend_Log::INFO
-                );
-
-                $transaction = Mage::getModel('core/resource_transaction');
-                $transaction
-                    ->addObject($shipment)
-                    ->addObject($shipment->getOrder())
-                    ->save();
-
-
-            } catch (Exception $e) {
-                Mage::log(
-                    'An Error occured while creating shipment. Errormessage: ' . $e->getMessage()
-                );
-            }
+        if (!Mage::getModel('dhl_versenden/config')->getAutoCreateShipmentEnbaled()) {
+            return $this;
         }
+        Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreateShippment();
 
         return $this;
     }
