@@ -53,6 +53,13 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'carriers/dhlversenden/webservice_auth_username';
     const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'carriers/dhlversenden/webservice_auth_password';
 
+    const CONFIG_XML_PATH_SHIPPING_ORDER_STATUS       = 'shipment_creation_order_status';
+    const CONFIG_XML_PATH_SHIPPING_PARCELANNOUNCEMENT = 'shipment_creation_parcelannouncement';
+    const CONFIG_XML_PATH_SHIPPING_VISUALCHECKAGE     = 'shipment_creation_visualcheckofage';
+    const CONFIG_XML_PATH_SHIPPING_RETURNSHIPMENT     = 'shipment_creation_returnshipment';
+    const CONFIG_XML_PATH_SHIPPING_INSURANCE          = 'shipment_creation_insurance';
+    const CONFIG_XML_PATH_SHIPPING_BULKYGOODS         = 'shipment_creation_bulkygoods';
+
     /**
      * Wrap store config access.
      *
@@ -188,5 +195,71 @@ class Dhl_Versenden_Model_Config
         );
 
         return $shipperCountry;
+    }
+
+    /**
+     * Obtain configured order status for auto creation of shipping
+     *
+     * @param mixed $store
+     * @return string
+     */
+    public function getAutocreateAllowedStatusCodes($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPPING_ORDER_STATUS, $store);
+    }
+
+    /**
+     * Obtain parcel announcement configuration for auto creation of shipments
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getParcelAnnouncmentConfig($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPPING_PARCELANNOUNCEMENT, $store);
+    }
+
+    /**
+     * Obtain visul check age config for auto creation of shipments
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getVisualCheckAgeConfig($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPPING_VISUALCHECKAGE, $store);
+    }
+
+    /**
+     * Obtain return shipments config for auto creation of shipment
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getReturnShipmentConfig($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPPING_RETURNSHIPMENT, $store);
+    }
+
+    /**
+     * Obtain insurance config for auto creation of shipment
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getInsuranceConfig($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPPING_INSURANCE, $store);
+    }
+
+    /**
+     * Obtain bulkygoods config cor auto creation of shipment
+     *
+     * @param null $store
+     * @return mixed
+     */
+    public function getBulkyGoodsConfig($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPPING_BULKYGOODS, $store);
     }
 }
