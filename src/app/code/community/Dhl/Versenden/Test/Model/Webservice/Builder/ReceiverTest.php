@@ -89,7 +89,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
     {
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/data')
+            'helper' => Mage::helper('dhl_versenden/address')
         ));
 
         $firstName = 'Foo';
@@ -138,7 +138,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
     {
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/data')
+            'helper' => Mage::helper('dhl_versenden/address')
         ));
 
         $firstName = 'Foo';
@@ -182,7 +182,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
     {
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/data')
+            'helper' => Mage::helper('dhl_versenden/address')
         ));
 
         $firstName = 'Foo';
@@ -227,7 +227,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
     {
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/data')
+            'helper' => Mage::helper('dhl_versenden/address')
         ));
 
         $firstName = 'Foo';

@@ -24,12 +24,13 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Webservice;
-use \Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
-use \Dhl\Versenden\Webservice\Parser\Soap as SoapParser;
 use \Dhl\Versenden\Webservice\RequestData;
 use \Dhl\Versenden\Webservice\ResponseData;
 /**
  * Dhl_Versenden_Model_Webservice_Gateway_Abstract
+ *
+ * Note: adapter, parser and logger should get injected during object instantiation
+ * but we do not have proper constructors in M1's alias factory.
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -61,6 +62,13 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      * @return Webservice\Parser
      */
     abstract public function getParser($operation);
+
+    /**
+     * @param Dhl_Versenden_Model_Config $config
+     * @param Dhl_Versenden_Model_Logger_Writer $writer
+     * @return Dhl_Versenden_Model_Webservice_Logger_Interface
+     */
+    abstract public function getLogger(Dhl_Versenden_Model_Config $config, Dhl_Versenden_Model_Logger_Writer $writer);
 
     /**
      * @param RequestData\CreateShipment $requestData
@@ -100,13 +108,16 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
             $packageInfo = $shipmentRequest->getData('packages');
             $serviceInfo = $shipmentRequest->getData('services');
+            $customsInfo = $shipmentRequest->getData('customs');
 
             try {
                 $shipmentOrder = $this->shipmentToShipmentOrder(
                     $sequenceNumber,
                     $orderShipment,
                     $packageInfo,
-                    $serviceInfo
+                    $serviceInfo,
+                    $customsInfo,
+                    $shipmentRequest->getData('gk_api_product')
                 );
 
                 $canShipPartially = ($shipmentOrder->getServiceSelection()->getCod() === null)
@@ -179,78 +190,71 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      *
      * @param int $sequenceNumber
      * @param Mage_Sales_Model_Order_Shipment $shipment
-     * @param array $packageInfo
-     * @param array $serviceInfo
+     * @param string[] $packageInfo
+     * @param string[] $serviceInfo
+     * @param string[] $customsInfo
+     * @param string $gkApiProduct
      * @return RequestData\ShipmentOrder
      */
     public function shipmentToShipmentOrder(
         $sequenceNumber,
         Mage_Sales_Model_Order_Shipment $shipment,
         array $packageInfo,
-        array $serviceInfo
+        array $serviceInfo,
+        array $customsInfo,
+        $gkApiProduct
     )
     {
-        $helper         = Mage::helper('dhl_versenden/data');
         $shipperConfig  = Mage::getModel('dhl_versenden/config_shipper');
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
 
-        $shipperBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_shipper',
-            array(
-                'config' => $shipperConfig
-            )
-        );
+        $args = array('config' => $shipperConfig);
+        $shipperBuilder = Mage::getModel('dhl_versenden/webservice_builder_shipper', $args);
 
-        $receiverBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_receiver',
-            array(
-                'country_directory' => Mage::getModel('directory/country'),
-                'helper'            => $helper,
-            )
+        $args = array(
+            'country_directory' => Mage::getModel('directory/country'),
+            'helper'            => Mage::helper('dhl_versenden/address'),
         );
+        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', $args);
 
-        $serviceBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_service',
-            array(
-                'shipper_config'  => $shipperConfig,
-                'shipment_config' => $shipmentConfig,
-            )
+        $args = array(
+            'shipper_config'  => $shipperConfig,
+            'shipment_config' => $shipmentConfig,
         );
+        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', $args);
 
-        $packageBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_package',
-            array(
-                'unit_of_measure' => $shipmentConfig->getSettings($shipment->getStoreId())->getUnitOfMeasure(),
-                'min_weight'      => Dhl_Versenden_Model_Shipping_Carrier_Versenden::PACKAGE_MIN_WEIGHT,
-            )
+        $args = array(
+            'unit_of_measure' => $shipmentConfig->getSettings($shipment->getStoreId())->getUnitOfMeasure(),
+            'min_weight'      => Dhl_Versenden_Model_Shipping_Carrier_Versenden::PACKAGE_MIN_WEIGHT,
         );
+        $packageBuilder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
-        $settingsBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_settings',
-            array(
-                'config' => $shipmentConfig
-            )
-        );
+        $customsBuilder = Mage::getModel('dhl_versenden/webservice_builder_customs');
 
-        $orderBuilder = Mage::getModel(
-            'dhl_versenden/webservice_builder_order',
-            array(
-                'shipper_builder'  => $shipperBuilder,
-                'receiver_builder' => $receiverBuilder,
-                'service_builder'  => $serviceBuilder,
-                'package_builder'  => $packageBuilder,
-                'settings_builder' => $settingsBuilder,
-            )
+        $args = array('config' => $shipmentConfig);
+        $settingsBuilder = Mage::getModel('dhl_versenden/webservice_builder_settings', $args);
+
+
+        $args = array(
+            'shipper_builder'  => $shipperBuilder,
+            'receiver_builder' => $receiverBuilder,
+            'service_builder'  => $serviceBuilder,
+            'package_builder'  => $packageBuilder,
+            'customs_builder'  => $customsBuilder,
+            'settings_builder' => $settingsBuilder,
         );
+        $orderBuilder = Mage::getModel('dhl_versenden/webservice_builder_order', $args);
 
         // build shipment order request data
         $shipmentOrder = $orderBuilder->getShipmentOrder(
             $sequenceNumber,
-            $helper->utcToCet(null, 'Y-m-d'),
+            Mage::helper('dhl_versenden/data')->utcToCet(null, 'Y-m-d'),
             $shipment,
             $packageInfo,
-            $serviceInfo
+            $serviceInfo,
+            $customsInfo,
+            $gkApiProduct
         );
 
         // update shipping info

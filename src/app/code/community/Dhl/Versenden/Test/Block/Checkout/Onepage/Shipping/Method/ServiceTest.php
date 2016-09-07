@@ -36,42 +36,50 @@ use \Dhl\Versenden\Shipment\Service;
 class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
     extends EcomDev_PHPUnit_Test_Case
 {
+    const BLOCK_ALIAS = 'dhl_versenden/checkout_onepage_shipping_method_service';
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->setCurrentStore('store_two');
+
+        $shippingAddress = Mage::getModel('sales/quote_address');
+        $shippingAddress->setCountryId('DE');
+
+        $quote = Mage::getModel('sales/quote');
+        $quote->setStoreId(Mage::app()->getStore()->getId());
+        $quote->setShippingAddress($shippingAddress);
+
+        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getQuote'));
+        $blockMock
+            ->expects($this->any())
+            ->method('getQuote')
+            ->willReturn($quote);
+        $this->replaceByMock('block', self::BLOCK_ALIAS, $blockMock);
+
+    }
+
     /**
      * @test
      * @loadFixture Model_ConfigTest
      */
     public function getServices()
     {
-        $this->setCurrentStore('store_two');
-
-        $shippingAddress = new Mage_Sales_Model_Quote_Address();
-        $shippingAddress->setCountryId('DE');
-        $quote = new Mage_Sales_Model_Quote();
-        $quote->setStoreId(Mage::app()->getStore()->getId());
-        $quote->setShippingAddress($shippingAddress);
-
-        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
-        $blockMock = $this->getBlockMock($blockType, array('getQuote'));
-        $blockMock
-            ->expects($this->exactly(2))
-            ->method('getQuote')
-            ->willReturn($quote);
-        $this->replaceByMock('block', $blockType, $blockMock);
-
         $serviceOne = new Service\BulkyGoods('', true, false);
         $serviceTwo = new Service\PreferredLocation('', true, false, '');
-        $collection = new Service\Collection([
-            $serviceOne, $serviceTwo
-        ]);
+        $services   = array($serviceOne, $serviceTwo);
+        $collection = new Service\Collection($services);
 
-        $configMock = $this->getModelMock('dhl_versenden/config_service', ['getEnabledServices']);
+        $configMock = $this->getModelMock('dhl_versenden/config_service', array('getEnabledServices'));
         $configMock
             ->expects($this->once())
             ->method('getEnabledServices')
             ->willReturn($collection);
         $this->replaceByMock('model', 'dhl_versenden/config_service', $configMock);
 
-        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/checkout_onepage_shipping_method_service');
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
         $frontendServices = $block->getServices();
         $this->assertInstanceOf(Service\Collection::class, $frontendServices);
@@ -85,23 +93,9 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
      */
     public function getDhlMethods()
     {
-        $this->setCurrentStore('store_two');
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
-        $shippingAddress = new Mage_Sales_Model_Quote_Address();
-        $shippingAddress->setCountryId('DE');
-        $quote = new Mage_Sales_Model_Quote();
-        $quote->setStoreId(Mage::app()->getStore()->getId());
-        $quote->setShippingAddress($shippingAddress);
-
-        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
-        $blockMock = $this->getBlockMock($blockType, array('getQuote'));
-        $blockMock
-            ->expects($this->exactly(1))
-            ->method('getQuote')
-            ->willReturn($quote);
-        $this->replaceByMock('block', $blockType, $blockMock);
-
-        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/checkout_onepage_shipping_method_service');
         $json = $block->getDhlMethods();
         $methods = Mage::helper('core/data')->jsonDecode($json);
         $this->assertInternalType('array', $methods);

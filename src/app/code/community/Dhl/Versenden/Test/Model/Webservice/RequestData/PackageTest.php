@@ -59,7 +59,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_PackageTest
         $collection->addItem($packageOne);
         $this->assertCount(1, $collection);
         $this->assertInstanceOf(Package::class, $collection->getItem($sequenceNumberOne));
-        $this->assertEquals($sequenceNumberOne, $collection->getItem($sequenceNumberOne)->getSequenceNumber());
+        $this->assertEquals($sequenceNumberOne, $collection->getItem($sequenceNumberOne)->getPackageId());
         $this->assertEquals($weightInKGOne, $collection->getItem($sequenceNumberOne)->getWeightInKG());
         $this->assertEquals($lengthInCMOne, $collection->getItem($sequenceNumberOne)->getLengthInCM());
         $this->assertEquals($widthInCMOne, $collection->getItem($sequenceNumberOne)->getWidthInCM());
@@ -67,7 +67,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_PackageTest
 
         $collection->setItems(array($packageOne, $packageTwo));
         $this->assertCount(2, $collection);
-        $this->assertEquals($sequenceNumberTwo, $collection->getItem($sequenceNumberTwo)->getSequenceNumber());
+        $this->assertEquals($sequenceNumberTwo, $collection->getItem($sequenceNumberTwo)->getPackageId());
         $this->assertEquals($weightInKGTwo, $collection->getItem($sequenceNumberTwo)->getWeightInKG());
         $this->assertNull($collection->getItem($sequenceNumberTwo)->getLengthInCM());
         $this->assertNull($collection->getItem($sequenceNumberTwo)->getWidthInCM());

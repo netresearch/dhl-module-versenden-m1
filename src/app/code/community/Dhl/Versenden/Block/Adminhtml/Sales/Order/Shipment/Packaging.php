@@ -65,21 +65,10 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging
      */
     public function displayCustomsValue()
     {
-        $shipperCountry   = Mage::getStoreConfig(
-            Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID,
-            $this->getShipment()->getStoreId()
-        );
+        $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($this->getShipment()->getStoreId());
         $recipientCountry = $this->getShipment()->getOrder()->getShippingAddress()->getCountryId();
 
-        // are shipper and receiver located in different countries?
-        $diffCountry = parent::displayCustomsValue();
-
-        // are shipper and receiver both located in EU country?
-        $bothEu = Mage::helper('core/data')->isCountryInEU($shipperCountry)
-            && Mage::helper('core/data')->isCountryInEU($recipientCountry);
-
-
-        return $diffCountry && !$bothEu;
+        return $this->helper('dhl_versenden/data')->isCollectCustomsData($shipperCountry, $recipientCountry);
     }
 
 }

@@ -119,6 +119,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
             $sequenceNumberTwo => $packageTwo,
         );
 
+        /** @var Dhl_Versenden_Model_Webservice_Builder_Package $builder */
         $builder = Mage::getModel('dhl_versenden/webservice_builder_package', array(
             'unit_of_measure' => 'KG',
             'min_weight'      => $this->minWeight,
@@ -129,14 +130,14 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
         $this->assertCount(count($packageInfo), $packageCollection);
 
         $this->assertInstanceOf(Package::class, $packageCollection->getItem($sequenceNumberOne));
-        $this->assertEquals($sequenceNumberOne, $packageCollection->getItem($sequenceNumberOne)->getSequenceNumber());
+        $this->assertEquals($sequenceNumberOne, $packageCollection->getItem($sequenceNumberOne)->getPackageId());
         $this->assertEquals($weightInKGOne, $packageCollection->getItem($sequenceNumberOne)->getWeightInKG());
         $this->assertEquals($lengthInCMOne, $packageCollection->getItem($sequenceNumberOne)->getLengthInCM());
         $this->assertEquals($widthInCMOne, $packageCollection->getItem($sequenceNumberOne)->getWidthInCM());
         $this->assertEquals($heightInCMOne, $packageCollection->getItem($sequenceNumberOne)->getHeightInCM());
 
         $this->assertInstanceOf(Package::class, $packageCollection->getItem($sequenceNumberTwo));
-        $this->assertEquals($sequenceNumberTwo, $packageCollection->getItem($sequenceNumberTwo)->getSequenceNumber());
+        $this->assertEquals($sequenceNumberTwo, $packageCollection->getItem($sequenceNumberTwo)->getPackageId());
         $this->assertEquals($this->minWeight, $packageCollection->getItem($sequenceNumberTwo)->getWeightInKG());
         $this->assertNull($packageCollection->getItem($sequenceNumberTwo)->getLengthInCM());
         $this->assertNull($packageCollection->getItem($sequenceNumberTwo)->getWidthInCM());
@@ -161,6 +162,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
             $sequenceNumber => $package,
         );
 
+        /** @var Dhl_Versenden_Model_Webservice_Builder_Package $builder */
         $builder = Mage::getModel('dhl_versenden/webservice_builder_package', array(
             'unit_of_measure' => 'G',
             'min_weight'      => $this->minWeight,
@@ -171,7 +173,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
         $this->assertCount(count($packageInfo), $packageCollection);
 
         $this->assertInstanceOf(Package::class, $packageCollection->getItem($sequenceNumber));
-        $this->assertEquals($sequenceNumber, $packageCollection->getItem($sequenceNumber)->getSequenceNumber());
+        $this->assertEquals($sequenceNumber, $packageCollection->getItem($sequenceNumber)->getPackageId());
         $this->assertEquals($minWeight, $packageCollection->getItem($sequenceNumber)->getWeightInKG());
         $this->assertNull($packageCollection->getItem($sequenceNumber)->getLengthInCM());
         $this->assertNull($packageCollection->getItem($sequenceNumber)->getWidthInCM());

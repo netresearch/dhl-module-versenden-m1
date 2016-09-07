@@ -79,7 +79,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     {
         $packageCollection = new ShipmentOrder\PackageCollection();
 
-        foreach ($packageInfo as $idx => $packageDetails) {
+        foreach ($packageInfo as $id => $packageDetails) {
             $lenghtInCM = null;
             if (isset($packageDetails['params']['length']) && $packageDetails['params']['length']) {
                 $lenghtInCM = $packageDetails['params']['length'];
@@ -94,7 +94,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
             }
 
             $package = new ShipmentOrder\Package(
-                $idx,
+                $id,
                 max($packageDetails['params']['weight'], $this->minWeight),
                 $lenghtInCM,
                 $widthInCM,

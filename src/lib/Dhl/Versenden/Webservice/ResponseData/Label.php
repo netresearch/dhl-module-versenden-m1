@@ -24,6 +24,8 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\ResponseData;
+use Dhl\Versenden\Pdf\Adapter;
+
 /**
  * Label
  *
@@ -33,7 +35,7 @@ namespace Dhl\Versenden\Webservice\ResponseData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-final class Label
+class Label
 {
     /** @var Status */
     private $status;
@@ -119,5 +121,18 @@ final class Label
     public function isCreated()
     {
         return ($this->getStatus()->getStatusCode() === '0');
+    }
+
+    /**
+     * @param Adapter $pdfLib
+     */
+    public function getAllLabels(Adapter $pdfLib)
+    {
+        return $pdfLib->merge([
+            $this->getLabel(),
+            $this->getReturnLabel(),
+            $this->getCodLabel(),
+            $this->getExportLabel(),
+        ]);
     }
 }

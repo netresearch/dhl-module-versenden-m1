@@ -69,7 +69,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
     /**
      * @test
      */
-    public function getContainerTypesGermanShipper()
+    public function getProductsGermanShipper()
     {
         $paketNational = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
         $paketInternational = \Dhl\Versenden\Product::CODE_WELTPAKET;
@@ -77,48 +77,32 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $shipperCountry = 'DE';
 
-        // national receiver
         $receiverCountry = 'DE';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayHasKey($paketNational, $containerTypes);
-        $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertArrayHasKey($paketNational, $products);
+        $this->assertArrayNotHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketNational));
 
         // eu receiver
         $receiverCountry = 'AT';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayNotHasKey($paketNational, $containerTypes);
-        $this->assertArrayHasKey($paketInternational, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertArrayNotHasKey($paketNational, $products);
+        $this->assertArrayHasKey($paketInternational, $products);
 
         // row receiver
         $receiverCountry = 'NZ';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayNotHasKey($paketNational, $containerTypes);
-        $this->assertArrayHasKey($paketInternational, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertArrayNotHasKey($paketNational, $products);
+        $this->assertArrayHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketInternational));
     }
     /**
      * @test
      */
-    public function getContainerTypesAustrianShipper()
+    public function getProductsAustrianShipper()
     {
         $paketNational = \Dhl\Versenden\Product::CODE_PAKET_AUSTRIA;
         $paketEu = \Dhl\Versenden\Product::CODE_PAKET_CONNECT;
@@ -129,96 +113,122 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
         // national receiver
         $receiverCountry = 'AT';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayHasKey($paketNational, $containerTypes);
-        $this->assertArrayNotHasKey($paketEu, $containerTypes);
-        $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertArrayHasKey($paketNational, $products);
+        $this->assertArrayNotHasKey($paketEu, $products);
+        $this->assertArrayNotHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketNational));
 
         // eu receiver
         $receiverCountry = 'DE';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayNotHasKey($paketNational, $containerTypes);
-        $this->assertArrayHasKey($paketEu, $containerTypes);
-        $this->assertArrayNotHasKey($paketInternational, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertArrayNotHasKey($paketNational, $products);
+        $this->assertArrayHasKey($paketEu, $products);
+        $this->assertArrayNotHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketEu));
 
         // row receiver
         $receiverCountry = 'NZ';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertArrayNotHasKey($paketNational, $containerTypes);
-        $this->assertArrayNotHasKey($paketEu, $containerTypes);
-        $this->assertArrayHasKey($paketInternational, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertArrayNotHasKey($paketNational, $products);
+        $this->assertArrayNotHasKey($paketEu, $products);
+        $this->assertArrayHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketInternational));
     }
 
     /**
      * @test
      */
-    public function getContainerTypesInvalidShipper()
+    public function getProductsInvalidShipper()
     {
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
 
         // no shipper or receiver info given
-        $params = null;
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertNotEmpty($containerTypes);
+        $products = $carrier->getProducts(null, null);
+        $this->assertInternalType('array', $products);
+        $this->assertNotEmpty($products);
 
         // international shipper, national receiver
         $shipperCountry = 'CZ';
         $receiverCountry = 'DE';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertCount(0, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertCount(0, $products);
 
         // international shipper, international receiver
         $shipperCountry = 'CZ';
         $receiverCountry = 'CH';
-        $params = new Varien_Object(array(
-            'method' => 'dhlversenden_foo',
-            'country_shipper' => $shipperCountry,
-            'country_recipient' => $receiverCountry,
-        ));
-        $containerTypes = $carrier->getContainerTypes($params);
-        $this->assertInternalType('array', $containerTypes);
-        $this->assertCount(0, $containerTypes);
+        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
+        $this->assertInternalType('array', $products);
+        $this->assertCount(0, $products);
         $this->assertEmpty(\Dhl\Versenden\Product::getProcedure('V77FOO'));
     }
 
     /**
      * @test
      */
+    public function getContentTypes()
+    {
+        $params = new Varien_Object();
+        $contentTypes = array(
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_COMMERCIAL_SAMPLE,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_DOCUMENT,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_OTHER,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_PRESENT,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_RETURN_OF_GOODS,
+        );
+
+        $helperMock = $this->getHelperMock('dhl_versenden/data', array('isCollectCustomsData'));
+        $helperMock
+            ->expects($this->exactly(2))
+            ->method('isCollectCustomsData')
+            ->willReturnOnConsecutiveCalls(false, true);
+        $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
+
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
+        $this->assertEmpty($carrier->getContentTypes($params));
+        $this->assertEquals($contentTypes, array_keys($carrier->getContentTypes($params)));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ShipmentConfigTest
+     */
     public function requestToShipmentOk()
     {
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $request = new Mage_Shipping_Model_Shipment_Request();
 
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setCountryId('DE');
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setStoreId(1);
+        $shipment->setOrder($order);
+        $request->setOrderShipment($shipment);
+
         $trackingNumber = 'foo';
         $labelContent = 'bar';
+
+        $label = $this->getMockBuilder(Varien_Object::class)
+            ->setMethods(array('__call', 'getAllLabels'))
+            ->getMock();
+        $label
+            ->expects($this->any())
+            ->method('__call')
+            ->with(
+                $this->equalTo('getStatus'),
+                $this->anything()
+            )
+            ->willReturn(new Dhl\Versenden\Webservice\ResponseData\Status(0, 'ok', 'ok'));
+        $label
+            ->expects($this->any())
+            ->method('getAllLabels')
+            ->willReturn($labelContent);
 
         $labels = $this->getMockBuilder(Varien_Object::class)
             ->setMethods(array('__call'))
@@ -230,10 +240,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->equalTo('getItem'),
                 $this->anything()
             )
-            ->willReturn(new Varien_Object(array(
-                'status' => new Dhl\Versenden\Webservice\ResponseData\Status(0, 'ok', 'ok'),
-                'label'  => $labelContent,
-            )));
+            ->willReturn($label);
 
         $result = new Varien_Object(array(
             'shipment_number' => $trackingNumber,
@@ -260,12 +267,22 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
     /**
      * @test
+     * @loadFixture Model_ShipmentConfigTest
      * @expectedException \Mage_Core_Exception
      */
     public function requestToShipmentStatusException()
     {
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $request = new Mage_Shipping_Model_Shipment_Request();
+
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setCountryId('DE');
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setStoreId(1);
+        $shipment->setOrder($order);
+        $request->setOrderShipment($shipment);
 
         $labels = $this->getMockBuilder(Varien_Object::class)
             ->setMethods(array('__call'))
@@ -300,13 +317,22 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
     /**
      * @test
+     * @loadFixture Model_ShipmentConfigTest
      * @expectedException \Exception
      */
     public function requestToShipmentException()
     {
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
-
         $request = new Mage_Shipping_Model_Shipment_Request();
+
+        $shippingAddress = new Mage_Sales_Model_Order_Address();
+        $shippingAddress->setCountryId('DE');
+        $order = new Mage_Sales_Model_Order();
+        $order->setShippingAddress($shippingAddress);
+        $shipment = new Mage_Sales_Model_Order_Shipment();
+        $shipment->setStoreId(1);
+        $shipment->setOrder($order);
+        $request->setOrderShipment($shipment);
 
         $gatewayMock = $this->getModelMock('dhl_versenden/webservice_gateway_soap', array(
             'createShipmentOrder'
@@ -331,6 +357,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $units = $carrier->getCode('unit_of_measure');
         $this->assertInternalType('array', $units);
         $this->assertNotEmpty($units);
+        $this->assertCount(2, $units);
         $this->assertArrayHasKey('G', $units);
         $this->assertArrayHasKey('KG', $units);
 

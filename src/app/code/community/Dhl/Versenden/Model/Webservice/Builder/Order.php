@@ -43,6 +43,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
     protected $serviceBuilder;
     /** @var Dhl_Versenden_Model_Webservice_Builder_Package */
     protected $packageBuilder;
+    /** @var Dhl_Versenden_Model_Webservice_Builder_Customs */
+    protected $customsBuilder;
     /** @var Dhl_Versenden_Model_Webservice_Builder_Settings */
     protected $settingsBuilder;
 
@@ -59,6 +61,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             'receiver_builder' => Dhl_Versenden_Model_Webservice_Builder_Receiver::class,
             'service_builder'  => Dhl_Versenden_Model_Webservice_Builder_Service::class,
             'package_builder'  => Dhl_Versenden_Model_Webservice_Builder_Package::class,
+            'customs_builder'  => Dhl_Versenden_Model_Webservice_Builder_Customs::class,
             'settings_builder' => Dhl_Versenden_Model_Webservice_Builder_Settings::class
         );
 
@@ -78,11 +81,12 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             throw new Mage_Core_Exception($message);
         }
 
-        $this->packageBuilder = $args['package_builder'];
-        $this->serviceBuilder = $args['service_builder'];
         $this->shipperBuilder = $args['shipper_builder'];
-        $this->settingsBuilder = $args['settings_builder'];
         $this->receiverBuilder = $args['receiver_builder'];
+        $this->serviceBuilder = $args['service_builder'];
+        $this->packageBuilder = $args['package_builder'];
+        $this->customsBuilder = $args['customs_builder'];
+        $this->settingsBuilder = $args['settings_builder'];
 
         return $this;
     }
@@ -93,6 +97,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
      * @param Mage_Sales_Model_Order_Shipment $shipment
      * @param string[] $packageInfo
      * @param string[] $serviceInfo
+     * @param string[] $customsInfo
+     * @param string $gkApiProduct
      * @return RequestData\ShipmentOrder
      */
     public function getShipmentOrder(
@@ -100,7 +106,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         $shipmentDate,
         Mage_Sales_Model_Order_Shipment $shipment,
         array $packageInfo,
-        array $serviceInfo
+        array $serviceInfo,
+        array $customsInfo,
+        $gkApiProduct
     )
     {
         $shipper = $this->shipperBuilder->getShipper($shipment->getStoreId());
@@ -116,10 +124,18 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $serviceSelection = $this->serviceBuilder->getServiceSelection($shipment->getOrder(), $serviceInfo);
 
-        $packageCollection = $this->packageBuilder->getPackages($packageInfo);
+        $packages = $this->packageBuilder->getPackages($packageInfo);
 
-        $package = current($packageInfo);
-        $productCode = $package['params']['container'];
+        /** @var Mage_Sales_Model_Resource_Order_Invoice_Collection $invoiceCollection */
+        $invoiceCollection = $shipment->getOrder()->getInvoiceCollection();
+        /** @var Mage_Sales_Model_Order_Invoice $invoice */
+        $invoice = $invoiceCollection->getFirstItem();
+
+        $exportDocuments = $this->customsBuilder->getExportDocuments(
+            $invoice->getIncrementId(),
+            $customsInfo,
+            $packageInfo
+        );
 
         $globalSettings = $this->settingsBuilder->getSettings($shipment->getStoreId());
 
@@ -130,8 +146,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $shipper,
             $receiver,
             $serviceSelection,
-            $packageCollection,
-            $productCode,
+            $packages,
+            $exportDocuments,
+            $gkApiProduct,
             $shipmentDate,
             $globalSettings->isPrintOnlyIfCodeable(),
             $globalSettings->getLabelType()

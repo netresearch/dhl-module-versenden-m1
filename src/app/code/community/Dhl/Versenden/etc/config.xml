@@ -91,6 +91,17 @@
             </sales_convert_quote_address>
         </fieldsets>
     </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Dhl_Versenden_Adminhtml before="Mage_Adminhtml">Dhl_Versenden_Adminhtml</Dhl_Versenden_Adminhtml>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <adminhtml>
         <layout>
             <updates>
