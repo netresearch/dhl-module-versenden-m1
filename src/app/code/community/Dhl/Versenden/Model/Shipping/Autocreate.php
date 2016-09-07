@@ -32,7 +32,7 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Shipping_Autocreate
+class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shipping
 {
     public function requestToShipment(Mage_Sales_Model_Order_Shipment $orderShipment)
     {
@@ -44,18 +44,21 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         $baseCurrencyCode    = Mage::app()->getStore($shipmentStoreId)->getBaseCurrencyCode();
         $recipientRegionCode = Mage::getModel('directory/region')->load($address->getRegionId())->getCode();
         $shipperRegionCode   = $this->getShipperRegionCode($shipmentStoreId);
-        $originStreet1       = Mage::getStoreConfig(self::XML_PATH_STORE_ADDRESS1, $shipmentStoreId);
-        $originStreet2       = Mage::getStoreConfig(self::XML_PATH_STORE_ADDRESS2, $shipmentStoreId);
+        $originStreetOne     = Mage::getStoreConfig(self::XML_PATH_STORE_ADDRESS1, $shipmentStoreId);
+        $originStreetTwo     = Mage::getStoreConfig(self::XML_PATH_STORE_ADDRESS2, $shipmentStoreId);
         $storeInfo           = new Varien_Object(Mage::getStoreConfig('general/store_information', $shipmentStoreId));
+        $shipperCountry      = Mage::getStoreConfig(self::XML_PATH_STORE_COUNTRY_ID, $shipmentStoreId);
+        $recipientCountry    = $address->getCountryId();
 
         if (!$admin->getFirstname() || !$admin->getLastname() || !$storeInfo->getName() || !$storeInfo->getPhone()
-            || !$originStreet1 || !Mage::getStoreConfig(self::XML_PATH_STORE_CITY, $shipmentStoreId)
+            || !$originStreetOne || !Mage::getStoreConfig(self::XML_PATH_STORE_CITY, $shipmentStoreId)
             || !$shipperRegionCode || !Mage::getStoreConfig(self::XML_PATH_STORE_ZIP, $shipmentStoreId)
             || !Mage::getStoreConfig(self::XML_PATH_STORE_COUNTRY_ID, $shipmentStoreId)
         ) {
             Mage::throwException(
                 Mage::helper('sales')->__(
-                    'Insufficient information to create shipping label(s). Please verify your Store Information and Shipping Settings.'
+                    'Insufficient information to create shipping label(s).' .
+                    'Please verify your Store Information and Shipping Settings.'
                 )
             );
         }
@@ -69,13 +72,13 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         $request->setShipperContactCompanyName($storeInfo->getName());
         $request->setShipperContactPhoneNumber($storeInfo->getPhone());
         $request->setShipperEmail($admin->getEmail());
-        $request->setShipperAddressStreet(trim($originStreet1 . ' ' . $originStreet2));
-        $request->setShipperAddressStreet1($originStreet1);
-        $request->setShipperAddressStreet2($originStreet2);
+        $request->setShipperAddressStreet(trim($originStreetOne . ' ' . $originStreetTwo));
+        $request->setShipperAddressStreet1($originStreetOne);
+        $request->setShipperAddressStreet2($originStreetTwo);
         $request->setShipperAddressCity(Mage::getStoreConfig(self::XML_PATH_STORE_CITY, $shipmentStoreId));
         $request->setShipperAddressStateOrProvinceCode($shipperRegionCode);
         $request->setShipperAddressPostalCode(Mage::getStoreConfig(self::XML_PATH_STORE_ZIP, $shipmentStoreId));
-        $request->setShipperAddressCountryCode(Mage::getStoreConfig(self::XML_PATH_STORE_COUNTRY_ID, $shipmentStoreId));
+        $request->setShipperAddressCountryCode($shipperCountry);
         $request->setRecipientContactPersonName(trim($address->getFirstname() . ' ' . $address->getLastname()));
         $request->setRecipientContactPersonFirstName($address->getFirstname());
         $request->setRecipientContactPersonLastName($address->getLastname());
@@ -89,14 +92,76 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         $request->setRecipientAddressStateOrProvinceCode($address->getRegionCode());
         $request->setRecipientAddressRegionCode($recipientRegionCode);
         $request->setRecipientAddressPostalCode($address->getPostcode());
-        $request->setRecipientAddressCountryCode($address->getCountryId());
+        $request->setRecipientAddressCountryCode($recipientCountry);
         $request->setShippingMethod($shippingMethod->getMethod());
         $request->setPackageWeight($order->getWeight());
         $request->setPackages($orderShipment->getPackages());
         $request->setBaseCurrencyCode($baseCurrencyCode);
         $request->setStoreId($shipmentStoreId);
 
+        // add service data to request object
+        $request->setData('services', $this->getConfiguredServices());
+        // add dhl versenden product to request object
+        $request->setData('gk_api_product', $this->getDhlVersendenProducts($shipperCountry, $recipientCountry));
+
+
         return $request;
+    }
+
+    /**
+     * create shipments
+     *
+     *
+     * @return $this
+     */
+    public function autoCreateShippment()
+    {
+        $shipmentRequests = array();
+        $orderCollection  = Mage::helper('dhl_versenden/data')->getOrdersForAutoCreateShippment();
+        /** @var Mage_Sales_Model_Order $order */
+        foreach ($orderCollection as $order) {
+            try {
+                $shipment = $order->prepareShipment();
+                $shipment->register();
+                $shipmentRequests[$order->getId()] = $this->requestToShipment($shipment);
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
+        }
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $soapWebservice */
+        $soapWebservice = Mage::getModel('dhl_versenden/webservice_gateway_soap');
+        $result         = $soapWebservice->createShipmentOrder($shipmentRequests);
+
+        $transaction = Mage::getModel('core/resource_transaction');
+        $pdfLib      = new \Dhl\Versenden\Pdf\Adapter\Zend();
+        /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
+        foreach ($shipmentRequests as $orderId => $shipmentRequest) {
+            $shipment = $shipmentRequest->getOrderShipment();
+            $shipmentNumber = $result->getShipmentNumber($orderId);
+            $shipmentStatus = $result->getLabels()->getItem($shipmentNumber)->getStatus();
+            if ($shipmentStatus->isError()) {
+                $order->addStatusHistoryComment(
+                    $shipmentStatus->getStatusText() . $shipmentStatus->getStatusMessage(),
+                    Zend_Log::ERR
+                );
+            } else {
+                $labels = $result->getLabels()->getItem($shipmentNumber)->getAllLabels($pdfLib);
+                $shipment->setShippingLabel($labels);
+                $carrierTitle = 'DHL Versenden Autocreate';
+                $track = Mage::getModel('sales/order_shipment_track')
+                    ->setNumber($shipmentNumber)
+                    ->setCarrierCode($shipment->getOrder()->getShippingMethod())
+                    ->setTitle($carrierTitle);
+                $shipment->addTrack($track);
+            }
+
+            $transaction
+                ->addObject($shipment)
+                ->addObject($shipment->getOrder());
+        }
+        $transaction->save();
+
+        return $this;
     }
 
     /**
@@ -113,10 +178,40 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         return $shipperRegionCode;
     }
 
+    /**
+     * get service data from config
+     *
+     * @return array
+     */
     protected function getConfiguredServices()
     {
+        $services = Mage::getModel('dhl_versenden/config')->getAutoCreateServices();
+        $serviceData = array(
+            'shipment_service' => array(),
+            'service_setting'  => array(),
+        );
 
+        foreach ($services as $name => $value) {
+            $serviceData['shipment_service'][$name] = (bool) $value;
+            $serviceData['service_setting'][$name]  = $value;
+        }
 
-       
+        return $serviceData;
+    }
+
+    /**
+     * get dhl versenden products based on shipper and recipient country
+     *
+     * @param $shipperCountry
+     * @param $recipientCountry
+     * @return mixed
+     */
+    protected function getDhlVersendenProducts($shipperCountry, $recipientCountry)
+    {
+        $products     = Mage::getModel('dhl_versenden/shipping_carrier_versenden')
+            ->getProducts($shipperCountry, $recipientCountry);
+        $productCodes = array_keys($products);
+
+        return $productCodes[0];
     }
 }
