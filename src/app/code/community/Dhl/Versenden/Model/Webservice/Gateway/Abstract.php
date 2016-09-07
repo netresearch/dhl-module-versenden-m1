@@ -29,6 +29,9 @@ use \Dhl\Versenden\Webservice\ResponseData;
 /**
  * Dhl_Versenden_Model_Webservice_Gateway_Abstract
  *
+ * Note: adapter, parser and logger should get injected during object instantiation
+ * but we do not have proper constructors in M1's alias factory.
+ *
  * @category Dhl
  * @package  Dhl_Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
@@ -59,6 +62,13 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      * @return Webservice\Parser
      */
     abstract public function getParser($operation);
+
+    /**
+     * @param Dhl_Versenden_Model_Config $config
+     * @param Dhl_Versenden_Model_Logger_Writer $writer
+     * @return Dhl_Versenden_Model_Webservice_Logger_Interface
+     */
+    abstract public function getLogger(Dhl_Versenden_Model_Config $config, Dhl_Versenden_Model_Logger_Writer $writer);
 
     /**
      * @param RequestData\CreateShipment $requestData
