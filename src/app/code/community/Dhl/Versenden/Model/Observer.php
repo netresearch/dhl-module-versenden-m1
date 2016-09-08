@@ -320,7 +320,6 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        //TODO(nr): check what happens it label is already manifested
         $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
         $shipmentNumbers = array($track->getData('track_number'));
         $response = $gateway->deleteShipmentOrder($shipmentNumbers);
@@ -328,7 +327,8 @@ class Dhl_Versenden_Model_Observer
             throw new Mage_Core_Exception($response->getStatus()->getStatusText());
         }
 
-        //TODO(nr): save shipment?
+        //FIXME(nr): shipping label is still available after delete
         $track->getShipment()->unsetData('shipping_label');
+        $track->getShipment()->save();
     }
 }
