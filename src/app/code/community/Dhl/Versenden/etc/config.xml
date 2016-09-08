@@ -179,14 +179,14 @@
     </frontend>
     <crontab>
     <jobs>
-        <dhlversenden_cronQueue>
+        <dhlversenden_shipment_autocreate>
             <schedule>
-                <cron_expr>*/5 * * * *</cron_expr>
+                <cron_expr>*/15 * * * *</cron_expr>
             </schedule>
             <run>
                 <model>dhl_versenden/cron::autoCreateShippment</model>
             </run>
-        </dhlversenden_cronQueue>
+        </dhlversenden_shipment_autocreate>
     </jobs>
     </crontab>
     <default>

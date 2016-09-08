@@ -34,6 +34,12 @@
  */
 class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shipping
 {
+    /**
+     * build and return the request for shipment
+     *
+     * @param Mage_Sales_Model_Order_Shipment $orderShipment
+     * @return Mage_Shipping_Model_Shipment_Request
+     */
     public function requestToShipment(Mage_Sales_Model_Order_Shipment $orderShipment)
     {
         $admin               = Mage::getSingleton('admin/session')->getUser();
@@ -118,11 +124,16 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
     {
         $shipmentRequests = array();
         $orderCollection  = Mage::helper('dhl_versenden/data')->getOrdersForAutoCreateShippment();
+
+        if ($orderCollection->count() == 0) {
+            return;
+        }
         /** @var Mage_Sales_Model_Order $order */
         foreach ($orderCollection as $order) {
             try {
                 $shipment = $order->prepareShipment();
                 $shipment->register();
+                $shipment->setPackages($this->getPackagesForShipment($order));
                 $shipmentRequests[$order->getId()] = $this->requestToShipment($shipment);
             } catch (Exception $e) {
                 Mage::logException($e);
@@ -140,8 +151,9 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
             $shipmentNumber = $result->getShipmentNumber($orderId);
             $shipmentStatus = $result->getLabels()->getItem($shipmentNumber)->getStatus();
             if ($shipmentStatus->isError()) {
-                $order->addStatusHistoryComment(
-                    $shipmentStatus->getStatusText() . $shipmentStatus->getStatusMessage(),
+                Mage::helper('dhl_versenden/data')->addStatusHistoryError(
+                    $order,
+                    $shipmentStatus->getStatusText() . implode(':', $shipmentStatus->getStatusMessage()),
                     Zend_Log::ERR
                 );
             } else {
@@ -153,18 +165,43 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
                     ->setCarrierCode($shipment->getOrder()->getShippingMethod())
                     ->setTitle($carrierTitle);
                 $shipment->addTrack($track);
+                $order->setIsInProcess(true);
+                $transaction
+                    ->addObject($shipment)
+                    ->addObject($shipment->getOrder());
             }
-
-            $transaction
-                ->addObject($shipment)
-                ->addObject($shipment->getOrder());
         }
+
         $transaction->save();
 
         return $this;
     }
 
     /**
+     * Obtain packages for shipment
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @return array
+     */
+    protected function getPackagesForShipment(Mage_Sales_Model_Order $order)
+    {
+        $packageData = array();
+        $weight      = 0;
+
+        /** @var Mage_Sales_Model_Order_Item $item */
+        foreach ($order->getAllItems() as $item) {
+            if (!$item->canShip()) {
+                continue;
+            }
+            $weight +=  (float) $item->getWeight() * (float) $item->getQtyOrdered();
+        }
+
+        return $packageData['params'][] = array('weight' => + $weight);
+    }
+
+    /**
+     * Obtain shipper region code
+     *
      * @param $shipmentStoreId
      * @return mixed
      */
