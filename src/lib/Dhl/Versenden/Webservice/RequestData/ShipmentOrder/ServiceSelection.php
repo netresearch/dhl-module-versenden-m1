@@ -60,7 +60,7 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     /** @var bool false or true */
     private $goGreen = false;
     /** @var bool false or true */
-    private $printOnlyIfCodeable = true;
+    private $printOnlyIfCodeable = false;
 
     /**
      * Constructs ServiceSettings object from array with values that differ from initial settings
