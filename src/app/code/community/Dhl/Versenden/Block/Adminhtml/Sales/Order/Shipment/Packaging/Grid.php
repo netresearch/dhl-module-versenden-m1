@@ -96,7 +96,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
             $productCollection
                 ->addStoreFilter($this->getShipment()->getStoreId())
                 ->addFieldToFilter('entity_id', array('in' => $productIds))
-                ->addAttributeToSelect('country_of_manufacture');
+                ->addAttributeToSelect('country_of_manufacture', true);
             ;
 
             while ($product = $productCollection->fetchItem()) {
