@@ -112,18 +112,30 @@ class ObjectMapper
 
     /**
      * @param \stdClass $object
+     * @param string $zip Receiver Postal Code
+     * @param string $city Receiver City
+     * @param string $country Receiver Country
+     * @param string $countryISOCode Receiver Country ISO Code
+     * @param string $state Receiver Region
      * @return Receiver\Packstation
      */
-    protected static function getPackstation(\stdClass $object)
+    protected static function getPackstation(\stdClass $object, $zip, $city, $country, $countryISOCode, $state)
     {
-        $zip = isset($object->zip) ? $object->zip : '';
-        $city = isset($object->city) ? $object->city : '';
+        $zip = isset($object->zip) ? $object->zip : $zip;
+        $city = isset($object->city) ? $object->city : $city;
+        $country = isset($object->country) ? $object->country : $country;
+        $countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : $countryISOCode;
+        $state = isset($object->state) ? $object->state : $state;
+
         $packstationNumber = isset($object->packstationNumber) ? $object->packstationNumber : '';
         $postNumber = isset($object->postNumber) ? $object->postNumber : '';
 
         return new Receiver\Packstation(
             $zip,
             $city,
+            $country,
+            $countryISOCode,
+            $state,
             $packstationNumber,
             $postNumber
         );
@@ -131,12 +143,20 @@ class ObjectMapper
 
     /**
      * @param \stdClass $object
+     * @param string $zip Receiver Postal Code
+     * @param string $city Receiver City
+     * @param string $country Receiver Country
+     * @param string $countryISOCode Receiver Country ISO Code
+     * @param string $state Receiver Region
      * @return Receiver\ParcelShop
      */
-    protected static function getParcelShop(\stdClass $object)
+    protected static function getParcelShop(\stdClass $object, $zip, $city, $country, $countryISOCode, $state)
     {
-        $zip = isset($object->zip) ? $object->zip : '';
-        $city = isset($object->city) ? $object->city : '';
+        $zip = isset($object->zip) ? $object->zip : $zip;
+        $city = isset($object->city) ? $object->city : $city;
+        $country = isset($object->country) ? $object->country : $country;
+        $countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : $countryISOCode;
+        $state = isset($object->state) ? $object->state : $state;
 
         $parcelShopNumber = isset($object->parcelShopNumber) ? $object->parcelShopNumber : '';
         $streetName = isset($object->streetName) ? $object->streetName : '';
@@ -145,6 +165,9 @@ class ObjectMapper
         return new Receiver\ParcelShop(
             $zip,
             $city,
+            $country,
+            $countryISOCode,
+            $state,
             $parcelShopNumber,
             $streetName,
             $streetNumber
@@ -153,12 +176,20 @@ class ObjectMapper
 
     /**
      * @param \stdClass $object
+     * @param string $zip Receiver Postal Code
+     * @param string $city Receiver City
+     * @param string $country Receiver Country
+     * @param string $countryISOCode Receiver Country ISO Code
+     * @param string $state Receiver Region
      * @return Receiver\Postfiliale
      */
-    protected static function getPostfiliale(\stdClass $object)
+    protected static function getPostfiliale(\stdClass $object, $zip, $city, $country, $countryISOCode, $state)
     {
-        $zip = isset($object->zip) ? $object->zip : '';
-        $city = isset($object->city) ? $object->city : '';
+        $zip = isset($object->zip) ? $object->zip : $zip;
+        $city = isset($object->city) ? $object->city : $city;
+        $country = isset($object->country) ? $object->country : $country;
+        $countryISOCode = isset($object->countryISOCode) ? $object->countryISOCode : $countryISOCode;
+        $state = isset($object->state) ? $object->state : $state;
 
         $postfilialNumber = isset($object->postfilialNumber) ? $object->postfilialNumber : '';
         $postNumber = isset($object->postNumber) ? $object->postNumber : '';
@@ -166,6 +197,9 @@ class ObjectMapper
         return new Receiver\Postfiliale(
             $zip,
             $city,
+            $country,
+            $countryISOCode,
+            $state,
             $postfilialNumber,
             $postNumber
         );
@@ -196,13 +230,13 @@ class ObjectMapper
         $contactPerson = isset($object->contactPerson) ? $object->contactPerson : '';
 
         $packstation = isset($object->packstation)
-            ? static::getPackstation($object->packstation)
+            ? static::getPackstation($object->packstation, $zip, $city, $country, $countryISOCode, $state)
             : null;
         $postfiliale = isset($object->postfiliale)
-            ? static::getPostfiliale($object->postfiliale)
+            ? static::getPostfiliale($object->postfiliale, $zip, $city, $country, $countryISOCode, $state)
             : null;
         $parcelShop = isset($object->parcelShop)
-            ? static::getParcelShop($object->parcelShop)
+            ? static::getParcelShop($object->parcelShop, $zip, $city, $country, $countryISOCode, $state)
             : null;
 
         return new Receiver(

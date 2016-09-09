@@ -6,9 +6,9 @@ class ParcelShopType
 {
 
     /**
-     * @var string $ParcelShopNumber
+     * @var parcelShopNumber $parcelShopNumber
      */
-    protected $ParcelShopNumber = null;
+    protected $parcelShopNumber = null;
 
     /**
      * @var streetName $streetName
@@ -21,42 +21,49 @@ class ParcelShopType
     protected $streetNumber = null;
 
     /**
-     * @var Zip $Zip
+     * @var ZipType $zip
      */
-    protected $Zip = null;
+    protected $zip = null;
 
     /**
-     * @var City $City
+     * @var city $city
      */
-    protected $City = null;
+    protected $city = null;
 
     /**
-     * @param string $ParcelShopNumber
-     * @param Zip $Zip
-     * @param City $City
+     * @var CountryType $Origin
      */
-    public function __construct($ParcelShopNumber, $Zip, $City)
+    protected $Origin = null;
+
+    /**
+     * @param parcelShopNumber $parcelShopNumber
+     * @param ZipType $zip
+     * @param city $city
+     * @param CountryType $Origin
+     */
+    public function __construct($parcelShopNumber, $zip, $city, $Origin)
     {
-      $this->ParcelShopNumber = $ParcelShopNumber;
-      $this->Zip = $Zip;
-      $this->City = $City;
+      $this->parcelShopNumber = $parcelShopNumber;
+      $this->zip = $zip;
+      $this->city = $city;
+      $this->Origin = $Origin;
     }
 
     /**
-     * @return string
+     * @return parcelShopNumber
      */
     public function getParcelShopNumber()
     {
-      return $this->ParcelShopNumber;
+      return $this->parcelShopNumber;
     }
 
     /**
-     * @param string $ParcelShopNumber
+     * @param parcelShopNumber $parcelShopNumber
      * @return \Dhl\Bcs\Api\ParcelShopType
      */
-    public function setParcelShopNumber($ParcelShopNumber)
+    public function setParcelShopNumber($parcelShopNumber)
     {
-      $this->ParcelShopNumber = $ParcelShopNumber;
+      $this->parcelShopNumber = $parcelShopNumber;
       return $this;
     }
 
@@ -97,38 +104,56 @@ class ParcelShopType
     }
 
     /**
-     * @return Zip
+     * @return ZipType
      */
     public function getZip()
     {
-      return $this->Zip;
+      return $this->zip;
     }
 
     /**
-     * @param Zip $Zip
+     * @param ZipType $zip
      * @return \Dhl\Bcs\Api\ParcelShopType
      */
-    public function setZip($Zip)
+    public function setZip($zip)
     {
-      $this->Zip = $Zip;
+      $this->zip = $zip;
       return $this;
     }
 
     /**
-     * @return City
+     * @return city
      */
     public function getCity()
     {
-      return $this->City;
+      return $this->city;
     }
 
     /**
-     * @param City $City
+     * @param city $city
      * @return \Dhl\Bcs\Api\ParcelShopType
      */
-    public function setCity($City)
+    public function setCity($city)
     {
-      $this->City = $City;
+      $this->city = $city;
+      return $this;
+    }
+
+    /**
+     * @return CountryType
+     */
+    public function getOrigin()
+    {
+      return $this->Origin;
+    }
+
+    /**
+     * @param CountryType $Origin
+     * @return \Dhl\Bcs\Api\ParcelShopType
+     */
+    public function setOrigin($Origin)
+    {
+      $this->Origin = $Origin;
       return $this;
     }
 
