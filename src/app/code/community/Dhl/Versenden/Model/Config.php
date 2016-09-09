@@ -53,6 +53,8 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'carriers/dhlversenden/webservice_auth_username';
     const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'carriers/dhlversenden/webservice_auth_password';
 
+    const CONFIG_XML_PATH_SHIPMENT_PRINT_ONLY_IF_CODEABLE ='shipment_printonlyifcodeable';
+
     const CONFIG_XML_PATH_SHIPMENT_AUTO_CREATE_ACTIVE = 'shipment_creation_enabled';
     const CONFIG_XML_PATH_SHIPMENT_ORDER_STATUS       = 'shipment_creation_order_status';
     const CONFIG_XML_PATH_SHIPMENT_PARCELANNOUNCEMENT = 'shipment_creation_parcelannouncement';
@@ -239,7 +241,9 @@ class Dhl_Versenden_Model_Config
             \Dhl\Versenden\Shipment\Service\Insurance::CODE =>
                 $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_INSURANCE, $store),
             \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_BULKYGOODS, $store)
+                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_BULKYGOODS, $store),
+            \Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE =>
+                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_PRINT_ONLY_IF_CODEABLE, $store),
 
         );
 

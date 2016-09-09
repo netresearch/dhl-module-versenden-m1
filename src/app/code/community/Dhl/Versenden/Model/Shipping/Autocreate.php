@@ -196,7 +196,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
             $weight +=  (float) $item->getWeight() * (float) $item->getQtyOrdered();
         }
 
-        return $packageData['params'][] = array('weight' => + $weight);
+        return $packageData['params'][] = array('weight' => $weight);
     }
 
     /**
