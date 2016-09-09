@@ -135,6 +135,11 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         return $result;
     }
 
+    /**
+     * @param RequestData\DeleteShipment $requestData
+     * @return ResponseData\CreateShipment
+     * @throws SoapFault
+     */
     protected function doDeleteShipmentOrder(RequestData\DeleteShipment $requestData)
     {
         /** @var SoapParser\CreateShipmentOrder $parser */

@@ -242,6 +242,7 @@ class Dhl_Versenden_Model_Observer
 
     /**
      * Disable COD in case it is not available for the current destination.
+     * - event: payment_method_is_active
      *
      * @param Varien_Event_Observer $observer
      */
@@ -317,6 +318,12 @@ class Dhl_Versenden_Model_Observer
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         $track = $observer->getData('track');
         if ($track->getCarrierCode() !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            // some other carrier, not our business.
+            return;
+        }
+
+        if (!$track->getShipment()->hasShippingLabel()) {
+            // shipment has no label, no need to send cancellation request
             return;
         }
 
@@ -327,8 +334,7 @@ class Dhl_Versenden_Model_Observer
             throw new Mage_Core_Exception($response->getStatus()->getStatusText());
         }
 
-        //FIXME(nr): shipping label is still available after delete
-        $track->getShipment()->unsetData('shipping_label');
+        $track->getShipment()->setShippingLabel(null);
         $track->getShipment()->save();
     }
 }

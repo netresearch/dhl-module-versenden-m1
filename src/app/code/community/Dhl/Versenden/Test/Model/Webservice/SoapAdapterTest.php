@@ -136,9 +136,37 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      * @param string $serializedResponse
      * @param string $serializedRequestData
      */
-    public function deleteShipmentOrderSuccess($serializedResponse, $serializedRequestData)
+    public function deleteShipmentOrder($serializedResponse, $serializedRequestData)
     {
-        $this->markTestIncomplete('No recorded successful response available.');
+        /** @var RequestData\DeleteShipment $requestData */
+        $requestData = unserialize($serializedRequestData);
+        $response = unserialize($serializedResponse);
+
+        $soapClient = $this->getMockBuilder(\SoapClient::class)
+            ->setMethods(array('deleteShipmentOrder'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $soapClient
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willReturn($response);
+
+        $adapter = new SoapAdapter($soapClient);
+        $parser = new SoapParser\DeleteShipmentOrder();
+
+        $response = $adapter->deleteShipmentOrder($requestData, $parser);
+        $this->assertInstanceOf(ResponseData\DeleteShipment::class, $response);
+
+        $shipmentNumbers = $requestData->getShipmentNumbers();
+        $deletedItems = $response->getDeletedItems();
+        $this->assertNotNull($deletedItems);
+        $this->assertCount(count($shipmentNumbers), $deletedItems);
+
+        foreach ($shipmentNumbers as $shipmentNumber) {
+            $deletedItem = $deletedItems->getItem($shipmentNumber);
+            $this->assertNotNull($deletedItem);
+            $this->assertInstanceOf(ResponseData\Status\Item::class, $deletedItem);
+        }
     }
 
     /**
