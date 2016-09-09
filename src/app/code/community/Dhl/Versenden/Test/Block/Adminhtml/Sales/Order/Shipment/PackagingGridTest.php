@@ -120,8 +120,6 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
      */
     public function getCountryOfManufacture()
     {
-        $this->markTestIncomplete('eav attributes are not getting loaded to product entities.');
-
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
         $this->assertEquals('TR', $block->getCountryOfManufacture('100'));
