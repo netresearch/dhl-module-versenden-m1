@@ -79,6 +79,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         $this->countryDirectory->loadByCode($address->getCountryId());
         $country        = $this->countryDirectory->getName();
         $countryISOCode = $this->countryDirectory->getIso2Code();
+        $state          = $address->getRegion();
 
         $street = $this->helper->splitStreet($address->getStreetFull());
         $streetName      = $street['street_name'];
@@ -100,6 +101,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
             $packStation = new Receiver\Packstation(
                 $address->getPostcode(),
                 $address->getCity(),
+                $country,
+                $countryISOCode,
+                $state,
                 $facility->getData('shop_number'),
                 $facility->getData('post_number')
             );
@@ -110,6 +114,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
             $postFiliale = new Receiver\Postfiliale(
                 $address->getPostcode(),
                 $address->getCity(),
+                $country,
+                $countryISOCode,
+                $state,
                 $facility->getData('shop_number'),
                 $facility->getData('post_number')
             );
@@ -120,6 +127,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
             $parcelShop = new Receiver\ParcelShop(
                 $address->getPostcode(),
                 $address->getCity(),
+                $country,
+                $countryISOCode,
+                $state,
                 $facility->getData('shop_number'),
                 $streetName,
                 $streetNumber

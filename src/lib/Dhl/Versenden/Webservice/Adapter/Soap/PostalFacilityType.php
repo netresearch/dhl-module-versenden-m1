@@ -25,7 +25,6 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
-use Dhl\Bcs\Api\CountryType;
 use Dhl\Versenden\Webservice\RequestData;
 use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 
@@ -46,11 +45,11 @@ class PostalFacilityType implements RequestType
      */
     public static function prepare(RequestData $requestData = null)
     {
-        if (!$requestData) {
+        if (!$requestData instanceof Receiver\PostalFacility) {
             return null;
         }
 
-        $countryType = new CountryType();
+        $countryType = new VersendenApi\CountryType();
         $countryType->setCountry($requestData->getCountry());
         $countryType->setCountryISOCode($requestData->getCountryISOCode());
         $countryType->setState($requestData->getState());

@@ -107,9 +107,9 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
             '',
             '',
             '',
-            new Receiver\Packstation('', '', $packstationNumber, $postNumber),
-            new Receiver\Postfiliale('', '', $postfilialNumber, $postNumber),
-            new Receiver\ParcelShop('', '', $parcelShopNumber, $streetName, $streetNumber)
+            new Receiver\Packstation('', '', '', '', '', $packstationNumber, $postNumber),
+            new Receiver\Postfiliale('', '', '', '', '', $postfilialNumber, $postNumber),
+            new Receiver\ParcelShop('', '', '', '', '', $parcelShopNumber, $streetName, $streetNumber)
         );
 
         // create and serialize shipping info

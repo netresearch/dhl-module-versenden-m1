@@ -240,11 +240,19 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
     {
         $zip = '111';
         $city = 'Foo';
+        $country = 'Germany';
+        $countryISOCode = 'DE';
+        $state = 'Saxony';
+
         $packstationNumber = '123';
         $postNumber = '123456';
+
         $packStation = new RequestData\ShipmentOrder\Receiver\Packstation(
             $zip,
             $city,
+            $country,
+            $countryISOCode,
+            $state,
             $packstationNumber,
             $postNumber
         );
@@ -264,11 +272,19 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
     {
         $zip = '111';
         $city = 'Foo';
+        $country = 'Germany';
+        $countryISOCode = 'DE';
+        $state = 'Saxony';
+
         $postfilialNumber = '123';
         $postNumber = '123456';
+
         $postfiliale = new RequestData\ShipmentOrder\Receiver\Postfiliale(
             $zip,
             $city,
+            $country,
+            $countryISOCode,
+            $state,
             $postfilialNumber,
             $postNumber
         );
@@ -288,12 +304,20 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
     {
         $zip = '111';
         $city = 'Foo';
+        $country = 'Germany';
+        $countryISOCode = 'DE';
+        $state = 'Saxony';
+
         $parcelShopNumber = '123';
         $streetName   = 'Foo Street';
         $streetNumber = '909';
+
         $parcelShop = new RequestData\ShipmentOrder\Receiver\ParcelShop(
             $zip,
             $city,
+            $country,
+            $countryISOCode,
+            $state,
             $parcelShopNumber,
             $streetName,
             $streetNumber
