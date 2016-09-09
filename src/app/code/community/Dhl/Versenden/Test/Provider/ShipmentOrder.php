@@ -215,7 +215,9 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         );
 
         $packstation = new RequestData\ShipmentOrder\Receiver\Packstation(
-            $packstationZip, $packstationCity, $packstationPackstationNumber, $packstationPostNumber
+            $packstationZip, $packstationCity,
+            $receiverCountry, $receiverCountryISOCode, $receiverState,
+            $packstationPackstationNumber, $packstationPostNumber
         );
         $receiver = new RequestData\ShipmentOrder\Receiver(
             $receiverName1, $receiverName2, $receiverName3, $receiverStreetName,

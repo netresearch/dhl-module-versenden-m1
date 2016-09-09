@@ -41,9 +41,9 @@ class GVAPI_2_0_de extends \SoapClient
       'ReceiverType' => 'Dhl\\Bcs\\Api\\ReceiverType',
       'ReceiverTypeType' => 'Dhl\\Bcs\\Api\\ReceiverTypeType',
       'ReceiverNativeAddressType' => 'Dhl\\Bcs\\Api\\ReceiverNativeAddressType',
-      'PackStationType' => 'Dhl\\Bcs\\Api\\PackStationType',
-      'PostfilialeType' => 'Dhl\\Bcs\\Api\\PostfilialeType',
-      'ParcelShopType' => 'Dhl\\Bcs\\Api\\ParcelShopType',
+      'cis:PackStationType' => 'Dhl\\Bcs\\Api\\PackStationType',
+      'cis:PostfilialeType' => 'Dhl\\Bcs\\Api\\PostfilialeType',
+      'cis:ParcelShopType' => 'Dhl\\Bcs\\Api\\ParcelShopType',
       'ExportDocumentType' => 'Dhl\\Bcs\\Api\\ExportDocumentType',
       'ExportDocPosition' => 'Dhl\\Bcs\\Api\\ExportDocPosition',
       'Statusinformation' => 'Dhl\\Bcs\\Api\\Statusinformation',
@@ -52,6 +52,7 @@ class GVAPI_2_0_de extends \SoapClient
       'DeleteShipmentOrderRequest' => 'Dhl\\Bcs\\Api\\DeleteShipmentOrderRequest',
       'DeleteShipmentOrderResponse' => 'Dhl\\Bcs\\Api\\DeleteShipmentOrderResponse',
       'DeletionState' => 'Dhl\\Bcs\\Api\\DeletionState',
+      'GetVersionResponse' => 'Dhl\\Bcs\\Api\\GetVersionResponse',
     );
 
     /**
@@ -94,6 +95,18 @@ class GVAPI_2_0_de extends \SoapClient
     public function deleteShipmentOrder(DeleteShipmentOrderRequest $part1)
     {
       return $this->__soapCall('deleteShipmentOrder', array($part1));
+    }
+
+    /**
+     * Returns the actual version of the implementation of the whole ISService
+     *         webservice.
+     *
+     * @param Version $part1
+     * @return GetVersionResponse
+     */
+    public function getVersion(Version $part1)
+    {
+      return $this->__soapCall('getVersion', array($part1));
     }
 
 }

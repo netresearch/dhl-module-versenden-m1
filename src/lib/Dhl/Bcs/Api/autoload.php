@@ -47,7 +47,8 @@
         'Dhl\Bcs\Api\LabelData' => __DIR__ .'/LabelData.php',
         'Dhl\Bcs\Api\DeleteShipmentOrderRequest' => __DIR__ .'/DeleteShipmentOrderRequest.php',
         'Dhl\Bcs\Api\DeleteShipmentOrderResponse' => __DIR__ .'/DeleteShipmentOrderResponse.php',
-        'Dhl\Bcs\Api\DeletionState' => __DIR__ .'/DeletionState.php'
+        'Dhl\Bcs\Api\DeletionState' => __DIR__ .'/DeletionState.php',
+        'Dhl\Bcs\Api\GetVersionResponse' => __DIR__ .'/GetVersionResponse.php'
     );
     if (!empty($classes[$class])) {
         include $classes[$class];
