@@ -39,12 +39,14 @@ use Dhl\Versenden\Webservice\RequestData;
 class CreateShipmentRequestType implements RequestType
 {
     /**
+     * Note: multiple packages are currently not supported by the DHL webservices,
+     * so we pick the first one until this feature is added to the API.
+     *
      * @param RequestData\ShipmentOrder $shipmentOrder
      * @return VersendenApi\ShipmentDetailsTypeType
      */
     protected static function prepareShipmentDetails(RequestData\ShipmentOrder $shipmentOrder)
     {
-        //TODO(nr): how to add multiple parcels/packages?
         $packages = $shipmentOrder->getPackages()->getItems();
         /** @var RequestData\ShipmentOrder\Package $package */
         $package = current($packages);
@@ -93,10 +95,15 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareReceiver(RequestData\ShipmentOrder\Receiver $receiver)
     {
-        $receiverAddressType = ReceiverAddressType::prepare($receiver);
         $packStationType     = PostalFacilityType::prepare($receiver->getPackstation());
         $postfilialeType     = PostalFacilityType::prepare($receiver->getPostfiliale());
         $parcelShopType      = PostalFacilityType::prepare($receiver->getParcelShop());
+
+        if ($packStationType || $postfilialeType || $parcelShopType) {
+            $receiverAddressType = null;
+        } else {
+            $receiverAddressType = ReceiverAddressType::prepare($receiver);
+        }
         $communicationType   = CommunicationType::prepare($receiver);
 
         $receiverType = new VersendenApi\ReceiverType(
@@ -131,6 +138,9 @@ class CreateShipmentRequestType implements RequestType
     }
 
     /**
+     * Note: multiple packages are currently not supported by the DHL webservices,
+     * so we pick the first export document until this feature is added to the API.
+     *
      * @param RequestData\ShipmentOrder\Export\DocumentCollection $documents
      * @return VersendenApi\ExportDocumentType|null
      */

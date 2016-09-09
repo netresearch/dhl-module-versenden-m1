@@ -46,18 +46,21 @@ class ParcelShop extends PostalFacility implements \JsonSerializable
      * ParcelShop constructor.
      * @param string $zip
      * @param string $city
+     * @param string $country
+     * @param string $countryISOCode
+     * @param string $state
      * @param string $parcelShopNumber
      * @param string $streetName
      * @param string $streetNumber
      */
-    public function __construct(
-        $zip, $city, $parcelShopNumber, $streetName, $streetNumber
-    ) {
+    public function __construct($zip, $city, $country, $countryISOCode, $state,
+                                $parcelShopNumber, $streetName, $streetNumber)
+    {
         $this->parcelShopNumber = $parcelShopNumber;
         $this->streetName = $streetName;
         $this->streetNumber = $streetNumber;
 
-        parent::__construct($zip, $city);
+        parent::__construct($zip, $city, $country, $countryISOCode, $state);
     }
 
     /**
