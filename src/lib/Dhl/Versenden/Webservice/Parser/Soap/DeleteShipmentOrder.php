@@ -46,10 +46,8 @@ class DeleteShipmentOrder extends Shipment implements Webservice\Parser
     {
         $status = $this->parseResponseStatus($response->getStatus());
 
+        // with the SoapClient SOAP_SINGLE_ELEMENT_ARRAYS feature enabled, $deletionStates is always an array
         $deletionStates = $response->getDeletionState();
-        if ($deletionStates instanceof VersendenApi\DeletionState) {
-            $deletionStates = array($deletionStates);
-        }
 
         $deletedItems = new Webservice\ResponseData\DeleteShipment\StatusCollection();
 

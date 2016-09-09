@@ -46,10 +46,8 @@ class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
     {
         $status = $this->parseResponseStatus($response->getStatus());
 
+        // with the SoapClient SOAP_SINGLE_ELEMENT_ARRAYS feature enabled, $creationStates is always an array
         $creationStates = $response->getCreationState();
-        if ($creationStates instanceof VersendenApi\CreationState) {
-            $creationStates = array($creationStates);
-        }
 
         $sequence = [];
         $labels = new Webservice\ResponseData\CreateShipment\LabelCollection();
