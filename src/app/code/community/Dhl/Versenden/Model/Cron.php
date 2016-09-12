@@ -37,19 +37,52 @@
 
 class Dhl_Versenden_Model_Cron
 {
-    /**
-     * trigger auto creation of shipments by cron
-     *
-     * @param Varien_Event_Observer $observer
-     * @return $this
-     */
-    public function autoCreateShippment()
-    {
-        if (!Mage::getModel('dhl_versenden/config')->getAutoCreateShipmentEnbaled()) {
-            return $this;
-        }
-        Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreateShippment();
+    const CRON_MESSAGE_LABELS_RETRIEVED = '%d labels were retrieved for %d orders.';
 
-        return $this;
+    /**
+     * Manually load DHL libraries for CLI scripts such as Aoe_Scheduler.
+     */
+    public function __construct()
+    {
+        $observer = new Dhl_Versenden_Model_Observer();
+        $observer->registerAutoload();
+    }
+
+
+    /**
+     * @param Mage_Cron_Model_Schedule $schedule
+     */
+    public function shipmentAutoCreate(Mage_Cron_Model_Schedule $schedule)
+    {
+        $config = Mage::getModel('dhl_versenden/config');
+
+        $stores = array_filter(
+            Mage::app()->getStores(),
+            function (Mage_Core_Model_Store $store) use ($config) {
+                return $config->isShipmentAutoCreateEnabled($store);
+            }
+        );
+
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST));
+        $orderStatus = $config->getAutoCreateOrderStatus();
+
+        try {
+            /** @var Dhl_Versenden_Model_Resource_Autocreate_Collection $collection */
+            $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+            $collection->addShippingMethodFilter();
+            $collection->addShipmentFilter();
+            $collection->addDeliveryCountriesFilter($euCountries);
+            $collection->addStatusFilter($orderStatus);
+            $collection->addStoreFilter($stores);
+
+            $num = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+
+            $schedule->setMessages(sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize()));
+            $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
+        } catch (\Exception $e) {
+            Mage::logException($e);
+            $schedule->setMessages($e->getMessage());
+            $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
+        }
     }
 }

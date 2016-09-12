@@ -49,6 +49,12 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
     const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
 
+    const CONFIG_XML_PATH_AUTOCREATE_PARCELANNOUNCEMENT = 'shipment_autocreate_service_parcelannouncement';
+    const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
+    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
+    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE = 'shipment_autocreate_service_insurance';
+    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS = 'shipment_autocreate_service_bulkygoods';
+
     /**
      * @param mixed $store
      * @return Service\DayOfDelivery
@@ -260,6 +266,55 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         );
 
         return new Service\Collection($items);
+    }
+
+    /**
+     * Obtain the service objects that are
+     * - enabled via module configuration and
+     * - selected for autocreate labels.
+     *
+     * @param mixed $store
+     * @return Service\Collection
+     */
+    public function getAutoCreateServices($store = null)
+    {
+        // read autocreate service values from config
+        $paValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_PARCELANNOUNCEMENT, $store);
+        $ageCheckValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
+        $returnShipmentValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT, $store);
+        $insuranceValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
+        $bulkyGoodsValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS, $store);
+        $validationValue = $this->getStoreConfigFlag(
+            Dhl_Versenden_Model_Config_Shipment::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE,
+            $store
+        );
+
+        $autoCreateValues = array(
+            Service\ParcelAnnouncement::CODE => $paValue,
+            Service\VisualCheckOfAge::CODE => $ageCheckValue,
+            Service\ReturnShipment::CODE => $returnShipmentValue,
+            Service\Insurance::CODE => $insuranceValue,
+            Service\BulkyGoods::CODE => $bulkyGoodsValue,
+            Service\PrintOnlyIfCodeable::CODE => $validationValue,
+        );
+
+        // obtain all enabled services
+        $services = $this->getEnabledServices($store)->getItems();
+
+        // skip services disabled for auto creation
+        $items = array_filter(
+            $services,
+            function (Service\Type\Generic $service) use ($autoCreateValues) {
+                return (isset($autoCreateValues[$service->getCode()]) && $autoCreateValues[$service->getCode()]);
+            }
+        );
+
+        // set autocreate service details to remaining services
+        $collection = new Service\Collection($items);
+        $selection  = ShipmentOrder\ServiceSelection::fromArray($autoCreateValues);
+        $this->setServiceValues($collection, $selection);
+
+        return $collection;
     }
 
     /**

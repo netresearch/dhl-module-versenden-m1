@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Service\Type as Service;
-use Dhl\Versenden\Service\Collection as ServiceCollection;
+use Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Model_Config
  *
@@ -42,26 +41,17 @@ class Dhl_Versenden_Model_Config
 
     const CONFIG_XML_PATH_AUTOLOAD_ENABLED = 'dhl_versenden/dev/autoload_enabled';
 
-    const CONFIG_XML_PATH_CARRIER = 'carriers/dhlversenden';
-    const CONFIG_XML_PATH_CARRIER_ACTIVE = 'carriers/dhlversenden/active';
-    const CONFIG_XML_PATH_CARRIER_TITLE = 'carriers/dhlversenden/title';
-    const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlversenden/sandbox_mode';
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'carriers/dhlversenden/sandbox_endpoint';
-    const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlversenden/logging_enabled';
-    const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlversenden/log_level';
+    const CONFIG_XML_PATH_CARRIER_TITLE    = 'title';
+    const CONFIG_XML_PATH_SANDBOX_MODE     = 'sandbox_mode';
+    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'sandbox_endpoint';
+    const CONFIG_XML_PATH_LOGGING_ENABLED  = 'logging_enabled';
+    const CONFIG_XML_PATH_LOG_LEVEL        = 'log_level';
 
-    const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'carriers/dhlversenden/webservice_auth_username';
-    const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'carriers/dhlversenden/webservice_auth_password';
+    const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'webservice_auth_username';
+    const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'webservice_auth_password';
 
-    const CONFIG_XML_PATH_SHIPMENT_PRINT_ONLY_IF_CODEABLE ='shipment_printonlyifcodeable';
-
-    const CONFIG_XML_PATH_SHIPMENT_AUTO_CREATE_ACTIVE = 'shipment_creation_enabled';
-    const CONFIG_XML_PATH_SHIPMENT_ORDER_STATUS       = 'shipment_creation_order_status';
-    const CONFIG_XML_PATH_SHIPMENT_PARCELANNOUNCEMENT = 'shipment_creation_parcelannouncement';
-    const CONFIG_XML_PATH_SHIPMENT_VISUALCHECKAGE     = 'shipment_creation_visualcheckofage';
-    const CONFIG_XML_PATH_SHIPMENT_RETURNSHIPMENT     = 'shipment_creation_returnshipment';
-    const CONFIG_XML_PATH_SHIPMENT_INSURANCE          = 'shipment_creation_insurance';
-    const CONFIG_XML_PATH_SHIPMENT_BULKYGOODS         = 'shipment_creation_bulkygoods';
+    const CONFIG_XML_PATH_AUTOCREATE_ENABLED                    = 'shipment_autocreate_enabled';
+    const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS               = 'shipment_autocreate_order_status';
 
     /**
      * Wrap store config access.
@@ -107,7 +97,7 @@ class Dhl_Versenden_Model_Config
      */
     public function getTitle($store = null)
     {
-        return Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER_TITLE, $store);
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_CARRIER_TITLE, $store);
     }
 
     /**
@@ -131,7 +121,7 @@ class Dhl_Versenden_Model_Config
      */
     public function isSandboxModeEnabled($store = null)
     {
-        return Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
     }
 
     /**
@@ -144,8 +134,8 @@ class Dhl_Versenden_Model_Config
     {
         $level = ($level === null) ? Zend_Log::DEBUG : $level;
 
-        $isEnabled = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_LOGGING_ENABLED);
-        $isLevelEnabled = (Mage::getStoreConfig(self::CONFIG_XML_PATH_LOG_LEVEL) >= $level);
+        $isEnabled = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_LOGGING_ENABLED);
+        $isLevelEnabled = ($this->getStoreConfig(self::CONFIG_XML_PATH_LOG_LEVEL) >= $level);
 
         return ($isEnabled && $isLevelEnabled);
     }
@@ -156,7 +146,7 @@ class Dhl_Versenden_Model_Config
      */
     public function getWebserviceAuthUsername()
     {
-        return Mage::getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_USERNAME);
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_USERNAME);
     }
 
     /**
@@ -166,7 +156,7 @@ class Dhl_Versenden_Model_Config
      */
     public function getWebserviceAuthPassword()
     {
-        return Mage::getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
     }
 
     /**
@@ -178,7 +168,7 @@ class Dhl_Versenden_Model_Config
     public function getEndpoint($store = null)
     {
         if ($this->isSandboxModeEnabled($store)) {
-            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
+            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
         }
 
         return null;
@@ -202,51 +192,25 @@ class Dhl_Versenden_Model_Config
 
 
     /**
-     * Check if auto create shipment is enbaled in config
-     *
-     * @param null $store
-     * @return mixed
-     */
-    public function getAutoCreateShipmentEnbaled($store = null)
-    {
-        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SHIPMENT_AUTO_CREATE_ACTIVE, $store);
-    }
-
-    /**
-     * Obtain configured order status for auto creation of shipping
+     * Check if shipment auto creation is enabled.
      *
      * @param mixed $store
-     * @return string
+     * @return bool
      */
-    public function getAutocreateAllowedStatusCodes($store = null)
+    public function isShipmentAutoCreateEnabled($store = null)
     {
-        return $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_ORDER_STATUS, $store);
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_ENABLED, $store);
     }
 
     /**
-     * Obtain configured services for auto create shipment
+     * Obtain the status of orders applicable for shipment auto creation.
      *
-     * @param null $store
-     * @return array
+     * @param mixed $store
+     * @return string[]
      */
-    public function getAutoCreateServices($store = null)
+    public function getAutoCreateOrderStatus($store = null)
     {
-        $services = array(
-            \Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_PARCELANNOUNCEMENT, $store),
-            \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::CODE   =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_VISUALCHECKAGE),
-            Dhl\Versenden\Shipment\Service\ReturnShipment::CODE =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_RETURNSHIPMENT, $store),
-            \Dhl\Versenden\Shipment\Service\Insurance::CODE =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_INSURANCE, $store),
-            \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_BULKYGOODS, $store),
-            \Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE =>
-                $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_PRINT_ONLY_IF_CODEABLE, $store),
-
-        );
-
-        return $services;
+        $status = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS, $store);
+        return explode(',', $status);
     }
 }
