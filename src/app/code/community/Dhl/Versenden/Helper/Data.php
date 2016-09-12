@@ -158,7 +158,6 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function addStatusHistoryComment(Mage_Sales_Model_Order $order, $message, $messageType)
     {
-        // TODO(nr): use psr log types
         // TODO(nr): add dhl message type indicator, i.e. some icon
         if ($messageType === Zend_Log::ERR) {
             $message = sprintf('%s %s', '(x)', $message);
@@ -193,44 +192,5 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     public function addStatusHistoryInfo(Mage_Sales_Model_Order $order, $message)
     {
         $this->addStatusHistoryComment($order, $message, Zend_Log::INFO);
-    }
-
-    /**
-     * Obtain order collection filered based on dhlversenden configuration
-     * and EU countries
-     *
-     * @return Mage_Sales_Model_Resource_Order_Collection
-     */
-    public function getOrdersForAutoCreateShippment()
-    {
-        /* @var $config Dhl_Versenden_Model_Config */
-        $config                  = Mage::getModel('dhl_versenden/config');
-        $allowedStatusCodes      = $config->getAutocreateAllowedStatusCodes();
-        $allowedCountrys         = Mage::getStoreConfig('general/country/eu_countries');
-
-        /* @var $orderCollection Mage_Sales_Model_Resource_Order_Collection */
-        $orderCollection = Mage::getModel('sales/order')->getCollection();
-        $orderCollection->getSelect()
-            ->join(
-                array('sfoa' => 'sales_flat_order_address'),
-                'main_table.entity_id = sfoa.parent_id AND sfoa.address_type="shipping"',
-                array('sfoa.country_id' => 'country_id')
-            )
-            ->joinLeft(
-                array('shipment' => 'sales_flat_shipment'),
-                'main_table.entity_id = shipment.order_id',
-                array('shipment.order_id')
-
-            );
-
-        $orderCollection
-            ->addFieldToFilter('status', array('in' => explode(',', $allowedStatusCodes)))
-            ->addFieldToFilter('shipping_method', array('like' => Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE . '%'))
-            ->addFieldToFilter('sfoa.country_id', array('in' => explode(',', $allowedCountrys)))
-            ->addFieldToFilter('shipment.entity_id', array('null' => true));
-
-        Mage::dispatchEvent('dhlversenden_shipment_autocreate_bevore', array('order_collection' => $orderCollection));
-
-        return $orderCollection;
     }
 }

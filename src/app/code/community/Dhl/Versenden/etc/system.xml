@@ -243,15 +243,15 @@
                             <show_in_store>0</show_in_store>
                         </shipment_dhlcodmethods>
 
-                        <dhlversenden_fields_automatic_shipment_creation translate="label">
+                        <dhlversenden_fields_shipment_autocreate translate="label">
                             <label>automatic shipment creation</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>360</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </dhlversenden_fields_automatic_shipment_creation>
-                        <shipment_creation_enabled>
+                        </dhlversenden_fields_shipment_autocreate>
+                        <shipment_autocreate_enabled>
                             <label>Enable automatic shipment creation</label>
                             <tooltip>Enable automatically shipment creation.</tooltip>
                             <frontend_type>select</frontend_type>
@@ -260,27 +260,27 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_creation_enabled>
-                        <shipment_creation_order_status>
+                        </shipment_autocreate_enabled>
+                        <shipment_autocreate_order_status>
                             <label>Order Status</label>
                             <frontend_type>multiselect</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
                             <sort_order>361</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_creation_order_status>
-                        <shipment_creation_parcelannouncement>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_order_status>
+                        <shipment_autocreate_service_parcelannouncement>
                             <label>Enable Parcel Announcement</label>
                             <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
                             <frontend_type>select</frontend_type>
-                            <source_model>dhl_versenden/adminhtml_system_config_source_yesoptno</source_model>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>362</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_creation_parcelannouncement>
-                        <shipment_creation_visualcheckofage>
+                        </shipment_autocreate_service_parcelannouncement>
+                        <shipment_autocreate_service_visualcheckofage>
                             <label>Enable Visual Check of Age</label>
                             <tooltip>Display the age check service while creating shipments.</tooltip>
                             <frontend_type>select</frontend_type>
@@ -289,8 +289,8 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_creation_visualcheckofage>
-                        <shipment_creation_returnshipment>
+                        </shipment_autocreate_service_visualcheckofage>
+                        <shipment_autocreate_service_returnshipment>
                             <label>Enable Return Shipment</label>
                             <tooltip>Display the return shipment service while creating shipments.</tooltip>
                             <frontend_type>select</frontend_type>
@@ -299,8 +299,8 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_creation_returnshipment>
-                        <shipment_creation_insurance>
+                        </shipment_autocreate_service_returnshipment>
+                        <shipment_autocreate_service_insurance>
                             <label>Enable Additional Insurance</label>
                             <tooltip>Display the additional insurance service while creating shipments.</tooltip>
                             <frontend_type>select</frontend_type>
@@ -309,8 +309,8 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_creation_insurance>
-                        <shipment_creation_bulkygoods>
+                        </shipment_autocreate_service_insurance>
+                        <shipment_autocreate_service_bulkygoods>
                             <label>Enable Bulky Goods</label>
                             <tooltip>Display the bulky goods service while creating shipments.</tooltip>
                             <frontend_type>select</frontend_type>
@@ -319,7 +319,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                        </shipment_creation_bulkygoods>
+                        </shipment_autocreate_service_bulkygoods>
 
                         <dhlversenden_fields_service translate="label">
                             <label>Additional Services</label>
