@@ -25,6 +25,7 @@
  */
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
+<?php if($this->getServices()->count() > 0): ?>
 <div id="checkout-dhlversenden-services" style="display: none;">
     <img
         src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
@@ -56,3 +57,4 @@
         //]]>
     </script>
 </div>
+<?php endif; ?>
