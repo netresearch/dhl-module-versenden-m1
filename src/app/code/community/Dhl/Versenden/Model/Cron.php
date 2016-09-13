@@ -19,6 +19,7 @@
  * @category  Dhl
  * @package   Dhl_Versenden
  * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
@@ -31,6 +32,7 @@
  * @category Dhl
  * @package  Dhl_Versenden
  * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -47,7 +49,6 @@ class Dhl_Versenden_Model_Cron
         $observer = new Dhl_Versenden_Model_Observer();
         $observer->registerAutoload();
     }
-
 
     /**
      * @param Mage_Cron_Model_Schedule $schedule
