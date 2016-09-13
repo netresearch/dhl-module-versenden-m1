@@ -51,7 +51,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
                 '18002000' => '18:00 - 20:00',
                 '19002100' => '19:00 - 21:00',
             ]),
-            new Service\ParcelAnnouncement('', true, false),
+            new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false),
             new Service\PreferredLocation('', true, false, ''),
             new Service\PreferredNeighbour('', true, false, ''),
         ];
@@ -158,7 +158,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputBoolean()
     {
-        $boolService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false);
+        $boolService = new Service\ReturnShipment('', true, false);
 
         $this->assertContains('type="checkbox"', $boolService->getSelectorHtml());
         $this->assertContains('label for', $boolService->getLabelHtml());
@@ -170,7 +170,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputHidden()
     {
-        $hiddenService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_REQUIRED, false);
+        $hiddenService = new Service\GoGreen('', true, false);
 
         $this->assertContains('type="hidden"', $hiddenService->getSelectorHtml());
         $this->assertEmpty($hiddenService->getLabelHtml());
