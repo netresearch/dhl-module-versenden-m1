@@ -37,8 +37,6 @@ namespace Dhl\Versenden\Shipment\Service;
 class ParcelAnnouncement extends Type\Boolean
 {
     const CODE = 'parcelAnnouncement';
-
-    const DISPLAY_MODE_REQUIRED = 1;
     const DISPLAY_MODE_OPTIONAL = 2;
 
     /**
@@ -50,48 +48,10 @@ class ParcelAnnouncement extends Type\Boolean
      */
     public function __construct($name, $isEnabled, $isSelected)
     {
-        if ($isEnabled == self::DISPLAY_MODE_OPTIONAL) {
+        if ($isEnabled === self::DISPLAY_MODE_OPTIONAL) {
             // customer can decide
             $this->customerService = true;
         }
         parent::__construct($name, (bool)$isEnabled, $isSelected);
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getSelectorHtml()
-    {
-        if (!$this->isCustomerService()) {
-            $format = '<input type="hidden" name="shipment_service[%s]" value="%s">';
-            return sprintf($format, $this->getCode(), $this->isSelected());
-        }
-
-        return parent::getSelectorHtml();
-    }
-
-    /**
-     * @return string
-     */
-    public function getLabelHtml()
-    {
-        if (!$this->isCustomerService()) {
-            return '';
-        }
-
-        return parent::getLabelHtml();
-    }
-
-    /**
-     * @return string
-     */
-    public function getValueHtml()
-    {
-        if (!$this->isCustomerService()) {
-            return '';
-        }
-
-        return parent::getValueHtml();
     }
 }
