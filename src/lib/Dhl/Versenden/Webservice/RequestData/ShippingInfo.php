@@ -29,6 +29,9 @@ use Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 /**
  * ShippingInfo
  *
+ * @deprecated
+ * @see Dhl\Versenden\Info
+ *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
