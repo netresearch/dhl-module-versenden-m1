@@ -6,108 +6,133 @@ class PostfilialeType
 {
 
     /**
-     * @var string $PostfilialNumber
+     * @var postfilialNumber $postfilialNumber
      */
-    protected $PostfilialNumber = null;
+    protected $postfilialNumber = null;
 
     /**
-     * @var string $PostNumber
+     * @var postNumber $postNumber
      */
-    protected $PostNumber = null;
+    protected $postNumber = null;
 
     /**
-     * @var Zip $Zip
+     * @var ZipType $zip
      */
-    protected $Zip = null;
+    protected $zip = null;
 
     /**
-     * @var City $City
+     * @var city $city
      */
-    protected $City = null;
+    protected $city = null;
 
     /**
-     * @param string $PostfilialNumber
-     * @param string $PostNumber
-     * @param Zip $Zip
-     * @param City $City
+     * @var CountryType $Origin
      */
-    public function __construct($PostfilialNumber, $PostNumber, $Zip, $City)
+    protected $Origin = null;
+
+    /**
+     * @param postfilialNumber $postfilialNumber
+     * @param postNumber $postNumber
+     * @param ZipType $zip
+     * @param city $city
+     * @param CountryType $Origin
+     */
+    public function __construct($postfilialNumber, $postNumber, $zip, $city, $Origin)
     {
-      $this->PostfilialNumber = $PostfilialNumber;
-      $this->PostNumber = $PostNumber;
-      $this->Zip = $Zip;
-      $this->City = $City;
+      $this->postfilialNumber = $postfilialNumber;
+      $this->postNumber = $postNumber;
+      $this->zip = $zip;
+      $this->city = $city;
+      $this->Origin = $Origin;
     }
 
     /**
-     * @return string
+     * @return postfilialNumber
      */
     public function getPostfilialNumber()
     {
-      return $this->PostfilialNumber;
+      return $this->postfilialNumber;
     }
 
     /**
-     * @param string $PostfilialNumber
+     * @param postfilialNumber $postfilialNumber
      * @return \Dhl\Bcs\Api\PostfilialeType
      */
-    public function setPostfilialNumber($PostfilialNumber)
+    public function setPostfilialNumber($postfilialNumber)
     {
-      $this->PostfilialNumber = $PostfilialNumber;
+      $this->postfilialNumber = $postfilialNumber;
       return $this;
     }
 
     /**
-     * @return string
+     * @return postNumber
      */
     public function getPostNumber()
     {
-      return $this->PostNumber;
+      return $this->postNumber;
     }
 
     /**
-     * @param string $PostNumber
+     * @param postNumber $postNumber
      * @return \Dhl\Bcs\Api\PostfilialeType
      */
-    public function setPostNumber($PostNumber)
+    public function setPostNumber($postNumber)
     {
-      $this->PostNumber = $PostNumber;
+      $this->postNumber = $postNumber;
       return $this;
     }
 
     /**
-     * @return Zip
+     * @return ZipType
      */
     public function getZip()
     {
-      return $this->Zip;
+      return $this->zip;
     }
 
     /**
-     * @param Zip $Zip
+     * @param ZipType $zip
      * @return \Dhl\Bcs\Api\PostfilialeType
      */
-    public function setZip($Zip)
+    public function setZip($zip)
     {
-      $this->Zip = $Zip;
+      $this->zip = $zip;
       return $this;
     }
 
     /**
-     * @return City
+     * @return city
      */
     public function getCity()
     {
-      return $this->City;
+      return $this->city;
     }
 
     /**
-     * @param City $City
+     * @param city $city
      * @return \Dhl\Bcs\Api\PostfilialeType
      */
-    public function setCity($City)
+    public function setCity($city)
     {
-      $this->City = $City;
+      $this->city = $city;
+      return $this;
+    }
+
+    /**
+     * @return CountryType
+     */
+    public function getOrigin()
+    {
+      return $this->Origin;
+    }
+
+    /**
+     * @param CountryType $Origin
+     * @return \Dhl\Bcs\Api\PostfilialeType
+     */
+    public function setOrigin($Origin)
+    {
+      $this->Origin = $Origin;
       return $this;
     }
 
