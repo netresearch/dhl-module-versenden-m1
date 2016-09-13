@@ -32,6 +32,7 @@
         title="<?php echo $this->__('DHL Additional Services') ?>"
     />
     <dl>
+        <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
         <?php foreach ($this->getServices() as $service): ?>
             <dt class="service-<?php echo $service->getFrontendInputType(); ?>">
                 <?php echo $service->getSelectorHtml() ?>

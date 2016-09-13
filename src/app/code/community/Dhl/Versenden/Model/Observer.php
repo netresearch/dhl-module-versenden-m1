@@ -109,6 +109,8 @@ class Dhl_Versenden_Model_Observer
      */
     public function saveShippingSettings(Varien_Event_Observer $observer)
     {
+        //TODO(nr): rework DHL Versenden Info handling
+
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = $observer->getQuote();
         $shippingAddress = $quote->getShippingAddress();
@@ -136,12 +138,24 @@ class Dhl_Versenden_Model_Observer
             'shipper_config'  => Mage::getModel('dhl_versenden/config_shipper'),
             'shipment_config' => $shipmentConfig,
         );
+
+        $services = $request->getPost('shipment_service', array());
+        $settings = $request->getPost('service_setting', array());
+
+        $services[\Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE] =
+            $shipmentConfig->getSettings($quote->getStoreId())->isPrintOnlyIfCodeable();
+        $services[\Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE] =
+            Mage::getModel('dhl_versenden/config_service')
+                ->getServices($quote->getStoreId())
+                ->getItem(\Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE)
+                ->isEnabled();
+
         $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', $args);
         $serviceSettings = $serviceBuilder->getServiceSelection(
             $quote,
             array(
-                'shipment_service' => $request->getPost('shipment_service', array()),
-                'service_setting'  => $request->getPost('service_setting', array())
+                'shipment_service' => $services,
+                'service_setting'  => $settings,
             )
         );
 
