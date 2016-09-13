@@ -243,84 +243,6 @@
                             <show_in_store>0</show_in_store>
                         </shipment_dhlcodmethods>
 
-                        <dhlversenden_fields_shipment_autocreate translate="label">
-                            <label>automatic shipment creation</label>
-                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
-                            <sort_order>360</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </dhlversenden_fields_shipment_autocreate>
-                        <shipment_autocreate_enabled>
-                            <label>Enable automatic shipment creation</label>
-                            <tooltip>Enable automatically shipment creation.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>361</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_autocreate_enabled>
-                        <shipment_autocreate_order_status>
-                            <label>Order Status</label>
-                            <frontend_type>multiselect</frontend_type>
-                            <source_model>adminhtml/system_config_source_order_status</source_model>
-                            <sort_order>361</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </shipment_autocreate_order_status>
-                        <shipment_autocreate_service_parcelannouncement>
-                            <label>Enable Parcel Announcement</label>
-                            <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>362</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_autocreate_service_parcelannouncement>
-                        <shipment_autocreate_service_visualcheckofage>
-                            <label>Enable Visual Check of Age</label>
-                            <tooltip>Display the age check service while creating shipments.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>dhl_versenden/adminhtml_system_config_source_service_visualcheckofage</source_model>
-                            <sort_order>363</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_autocreate_service_visualcheckofage>
-                        <shipment_autocreate_service_returnshipment>
-                            <label>Enable Return Shipment</label>
-                            <tooltip>Display the return shipment service while creating shipments.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>364</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_autocreate_service_returnshipment>
-                        <shipment_autocreate_service_insurance>
-                            <label>Enable Additional Insurance</label>
-                            <tooltip>Display the additional insurance service while creating shipments.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>365</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_autocreate_service_insurance>
-                        <shipment_autocreate_service_bulkygoods>
-                            <label>Enable Bulky Goods</label>
-                            <tooltip>Display the bulky goods service while creating shipments.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>366</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </shipment_autocreate_service_bulkygoods>
-
                         <dhlversenden_fields_service translate="label">
                             <label>Additional Services</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
@@ -354,7 +276,7 @@
                             <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>425</sort_order>
+                            <sort_order>430</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -364,7 +286,7 @@
                             <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>430</sort_order>
+                            <sort_order>440</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
@@ -420,10 +342,79 @@
                             <show_in_store>1</show_in_store>
                         </service_bulkygoods_enabled>
 
+                        <dhlversenden_fields_shipment_autocreate translate="label">
+                            <label>Automatic Shipment Creation</label>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
+                            <sort_order>500</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </dhlversenden_fields_shipment_autocreate>
+                        <shipment_autocreate_enabled>
+                            <label>Enabled</label>
+                            <tooltip>Create shipments and retrieve labels via cron job.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>510</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_autocreate_enabled>
+                        <shipment_autocreate_order_status>
+                            <label>Order Status</label>
+                            <tooltip>Create shipments for orders with the given status.</tooltip>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>adminhtml/system_config_source_order_status</source_model>
+                            <sort_order>520</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_order_status>
+                        <shipment_autocreate_service_visualcheckofage>
+                            <label>Visual Check of Age</label>
+                            <tooltip>Book the service Visual Check Of Age with automated shipment orders.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_service_visualcheckofage</source_model>
+                            <sort_order>530</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_autocreate_service_visualcheckofage>
+                        <shipment_autocreate_service_returnshipment>
+                            <label>Return Shipment</label>
+                            <tooltip>Book the service Return Shipment with automated shipment orders.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>540</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_autocreate_service_returnshipment>
+                        <shipment_autocreate_service_insurance>
+                            <label>Additional Insurance</label>
+                            <tooltip>Book the service Additional Insurance with automated shipment orders.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>550</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_autocreate_service_insurance>
+                        <shipment_autocreate_service_bulkygoods>
+                            <label>Bulky Goods</label>
+                            <tooltip>Book the service Bulky Goods with automated shipment orders.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>560</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </shipment_autocreate_service_bulkygoods>
+
                         <dhlversenden_fields_contact translate="label">
                             <label>Contact Data</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
-                            <sort_order>500</sort_order>
+                            <sort_order>600</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -432,7 +423,7 @@
                             <label>Name of Sender</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-50</validate>
-                            <sort_order>510</sort_order>
+                            <sort_order>610</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -441,7 +432,7 @@
                             <label>Name of Company</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
-                            <sort_order>511</sort_order>
+                            <sort_order>611</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -450,7 +441,7 @@
                             <label>Name of Company (2)</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
-                            <sort_order>512</sort_order>
+                            <sort_order>612</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -459,7 +450,7 @@
                             <label>Street Name</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-35</validate>
-                            <sort_order>520</sort_order>
+                            <sort_order>620</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -468,7 +459,7 @@
                             <label>Street Number</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-5</validate>
-                            <sort_order>521</sort_order>
+                            <sort_order>621</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -477,7 +468,7 @@
                             <label>Address Addition</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>522</sort_order>
+                            <sort_order>622</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -486,7 +477,7 @@
                             <label>Dispatching Information</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>523</sort_order>
+                            <sort_order>623</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -495,7 +486,7 @@
                             <label>Zip Code</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-10</validate>
-                            <sort_order>530</sort_order>
+                            <sort_order>630</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -504,7 +495,7 @@
                             <label>City</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-35</validate>
-                            <sort_order>531</sort_order>
+                            <sort_order>631</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -514,7 +505,7 @@
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_country</source_model>
                             <validate>required-entry</validate>
-                            <sort_order>532</sort_order>
+                            <sort_order>632</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -523,7 +514,7 @@
                             <label>Phone Number</label>
                             <validate>validate-length maximum-length-20</validate>
                             <frontend_type>text</frontend_type>
-                            <sort_order>540</sort_order>
+                            <sort_order>640</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -532,7 +523,7 @@
                             <label>Email Address</label>
                             <validate>validate-email validate-length maximum-length-50</validate>
                             <frontend_type>text</frontend_type>
-                            <sort_order>541</sort_order>
+                            <sort_order>641</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -541,7 +532,7 @@
                             <label>First Name and Last Name of Contact Person</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
-                            <sort_order>542</sort_order>
+                            <sort_order>642</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -551,7 +542,7 @@
                             <label>Bank Data</label>
                             <comment>Bank data as required for cash on delivery shipments</comment>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
-                            <sort_order>600</sort_order>
+                            <sort_order>700</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -560,7 +551,7 @@
                             <label>Account Owner</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-80</validate>
-                            <sort_order>610</sort_order>
+                            <sort_order>710</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -569,7 +560,7 @@
                             <label>Bank Name</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-80</validate>
-                            <sort_order>620</sort_order>
+                            <sort_order>720</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -578,7 +569,7 @@
                             <label>IBAN</label>
                             <validate>required-entry validate-alphanum validate-length maximum-length-34</validate>
                             <frontend_type>text</frontend_type>
-                            <sort_order>630</sort_order>
+                            <sort_order>730</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -587,7 +578,7 @@
                             <label>BIC</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-alphanum validate-length maximum-length-11</validate>
-                            <sort_order>640</sort_order>
+                            <sort_order>740</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -596,7 +587,7 @@
                             <label>Reason for Payment</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>650</sort_order>
+                            <sort_order>750</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -605,7 +596,7 @@
                             <label>Reason for Payment (2)</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>660</sort_order>
+                            <sort_order>760</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -614,7 +605,7 @@
                             <label>Account Reference to Customer Profile</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>670</sort_order>
+                            <sort_order>770</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -623,7 +614,7 @@
                         <dhlversenden_fields_returnshipment translate="label">
                             <label>Return Shipment</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
-                            <sort_order>700</sort_order>
+                            <sort_order>800</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -632,7 +623,7 @@
                             <label>Use Shipper as Receiver</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>800</sort_order>
+                            <sort_order>810</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -641,7 +632,7 @@
                             <label>Name of Receiver</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-50</validate>
-                            <sort_order>810</sort_order>
+                            <sort_order>820</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -653,7 +644,7 @@
                             <label>Name of Company</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
-                            <sort_order>811</sort_order>
+                            <sort_order>821</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -665,7 +656,7 @@
                             <label>Name of Company (2)</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
-                            <sort_order>812</sort_order>
+                            <sort_order>822</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -677,7 +668,7 @@
                             <label>Street Name</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-35</validate>
-                            <sort_order>820</sort_order>
+                            <sort_order>830</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -689,7 +680,7 @@
                             <label>Street Number</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-5</validate>
-                            <sort_order>821</sort_order>
+                            <sort_order>831</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -701,7 +692,7 @@
                             <label>Address Addition</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>822</sort_order>
+                            <sort_order>832</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -713,7 +704,7 @@
                             <label>Dispatching Information</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
-                            <sort_order>823</sort_order>
+                            <sort_order>833</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -725,7 +716,7 @@
                             <label>Zip Code</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-10</validate>
-                            <sort_order>830</sort_order>
+                            <sort_order>840</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -737,7 +728,7 @@
                             <label>City</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-35</validate>
-                            <sort_order>831</sort_order>
+                            <sort_order>841</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -750,7 +741,7 @@
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_country</source_model>
                             <validate>required-entry</validate>
-                            <sort_order>832</sort_order>
+                            <sort_order>842</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>

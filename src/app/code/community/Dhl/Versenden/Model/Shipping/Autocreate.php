@@ -43,6 +43,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
     {
         $shipmentRequests = array();
 
+        $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
         $shipperConfig = Mage::getModel('dhl_versenden/config_shipper');
         $serviceConfig = Mage::getModel('dhl_versenden/config_service');
 
@@ -52,7 +53,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
                 $shipment = $order->prepareShipment();
                 $shipment->register();
 
-                $builder = new Dhl_Versenden_Model_Shipping_Autocreate_Builder($order, $shipperConfig, $serviceConfig);
+                $builder = new Dhl_Versenden_Model_Shipping_Autocreate_Builder($order, $shipmentConfig, $shipperConfig, $serviceConfig);
                 $request = $builder->createShipmentRequest($shipment);
 
                 $shipmentRequests[$order->getId()] = $request;
@@ -66,7 +67,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
 
     /**
      * @param Mage_Sales_Model_Resource_Order_Collection $collection
-     * @return int The number of successfully retrieved labels.
+     * @return int The number of successfully created shipment orders.
      */
     public function autoCreate(Mage_Sales_Model_Resource_Order_Collection $collection)
     {
@@ -76,12 +77,11 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
 
         $shipmentRequests = $this->prepareShipmentRequests($collection);
         $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
+        $result = $gateway->createShipmentOrder($shipmentRequests);
 
-
-        $result  = $gateway->createShipmentOrder($shipmentRequests);
-
-        $transaction = Mage::getModel('core/resource_transaction');
+        $carrier     = Mage::getModel('dhl_versenden/shipping_carrier_versenden');
         $pdfLib      = new \Dhl\Versenden\Pdf\Adapter\Zend();
+        $transaction = Mage::getModel('core/resource_transaction');
 
         /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
         foreach ($shipmentRequests as $orderId => $shipmentRequest) {
@@ -92,16 +92,15 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
             if ($shipmentStatus->isError()) {
                 Mage::helper('dhl_versenden/data')->addStatusHistoryError(
                     $shipmentRequest->getOrderShipment()->getOrder(),
-                    $shipmentStatus->getStatusText() . implode(':', $shipmentStatus->getStatusMessage())
+                    sprintf('%s %s', $shipmentStatus->getStatusText(), $shipmentStatus->getStatusMessage())
                 );
             } else {
                 $labels = $result->getLabels()->getItem($shipmentNumber)->getAllLabels($pdfLib);
                 $shipment->setShippingLabel($labels);
-                $carrierTitle = 'DHL Versenden Autocreate';
                 $track = Mage::getModel('sales/order_shipment_track')
                     ->setNumber($shipmentNumber)
-                    ->setCarrierCode($shipment->getOrder()->getShippingMethod())
-                    ->setTitle($carrierTitle);
+                    ->setCarrierCode($carrier->getCarrierCode())
+                    ->setTitle($carrier->getConfigData('title'));
                 $shipment->addTrack($track);
                 $shipment->getOrder()->setIsInProcess(true);
                 $transaction
@@ -111,6 +110,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
         }
 
         $transaction->save();
+
         return count($result->getShipmentNumbers());
     }
 }
