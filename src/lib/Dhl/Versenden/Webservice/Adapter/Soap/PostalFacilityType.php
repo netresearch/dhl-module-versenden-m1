@@ -25,7 +25,6 @@
  */
 namespace Dhl\Versenden\Webservice\Adapter\Soap;
 use Dhl\Bcs\Api as VersendenApi;
-use Dhl\Bcs\Api\CountryType;
 use Dhl\Versenden\Webservice\RequestData;
 use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 
@@ -46,13 +45,24 @@ class PostalFacilityType implements RequestType
      */
     public static function prepare(RequestData $requestData = null)
     {
+        if (!$requestData instanceof Receiver\PostalFacility) {
+            return null;
+        }
+
+        $countryType = new VersendenApi\CountryType();
+        $countryType->setCountry($requestData->getCountry());
+        $countryType->setCountryISOCode($requestData->getCountryISOCode());
+        $countryType->setState($requestData->getState());
+
         if ($requestData instanceof Receiver\Packstation) {
-            return new VersendenApi\PackstationType(
+            $packStationType = new VersendenApi\PackStationType(
                 $requestData->getPackstationNumber(),
-                $requestData->getPostNumber(),
                 $requestData->getZip(),
-                $requestData->getCity()
+                $requestData->getCity(),
+                $countryType
             );
+            $packStationType->setPostNumber($requestData->getPostNumber());
+            return $packStationType;
         }
 
         if ($requestData instanceof Receiver\Postfiliale) {
@@ -60,7 +70,8 @@ class PostalFacilityType implements RequestType
                 $requestData->getPostfilialNumber(),
                 $requestData->getPostNumber(),
                 $requestData->getZip(),
-                $requestData->getCity()
+                $requestData->getCity(),
+                $countryType
             );
         }
 
@@ -68,7 +79,8 @@ class PostalFacilityType implements RequestType
             $parcelShopType = new VersendenApi\ParcelShopType(
                 $requestData->getParcelShopNumber(),
                 $requestData->getZip(),
-                $requestData->getCity()
+                $requestData->getCity(),
+                $countryType
             );
             $parcelShopType->setStreetName($requestData->getStreetName());
             $parcelShopType->setStreetNumber($requestData->getStreetNumber());
