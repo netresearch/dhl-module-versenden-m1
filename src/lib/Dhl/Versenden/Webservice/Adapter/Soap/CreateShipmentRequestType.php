@@ -60,12 +60,20 @@ class CreateShipmentRequestType implements RequestType
         );
         $shipmentDetailsType->setCustomerReference($shipmentOrder->getReference());
 
+        // add services that are part of the service type
+        $serviceType = ServiceType::prepare($shipmentOrder->getServiceSelection());
+        $shipmentDetailsType->setService($serviceType);
+
+        // add services that are not part of the service type
         if ($shipmentOrder->getServiceSelection()->isReturnShipment()) {
             $shipmentDetailsType->setReturnShipmentAccountNumber($shipmentOrder->getReturnShipmentAccountNumber());
         }
 
-        $serviceType = ServiceType::prepare($shipmentOrder->getServiceSelection());
-        $shipmentDetailsType->setService($serviceType);
+        if ($shipmentOrder->getServiceSelection()->getParcelAnnouncement()) {
+            $notificationType = new VersendenApi\ShipmentNotificationType($shipmentOrder->getReceiver()->getEmail());
+            $shipmentDetailsType->setNotification($notificationType);
+        }
+
 
         return $shipmentDetailsType;
     }

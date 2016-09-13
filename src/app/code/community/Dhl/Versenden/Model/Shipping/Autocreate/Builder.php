@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-
+use \Dhl\Versenden\Shipment\Service;
 /**
- * Dhl_Versenden_Model_Shipping_Autocreate_Request
+ * Dhl_Versenden_Model_Shipping_Autocreate_Builder
  *
  * @category Dhl
  * @package  Dhl_Versenden
@@ -37,17 +37,28 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 {
     /** @var Mage_Sales_Model_Order */
     protected $order;
+    /** @var Dhl_Versenden_Model_Config_Shipment */
+    protected $shipmentConfig;
     /** @var Dhl_Versenden_Model_Config_Shipper */
     protected $shipperConfig;
     /** @var Dhl_Versenden_Model_Config_Service */
     protected $serviceConfig;
 
+    /**
+     * Dhl_Versenden_Model_Shipping_Autocreate_Builder constructor.
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param Dhl_Versenden_Model_Config_Shipment $shipmentConfig
+     * @param Dhl_Versenden_Model_Config_Shipper $shipperConfig
+     * @param Dhl_Versenden_Model_Config_Service $serviceConfig
+     */
     public function __construct(Mage_Sales_Model_Order $order,
+                                Dhl_Versenden_Model_Config_Shipment $shipmentConfig,
                                 Dhl_Versenden_Model_Config_Shipper $shipperConfig,
-                                Dhl_Versenden_Model_Config_Service $serviceConfig
-    )
+                                Dhl_Versenden_Model_Config_Service $serviceConfig)
     {
         $this->order = $order;
+        $this->shipmentConfig = $shipmentConfig;
         $this->shipperConfig = $shipperConfig;
         $this->serviceConfig = $serviceConfig;
     }
@@ -79,6 +90,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
     }
 
     /**
+     * Add shipping origin info to request.
+     *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setShipper(Mage_Shipping_Model_Shipment_Request $request)
@@ -98,6 +111,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
     }
 
     /**
+     * Add shipment address info to request.
+     *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setRecipient(Mage_Shipping_Model_Shipment_Request $request)
@@ -122,32 +137,62 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
     }
 
     /**
+     * Add package details to request.
+     *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setPackages(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $weight = array_reduce(
-            $this->order->getAllItems(),
-            function ($carry, Mage_Sales_Model_Order_Item $item) {
-                if ($item->canShip()) {
-                    $carry += (float) $item->getWeight() * (float) $item->getQtyOrdered();
-                }
-                return $carry;
-            },
-            0
+        $packageItems = array();
+        $totalWeight = 0;
+        $totalCustomsValue = 0;
+
+        /** @var Mage_Sales_Model_Order_Item $item */
+        foreach ($this->order->getAllItems() as $item) {
+            if (!$item->isDummy($request->getOrderShipment())) {
+                $packageItem = array();
+                $packageItem['qty'] = $item->getQtyShipped();
+                $packageItem['customs_value'] = $item->getBasePrice();
+                $packageItem['price'] = $item->getPrice();
+                $packageItem['name'] = $item->getName();
+                $packageItem['weight'] = $item->getWeight();
+                $packageItem['product_id'] = $item->getProductId();
+                $packageItem['order_item_id'] = $item->getId();
+
+                $packageItems[$item->getId()] = $packageItem;
+
+                $totalWeight+= ($item->getQtyShipped() * $item->getWeight());
+                $totalCustomsValue+= ($item->getQtyShipped() * $item->getBasePrice());
+            }
+        }
+
+        $packageParams = array(
+            'weight' => $totalWeight,
+            'customs_value' => $totalCustomsValue,
+            'weight_units' => $this->shipmentConfig->getSettings($this->order->getStoreId())->getUnitOfMeasure(),
         );
 
-        $packageData = array(array('params' => array('weight' => $weight)));
+        $packageData = array(
+            // package_1:
+            '1' => array(
+                'params' => $packageParams,
+                'items' => $packageItems
+            ),
+        );
+
+        $request->getOrderShipment()->setData('packages', $packageData);
         $request->setData('packages', $packageData);
     }
 
     /**
+     * Add merchant and customer services to request.
+     *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setServices(Mage_Shipping_Model_Shipment_Request $request)
     {
+        // set merchant services from autocreate config
         $services = $this->serviceConfig->getAutoCreateServices($this->order->getStoreId());
-
         $serviceData = array(
             'shipment_service' => array(),
             'service_setting'  => array(),
@@ -159,10 +204,28 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
         }
 
+        // set customer services from checkout
+        $shippingInfoJson = $this->order->getShippingAddress()->getData('dhl_versenden_info');
+        $shippingInfoObj = json_decode($shippingInfoJson);
+        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
+        if ($shippingInfo) {
+            $services = $shippingInfo->getServiceSelection();
+
+            $serviceData['shipment_service'][Service\PreferredLocation::CODE] = (bool)$services->getPreferredLocation();
+            $serviceData['service_setting'][Service\PreferredLocation::CODE] = $services->getPreferredLocation();
+
+            $serviceData['shipment_service'][Service\PreferredNeighbour::CODE] = (bool)$services->getPreferredNeighbour();
+            $serviceData['service_setting'][Service\PreferredNeighbour::CODE] = $services->getPreferredNeighbour();
+
+            $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = (bool)$services->getParcelAnnouncement();
+        }
+
         $request->setData('services', $serviceData);
     }
 
     /**
+     * Calculate the product to be used with the current shipment.
+     *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setGkApiProduct(Mage_Shipping_Model_Shipment_Request $request)
@@ -178,6 +241,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
     }
 
     /**
+     * Add customs info to request: empty, international shipments are note supported.
+     *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setCustomsInfo(Mage_Shipping_Model_Shipment_Request $request)

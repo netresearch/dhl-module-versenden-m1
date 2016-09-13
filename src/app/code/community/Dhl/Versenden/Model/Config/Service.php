@@ -49,7 +49,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
     const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
 
-    const CONFIG_XML_PATH_AUTOCREATE_PARCELANNOUNCEMENT = 'shipment_autocreate_service_parcelannouncement';
     const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
     const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
     const CONFIG_XML_PATH_AUTOCREATE_INSURANCE = 'shipment_autocreate_service_insurance';
@@ -279,7 +278,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     public function getAutoCreateServices($store = null)
     {
         // read autocreate service values from config
-        $paValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_PARCELANNOUNCEMENT, $store);
         $ageCheckValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
         $returnShipmentValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT, $store);
         $insuranceValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
@@ -290,7 +288,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         );
 
         $autoCreateValues = array(
-            Service\ParcelAnnouncement::CODE => $paValue,
             Service\VisualCheckOfAge::CODE => $ageCheckValue,
             Service\ReturnShipment::CODE => $returnShipmentValue,
             Service\Insurance::CODE => $insuranceValue,
