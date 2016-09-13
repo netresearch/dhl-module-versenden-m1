@@ -87,7 +87,6 @@ class Filter
             ],
             Product::CODE_WELTPAKET => [
                 BulkyGoods::CODE,
-                Cod::CODE,
                 GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
