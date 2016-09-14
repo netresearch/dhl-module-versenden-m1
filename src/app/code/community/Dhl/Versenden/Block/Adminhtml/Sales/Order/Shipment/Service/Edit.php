@@ -51,14 +51,11 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
 
         $enabledServices = $serviceConfig->getServices($storeId);
 
-        $shippingInfoJson = $shippingAddress->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
+        $shippingInfo = $shippingAddress->getData('dhl_versenden_info');
         if ($shippingInfo !== null) {
             $serviceSelection = $shippingInfo->getServiceSelection();
             $serviceConfig->setServiceValues($enabledServices, $serviceSelection);
         }
-
 
         $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
         $recipientCountry = $shippingAddress->getCountryId();

@@ -314,6 +314,33 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * Obtain the service objects that are enabled via module configuration and
+     * applicable to the given order parameters.
+     *
+     * @param string $shipperCountry
+     * @param string $recipientCountry
+     * @param bool $isPostalFacility
+     * @param bool $onlyCustomerServices
+     * @param mixed $store
+     * @return Service\Collection
+     */
+    public function getAvailableServices($shipperCountry, $recipientCountry, $isPostalFacility,
+                                         $onlyCustomerServices = false, $store = null)
+    {
+        $services = $this->getEnabledServices($store);
+
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
+        $shippingProducts = \Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+
+        $filter = new \Dhl\Versenden\Shipment\Service\Filter(
+            $shippingProducts,
+            $isPostalFacility,
+            $onlyCustomerServices
+        );
+        return $filter->filterServiceCollection($services);
+    }
+
+    /**
      * @param Service\Collection $serviceCollection
      * @param ShipmentOrder\ServiceSelection $serviceSelection
      */

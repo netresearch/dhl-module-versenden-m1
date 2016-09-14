@@ -24,7 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden;
-use Dhl\Versenden\Info as DhlVersendenInfo;
 
 /**
  * Info
@@ -35,20 +34,18 @@ use Dhl\Versenden\Info as DhlVersendenInfo;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Info extends DhlVersendenInfo\AbstractInfo
+class Info extends Info\AbstractInfo
 {
     const SCHEMA_VERSION = '1.0';
 
     /** @var string */
-    private $schemaVersion;
-    /** @var DhlVersendenInfo\Receiver */
-    private $receiver;
-    /** @var DhlVersendenInfo\Packages */
-    private $packages;
-    /** @var DhlVersendenInfo\Services */
-    private $services;
-    /** @var DhlVersendenInfo\ExportData */
-    private $exportData;
+    public $schemaVersion;
+    /** @var Info\Receiver */
+    public $receiver;
+    /** @var Info\Services */
+    public $services;
+    /** @var Info\ExportData */
+    public $exportData;
 
     /**
      * Info constructor.
@@ -56,6 +53,9 @@ class Info extends DhlVersendenInfo\AbstractInfo
     public function __construct()
     {
         $this->schemaVersion = self::SCHEMA_VERSION;
+        $this->receiver = new Info\Receiver();
+        $this->services = new Info\Services();
+        $this->exportData = new Info\ExportData();
     }
 
     /**
@@ -67,31 +67,7 @@ class Info extends DhlVersendenInfo\AbstractInfo
     }
 
     /**
-     * @param Info\Receiver $receiver
-     */
-    public function setReceiver($receiver)
-    {
-        $this->receiver = $receiver;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPackages()
-    {
-        return $this->packages;
-    }
-
-    /**
-     * @param mixed $packages
-     */
-    public function setPackages($packages)
-    {
-        $this->packages = $packages;
-    }
-
-    /**
-     * @return mixed
+     * @return Info\Services
      */
     public function getServices()
     {
@@ -99,27 +75,11 @@ class Info extends DhlVersendenInfo\AbstractInfo
     }
 
     /**
-     * @param mixed $services
-     */
-    public function setServices($services)
-    {
-        $this->services = $services;
-    }
-
-    /**
-     * @return mixed
+     * @return Info\ExportData
      */
     public function getExportData()
     {
         return $this->exportData;
-    }
-
-    /**
-     * @param mixed $exportData
-     */
-    public function setExportData($exportData)
-    {
-        $this->exportData = $exportData;
     }
 
     /**
@@ -134,16 +94,13 @@ class Info extends DhlVersendenInfo\AbstractInfo
 
         $info = new self();
         if (isset($object->receiver)) {
-            $info->setReceiver(DhlVersendenInfo\Receiver::fromObject($object->receiver));
-        }
-        if (isset($object->packages)) {
-            $info->setPackages(DhlVersendenInfo\Packages::fromObject($object->packages));
+            $info->receiver = Info\Receiver::fromObject($object->receiver);
         }
         if (isset($object->services)) {
-            $info->setServices(DhlVersendenInfo\Services::fromObject($object->services));
+            $info->services = Info\Services::fromObject($object->services);
         }
         if (isset($object->exportData)) {
-            $info->setExportData(DhlVersendenInfo\ExportData::fromObject($object->exportData));
+            $info->exportData = Info\ExportData::fromObject($object->exportData);
         }
 
         return $info;
