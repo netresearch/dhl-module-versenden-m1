@@ -44,8 +44,6 @@ class Info extends Info\AbstractInfo
     public $receiver;
     /** @var Info\Services */
     public $services;
-    /** @var Info\ExportData */
-    public $exportData;
 
     /**
      * Info constructor.
@@ -55,7 +53,6 @@ class Info extends Info\AbstractInfo
         $this->schemaVersion = self::SCHEMA_VERSION;
         $this->receiver = new Info\Receiver();
         $this->services = new Info\Services();
-        $this->exportData = new Info\ExportData();
     }
 
     /**
@@ -75,14 +72,6 @@ class Info extends Info\AbstractInfo
     }
 
     /**
-     * @return Info\ExportData
-     */
-    public function getExportData()
-    {
-        return $this->exportData;
-    }
-
-    /**
      * @param \stdClass $object
      * @return Info|null
      */
@@ -98,9 +87,6 @@ class Info extends Info\AbstractInfo
         }
         if (isset($object->services)) {
             $info->services = Info\Services::fromObject($object->services);
-        }
-        if (isset($object->exportData)) {
-            $info->exportData = Info\ExportData::fromObject($object->exportData);
         }
 
         return $info;

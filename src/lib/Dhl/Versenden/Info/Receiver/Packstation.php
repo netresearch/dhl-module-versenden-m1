@@ -35,16 +35,10 @@ use Dhl\Versenden\Info;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Packstation extends Info\AbstractInfo
+class Packstation extends PostalFacility
 {
-    /**
-     * @param \stdClass $object
-     * @return Packstation|null
-     */
-    public static function fromObject(\stdClass $object)
-    {
-        // TODO: Implement fromObject() method.
-        $packstation = new self();
-        return $packstation;
-    }
+    /** @var string */
+    public $packstationNumber;
+    /** @var string */
+    public $postNumber;
 }

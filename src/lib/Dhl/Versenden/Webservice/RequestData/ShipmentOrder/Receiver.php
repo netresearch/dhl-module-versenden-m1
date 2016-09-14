@@ -34,7 +34,7 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Receiver extends Person implements \JsonSerializable
+class Receiver extends Person
 {
     /** @var Receiver\Packstation */
     private $packstation;
@@ -43,6 +43,28 @@ class Receiver extends Person implements \JsonSerializable
     /** @var Receiver\ParcelShop */
     private $parcelShop;
 
+
+    /**
+     * Receiver constructor.
+     * @param string $name1
+     * @param string $name2
+     * @param string $name3
+     * @param string $streetName
+     * @param string $streetNumber
+     * @param string $addressAddition
+     * @param string $dispatchingInformation
+     * @param string $zip
+     * @param string $city
+     * @param string $country
+     * @param string $countryISOCode
+     * @param string $state
+     * @param string $phone
+     * @param string $email
+     * @param string $contactPerson
+     * @param Receiver\Packstation|null $packStation
+     * @param Receiver\Postfiliale|null $postFiliale
+     * @param Receiver\ParcelShop|null $parcelShop
+     */
     public function __construct(
         $name1, $name2, $name3, $streetName, $streetNumber, $addressAddition, $dispatchingInformation,
         $zip, $city, $country, $countryISOCode, $state, $phone, $email, $contactPerson,
@@ -83,17 +105,5 @@ class Receiver extends Person implements \JsonSerializable
     public function getParcelShop()
     {
         return $this->parcelShop;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
     }
 }

@@ -33,7 +33,7 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class PackageCollection implements \IteratorAggregate, \Countable, \JsonSerializable
+class PackageCollection implements \IteratorAggregate, \Countable
 {
     /**
      * @var Package[]
@@ -106,17 +106,5 @@ class PackageCollection implements \IteratorAggregate, \Countable, \JsonSerializ
         }
 
         return $this->packages[$packageId];
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
     }
 }

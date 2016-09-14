@@ -23,10 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Info;
+namespace Dhl\Versenden\Info\Receiver;
+use Dhl\Versenden\Info;
 
 /**
- * ExportData
+ * PostalFacility
  *
  * @category Dhl
  * @package  Dhl\Versenden\Info
@@ -34,18 +35,20 @@ namespace Dhl\Versenden\Info;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ExportData extends ArrayableInfo
+abstract class PostalFacility extends Info\ArrayableInfo
 {
+    const TYPE_PACKSTATION = 'packStation';
+    const TYPE_PAKETSHOP   = 'parcelShop';
+    const TYPE_POSTFILIALE = 'postOffice';
+
     /** @var string */
-    public $termsOfTrade;
+    public $zip;
     /** @var string */
-    public $additionalFee;
+    public $city;
     /** @var string */
-    public $placeOfCommital;
+    public $country;
     /** @var string */
-    public $permitNumber;
+    public $countryISOCode;
     /** @var string */
-    public $attestationNumber;
-    /** @var bool */
-    public $exportNotification;
+    public $state;
 }

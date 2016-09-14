@@ -47,6 +47,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
     protected $customsBuilder;
     /** @var Dhl_Versenden_Model_Webservice_Builder_Settings */
     protected $settingsBuilder;
+    /** @var Dhl_Versenden_Model_Info_Builder */
+    protected $infoBuilder;
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Order constructor.
@@ -62,7 +64,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             'service_builder'  => Dhl_Versenden_Model_Webservice_Builder_Service::class,
             'package_builder'  => Dhl_Versenden_Model_Webservice_Builder_Package::class,
             'customs_builder'  => Dhl_Versenden_Model_Webservice_Builder_Customs::class,
-            'settings_builder' => Dhl_Versenden_Model_Webservice_Builder_Settings::class
+            'settings_builder' => Dhl_Versenden_Model_Webservice_Builder_Settings::class,
+            'info_builder'     => Dhl_Versenden_Model_Info_Builder::class
         );
 
         $missingArguments = array_diff_key($argDef, $args);
@@ -87,6 +90,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         $this->packageBuilder = $args['package_builder'];
         $this->customsBuilder = $args['customs_builder'];
         $this->settingsBuilder = $args['settings_builder'];
+        $this->infoBuilder = $args['info_builder'];
 
         return $this;
     }
@@ -113,13 +117,66 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
     {
         $shipper = $this->shipperBuilder->getShipper($shipment->getStoreId());
 
-        $shippingInfoJson = $shipment->getShippingAddress()->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if (!$shippingInfo) {
+        $versendenInfo = $shipment->getShippingAddress()->getData('dhl_versenden_info');
+
+        if (!$versendenInfo instanceof \Dhl\Versenden\Info) {
+            // build receiver from shipping address
             $receiver = $this->receiverBuilder->getReceiver($shipment->getShippingAddress());
         } else {
-            $receiver = $shippingInfo->getReceiver();
+            // read receiver from prepared address (split, eventually updated)
+            $versendenReceiver = $versendenInfo->getReceiver();
+            $packstation = isset($versendenReceiver->getPackstation()->packstationNumber)
+                ? new RequestData\ShipmentOrder\Receiver\Packstation(
+                    $versendenReceiver->getPackstation()->zip,
+                    $versendenReceiver->getPackstation()->city,
+                    $versendenReceiver->getPackstation()->country,
+                    $versendenReceiver->getPackstation()->countryISOCode,
+                    $versendenReceiver->getPackstation()->state,
+                    $versendenReceiver->getPackstation()->packstationNumber,
+                    $versendenReceiver->getPackstation()->postNumber)
+                : null;
+            $postfiliale = isset($versendenReceiver->getPostfiliale()->postfilialNumber)
+                ? new RequestData\ShipmentOrder\Receiver\Postfiliale(
+                    $versendenReceiver->getPostfiliale()->zip,
+                    $versendenReceiver->getPostfiliale()->city,
+                    $versendenReceiver->getPostfiliale()->country,
+                    $versendenReceiver->getPostfiliale()->countryISOCode,
+                    $versendenReceiver->getPostfiliale()->state,
+                    $versendenReceiver->getPostfiliale()->postfilialNumber,
+                    $versendenReceiver->getPostfiliale()->postNumber)
+                : null;
+            $parcelShop = isset($versendenReceiver->getParcelShop()->parcelShopNumber)
+                ? new RequestData\ShipmentOrder\Receiver\ParcelShop(
+                    $versendenReceiver->getParcelShop()->zip,
+                    $versendenReceiver->getParcelShop()->city,
+                    $versendenReceiver->getParcelShop()->country,
+                    $versendenReceiver->getParcelShop()->countryISOCode,
+                    $versendenReceiver->getParcelShop()->state,
+                    $versendenReceiver->getParcelShop()->parcelShopNumber,
+                    $versendenReceiver->getParcelShop()->streetName,
+                    $versendenReceiver->getParcelShop()->streetNumber)
+                : null;
+
+            $receiver = new RequestData\ShipmentOrder\Receiver(
+                $versendenReceiver->name1,
+                $versendenReceiver->name2,
+                $versendenReceiver->name3,
+                $versendenReceiver->streetName,
+                $versendenReceiver->streetNumber,
+                $versendenReceiver->addressAddition,
+                $versendenReceiver->dispatchingInformation,
+                $versendenReceiver->zip,
+                $versendenReceiver->city,
+                $versendenReceiver->country,
+                $versendenReceiver->countryISOCode,
+                $versendenReceiver->state,
+                $versendenReceiver->phone,
+                $versendenReceiver->email,
+                $versendenReceiver->contactPerson,
+                $packstation,
+                $postfiliale,
+                $parcelShop
+            );
         }
 
         $serviceSelection = $this->serviceBuilder->getServiceSelection($shipment->getOrder(), $serviceInfo);
@@ -139,8 +196,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $globalSettings = $this->settingsBuilder->getSettings($shipment->getStoreId());
 
-
-        return new RequestData\ShipmentOrder(
+        $shipmentOrder = new RequestData\ShipmentOrder(
             $sequenceNumber,
             $shipment->getOrder()->getIncrementId(),
             $shipper,
@@ -153,5 +209,11 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $globalSettings->isPrintOnlyIfCodeable(),
             $globalSettings->getLabelType()
         );
+
+        // update dhl_versenden_info with current address and service selection
+        $versendenInfo = $this->infoBuilder->infoFromRequestData($shipmentOrder);
+        $shipment->getShippingAddress()->setData('dhl_versenden_info', $versendenInfo);
+
+        return $shipmentOrder;
     }
 }

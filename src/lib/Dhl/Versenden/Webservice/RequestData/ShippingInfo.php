@@ -60,6 +60,7 @@ class ShippingInfo implements \JsonSerializable
     }
 
     /**
+     * @deprecated
      * @return ShipmentOrder\Receiver
      */
     public function getReceiver()
@@ -68,6 +69,7 @@ class ShippingInfo implements \JsonSerializable
     }
 
     /**
+     * @deprecated
      * @return ShipmentOrder\ServiceSelection
      */
     public function getServiceSelection()
@@ -76,6 +78,7 @@ class ShippingInfo implements \JsonSerializable
     }
 
     /**
+     * @deprecated
      * @return ShipmentOrder\PackageCollection
      */
     public function getPackages()
@@ -84,6 +87,7 @@ class ShippingInfo implements \JsonSerializable
     }
 
     /**
+     * @deprecated
      * @return string
      */
     public function getSchemaVersion()
