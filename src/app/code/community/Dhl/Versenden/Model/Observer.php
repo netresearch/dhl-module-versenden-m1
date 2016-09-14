@@ -109,12 +109,10 @@ class Dhl_Versenden_Model_Observer
      */
     public function saveShippingSettings(Varien_Event_Observer $observer)
     {
-        //TODO(nr): rework DHL Versenden Info handling
-
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = $observer->getQuote();
         $shippingAddress = $quote->getShippingAddress();
-        /** @var Dhl_Versenden_Model_Config_Shipment $shipmentConfig */
+
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
         if (!$shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
@@ -124,43 +122,60 @@ class Dhl_Versenden_Model_Observer
 
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
+        $versendenInfo = new \Dhl\Versenden\Info();
 
-        /** @var Dhl_Versenden_Model_Webservice_Builder_Receiver $receiverBuilder */
-        $args = array(
-            'country_directory' => Mage::getModel('directory/country'),
-            'helper'            => Mage::helper('dhl_versenden/address'),
-        );
-        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', $args);
-        $receiver = $receiverBuilder->getReceiver($shippingAddress);
+        // set selected services
+        $serviceInfo = array();
 
-        /** @var Dhl_Versenden_Model_Webservice_Builder_Service $serviceBuilder */
-        $args = array(
-            'shipper_config'  => Mage::getModel('dhl_versenden/config_shipper'),
-            'shipment_config' => $shipmentConfig,
-        );
+        $serviceConfig  = Mage::getModel('dhl_versenden/config_service');
 
-        $services = $request->getPost('shipment_service', array());
-        $settings = $request->getPost('service_setting', array());
+        $selectedServices = $request->getPost('shipment_service', array());
+        $selectedSettings = $request->getPost('service_setting', array());
 
-        $services[\Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE] =
-            $shipmentConfig->getSettings($quote->getStoreId())->isPrintOnlyIfCodeable();
-        $services[\Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE] =
-            Mage::getModel('dhl_versenden/config_service')
-                ->getServices($quote->getStoreId())
-                ->getItem(\Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE)
-                ->isEnabled();
-
-        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', $args);
-        $serviceSettings = $serviceBuilder->getServiceSelection(
-            $quote,
-            array(
-                'shipment_service' => $services,
-                'service_setting'  => $settings,
-            )
+        $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($quote->getStoreId());
+        $recipientCountry = $shippingAddress->getCountryId();
+        $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
+        $availableServices = $serviceConfig->getAvailableServices(
+            $shipperCountry,
+            $recipientCountry,
+            $isPostalFacility,
+            true,
+            $quote->getStoreId()
         );
 
-        $shippingInfo = new \Dhl\Versenden\Webservice\RequestData\ShippingInfo($receiver, $serviceSettings);
-        $shippingAddress->setData('dhl_versenden_info', json_encode($shippingInfo, JSON_FORCE_OBJECT));
+        /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $availableService */
+        foreach ($availableServices as $availableService) {
+            $code = $availableService->getCode();
+            if (isset($selectedServices[$code])) {
+                $details = isset($selectedSettings[$code]) ? $selectedSettings[$code] : (bool)$selectedServices[$code];
+                $serviceInfo[$code] = $details;
+            }
+        }
+
+        $versendenInfo->getServices()->fromArray($serviceInfo, false);
+
+        // set processed recipient address
+        $countryDirectory = Mage::getModel('directory/country')->loadByCode($shippingAddress->getCountryId());
+        $street = Mage::helper('dhl_versenden/address')->splitStreet($shippingAddress->getStreetFull());
+
+        $receiverInfo = array(
+            'name1' => $shippingAddress->getName(),
+            'name2' => $shippingAddress->getCompany(),
+            'streetName' => $street['street_name'],
+            'streetNumber' => $street['street_number'],
+            'addressAddition' => $street['supplement'],
+            'dispatchingInformation',
+            'zip' => $shippingAddress->getPostcode(),
+            'city' => $shippingAddress->getCity(),
+            'country' => $countryDirectory->getName(),
+            'countryISOCode' => $countryDirectory->getIso2Code(),
+            'state' => $shippingAddress->getRegion(),
+            'phone' => $shippingAddress->getTelephone(),
+            'email' => $shippingAddress->getEmail(),
+        );
+        $versendenInfo->getReceiver()->fromArray($receiverInfo, false);
+
+        $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
     }
 
     /**
@@ -336,5 +351,77 @@ class Dhl_Versenden_Model_Observer
 
         $track->getShipment()->setShippingLabel(null);
         $track->getShipment()->save();
+    }
+
+    /**
+     * Convert Info object to serialized representation.
+     * - event: model_save_before
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function serializeVersendenInfo(Varien_Event_Observer $observer)
+    {
+        $address = $observer->getData('object');
+        if (!$address instanceof Mage_Customer_Model_Address_Abstract) {
+            return;
+        }
+
+        $info = $address->getData('dhl_versenden_info');
+        if (!$info || !$info instanceof \Dhl\Versenden\Info) {
+            return;
+        }
+
+        $serializer = new \Dhl\Versenden\Info\Serializer();
+        $address->setData('dhl_versenden_info', $serializer->serialize($info));
+    }
+
+    /**
+     * Convert serialized info to Info object.
+     * - event: model_load_after
+     * - event: model_save_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function unserializeVersendenInfo(Varien_Event_Observer $observer)
+    {
+        $address = $observer->getData('object');
+        if (!$address instanceof Mage_Customer_Model_Address_Abstract) {
+            return;
+        }
+
+        $info = $address->getData('dhl_versenden_info');
+        if (!$info || !is_string($info)) {
+            return;
+        }
+
+        $serializer = new \Dhl\Versenden\Info\Serializer();
+        $address->setData('dhl_versenden_info', $serializer->unserialize($info));
+    }
+
+    /**
+     * Convert serialized info to Info object.
+     * - event: model_load_after
+     * - event: model_save_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function unserializeVersendenInfos(Varien_Event_Observer $observer)
+    {
+        $collection = $observer->getData('order_address_collection');
+        if (!$collection instanceof Mage_Sales_Model_Resource_Order_Address_Collection) {
+            return;
+        }
+
+        $unserializeInfo = function (Mage_Sales_Model_Order_Address $address) {
+            $info = $address->getData('dhl_versenden_info');
+            if (!$info || !is_string($info)) {
+                return;
+            }
+
+            $serializer = new \Dhl\Versenden\Info\Serializer();
+            $address->setData('dhl_versenden_info', $serializer->unserialize($info));
+        };
+
+        $collection->walk($unserializeInfo);
     }
 }

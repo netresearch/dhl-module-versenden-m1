@@ -24,7 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Info;
-use Dhl\Versenden\Info;
 
 /**
  * ExportData
@@ -35,16 +34,18 @@ use Dhl\Versenden\Info;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ExportData extends AbstractInfo
+class ExportData extends ArrayableInfo
 {
-    /**
-     * @param \stdClass $object
-     * @return ExportData|null
-     */
-    public static function fromObject(\stdClass $object)
-    {
-        //TODO(nr): implement
-        $exportData = new self();
-        return $exportData;
-    }
+    /** @var string */
+    public $termsOfTrade;
+    /** @var string */
+    public $additionalFee;
+    /** @var string */
+    public $placeOfCommital;
+    /** @var string */
+    public $permitNumber;
+    /** @var string */
+    public $attestationNumber;
+    /** @var bool */
+    public $exportNotification;
 }

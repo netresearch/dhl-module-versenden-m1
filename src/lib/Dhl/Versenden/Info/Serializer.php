@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Info;
 use Dhl\Versenden\Info;
 
 /**
- * UnserializableInterface
+ * Serializer
  *
  * @category Dhl
  * @package  Dhl\Versenden\Info
@@ -35,17 +35,23 @@ use Dhl\Versenden\Info;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-interface UnserializableInterface
+class Serializer
 {
     /**
-     * @param $json
-     * @return AbstractInfo|null
+     * @param Info $info
+     * @return string
      */
-    public static function fromJson($json);
+    public static function serialize(Info $info)
+    {
+        return json_encode($info, JSON_FORCE_OBJECT);
+    }
 
     /**
-     * @param \stdClass $object
-     * @return AbstractInfo|null
+     * @param $serialized
+     * @return Info|null
      */
-    public static function fromObject(\stdClass $object);
+    public static function unserialize($serialized)
+    {
+        return Info::fromJson($serialized);
+    }
 }
