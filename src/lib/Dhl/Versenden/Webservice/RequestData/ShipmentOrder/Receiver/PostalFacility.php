@@ -37,10 +37,6 @@ use Dhl\Versenden\Webservice\RequestData;
  */
 abstract class PostalFacility extends RequestData
 {
-    const TYPE_PACKSTATION = 'packStation';
-    const TYPE_PAKETSHOP   = 'parcelShop';
-    const TYPE_POSTFILIALE = 'postOffice';
-
     /** @var string */
     private $zip;
     /** @var string */
@@ -107,17 +103,5 @@ abstract class PostalFacility extends RequestData
     public function getState()
     {
         return $this->state;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
     }
 }

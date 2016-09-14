@@ -341,17 +341,17 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * @deprecated 
      * @param Service\Collection $serviceCollection
-     * @param ShipmentOrder\ServiceSelection $serviceSelection
+     * @param \Dhl\Versenden\Info\Services $serviceSelection
      */
-    public function setServiceValues(
-        Service\Collection $serviceCollection,
-        ShipmentOrder\ServiceSelection $serviceSelection
-    ) {
+    public function setServiceValues(Service\Collection $serviceCollection,
+                                     \Dhl\Versenden\Info\Services $serviceSelection)
+    {
         $services = $serviceCollection->getItems();
         /** @var Service\Type\Generic $service */
         foreach ($services as $service) {
-            $service->setValue($serviceSelection->getServiceValue($service->getCode()));
+            $service->setValue($serviceSelection->{$service->getCode()});
         }
     }
 }
