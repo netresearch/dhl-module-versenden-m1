@@ -32,6 +32,7 @@ use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection;
 /**
  * ObjectMapper
  *
+ * @deprecated
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\RequestData
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
@@ -43,6 +44,8 @@ class ObjectMapper
     const SCHEMA_VERSION = '1.0';
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $object
      * @return ServiceSelection
      */
@@ -76,6 +79,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $packagesObject
      * @return PackageCollection
      */
@@ -109,6 +114,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $object
      * @param string $zip Receiver Postal Code
      * @param string $city Receiver City
@@ -140,6 +147,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $object
      * @param string $zip Receiver Postal Code
      * @param string $city Receiver City
@@ -173,6 +182,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $object
      * @param string $zip Receiver Postal Code
      * @param string $city Receiver City
@@ -204,6 +215,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $object
      * @return Receiver
      */
@@ -260,6 +273,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * @param \stdClass $object
      * @return ShippingInfo|null
      */
@@ -283,6 +298,8 @@ class ObjectMapper
     }
 
     /**
+     * @deprecated
+     *
      * Check if the given stdClass can be mapped to RequestData objects
      * @param \stdClass $object
      * @return bool

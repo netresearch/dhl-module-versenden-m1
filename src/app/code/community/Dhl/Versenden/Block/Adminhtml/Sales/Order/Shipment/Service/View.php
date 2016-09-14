@@ -37,8 +37,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
     extends Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
 {
     /**
-     * Obtain the services that are enabled via config. Customer's service
-     * selection from checkout is read from shipping address.
+     * Obtain the services that were chosen during shipment creation.
      *
      * @return \Dhl\Versenden\Shipment\Service\Type\Generic[]
      */
@@ -48,24 +47,25 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
         $shippingAddress = $this->getShipment()->getShippingAddress();
         $serviceConfig = Mage::getModel('dhl_versenden/config_service');
 
-        $services = $serviceConfig->getServices($storeId);
+        $availableServices = $serviceConfig->getServices($storeId);
 
-        $shippingInfoJson = $shippingAddress->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if ($shippingInfo !== null) {
-            $serviceSelection = $shippingInfo->getServiceSelection();
-            $serviceConfig->setServiceValues($services, $serviceSelection);
+        $versendenInfo = $shippingAddress->getData('dhl_versenden_info');
+        if (!$versendenInfo instanceof \Dhl\Versenden\Info) {
+            return $availableServices;
         }
 
-        $services = array_filter(
-            $services->getItems(),
-            function (Service\Generic $service) {
-                return $service->isSelected();
-            }
-        );
+        $selectedServices = array();
 
-        return new \Dhl\Versenden\Shipment\Service\Collection($services);
+        /** @var Service\Generic $availableService */
+        foreach ($availableServices as $availableService) {
+            $code = $availableService->getCode();
+            $availableService->setValue($versendenInfo->getServices()->{$code});
+            if ($availableService->isSelected()) {
+                $selectedServices[]= $availableService;
+            }
+        }
+
+        return new Dhl\Versenden\Shipment\Service\Collection($selectedServices);
     }
 
     /**

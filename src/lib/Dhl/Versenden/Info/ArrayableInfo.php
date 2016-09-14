@@ -48,6 +48,8 @@ abstract class ArrayableInfo extends AbstractInfo implements ArrayableInterface
         $arrayKey = ucwords($arrayKey);
         // remove whitespace
         $arrayKey = str_replace(' ', '', $arrayKey);
+        // convert first character to lower case
+        $arrayKey = lcfirst($arrayKey);
 
         return $arrayKey;
     }
@@ -109,12 +111,12 @@ abstract class ArrayableInfo extends AbstractInfo implements ArrayableInterface
                     $className = get_class($this->{$key});
                     $method    = 'fromArray';
                     $params    = [$value, $camelizeKeys];
-                    $this->{$key} = call_user_func_array([$className, $method], $params);
+                    call_user_func_array([$className, $method], $params);
                 } elseif ($this->{$key} instanceof UnserializableInterface && is_object($value)) {
                     $className = get_class($this->{$key});
                     $method    = 'fromObject';
                     $params    = [$value];
-                    $this->{$key} = call_user_func_array([$className, $method], $params);
+                    call_user_func_array([$className, $method], $params);
                 } else {
                     $this->{$key} = $value;
                 }

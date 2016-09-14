@@ -35,34 +35,35 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceSelection extends RequestData implements \JsonSerializable
+class ServiceSelection extends RequestData
 {
     /** @var bool|string false or date */
-    private $dayOfDelivery = false;
+    private $dayOfDelivery;
     /** @var bool|string false or time */
-    private $deliveryTimeFrame = false;
+    private $deliveryTimeFrame;
     /** @var bool|string false or location */
-    private $preferredLocation = false;
+    private $preferredLocation;
     /** @var bool|string false or neighbour address */
-    private $preferredNeighbour = false;
+    private $preferredNeighbour;
     /** @var bool false or true */
-    private $parcelAnnouncement = false;
+    private $parcelAnnouncement;
     /** @var bool|string false or A16 or A18 */
-    private $visualCheckOfAge = false;
+    private $visualCheckOfAge;
     /** @var bool false or true */
-    private $returnShipment = false;
+    private $returnShipment;
     /** @var bool|float false or amount */
-    private $insurance = false;
+    private $insurance;
     /** @var bool false or true */
-    private $bulkyGoods = false;
+    private $bulkyGoods;
     /** @var bool|float false or amount */
-    private $cod = false;
+    private $cod;
     /** @var bool false or true */
-    private $printOnlyIfCodeable = false;
+    private $printOnlyIfCodeable;
 
     /**
      * Constructs ServiceSettings object from array with values that differ from initial settings
      *
+     * @deprecated Use constructor
      *
      * @param array $options service setting options that differ from default
      *
@@ -87,6 +88,8 @@ class ServiceSelection extends RequestData implements \JsonSerializable
 
     /**
      * Constructs service setting object from giving each property explicitly
+     *
+     * @deprecated use constructor
      *
      * @param bool|string $dayOfDelivery
      * @param bool|string $deliveryTimeFrame
@@ -223,18 +226,5 @@ class ServiceSelection extends RequestData implements \JsonSerializable
         }
 
         return null;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     *
-     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *        which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
     }
 }

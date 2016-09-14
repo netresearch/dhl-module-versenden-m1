@@ -37,27 +37,27 @@ namespace Dhl\Versenden\Info;
 class Services extends ArrayableInfo
 {
     /** @var bool|string false or date */
-    public $dayOfDelivery = false;
+    public $dayOfDelivery;
     /** @var bool|string false or time */
-    public $deliveryTimeFrame = false;
+    public $deliveryTimeFrame;
     /** @var bool|string false or location */
-    public $preferredLocation = false;
+    public $preferredLocation;
     /** @var bool|string false or neighbour address */
-    public $preferredNeighbour = false;
+    public $preferredNeighbour;
     /** @var bool false or true */
-    public $parcelAnnouncement = false;
+    public $parcelAnnouncement;
     /** @var bool|string false or A16 or A18 */
-    public $visualCheckOfAge = false;
+    public $visualCheckOfAge;
     /** @var bool false or true */
-    public $returnShipment = false;
+    public $returnShipment;
     /** @var bool|float false or amount */
-    public $insurance = false;
+    public $insurance;
     /** @var bool false or true */
-    public $bulkyGoods = false;
+    public $bulkyGoods;
     /** @var bool|float false or amount */
-    public $cod = false;
+    public $cod;
     /** @var bool false or true */
-    public $goGreen = false;
+    public $goGreen;
     /** @var bool false or true */
-    public $printOnlyIfCodeable = false;
+    public $printOnlyIfCodeable;
 }

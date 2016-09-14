@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver\PostalFacility;
+use Dhl\Versenden\Info\Receiver\PostalFacility;
 
 /**
  * Dhl_Versenden_Model_Observer
@@ -114,7 +114,6 @@ class Dhl_Versenden_Model_Observer
         $shippingAddress = $quote->getShippingAddress();
 
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
-
         if (!$shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
             // customer selected a shipping method not to be processed via DHL Versenden
             return;
@@ -122,58 +121,12 @@ class Dhl_Versenden_Model_Observer
 
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
-        $versendenInfo = new \Dhl\Versenden\Info();
-
-        // set selected services
-        $serviceInfo = array();
-
-        $serviceConfig  = Mage::getModel('dhl_versenden/config_service');
-
-        $selectedServices = $request->getPost('shipment_service', array());
-        $selectedSettings = $request->getPost('service_setting', array());
-
-        $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($quote->getStoreId());
-        $recipientCountry = $shippingAddress->getCountryId();
-        $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
-        $availableServices = $serviceConfig->getAvailableServices(
-            $shipperCountry,
-            $recipientCountry,
-            $isPostalFacility,
-            true,
-            $quote->getStoreId()
+        $infoBuilder = Mage::getModel('dhl_versenden/info_builder');
+        $serviceInfo = array(
+            'shipment_service' => $request->getPost('shipment_service', array()),
+            'service_setting' => $request->getPost('service_setting', array()),
         );
-
-        /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $availableService */
-        foreach ($availableServices as $availableService) {
-            $code = $availableService->getCode();
-            if (isset($selectedServices[$code])) {
-                $details = isset($selectedSettings[$code]) ? $selectedSettings[$code] : (bool)$selectedServices[$code];
-                $serviceInfo[$code] = $details;
-            }
-        }
-
-        $versendenInfo->getServices()->fromArray($serviceInfo, false);
-
-        // set processed recipient address
-        $countryDirectory = Mage::getModel('directory/country')->loadByCode($shippingAddress->getCountryId());
-        $street = Mage::helper('dhl_versenden/address')->splitStreet($shippingAddress->getStreetFull());
-
-        $receiverInfo = array(
-            'name1' => $shippingAddress->getName(),
-            'name2' => $shippingAddress->getCompany(),
-            'streetName' => $street['street_name'],
-            'streetNumber' => $street['street_number'],
-            'addressAddition' => $street['supplement'],
-            'dispatchingInformation',
-            'zip' => $shippingAddress->getPostcode(),
-            'city' => $shippingAddress->getCity(),
-            'country' => $countryDirectory->getName(),
-            'countryISOCode' => $countryDirectory->getIso2Code(),
-            'state' => $shippingAddress->getRegion(),
-            'phone' => $shippingAddress->getTelephone(),
-            'email' => $shippingAddress->getEmail(),
-        );
-        $versendenInfo->getReceiver()->fromArray($receiverInfo, false);
+        $versendenInfo = $infoBuilder->infoFromSales($shippingAddress, $serviceInfo, $quote->getStoreId());
 
         $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
     }
