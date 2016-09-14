@@ -27,7 +27,7 @@ namespace Dhl\Versenden\Info;
 use Dhl\Versenden\Info;
 
 /**
- * Packages
+ * ArrayableInterface
  *
  * @category Dhl
  * @package  Dhl\Versenden\Info
@@ -35,16 +35,17 @@ use Dhl\Versenden\Info;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Packages extends AbstractInfo
+interface ArrayableInterface
 {
     /**
-     * @param \stdClass $object
-     * @return Packages|null
+     * @param bool $underscoreKeys
+     * @return mixed[]
      */
-    public static function fromObject(\stdClass $object)
-    {
-        //TODO(nr): implement
-        $packages = new self();
-        return $packages;
-    }
+    public function toArray($underscoreKeys = true);
+
+    /**
+     * @param mixed[] $values
+     * @param bool $camelizeKeys
+     */
+    public function fromArray(array $values, $camelizeKeys = true);
 }

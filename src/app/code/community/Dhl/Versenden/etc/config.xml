@@ -95,6 +95,42 @@
                     </disable_cod_payment>
                 </observers>
             </payment_method_is_active>
+            <model_save_before>
+                <observers>
+                    <serialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>serializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </serialize_versenden_info>
+                </observers>
+            </model_save_before>
+            <model_load_after>
+                <observers>
+                    <unserialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_info>
+                </observers>
+            </model_load_after>
+            <model_save_after>
+                <observers>
+                    <unserialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_info>
+                </observers>
+            </model_save_after>
+            <sales_order_address_collection_load_after>
+                <observers>
+                    <unserialize_versenden_infos>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfos</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_infos>
+                </observers>
+            </sales_order_address_collection_load_after>
         </events>
         <fieldsets>
             <sales_convert_quote_address>

@@ -24,7 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Info;
-use Dhl\Versenden\Info;
 
 /**
  * Services
@@ -35,16 +34,30 @@ use Dhl\Versenden\Info;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Services extends AbstractInfo
+class Services extends ArrayableInfo
 {
-    /**
-     * @param \stdClass $object
-     * @return Services|null
-     */
-    public static function fromObject(\stdClass $object)
-    {
-        //TODO(nr): implement
-        $services = new self();
-        return $services;
-    }
+    /** @var bool|string false or date */
+    public $dayOfDelivery = false;
+    /** @var bool|string false or time */
+    public $deliveryTimeFrame = false;
+    /** @var bool|string false or location */
+    public $preferredLocation = false;
+    /** @var bool|string false or neighbour address */
+    public $preferredNeighbour = false;
+    /** @var bool false or true */
+    public $parcelAnnouncement = false;
+    /** @var bool|string false or A16 or A18 */
+    public $visualCheckOfAge = false;
+    /** @var bool false or true */
+    public $returnShipment = false;
+    /** @var bool|float false or amount */
+    public $insurance = false;
+    /** @var bool false or true */
+    public $bulkyGoods = false;
+    /** @var bool|float false or amount */
+    public $cod = false;
+    /** @var bool false or true */
+    public $goGreen = false;
+    /** @var bool false or true */
+    public $printOnlyIfCodeable = false;
 }
