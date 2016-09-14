@@ -44,8 +44,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
         $shipmentRequests = array();
 
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
-        $shipperConfig = Mage::getModel('dhl_versenden/config_shipper');
-        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
+        $shipperConfig  = Mage::getModel('dhl_versenden/config_shipper');
+        $serviceConfig  = Mage::getModel('dhl_versenden/config_service');
 
         /** @var Mage_Sales_Model_Order $order */
         foreach ($collection as $order) {

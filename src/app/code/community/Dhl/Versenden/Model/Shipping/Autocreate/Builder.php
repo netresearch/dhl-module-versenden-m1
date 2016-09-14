@@ -191,15 +191,27 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setServices(Mage_Shipping_Model_Shipment_Request $request)
     {
+        $storeId = $this->order->getStoreId();
         // set merchant services from autocreate config
-        $services = $this->serviceConfig->getAutoCreateServices($this->order->getStoreId());
+        $services = $this->serviceConfig->getAutoCreateServices($storeId);
+        $shippingAddress = $this->order->getShippingAddress();
+        $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
+        $recipientCountry = $shippingAddress->getCountryId();
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
+
+        $shippingProducts = \Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
+
+        $serviceFilter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, true);
+        $filteredServiceCollection = $serviceFilter->filterServiceCollection($services);
+
         $serviceData = array(
             'shipment_service' => array(),
             'service_setting'  => array(),
         );
 
         /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */
-        foreach ($services as $service) {
+        foreach ($filteredServiceCollection as $service) {
             $serviceData['shipment_service'][$service->getCode()] = $service->isEnabled();
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
         }
