@@ -53,7 +53,12 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
                 $shipment = $order->prepareShipment();
                 $shipment->register();
 
-                $builder = new Dhl_Versenden_Model_Shipping_Autocreate_Builder($order, $shipmentConfig, $shipperConfig, $serviceConfig);
+                $builder = new Dhl_Versenden_Model_Shipping_Autocreate_Builder(
+                    $order,
+                    $shipmentConfig,
+                    $shipperConfig,
+                    $serviceConfig
+                );
                 $request = $builder->createShipmentRequest($shipment);
 
                 $shipmentRequests[$order->getId()] = $request;
