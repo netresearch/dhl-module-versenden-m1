@@ -88,3 +88,15 @@ tables:
      address_type: "billing"
      prefix: "Mrs."
      company: "Magento Customer"
+
+  sales/order:
+   - entity_id: 10
+   - entity_id: 20
+
+  sales/shipment:
+   - entity_id: 100
+     order_id: 10
+     shipping_label: 'foo'
+   - entity_id: 110
+     order_id: 20
+     shipping_label: null

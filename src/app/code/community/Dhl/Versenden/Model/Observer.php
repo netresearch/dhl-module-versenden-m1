@@ -242,6 +242,7 @@ class Dhl_Versenden_Model_Observer
 
     /**
      * Disable COD in case it is not available for the current destination.
+     * - event: payment_method_is_active
      *
      * @param Varien_Event_Observer $observer
      */
@@ -302,5 +303,38 @@ class Dhl_Versenden_Model_Observer
         if ($codService === null) {
             $checkResult->isAvailable = false;
         }
+    }
+
+    /**
+     * Cancel the shipping label via DHL Business Customer Shipping API.
+     * The track will not be deleted if shipping label deletion fails.
+     * - event: sales_order_shipment_track_delete_before
+     *
+     * @param Varien_Event_Observer $observer
+     * @throws Mage_Core_Exception
+     */
+    public function deleteShippingLabel(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Order_Shipment_Track $track */
+        $track = $observer->getData('track');
+        if ($track->getCarrierCode() !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            // some other carrier, not our business.
+            return;
+        }
+
+        if (!$track->getShipment()->hasShippingLabel()) {
+            // shipment has no label, no need to send cancellation request
+            return;
+        }
+
+        $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
+        $shipmentNumbers = array($track->getData('track_number'));
+        $response = $gateway->deleteShipmentOrder($shipmentNumbers);
+        if ($response->getStatus()->isError()) {
+            throw new Mage_Core_Exception($response->getStatus()->getStatusText());
+        }
+
+        $track->getShipment()->setShippingLabel(null);
+        $track->getShipment()->save();
     }
 }

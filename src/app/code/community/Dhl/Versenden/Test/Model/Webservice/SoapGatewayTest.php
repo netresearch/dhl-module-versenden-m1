@@ -271,8 +271,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentNumber = 'bar';
 
         $wsResponse = new Webservice\ResponseData\CreateShipment(
-            new Webservice\ResponseData\Status(0, 'ok', 'ok'),
-            new Webservice\ResponseData\LabelCollection(),
+            new Webservice\ResponseData\Status\Response(0, 'ok', 'ok'),
+            new Webservice\ResponseData\CreateShipment\LabelCollection(),
             array($sequenceNumber => $shipmentNumber)
         );
 
@@ -475,5 +475,101 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
         $gateway->createShipmentOrder($shipmentRequests);
+    }
+
+    /**
+     * @test
+     */
+    public function deleteShipmentOrderOk()
+    {
+        $shipmentNumbers = array('123', '456');
+
+        $wsResponse = new Webservice\ResponseData\DeleteShipment(
+            new Webservice\ResponseData\Status\Response(0, 'ok', ''),
+            new Webservice\ResponseData\DeleteShipment\StatusCollection()
+        );
+
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
+            ->disableOriginalConstructor()
+            ->setMethods(array('deleteShipmentOrder'))
+            ->getMock();
+        $adapter
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willReturn($wsResponse);
+
+        $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
+            ->setMethods(array('debug', 'error'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger
+            ->expects($this->once())
+            ->method('debug');
+        $logger
+            ->expects($this->never())
+            ->method('error');
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('getAdapter', 'getLogger'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('getAdapter')
+            ->willReturn($adapter);
+        $gateway
+            ->expects($this->once())
+            ->method('getLogger')
+            ->willReturn($logger);
+
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $result = $gateway->deleteShipmentOrder($shipmentNumbers);
+        $this->assertEquals($wsResponse, $result);
+
+        $this->assertEventDispatched('dhl_versenden_delete_shipment_order_before');
+        $this->assertEventDispatched('dhl_versenden_delete_shipment_order_after');
+    }
+
+    /**
+     * @test
+     * @expectedException SoapFault
+     */
+    public function deleteShipmentOrderLogFault()
+    {
+        $shipmentNumbers = array('123', '456');
+
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
+            ->disableOriginalConstructor()
+            ->setMethods(array('deleteShipmentOrder'))
+            ->getMock();
+        $adapter
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willThrowException(new SoapFault('soap:Server', 'my bad :('));
+
+        $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
+            ->setMethods(array('debug', 'error'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger
+            ->expects($this->never())
+            ->method('debug');
+        $logger
+            ->expects($this->once())
+            ->method('error');
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('getAdapter', 'getLogger'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('getAdapter')
+            ->willReturn($adapter);
+        $gateway
+            ->expects($this->once())
+            ->method('getLogger')
+            ->willReturn($logger);
+
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $gateway->deleteShipmentOrder($shipmentNumbers);
     }
 }

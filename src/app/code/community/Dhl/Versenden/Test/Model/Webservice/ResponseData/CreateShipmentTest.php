@@ -44,10 +44,11 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $statusCode = '0';
         $statusText = 'ok';
         $statusMessage = 'Foo Message';
-        $status = new ResponseData\Status($statusCode, $statusText, $statusMessage);
 
         $sequenceNumber = '1000';
         $shipmentNumber = '0001';
+
+        $status = new ResponseData\Status\Item($shipmentNumber, $statusCode, $statusText, $statusMessage);
 
         $defaultLabel = new Zend_Pdf();
         $defaultLabel->pages[]= new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
@@ -57,26 +58,26 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $returnLabel->pages[]= new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4);
         $returnLabelData = $defaultLabel->render();
 
-        $label = new ResponseData\Label($status, $shipmentNumber, $defaultLabelData, $returnLabelData);
+        $label = new ResponseData\CreateShipment\Label($status, $shipmentNumber, $defaultLabelData, $returnLabelData);
 
         $sequence = array($sequenceNumber => $shipmentNumber);
 
 
-        $labelCollection = new ResponseData\LabelCollection();
+        $labelCollection = new ResponseData\CreateShipment\LabelCollection();
         $this->assertCount(0, $labelCollection);
 
         $labelCollection->addItem($label);
         $this->assertCount(1, $labelCollection);
 
         $item = $labelCollection->getItem($shipmentNumber);
-        $this->assertInstanceOf(ResponseData\Label::class, $item);
+        $this->assertInstanceOf(ResponseData\CreateShipment\Label::class, $item);
         $item = $labelCollection->getItem('foo');
         $this->assertNull($item);
 
         $labelCollection->setItems(array($label));
         $this->assertCount(1, $labelCollection->getItems());
 
-        /** @var ResponseData\Label $item */
+        /** @var ResponseData\CreateShipment\Label $item */
         foreach ($labelCollection as $idx => $item) {
             $this->assertEquals($shipmentNumber, $idx);
             $this->assertSame($defaultLabelData, $item->getLabel());
@@ -99,10 +100,10 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $this->assertEquals($shipmentNumber, $createShipment->getShipmentNumber($sequenceNumber));
         $this->assertNull($createShipment->getShipmentNumber('9999'));
 
-        $this->assertTrue($createShipment->getLabels()->getItem($shipmentNumber)->isCreated());
-        $this->assertSame($defaultLabelData, $createShipment->getLabels()->getItem($shipmentNumber)->getLabel());
-        $this->assertSame($returnLabelData, $createShipment->getLabels()->getItem($shipmentNumber)->getReturnLabel());
-        $this->assertEmpty($createShipment->getLabels()->getItem($shipmentNumber)->getExportLabel());
-        $this->assertEmpty($createShipment->getLabels()->getItem($shipmentNumber)->getCodLabel());
+        $this->assertTrue($createShipment->getCreatedItems()->getItem($shipmentNumber)->isCreated());
+        $this->assertSame($defaultLabelData, $createShipment->getCreatedItems()->getItem($shipmentNumber)->getLabel());
+        $this->assertSame($returnLabelData, $createShipment->getCreatedItems()->getItem($shipmentNumber)->getReturnLabel());
+        $this->assertEmpty($createShipment->getCreatedItems()->getItem($shipmentNumber)->getExportLabel());
+        $this->assertEmpty($createShipment->getCreatedItems()->getItem($shipmentNumber)->getCodLabel());
     }
 }

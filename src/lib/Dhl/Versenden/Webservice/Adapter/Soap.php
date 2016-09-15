@@ -81,13 +81,18 @@ class Soap implements Adapter
     }
 
     /**
-     * @param RequestData $requestData
-     * @param Parser $parser
-     * @throws NotImplementedException
+     * @param RequestData\DeleteShipment $requestData
+     * @param SoapParser\DeleteShipmentOrder $parser
+     * @return ResponseData\DeleteShipment
      */
     public function deleteShipmentOrder(RequestData $requestData, Parser $parser)
     {
-        throw new Adapter\NotImplementedException();
+        $requestType = Adapter\Soap\DeleteShipmentRequestType::prepare($requestData);
+
+        $response = $this->soapClient->deleteShipmentOrder($requestType);
+        $deleteShipment = $parser->parse($response);
+
+        return $deleteShipment;
     }
 
     /**

@@ -128,6 +128,16 @@
                 </dhl_versenden>
             </modules>
         </translate>
+        <events>
+            <sales_order_shipment_track_delete_before>
+                <observers>
+                    <delete_shipping_label>
+                        <class>dhl_versenden/observer</class>
+                        <method>deleteShippingLabel</method>
+                    </delete_shipping_label>
+                </observers>
+            </sales_order_shipment_track_delete_before>
+        </events>
     </adminhtml>
     <frontend>
         <layout>
