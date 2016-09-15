@@ -42,11 +42,14 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
      */
     public function autoCreateStatusOk()
     {
-        $status          = new ResponseData\Status(0, 'ok', 'no error');
-        $labelCollection = new ResponseData\LabelCollection();
+        $statusText = 'ok';
+        $statusMessage = 'No errors.';
+
+        $status          = new ResponseData\Status\Item('0', '0', $statusText, $statusMessage);
+        $labelCollection = new ResponseData\CreateShipment\LabelCollection();
         $labelArgs       = array($status, '10', '123123');
 
-        $labelMock = $this->getMockBuilder(ResponseData\Label::class)
+        $labelMock = $this->getMockBuilder(ResponseData\CreateShipment\Label::class)
             ->setConstructorArgs($labelArgs)
             ->setMethods(array('getAllLabels'))
             ->getMock();
@@ -94,11 +97,11 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $statusText = 'Hard validation error';
         $statusMessage = 'The foo is not bar.';
 
-        $status          = new ResponseData\Status('1101', $statusText, $statusMessage);
-        $labelCollection = new ResponseData\LabelCollection();
+        $status          = new ResponseData\Status\Item('0', '1101', $statusText, $statusMessage);
+        $labelCollection = new ResponseData\CreateShipment\LabelCollection();
         $labelArgs       = array($status, '10', '123123');
 
-        $labelMock = $this->getMockBuilder(ResponseData\Label::class)
+        $labelMock = $this->getMockBuilder(ResponseData\CreateShipment\Label::class)
             ->setConstructorArgs($labelArgs)
             ->setMethods(array('getAllLabels'))
             ->getMock();

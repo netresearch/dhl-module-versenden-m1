@@ -24,7 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Shipment\Service as Service;
-use \Dhl\Versenden\Shipment\Service\Type\Generic as ServiceItem;
 use \Dhl\Versenden\Product;
 /**
  * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
