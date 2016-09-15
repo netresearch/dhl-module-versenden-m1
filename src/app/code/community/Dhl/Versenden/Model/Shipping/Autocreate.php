@@ -80,6 +80,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
             return 0;
         }
 
+        $ordersShipped = 0;
+
         $shipmentRequests = $this->prepareShipmentRequests($collection);
         $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
         $result = $gateway->createShipmentOrder($shipmentRequests);
@@ -111,11 +113,13 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
                 $transaction
                     ->addObject($shipment)
                     ->addObject($shipment->getOrder());
+
+                $ordersShipped++;
             }
         }
 
         $transaction->save();
 
-        return count($result->getShipmentNumbers());
+        return $ordersShipped;
     }
 }

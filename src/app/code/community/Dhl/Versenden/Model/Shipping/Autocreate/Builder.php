@@ -216,7 +216,12 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
         }
 
+        // add printOnlyIfCodeable flag from config
+        $serviceData['shipment_service'][Service\PrintOnlyIfCodeable::CODE] =
+            $this->shipmentConfig->getSettings($this->order->getStoreId())->isPrintOnlyIfCodeable();
+
         // set customer services from checkout
+        //TODO(nr): iterate over all customer services and set according to checkout selection
         $shippingInfoJson = $this->order->getShippingAddress()->getData('dhl_versenden_info');
         $shippingInfoObj = json_decode($shippingInfoJson);
         $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
