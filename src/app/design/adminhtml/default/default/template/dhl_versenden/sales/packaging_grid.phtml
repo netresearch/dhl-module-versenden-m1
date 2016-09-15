@@ -63,7 +63,7 @@
                             <input name="customs_description"
                                    type="text" title="<?php echo $this->__('Customs Description') ?>"
                                    class="input-text required-entry validate-length maximum-length-256" maxlength="256"
-                                   value="<?php echo $item->getName(); ?>" />
+                                   value="<?php echo $this->escapeHtml($item->getName()); ?>" />
                         </td>
                         <td class="country-of-origin">
                             <select name="customs_origin"

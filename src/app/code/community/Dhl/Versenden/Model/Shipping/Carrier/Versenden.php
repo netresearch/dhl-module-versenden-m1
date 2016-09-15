@@ -197,16 +197,16 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 ->createShipmentOrder($shipmentRequests);
             $shipmentNumber = $result->getShipmentNumber($sequenceNumber);
 
-            $shipmentStatus = $result->getLabels()->getItem($shipmentNumber)->getStatus();
+            $shipmentStatus = $result->getCreatedItems()->getItem($shipmentNumber)->getStatus();
             if ($shipmentStatus->isError()) {
-                throw new Webservice\ResponseData\StatusException($shipmentStatus);
+                throw new Webservice\ResponseData\Status\Exception($shipmentStatus);
             }
 
             $pdfLib = new \Dhl\Versenden\Pdf\Adapter\Zend();
             $responseData = array(
                 'info' => array(array(
                     'tracking_number' => $shipmentNumber,
-                    'label_content'   => $result->getLabels()->getItem($shipmentNumber)->getAllLabels($pdfLib),
+                    'label_content'   => $result->getCreatedItems()->getItem($shipmentNumber)->getAllLabels($pdfLib),
                 ))
             );
             $response->setData($responseData);

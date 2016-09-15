@@ -102,21 +102,71 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @dataProvider dataProvider
+     *
+     * @param string $serializedResponse
+     * @param string $serializedRequestData
      */
-    public function deleteShipmentOrder()
+    public function deleteShipmentOrderStatusError($serializedResponse, $serializedRequestData)
     {
-        $major = '2';
-        $minor = '1';
-        $requestData = new RequestData\Version($major, $minor, null);
+        $requestData = unserialize($serializedRequestData);
+        $response = unserialize($serializedResponse);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
+            ->setMethods(array('deleteShipmentOrder'))
             ->disableOriginalConstructor()
             ->getMock();
-        $parser = new SoapParser\Version();
+        $soapClient
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willReturn($response);
 
         $adapter = new SoapAdapter($soapClient);
-        $adapter->deleteShipmentOrder($requestData, $parser);
+        $parser = new SoapParser\DeleteShipmentOrder();
+
+        $response = $adapter->deleteShipmentOrder($requestData, $parser);
+        $this->assertInstanceOf(ResponseData\DeleteShipment::class, $response);
+        $this->assertFalse($response->getStatus()->isSuccess());
+    }
+
+    /**
+     * @test
+     * @dataProvider dataProvider
+     *
+     * @param string $serializedResponse
+     * @param string $serializedRequestData
+     */
+    public function deleteShipmentOrder($serializedResponse, $serializedRequestData)
+    {
+        /** @var RequestData\DeleteShipment $requestData */
+        $requestData = unserialize($serializedRequestData);
+        $response = unserialize($serializedResponse);
+
+        $soapClient = $this->getMockBuilder(\SoapClient::class)
+            ->setMethods(array('deleteShipmentOrder'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $soapClient
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willReturn($response);
+
+        $adapter = new SoapAdapter($soapClient);
+        $parser = new SoapParser\DeleteShipmentOrder();
+
+        $response = $adapter->deleteShipmentOrder($requestData, $parser);
+        $this->assertInstanceOf(ResponseData\DeleteShipment::class, $response);
+
+        $shipmentNumbers = $requestData->getShipmentNumbers();
+        $deletedItems = $response->getDeletedItems();
+        $this->assertNotNull($deletedItems);
+        $this->assertCount(count($shipmentNumbers), $deletedItems);
+
+        foreach ($shipmentNumbers as $shipmentNumber) {
+            $deletedItem = $deletedItems->getItem($shipmentNumber);
+            $this->assertNotNull($deletedItem);
+            $this->assertInstanceOf(ResponseData\Status\Item::class, $deletedItem);
+        }
     }
 
     /**

@@ -50,6 +50,9 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_OrderTest
         $packageBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Package::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $customsBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Customs::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $settingsBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Settings::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -59,6 +62,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_OrderTest
             'receiver_builder' => $receiverBuilder,
             'service_builder' => $serviceBuilder,
             'package_builder' => $packageBuilder,
+            'customs_builder' => $customsBuilder,
             'settings_builder' => $settingsBuilder,
         );
     }

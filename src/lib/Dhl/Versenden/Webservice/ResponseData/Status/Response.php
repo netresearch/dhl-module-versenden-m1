@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-namespace Dhl\Versenden\Webservice\ResponseData;
+namespace Dhl\Versenden\Webservice\ResponseData\Status;
 /**
- * Status
+ * Response
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\ResponseData
@@ -33,14 +33,14 @@ namespace Dhl\Versenden\Webservice\ResponseData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Status
+class Response
 {
     /** @var string */
-    private $statusCode;
+    protected $statusCode;
     /** @var string */
-    private $statusText;
+    protected $statusText;
     /** @var string */
-    private $statusMessage;
+    protected $statusMessage;
 
     /**
      * Status constructor.

@@ -24,10 +24,11 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Webservice\ResponseData;
-use \Dhl\Versenden\Webservice\ResponseData\Status\Response as ResponseStatus;
-use Dhl\Versenden\Webservice\ResponseData\CreateShipment\LabelCollection;
+use Dhl\Versenden\Webservice\ResponseData\Status\Response as ResponseStatus;
+use Dhl\Versenden\Webservice\ResponseData\DeleteShipment\StatusCollection;
+
 /**
- * CreateShipment
+ * DeleteShipment
  *
  * @category Dhl
  * @package  Dhl\Versenden\Webservice\ResponseData
@@ -35,26 +36,22 @@ use Dhl\Versenden\Webservice\ResponseData\CreateShipment\LabelCollection;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class CreateShipment
+class DeleteShipment
 {
     /** @var ResponseStatus */
     private $status;
-    /** @var LabelCollection */
-    private $createdItems;
-    /** @var string[] */
-    private $shipmentNumbers;
+    /** @var StatusCollection */
+    private $deletedItems;
 
     /**
-     * CreateShipment constructor.
+     * DeleteShipment constructor.
      * @param ResponseStatus $status
-     * @param LabelCollection $labels
-     * @param string[] $shipmentNumbers
+     * @param StatusCollection $deletedItems
      */
-    public function __construct(ResponseStatus $status, LabelCollection $labels, array $shipmentNumbers)
+    public function __construct(ResponseStatus $status, StatusCollection $deletedItems)
     {
-        $this->status          = $status;
-        $this->createdItems    = $labels;
-        $this->shipmentNumbers = $shipmentNumbers;
+        $this->status = $status;
+        $this->deletedItems = $deletedItems;
     }
 
     /**
@@ -66,36 +63,10 @@ class CreateShipment
     }
 
     /**
-     * @return LabelCollection
+     * @return StatusCollection
      */
-    public function getCreatedItems()
+    public function getDeletedItems()
     {
-        return $this->createdItems;
-    }
-
-    /**
-     * Obtain sequence number to shipment number mapping.
-     *
-     * @return \string[]
-     */
-    public function getShipmentNumbers()
-    {
-        return $this->shipmentNumbers;
-    }
-
-    /**
-     * Obtain created shipment number by given sequence number
-     *
-     * @param string $sequenceNumber
-     * @return null|string
-     */
-    public function getShipmentNumber($sequenceNumber)
-    {
-        $numbers = $this->getShipmentNumbers();
-        if (!isset($numbers[$sequenceNumber])) {
-            return null;
-        }
-
-        return $numbers[$sequenceNumber];
+        return $this->deletedItems;
     }
 }
