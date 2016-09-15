@@ -122,8 +122,8 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $collection->addShippingMethodFilter();
         $collection->addShipmentFilter();
 
-        $shipmentRequestCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
-        $this->assertEquals(1, $shipmentRequestCount);
+        $createdLabelsCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+        $this->assertEquals(0, $createdLabelsCount);
 
         /** @var Mage_Sales_Model_Order $order */
         $order = $collection->getItemById(10);
