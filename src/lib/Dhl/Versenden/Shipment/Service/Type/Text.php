@@ -143,7 +143,7 @@ HTML;
         return sprintf(
             $format,
             $this->getCode(),
-            $this->getValue(),
+            htmlspecialchars($this->getValue(), ENT_COMPAT, 'UTF-8', false),
             $this->getMaxLength(),
             $this->getCode(),
             $this->getCode(),

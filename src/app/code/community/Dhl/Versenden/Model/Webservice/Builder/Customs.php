@@ -39,7 +39,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
      * @param string $invoiceNumber
      * @param string[] $customsInfo
      * @param string[] $packageInfo
-     * @return Export\DocumentCollection|null
+     * @return Export\DocumentCollection
      */
     public function getExportDocuments($invoiceNumber, array $customsInfo, array $packageInfo)
     {

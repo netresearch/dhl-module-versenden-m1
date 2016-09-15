@@ -77,6 +77,12 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     abstract protected function doCreateShipmentOrder(RequestData\CreateShipment $requestData);
 
     /**
+     * @param RequestData\DeleteShipment $requestData
+     * @return ResponseData\DeleteShipment
+     */
+    abstract protected function doDeleteShipmentOrder(RequestData\DeleteShipment $requestData);
+
+    /**
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
      */
     protected function createShipmentOrderBefore(array $shipmentRequests)
@@ -92,6 +98,24 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     {
         $eventData = array('result' => $result);
         Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
+    }
+
+    /**
+     * @param string[] $shipmentNumbers
+     */
+    protected function deleteShipmentOrderBefore(array $shipmentNumbers)
+    {
+        $eventData = array('shipment_numbers' => $shipmentNumbers);
+        Mage::dispatchEvent('dhl_versenden_delete_shipment_order_before', $eventData);
+    }
+
+    /**
+     * @param ResponseData\DeleteShipment $result
+     */
+    protected function deleteShipmentOrderAfter(ResponseData\DeleteShipment $result)
+    {
+        $eventData = array('result' => $result);
+        Mage::dispatchEvent('dhl_versenden_delete_shipment_order_after', $eventData);
     }
 
     /**
@@ -181,6 +205,32 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $result = $this->doCreateShipmentOrder($requestData);
 
         $this->createShipmentOrderAfter($result);
+
+        return $result;
+    }
+
+    /**
+     * @param string[] $shipmentNumbers
+     * @return RequestData\DeleteShipment
+     */
+    protected function prepareDeleteShipmentOrderData(array $shipmentNumbers)
+    {
+        $wsVersion = new RequestData\Version('2', '1');
+        return new RequestData\DeleteShipment($wsVersion, $shipmentNumbers);
+    }
+
+        /**
+     * @param string[] $shipmentNumbers
+     * @return ResponseData\DeleteShipment
+     */
+    public function deleteShipmentOrder(array $shipmentNumbers)
+    {
+        $this->deleteShipmentOrderBefore($shipmentNumbers);
+
+        $requestData = $this->prepareDeleteShipmentOrderData($shipmentNumbers);
+        $result = $this->doDeleteShipmentOrder($requestData);
+
+        $this->deleteShipmentOrderAfter($result);
 
         return $result;
     }

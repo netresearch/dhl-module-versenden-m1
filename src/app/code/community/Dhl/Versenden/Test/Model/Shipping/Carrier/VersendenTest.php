@@ -224,7 +224,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->equalTo('getStatus'),
                 $this->anything()
             )
-            ->willReturn(new Dhl\Versenden\Webservice\ResponseData\Status(0, 'ok', 'ok'));
+            ->willReturn(new Dhl\Versenden\Webservice\ResponseData\Status\Response(0, 'ok', 'ok'));
         $label
             ->expects($this->any())
             ->method('getAllLabels')
@@ -244,7 +244,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
 
         $result = new Varien_Object(array(
             'shipment_number' => $trackingNumber,
-            'labels' => $labels
+            'created_items' => $labels
         ));
 
         $gatewayMock = $this->getModelMock('dhl_versenden/webservice_gateway_soap', array(
@@ -295,11 +295,11 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->anything()
             )
             ->willReturn(new Varien_Object(array(
-                'status' => new Dhl\Versenden\Webservice\ResponseData\Status(1010, 'nok', 'nok'),
+                'status' => new Dhl\Versenden\Webservice\ResponseData\Status\Response(1010, 'nok', 'nok'),
             )));
 
         $result = new Varien_Object(array(
-            'labels' => $labels
+            'created_items' => $labels
         ));
 
 

@@ -41,17 +41,18 @@ abstract class ShipmentLabel extends Shipment implements Parser
 {
     /**
      * @param VersendenApi\LabelData $labelData
-     * @return ResponseData\Label
+     * @return ResponseData\CreateShipment\Label
      */
     protected function parseLabel(VersendenApi\LabelData $labelData)
     {
-        $labelStatus = new ResponseData\Status(
+        $labelStatus = new ResponseData\Status\Item(
+            $labelData->getShipmentNumber(),
             $labelData->getStatus()->getStatusCode(),
             $labelData->getStatus()->getStatusText(),
             $labelData->getStatus()->getStatusMessage()
         );
 
-        $label = new ResponseData\Label(
+        $label = new ResponseData\CreateShipment\Label(
             $labelStatus,
             $labelData->getShipmentNumber(),
             $labelData->getLabelData(),
@@ -65,11 +66,11 @@ abstract class ShipmentLabel extends Shipment implements Parser
 
     /**
      * @param VersendenApi\LabelData[] $labelData
-     * @return ResponseData\LabelCollection
+     * @return ResponseData\CreateShipment\LabelCollection
      */
     protected function parseLabels(array $labelData)
     {
-        $labelCollection = new ResponseData\LabelCollection();
+        $labelCollection = new ResponseData\CreateShipment\LabelCollection();
         foreach ($labelData as $label) {
             $labelCollection->addItem($this->parseLabel($label));
         }
