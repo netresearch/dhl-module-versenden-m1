@@ -329,6 +329,81 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $this->assertEventDispatched('dhl_versenden_create_shipment_order_after');
     }
 
+
+    /**
+     * @test
+     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider
+     *
+     * @param Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
+     */
+    public function createShipmentOrderErrorStatus($shipmentOrder, $expectation)
+    {
+        $sequenceNumber = 'foo';
+        $shipmentNumber = 'bar';
+
+        $wsResponse = new Webservice\ResponseData\CreateShipment(
+            new Webservice\ResponseData\Status\Response(23, 'ok', 'ok'),
+            new Webservice\ResponseData\CreateShipment\LabelCollection(),
+            array($sequenceNumber => $shipmentNumber)
+        );
+
+        $request = new Mage_Shipping_Model_Shipment_Request();
+        $request->setOrderShipment(new Mage_Sales_Model_Order_Shipment());
+        $request->setData('packages', array());
+        $request->setData('services', array());
+        $request->setData('customs', array());
+        $shipmentRequests = array($sequenceNumber => $request);
+
+
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
+            ->disableOriginalConstructor()
+            ->setMethods(array('createShipmentOrder'))
+            ->getMock();
+        $adapter
+            ->expects($this->once())
+            ->method('createShipmentOrder')
+            ->willReturn($wsResponse);
+
+        $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
+            ->setMethods(array('debug', 'error', 'warning'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger
+            ->expects($this->once())
+            ->method('debug');
+        $logger
+            ->expects($this->once())
+            ->method('warning');
+        $logger
+            ->expects($this->never())
+            ->method('error');
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('shipmentToShipmentOrder', 'getAdapter', 'getLogger'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('shipmentToShipmentOrder')
+            ->willReturn($shipmentOrder);
+        $gateway
+            ->expects($this->once())
+            ->method('getAdapter')
+            ->willReturn($adapter);
+        $gateway
+            ->expects($this->once())
+            ->method('getLogger')
+            ->willReturn($logger);
+
+
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $result = $gateway->createShipmentOrder($shipmentRequests);
+        $this->assertEquals($wsResponse, $result);
+
+        $this->assertEventDispatched('dhl_versenden_create_shipment_order_before');
+        $this->assertEventDispatched('dhl_versenden_create_shipment_order_after');
+    }
+
     /**
      * @test
      */
@@ -505,6 +580,61 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $logger
             ->expects($this->once())
             ->method('debug');
+        $logger
+            ->expects($this->never())
+            ->method('error');
+
+        $gateway = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Gateway_Soap::class)
+            ->setMethods(array('getAdapter', 'getLogger'))
+            ->getMock();
+        $gateway
+            ->expects($this->once())
+            ->method('getAdapter')
+            ->willReturn($adapter);
+        $gateway
+            ->expects($this->once())
+            ->method('getLogger')
+            ->willReturn($logger);
+
+        /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
+        $result = $gateway->deleteShipmentOrder($shipmentNumbers);
+        $this->assertEquals($wsResponse, $result);
+
+        $this->assertEventDispatched('dhl_versenden_delete_shipment_order_before');
+        $this->assertEventDispatched('dhl_versenden_delete_shipment_order_after');
+    }
+
+    /**
+     * @test
+     */
+    public function deleteShipmentOrderErrorStatus()
+    {
+        $shipmentNumbers = array('123', '456');
+
+        $wsResponse = new Webservice\ResponseData\DeleteShipment(
+            new Webservice\ResponseData\Status\Response(12, 'ok', ''),
+            new Webservice\ResponseData\DeleteShipment\StatusCollection()
+        );
+
+        $adapter = $this->getMockBuilder(Webservice\Adapter\Soap::class)
+            ->disableOriginalConstructor()
+            ->setMethods(array('deleteShipmentOrder'))
+            ->getMock();
+        $adapter
+            ->expects($this->once())
+            ->method('deleteShipmentOrder')
+            ->willReturn($wsResponse);
+
+        $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
+            ->setMethods(array('debug', 'error', 'warning'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $logger
+            ->expects($this->once())
+            ->method('debug');
+        $logger
+            ->expects($this->once())
+            ->method('warning');
         $logger
             ->expects($this->never())
             ->method('error');

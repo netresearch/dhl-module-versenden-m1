@@ -126,6 +126,9 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->createShipmentOrder($requestData, $parser);
+            if ($result->getStatus()->isError()) {
+                $logger->warning($adapter);
+            }
             $logger->debug($adapter);
         } catch (SoapFault $fault) {
             $logger->error($adapter);
@@ -155,6 +158,9 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->deleteShipmentOrder($requestData, $parser);
+            if ($result->getStatus()->isError()) {
+                $logger->warning($adapter);
+            }
             $logger->debug($adapter);
         } catch (SoapFault $fault) {
             $logger->error($adapter);

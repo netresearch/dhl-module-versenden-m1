@@ -59,4 +59,15 @@ class Dhl_Versenden_Model_Webservice_Logger_Soap
         $this->log->error($adapter->getClient()->__getLastResponseHeaders());
         $this->log->error($adapter->getClient()->__getLastResponse());
     }
+
+
+    /**
+     * @param SoapAdapter $adapter
+     */
+    public function warning(Adapter $adapter)
+    {
+        $this->log->warning($adapter->getClient()->__getLastRequest());
+        $this->log->warning($adapter->getClient()->__getLastResponseHeaders());
+        $this->log->warning($adapter->getClient()->__getLastResponse());
+    }
 }
