@@ -41,13 +41,24 @@ class Dhl_Versenden_Model_Cron
 {
     const CRON_MESSAGE_LABELS_RETRIEVED = '%d labels were retrieved for %d orders.';
 
+    /** @var Dhl_Versenden_Model_Log */
+    protected $logger;
+
     /**
-     * Manually load DHL libraries for CLI scripts such as Aoe_Scheduler.
+     * Manually load DHL libraries for CLI scripts such as Aoe_Scheduler and init logger.
      */
     public function __construct()
     {
         $observer = new Dhl_Versenden_Model_Observer();
         $observer->registerAutoload();
+
+        $writer = Mage::getModel('dhl_versenden/logger_writer');
+        $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
+
+        $config = Mage::getModel('dhl_versenden/config');
+        $dhlLogger = Mage::getSingleton('dhl_versenden/log', array('config' => $config));
+        $dhlLogger->setLogger($psrLogger);
+        $this->logger = $dhlLogger;
     }
 
     /**
@@ -81,7 +92,7 @@ class Dhl_Versenden_Model_Cron
             $schedule->setMessages(sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize()));
             $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
         } catch (\Exception $e) {
-            Mage::logException($e);
+            $this->logger->error($e->getMessage(), array('exception' => $e));
             $schedule->setMessages($e->getMessage());
             $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
         }

@@ -18,6 +18,7 @@
  *
  * @category  Dhl
  * @package   Dhl_Versenden
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
@@ -25,20 +26,22 @@
  */
 
 /**
- * Dhl_Versenden_Test_Model_Observer_AutoloaderTest
+ * Dhl_Versenden_Test_Model_CronTest
  *
  * @category Dhl
  * @package  Dhl_Versenden
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_CronTest  extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
 {
-
     /**
      * @test
-     * @loadFixture Model_CronTestFailure
+     * @loadFixture Model_ShipperConfigTest
+     * @loadFixture Model_AutoCreateTest
+     * @loadFixture Model_AutoCreateFailureTest
      */
     public function shipmentAutoCreateFailure()
     {
@@ -47,22 +50,36 @@ class Dhl_Versenden_Test_Model_CronTest  extends EcomDev_PHPUnit_Test_Case
         $cron = Mage::getModel('dhl_versenden/cron');
         $cron->shipmentAutoCreate($schedule);
 
-        $this->assertEquals('error', $schedule->getStatus());
+        $this->assertEquals(Mage_Cron_Model_Schedule::STATUS_ERROR, $schedule->getStatus());
     }
-
 
     /**
      * @test
-     * @loadFixture Model_CronTest
+     * @loadFixture Model_ShipperConfigTest
+     * @loadFixture Model_AutoCreateTest
      */
     public function shipmentAutoCreateSuccess()
     {
+        $numVersendenOrders = 1;
+        $numSuccess = 1;
+
+        $autocreateMock = $this->getModelMock('dhl_versenden/shipping_autocreate', array('autoCreate'));
+        $autocreateMock
+            ->expects($this->once())
+            ->method('autoCreate')
+            ->willReturn($numSuccess);
+        $this->replaceByMock('model', 'dhl_versenden/shipping_autocreate', $autocreateMock);
+
         $schedule = Mage::getModel('cron/schedule');
+
         /** @var Dhl_Versenden_Model_Cron $cron */
         $cron = Mage::getModel('dhl_versenden/cron');
         $cron->shipmentAutoCreate($schedule);
 
-        $this->assertEquals(Mage_Cron_Model_Schedule::STATUS_SUCCESS, $schedule->getStatus());
+        $format = Dhl_Versenden_Model_Cron::CRON_MESSAGE_LABELS_RETRIEVED;
+        $expectedMessage = sprintf($format, $numSuccess, $numVersendenOrders);
 
+        $this->assertEquals(Mage_Cron_Model_Schedule::STATUS_SUCCESS, $schedule->getStatus());
+        $this->assertEquals($expectedMessage, $schedule->getMessages());
     }
 }

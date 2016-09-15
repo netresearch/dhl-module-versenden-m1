@@ -35,76 +35,102 @@
  */
 class Dhl_Versenden_Test_Model_Resource_Autocreate_CollectionTest extends EcomDev_PHPUnit_Test_Case
 {
-
     /**
      * @test
-     * @loadFixture Model_AutoCreateCollectionTest
+     * @loadFixture Model_AutoCreateTest
      */
     public function addShippingMethodFilter()
     {
-        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection')->addShippingMethodFilter();
-        $this->assertEquals(1, count($collection));
-        $this->assertEquals('dhlversenden_foo', $collection->getFirstItem()->getShippingMethod());
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection->addShippingMethodFilter();
+
+        $this->assertNotEmpty($collection);
+
+        /** @var Mage_Sales_Model_Order $order */
+        foreach ($collection as $order) {
+            $this->assertStringStartsWith('dhlversenden_', $order->getShippingMethod());
+        }
     }
 
     /**
      * @test
-     * @loadFixture Model_AutoCreateCollectionTest
+     * @loadFixture Model_AutoCreateTest
      */
     public function addShipmentFilter()
     {
-        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection')->addShipmentFilter();
-        $this->assertEquals(1, count($collection));
-        $order = $collection->getFirstItem();
-        $this->assertEquals(17, $order->getId());
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection->addShipmentFilter();
+
+        $orderIds = $collection->getAllIds();
+
+        $this->assertContains('10', $orderIds);
+        $this->assertNotContains('11', $orderIds);
+        $this->assertContains('17', $orderIds);
     }
 
     /**
      * @test
-     * @loadFixture Model_AutoCreateCollectionTest
+     * @loadFixture Model_AutoCreateTest
      */
     public function addDeliveryCountriesFilter()
     {
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST));
-        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection')->addDeliveryCountriesFilter($euCountries);
-        $this->assertEquals(1, count($collection));
-        $order = $collection->getFirstItem();
-        $this->assertEquals('DE', $order->getShippingAddress()->getCountryId());
-    }
 
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection = $collection->addDeliveryCountriesFilter($euCountries);
+
+        $orderIds = $collection->getAllIds();
+        $this->assertContains('10', $orderIds);
+        $this->assertNotContains('11', $orderIds);
+    }
 
     /**
      * @test
-     * @loadFixture Model_AutoCreateCollectionTest
+     * @loadFixture Model_AutoCreateTest
      */
     public function addStatusFilter()
     {
-        $statusArray = array('0' => Mage_Sales_Model_Order::STATE_PROCESSING);
-        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection')->addStatusFilter($statusArray);
-        $this->assertEquals(1, count($collection));
-        $order = $collection->getFirstItem();
-        $this->assertEquals(current($statusArray), $order->getStatus());
-    }
+        $statusArray = array('pending');
 
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection->addStatusFilter($statusArray);
+
+        $orderIds = $collection->getAllIds();
+        $this->assertContains('10', $orderIds);
+        $this->assertNotContains('11', $orderIds);
+
+
+        $statusArray = array('pending', 'processing');
+
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection->addStatusFilter($statusArray);
+
+        $orderIds = $collection->getAllIds();
+        $this->assertContains('10', $orderIds);
+        $this->assertContains('11', $orderIds);
+    }
 
     /**
      * @test
-     * @loadFixture Model_AutoCreateCollectionTest
+     * @loadFixture Model_AutoCreateTest
      */
     public function addStoreFilter()
     {
-        $config = Mage::getModel('dhl_versenden/config');
-        $stores = array_filter(
-            Mage::app()->getStores(),
-            function (Mage_Core_Model_Store $store) use ($config) {
-                return $config->isShipmentAutoCreateEnabled($store);
-            }
-        );
-        $usedStore  = current($stores);
-        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection')->addStoreFilter($stores);
-        $this->assertEquals(1, count($collection));
-        $order = $collection->getFirstItem();
-        $this->assertEquals($usedStore->getId(), $order->getStoreId());
-    }
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection->addStoreFilter(array('store_one'));
 
+        $orderIds = $collection->getAllIds();
+        $this->assertContains('10', $orderIds);
+        $this->assertContains('11', $orderIds);
+        $this->assertNotContains('17', $orderIds);
+
+
+        $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $collection->addStoreFilter(array('store_one', 'store_two'));
+
+        $orderIds = $collection->getAllIds();
+        $this->assertContains('10', $orderIds);
+        $this->assertContains('11', $orderIds);
+        $this->assertContains('17', $orderIds);
+    }
 }
