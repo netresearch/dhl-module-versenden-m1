@@ -108,15 +108,14 @@ abstract class ArrayableInfo extends AbstractInfo implements ArrayableInterface
 
             if (property_exists($this, $key)) {
                 if ($this->{$key} instanceof ArrayableInterface && is_array($value)) {
-                    $className = get_class($this->{$key});
                     $method    = 'fromArray';
                     $params    = [$value, $camelizeKeys];
-                    call_user_func_array([$className, $method], $params);
+                    call_user_func_array([$this->{$key}, $method], $params);
                 } elseif ($this->{$key} instanceof UnserializableInterface && is_object($value)) {
                     $className = get_class($this->{$key});
                     $method    = 'fromObject';
                     $params    = [$value];
-                    call_user_func_array([$className, $method], $params);
+                    $this->{$key} = call_user_func_array([$className, $method], $params);
                 } else {
                     $this->{$key} = $value;
                 }

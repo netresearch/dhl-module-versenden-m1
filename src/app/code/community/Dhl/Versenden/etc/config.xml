@@ -258,7 +258,6 @@
                 <service_preferredlocation_placeholder>e.g. garage, terrace</service_preferredlocation_placeholder>
                 <service_preferredneighbour_enabled>0</service_preferredneighbour_enabled>
                 <service_preferredneighbour_placeholder>name, street and street number</service_preferredneighbour_placeholder>
-                <service_packstation_enabled>0</service_packstation_enabled>
                 <service_parcelannouncement_enabled>1</service_parcelannouncement_enabled>
                 <service_visualcheckofage_enabled>1</service_visualcheckofage_enabled>
                 <service_returnshipment_enabled>1</service_returnshipment_enabled>

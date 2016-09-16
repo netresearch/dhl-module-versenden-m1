@@ -341,7 +341,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
-     * @deprecated 
+     * @deprecated
      * @param Service\Collection $serviceCollection
      * @param \Dhl\Versenden\Info\Services $serviceSelection
      */

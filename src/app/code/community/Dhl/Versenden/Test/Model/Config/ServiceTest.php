@@ -76,34 +76,4 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         });
         $this->assertNotEmpty($paServices);
     }
-
-    /**
-     * @test
-     */
-    public function setServiceValues()
-    {
-        $selection = array(
-            Service\ParcelAnnouncement::CODE => false,
-            Service\VisualCheckOfAge::CODE => 'bar',
-        );
-        $serviceSelection = \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection::fromArray($selection);
-
-        $services = array(
-            new Service\ParcelAnnouncement('', true, false),
-            new Service\VisualCheckOfAge('', true, false, array('foo' => 'fox', 'bar' => 'baz')),
-        );
-
-        $serviceCollection = new Service\Collection($services);
-
-        $config = new Dhl_Versenden_Model_Config_Service();
-        $config->setServiceValues($serviceCollection, $serviceSelection);
-
-        /** @var Service\ParcelAnnouncement $paService */
-        $paService = $serviceCollection->getItem(Service\ParcelAnnouncement::CODE);
-        /** @var Service\VisualCheckOfAge $ageCheckService */
-        $ageCheckService = $serviceCollection->getItem(Service\VisualCheckOfAge::CODE);
-
-        $this->assertEquals($selection[Service\ParcelAnnouncement::CODE], $paService->getValue());
-        $this->assertEquals($selection[Service\VisualCheckOfAge::CODE], $ageCheckService->getValue());
-    }
 }
