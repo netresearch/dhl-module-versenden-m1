@@ -1,0 +1,125 @@
+<?php
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 5
+ *
+ * @category  Dhl
+ * @package   Dhl_Versenden
+ * @author    Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+
+/**
+ * Dhl_Versenden_Model_Shipping_Autocreate
+ *
+ * @category Dhl
+ * @package  Dhl_Versenden
+ * @author   Sebastian Ertner <sebastian.ertner@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
+class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shipping
+{
+    /**
+     * @param Mage_Sales_Model_Resource_Order_Collection $collection
+     * @return Mage_Shipping_Model_Shipment_Request[]
+     */
+    protected function prepareShipmentRequests(Mage_Sales_Model_Resource_Order_Collection $collection)
+    {
+        $shipmentRequests = array();
+
+        $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
+        $shipperConfig  = Mage::getModel('dhl_versenden/config_shipper');
+        $serviceConfig  = Mage::getModel('dhl_versenden/config_service');
+
+        /** @var Mage_Sales_Model_Order $order */
+        foreach ($collection as $order) {
+            try {
+                $shipment = $order->prepareShipment();
+                $shipment->register();
+
+                $builder = new Dhl_Versenden_Model_Shipping_Autocreate_Builder(
+                    $order,
+                    $shipmentConfig,
+                    $shipperConfig,
+                    $serviceConfig
+                );
+                $request = $builder->createShipmentRequest($shipment);
+
+                $shipmentRequests[$order->getId()] = $request;
+            } catch (Exception $e) {
+                Mage::logException($e);
+            }
+        }
+
+        return $shipmentRequests;
+    }
+
+    /**
+     * @param Mage_Sales_Model_Resource_Order_Collection $collection
+     * @return int The number of successfully created shipment orders.
+     */
+    public function autoCreate(Mage_Sales_Model_Resource_Order_Collection $collection)
+    {
+        if (!$collection->getSize()) {
+            return 0;
+        }
+
+        $ordersShipped = 0;
+
+        $shipmentRequests = $this->prepareShipmentRequests($collection);
+        $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
+        $result = $gateway->createShipmentOrder($shipmentRequests);
+
+        $carrier     = Mage::getModel('dhl_versenden/shipping_carrier_versenden');
+        $pdfLib      = new \Dhl\Versenden\Pdf\Adapter\Zend();
+        $transaction = Mage::getModel('core/resource_transaction');
+
+        /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
+        foreach ($shipmentRequests as $orderId => $shipmentRequest) {
+            $shipment = $shipmentRequest->getOrderShipment();
+            $shipmentNumber = $result->getShipmentNumber($orderId);
+            $shipmentStatus = $result->getCreatedItems()->getItem($shipmentNumber)->getStatus();
+
+            if ($shipmentStatus->isError()) {
+                Mage::helper('dhl_versenden/data')->addStatusHistoryError(
+                    $shipmentRequest->getOrderShipment()->getOrder(),
+                    sprintf('%s %s', $shipmentStatus->getStatusText(), $shipmentStatus->getStatusMessage())
+                );
+            } else {
+                $labels = $result->getCreatedItems()->getItem($shipmentNumber)->getAllLabels($pdfLib);
+                $shipment->setShippingLabel($labels);
+                $track = Mage::getModel('sales/order_shipment_track')
+                    ->setNumber($shipmentNumber)
+                    ->setCarrierCode($carrier->getCarrierCode())
+                    ->setTitle($carrier->getConfigData('title'));
+                $shipment->addTrack($track);
+                $shipment->getOrder()->setIsInProcess(true);
+                $transaction
+                    ->addObject($shipment)
+                    ->addObject($shipment->getOrder());
+
+                $ordersShipped++;
+            }
+        }
+
+        $transaction->save();
+
+        return $ordersShipped;
+    }
+}

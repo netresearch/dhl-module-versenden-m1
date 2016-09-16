@@ -76,7 +76,11 @@ class Response
      */
     public function getStatusMessage()
     {
-        return $this->statusMessage;
+        $statusMessage = $this->statusMessage;
+        if (is_array($this->statusMessage)) {
+            $statusMessage = implode(' ', $statusMessage);
+        }
+        return $statusMessage;
     }
 
     /**
