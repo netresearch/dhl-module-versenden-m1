@@ -45,7 +45,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
      * @param Dhl_Versenden_Model_Config_Shipper $config shipper configuration object
      *
      * @param Dhl_Versenden_Model_Config_Shipper $config
-     * @return Webservice\Adapter
+     * @return Webservice\Adapter\Soap
      */
     public function getAdapter(Dhl_Versenden_Model_Config_Shipper $config)
     {
@@ -105,6 +105,21 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         return $soapLogger;
     }
 
+    /**
+     * @param Dhl_Versenden_Model_Webservice_Logger_Soap $logger
+     * @param SoapAdapter $adapter
+     * @param ResponseData\Status\Response $responseStatus
+     */
+    protected function logResult(Dhl_Versenden_Model_Webservice_Logger_Soap $logger,
+                                 Webservice\Adapter\Soap $adapter,
+                                 ResponseData\Status\Response $responseStatus)
+    {
+        if ($responseStatus->isError()) {
+            $logger->warning($adapter);
+        } else {
+            $logger->debug($adapter);
+        }
+    }
 
     /**
      * @param RequestData\CreateShipment $requestData
@@ -126,10 +141,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->createShipmentOrder($requestData, $parser);
-            if ($result->getStatus()->isError()) {
-                $logger->warning($adapter);
-            }
-            $logger->debug($adapter);
+            $this->logResult($logger, $adapter, $result->getStatus());
         } catch (SoapFault $fault) {
             $logger->error($adapter);
             throw $fault;
@@ -158,10 +170,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         try {
             /** @var ResponseData\CreateShipment $result */
             $result = $adapter->deleteShipmentOrder($requestData, $parser);
-            if ($result->getStatus()->isError()) {
-                $logger->warning($adapter);
-            }
-            $logger->debug($adapter);
+            $this->logResult($logger, $adapter, $result->getStatus());
         } catch (SoapFault $fault) {
             $logger->error($adapter);
             throw $fault;

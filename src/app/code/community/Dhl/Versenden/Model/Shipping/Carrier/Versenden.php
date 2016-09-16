@@ -210,7 +210,8 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 ))
             );
             $response->setData($responseData);
-        } catch (Webservice\Exception $e) {
+        } catch (Exception $e) {
+            // convert to Mage_Core_Exception for proper message display in frontend
             Mage::throwException($e->getMessage());
         }
 
