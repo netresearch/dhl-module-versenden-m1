@@ -100,6 +100,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
 
     /**
      * @test
+     * @loadFixture Model_ShipperConfigTest
      * @loadFixture Model_ObserverTest
      */
     public function saveShippingSettings()
@@ -107,13 +108,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $this->setCurrentStore('store_two');
 
         // SERVICE DEFINITION
-        $preferredLocationValue = 'Garage Location';
-        $preferredLocation = new Service\PreferredLocation('', true, false, '');
-        $preferredLocation->setValue($preferredLocationValue);
-
-        $preferredNeighbourValue = 'Foo Neighbour';
-        $preferredNeighbour = new Service\PreferredNeighbour('', true, false, '');
-        $preferredNeighbour->setValue($preferredNeighbourValue);
+        $parcelAnnouncement = 'parcelAnnouncement';
 
         // two settings, only one actually enabled
         $requestMock = $this->getMockBuilder(Mage_Core_Controller_Request_Http::class)
@@ -126,11 +121,9 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
             ->willReturnMap(
                 array(
                     array('shipment_service', array(), array(
-                        $preferredLocation->getCode() => $preferredLocation->getCode()
+                        $parcelAnnouncement => $parcelAnnouncement
                     )),
                     array('service_setting', array(), array(
-                        $preferredLocation->getCode() => $preferredLocation->getValue(),
-                        $preferredNeighbour->getCode() => $preferredNeighbour->getValue(),
                     ))
                 )
             );
@@ -153,11 +146,12 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->saveShippingSettings($observerMock);
 
-        $versendenInfo = $quote->getShippingAddress()->getDhlVersendenInfo();
-        $this->assertNotEmpty($versendenInfo);
-        $this->assertContains($preferredLocationValue, $versendenInfo);
-        $this->assertNotContains($preferredNeighbourValue, $versendenInfo);
-        $this->assertContains($addressCompany, $versendenInfo);
+        /** @var \Dhl\Versenden\Info $versendenInfo */
+        $versendenInfo = $quote->getShippingAddress()->getData('dhl_versenden_info');
+        $this->assertInstanceOf(\Dhl\Versenden\Info::class, $versendenInfo);
+        $this->assertTrue($versendenInfo->getServices()->parcelAnnouncement);
+        $this->assertNull($versendenInfo->getServices()->preferredNeighbour);
+        $this->assertEquals($addressCompany, $versendenInfo->getReceiver()->name2);
     }
 
     /**

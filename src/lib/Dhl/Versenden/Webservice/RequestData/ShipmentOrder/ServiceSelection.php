@@ -61,6 +61,41 @@ class ServiceSelection extends RequestData
     private $printOnlyIfCodeable;
 
     /**
+     * ServiceSelection constructor.
+     * @param bool|string $dayOfDelivery
+     * @param bool|string $deliveryTimeFrame
+     * @param bool|string $preferredLocation
+     * @param bool|string $preferredNeighbour
+     * @param bool $parcelAnnouncement
+     * @param bool|string $visualCheckOfAge
+     * @param bool $returnShipment
+     * @param bool|float $insurance
+     * @param bool $bulkyGoods
+     * @param bool|float $cod
+     * @param bool $goGreen
+     * @param bool $printOnlyIfCodeable
+     */
+    public function __construct(
+        $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
+        $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance,
+        $bulkyGoods, $cod, $goGreen, $printOnlyIfCodeable)
+    {
+        $this->dayOfDelivery = $dayOfDelivery;
+        $this->deliveryTimeFrame = $deliveryTimeFrame;
+        $this->preferredLocation = $preferredLocation;
+        $this->preferredNeighbour = $preferredNeighbour;
+        $this->parcelAnnouncement = $parcelAnnouncement;
+        $this->visualCheckOfAge = $visualCheckOfAge;
+        $this->returnShipment = $returnShipment;
+        $this->insurance = $insurance;
+        $this->bulkyGoods = $bulkyGoods;
+        $this->cod = $cod;
+        $this->goGreen = $goGreen;
+        $this->printOnlyIfCodeable = $printOnlyIfCodeable;
+    }
+
+
+    /**
      * Constructs ServiceSettings object from array with values that differ from initial settings
      *
      * @deprecated Use constructor

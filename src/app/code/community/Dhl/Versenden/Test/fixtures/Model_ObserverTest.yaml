@@ -18,6 +18,10 @@ scope:
 config:
   default/carriers/dhlversenden/shipment_dhlmethods: "flatrate_flatrate"
 
+  default/carriers/dhlversenden/service_preferredlocation_enabled: '1'
+  default/carriers/dhlversenden/service_preferredneighbour_enabled: '1'
+  default/carriers/dhlversenden/service_parcelannouncement_enabled: '2'
+
 tables:
   sales/quote:
    - entity_id: 100

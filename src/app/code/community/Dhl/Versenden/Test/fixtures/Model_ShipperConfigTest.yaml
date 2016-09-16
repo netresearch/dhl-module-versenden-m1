@@ -16,8 +16,11 @@ scope:
       is_active: 1
 
 config:
+  default/shipping/origin/country_id: "DE"
+  stores/store_two/shipping/origin/country_id: "AT"
+
   default/dhl_versenden/dev/autoload_enabled: "0"
-  default/carriers/dhlversenden/sandbox_mode:          "1"
+  default/carriers/dhlversenden/sandbox_mode: "1"
   stores/store_two/carriers/dhlversenden/sandbox_mode: "0"
 
   default/carriers/dhlversenden/account_user:            "303TEST"
