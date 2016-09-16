@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
+use \Dhl\Versenden\Info\Receiver\PostalFacility;
 /**
  * Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
  *
@@ -39,9 +39,9 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
     protected function getLocationTypes()
     {
         return array(
-            Receiver\PostalFacility::TYPE_PACKSTATION => 'Packstation',
-            Receiver\PostalFacility::TYPE_POSTFILIALE => 'Postfiliale',
-            Receiver\PostalFacility::TYPE_PAKETSHOP =>   'Paketshop',
+            PostalFacility::TYPE_PACKSTATION => 'Packstation',
+            PostalFacility::TYPE_POSTFILIALE => 'Postfiliale',
+            PostalFacility::TYPE_PAKETSHOP => 'Paketshop',
         );
     }
 
@@ -51,7 +51,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
     public function preparePackstation()
     {
         $stationTypes = $this->getLocationTypes();
-        $stationType  = Receiver\PostalFacility::TYPE_PACKSTATION;
+        $stationType  = PostalFacility::TYPE_PACKSTATION;
 
         $stationId = '987';
         // valid shop, recognized type:
@@ -88,7 +88,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
     public function preparePostfiliale()
     {
         $stationTypes = $this->getLocationTypes();
-        $stationType = Receiver\PostalFacility::TYPE_POSTFILIALE;
+        $stationType = PostalFacility::TYPE_POSTFILIALE;
 
         $stationId   = '123';
         // valid shop, recognized type
@@ -125,7 +125,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
     public function preparePostalFacilityWrongType()
     {
         $stationTypes = $this->getLocationTypes();
-        $stationType = Receiver\PostalFacility::TYPE_PAKETSHOP;
+        $stationType = PostalFacility::TYPE_PAKETSHOP;
 
         $stationId   = '123';
         // valid shop, but unrecognized type

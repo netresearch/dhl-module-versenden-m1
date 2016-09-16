@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+use \Dhl\Versenden\Shipment\Service;
 use \Dhl\Versenden\Webservice\RequestData;
 use \Dhl\Versenden\Webservice\ResponseData;
 use \Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
@@ -397,53 +398,38 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function parseServices()
     {
-        $serviceSelection = array(
-            \Dhl\Versenden\Shipment\Service\DayOfDelivery::CODE => '2016-12-24',
-            \Dhl\Versenden\Shipment\Service\DeliveryTimeFrame::CODE => '19002100',
-            \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::CODE => 'A21',
-            \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE => 'Chimney',
-            \Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE => 'Santa Berger',
-            \Dhl\Versenden\Shipment\Service\Cod::CODE => 40.96,
-            \Dhl\Versenden\Shipment\Service\Insurance::CODE =>  34.06,
-            \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE => true,
+        $dayOfDelivery = '2016-12-24';
+        $deliveryTimeFrame = '19002100';
+        $visualCheckOfAge = 'A21';
+        $returnShipment = false;
+        $preferredLocation = 'Chimney';
+        $preferredNeighbour = 'Santa Berger';
+        $parcelAnnouncement = false;
+        $goGreen = true;
+        $cod = 40.96;
+        $insurance = 34.06;
+        $bulkyGoods = true;
+        $printOnlyIfCodeable = true;
 
+        $requestData = new RequestData\ShipmentOrder\ServiceSelection(
+            $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour, $parcelAnnouncement,
+            $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods, $cod, $goGreen, $printOnlyIfCodeable
         );
-
-        $requestData = RequestData\ShipmentOrder\ServiceSelection::fromArray($serviceSelection);
         $shipmentServices = SoapAdapter\ServiceType::prepare($requestData);
+
         $this->assertInstanceOf(\Dhl\Bcs\Api\ShipmentService::class, $shipmentServices);
 
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\DayOfDelivery::CODE],
-            $shipmentServices->getDayOfDelivery()->getDetails()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\DeliveryTimeFrame::CODE],
-            $shipmentServices->getDeliveryTimeframe()->getType()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\VisualCheckOfAge::CODE],
-            $shipmentServices->getVisualCheckOfAge()->getType()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\PreferredLocation::CODE],
-            $shipmentServices->getPreferredLocation()->getDetails()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE],
-            $shipmentServices->getPreferredNeighbour()->getDetails()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\Cod::CODE],
-            $shipmentServices->getCashOnDelivery()->getCodAmount()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\Insurance::CODE],
-            $shipmentServices->getAdditionalInsurance()->getInsuranceAmount()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\BulkyGoods::CODE],
-            $shipmentServices->getBulkyGoods()->getActive()
-        );
+        $this->assertEquals($dayOfDelivery, $shipmentServices->getDayOfDelivery()->getDetails());
+        $this->assertEquals($deliveryTimeFrame, $shipmentServices->getDeliveryTimeframe()->getType());
+        $this->assertEquals($visualCheckOfAge, $shipmentServices->getVisualCheckOfAge()->getType());
+        // $returnShipment is no ServiceType service
+        $this->assertEquals($preferredLocation, $shipmentServices->getPreferredLocation()->getDetails());
+        $this->assertEquals($preferredNeighbour, $shipmentServices->getPreferredNeighbour()->getDetails());
+        // $parcelAnnouncement is no ServiceType service
+        $this->assertEquals($goGreen, $shipmentServices->getGoGreen()->getActive());
+        $this->assertEquals($cod, $shipmentServices->getCashOnDelivery()->getCodAmount());
+        $this->assertEquals($insurance, $shipmentServices->getAdditionalInsurance()->getInsuranceAmount());
+        $this->assertEquals($bulkyGoods, $shipmentServices->getBulkyGoods()->getActive());
+        // $printOnlyIfCodeable is no ServiceType service
     }
 }
