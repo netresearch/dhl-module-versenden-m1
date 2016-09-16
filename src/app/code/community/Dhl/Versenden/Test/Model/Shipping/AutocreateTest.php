@@ -36,6 +36,20 @@ use \Dhl\Versenden\Webservice\ResponseData;
 class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
+     * Do not actually save anything during test runs.
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $transactionMock = $this->getModelMock('core/resource_transaction', array('save'));
+        $this->replaceByMock('model', 'core/resource_transaction', $transactionMock);
+
+        $historyMock = $this->getModelMock('sales/order_status_history', array('save'));
+        $this->replaceByMock('model', 'sales/order_status_history', $historyMock);
+    }
+
+    /**
      * @test
      * @loadFixture Model_ShipperConfigTest
      * @loadFixture Model_AutoCreateTest
@@ -74,8 +88,8 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $collection->addShippingMethodFilter();
         $collection->addShipmentFilter();
 
-        $shipmentRequestCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
-        $this->assertEquals(1, $shipmentRequestCount);
+        $createdLabelsCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+        $this->assertEquals(1, $createdLabelsCount);
 
         /** @var Mage_Sales_Model_Order $order */
         $order = $collection->getItemById(10);
@@ -143,9 +157,9 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
     public function autoCreateStatusCollectionCountZero()
     {
         /** @var Dhl_Versenden_Model_Resource_Autocreate_Collection $collection */
-        $collection           = Mage::getResourceModel('dhl_versenden/autocreate_collection');
-        $shipmentRequestCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+        $collection         = Mage::getResourceModel('dhl_versenden/autocreate_collection');
+        $createdLabelsCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
 
-        $this->assertEquals(0, $shipmentRequestCount);
+        $this->assertEquals(0, $createdLabelsCount);
     }
 }
