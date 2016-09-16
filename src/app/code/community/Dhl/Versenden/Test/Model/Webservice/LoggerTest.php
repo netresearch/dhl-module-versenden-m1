@@ -51,20 +51,20 @@ class Dhl_Versenden_Test_Model_Webservice_LoggerTest
             ->setMethods(array('__getLastRequest', '__getLastResponse', '__getLastResponseHeaders'))
             ->getMock();
         $clientMock
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('__getLastRequest')
             ->willReturn($lastRequest);
         $clientMock
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('__getLastResponse')
             ->willReturn($lastResponse);
         $clientMock
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('__getLastResponseHeaders')
             ->willReturn($lastResponseHeaders);
 
         $logMock = $this->getMockBuilder(Dhl_Versenden_Model_Log::class)
-            ->setMethods(array('error', 'debug'))
+            ->setMethods(array('error', 'debug', 'warning'))
             ->disableOriginalConstructor()
             ->getMock();
         $logMock
@@ -83,6 +83,14 @@ class Dhl_Versenden_Test_Model_Webservice_LoggerTest
                 array($lastResponseHeaders, array()),
                 array($lastResponse, array())
             );
+        $logMock
+            ->expects($this->exactly(3))
+            ->method('warning')
+            ->withConsecutive(
+                array($lastRequest, array()),
+                array($lastResponseHeaders, array()),
+                array($lastResponse, array())
+            );
 
         $soapLogger = new Dhl_Versenden_Model_Webservice_Logger_Soap($logMock);
         $adapter = new SoapAdapter($clientMock);
@@ -90,5 +98,6 @@ class Dhl_Versenden_Test_Model_Webservice_LoggerTest
         // assert messages being passed through to logger
         $soapLogger->debug($adapter);
         $soapLogger->error($adapter);
+        $soapLogger->warning($adapter);
     }
 }

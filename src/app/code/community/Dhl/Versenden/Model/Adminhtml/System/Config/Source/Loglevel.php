@@ -60,8 +60,9 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Loglevel
     public function toArray()
     {
         return array(
-            Zend_Log::ERR => Mage::helper('dhl_versenden/data')->__('Error'),
-            Zend_Log::DEBUG => Mage::helper('dhl_versenden/data')->__('Debug'),
+            Zend_Log::ERR   => Mage::helper('dhl_versenden/data')->__('Error'),
+            Zend_Log::WARN  => Mage::helper('dhl_versenden/data')->__('Warning'),
+            Zend_Log::DEBUG => Mage::helper('dhl_versenden/data')->__('Debug')
         );
     }
 }
