@@ -95,4 +95,17 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
             $this->psrLogger->error($message, $context);
         }
     }
+
+    /**
+     * Check config and pass warnings to PSR Logger
+     *
+     * @param $message
+     * @param mixed[] $context
+     */
+    public function warning($message, array $context = array())
+    {
+        if ($this->config->isLoggingEnabled(Zend_Log::WARN)) {
+            $this->psrLogger->error($message, $context);
+        }
+    }
 }
