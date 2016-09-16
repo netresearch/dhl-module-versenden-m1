@@ -294,12 +294,15 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->willReturn($wsResponse);
 
         $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
-            ->setMethods(array('debug', 'error'))
+            ->setMethods(array('debug', 'warning', 'error'))
             ->disableOriginalConstructor()
             ->getMock();
         $logger
             ->expects($this->once())
             ->method('debug');
+        $logger
+            ->expects($this->never())
+            ->method('warning');
         $logger
             ->expects($this->never())
             ->method('error');
@@ -366,11 +369,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->willReturn($wsResponse);
 
         $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
-            ->setMethods(array('debug', 'error', 'warning'))
+            ->setMethods(array('debug', 'warning', 'error'))
             ->disableOriginalConstructor()
             ->getMock();
         $logger
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('debug');
         $logger
             ->expects($this->once())
@@ -522,12 +525,15 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->willThrowException(new SoapFault('soap:Server', 'my bad :('));
 
         $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
-            ->setMethods(array('debug', 'error'))
+            ->setMethods(array('debug', 'warning', 'error'))
             ->disableOriginalConstructor()
             ->getMock();
         $logger
             ->expects($this->never())
             ->method('debug');
+        $logger
+            ->expects($this->never())
+            ->method('warning');
         $logger
             ->expects($this->once())
             ->method('error');
@@ -574,12 +580,15 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->willReturn($wsResponse);
 
         $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
-            ->setMethods(array('debug', 'error'))
+            ->setMethods(array('debug', 'warning', 'error'))
             ->disableOriginalConstructor()
             ->getMock();
         $logger
             ->expects($this->once())
             ->method('debug');
+        $logger
+            ->expects($this->never())
+            ->method('warning');
         $logger
             ->expects($this->never())
             ->method('error');
@@ -630,7 +639,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->disableOriginalConstructor()
             ->getMock();
         $logger
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('debug');
         $logger
             ->expects($this->once())
@@ -677,12 +686,15 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->willThrowException(new SoapFault('soap:Server', 'my bad :('));
 
         $logger = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Logger_Soap::class)
-            ->setMethods(array('debug', 'error'))
+            ->setMethods(array('debug', 'warning', 'error'))
             ->disableOriginalConstructor()
             ->getMock();
         $logger
             ->expects($this->never())
             ->method('debug');
+        $logger
+            ->expects($this->never())
+            ->method('warning');
         $logger
             ->expects($this->once())
             ->method('error');
