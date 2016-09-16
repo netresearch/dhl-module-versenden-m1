@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Service\Type as Service;
-use Dhl\Versenden\Service\Collection as ServiceCollection;
+use Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Model_Config
  *
@@ -42,16 +41,17 @@ class Dhl_Versenden_Model_Config
 
     const CONFIG_XML_PATH_AUTOLOAD_ENABLED = 'dhl_versenden/dev/autoload_enabled';
 
-    const CONFIG_XML_PATH_CARRIER = 'carriers/dhlversenden';
-    const CONFIG_XML_PATH_CARRIER_ACTIVE = 'carriers/dhlversenden/active';
-    const CONFIG_XML_PATH_CARRIER_TITLE = 'carriers/dhlversenden/title';
-    const CONFIG_XML_PATH_SANDBOX_MODE = 'carriers/dhlversenden/sandbox_mode';
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'carriers/dhlversenden/sandbox_endpoint';
-    const CONFIG_XML_PATH_LOGGING_ENABLED = 'carriers/dhlversenden/logging_enabled';
-    const CONFIG_XML_PATH_LOG_LEVEL = 'carriers/dhlversenden/log_level';
+    const CONFIG_XML_PATH_CARRIER_TITLE    = 'title';
+    const CONFIG_XML_PATH_SANDBOX_MODE     = 'sandbox_mode';
+    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'sandbox_endpoint';
+    const CONFIG_XML_PATH_LOGGING_ENABLED  = 'logging_enabled';
+    const CONFIG_XML_PATH_LOG_LEVEL        = 'log_level';
 
-    const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'carriers/dhlversenden/webservice_auth_username';
-    const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'carriers/dhlversenden/webservice_auth_password';
+    const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'webservice_auth_username';
+    const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'webservice_auth_password';
+
+    const CONFIG_XML_PATH_AUTOCREATE_ENABLED                    = 'shipment_autocreate_enabled';
+    const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS               = 'shipment_autocreate_order_status';
 
     /**
      * Wrap store config access.
@@ -97,7 +97,7 @@ class Dhl_Versenden_Model_Config
      */
     public function getTitle($store = null)
     {
-        return Mage::getStoreConfig(self::CONFIG_XML_PATH_CARRIER_TITLE, $store);
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_CARRIER_TITLE, $store);
     }
 
     /**
@@ -121,7 +121,7 @@ class Dhl_Versenden_Model_Config
      */
     public function isSandboxModeEnabled($store = null)
     {
-        return Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
     }
 
     /**
@@ -134,8 +134,8 @@ class Dhl_Versenden_Model_Config
     {
         $level = ($level === null) ? Zend_Log::DEBUG : $level;
 
-        $isEnabled = Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_LOGGING_ENABLED);
-        $isLevelEnabled = (Mage::getStoreConfig(self::CONFIG_XML_PATH_LOG_LEVEL) >= $level);
+        $isEnabled = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_LOGGING_ENABLED);
+        $isLevelEnabled = ($this->getStoreConfig(self::CONFIG_XML_PATH_LOG_LEVEL) >= $level);
 
         return ($isEnabled && $isLevelEnabled);
     }
@@ -146,7 +146,7 @@ class Dhl_Versenden_Model_Config
      */
     public function getWebserviceAuthUsername()
     {
-        return Mage::getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_USERNAME);
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_USERNAME);
     }
 
     /**
@@ -156,7 +156,7 @@ class Dhl_Versenden_Model_Config
      */
     public function getWebserviceAuthPassword()
     {
-        return Mage::getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
     }
 
     /**
@@ -168,7 +168,7 @@ class Dhl_Versenden_Model_Config
     public function getEndpoint($store = null)
     {
         if ($this->isSandboxModeEnabled($store)) {
-            return Mage::getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
+            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
         }
 
         return null;
@@ -188,5 +188,29 @@ class Dhl_Versenden_Model_Config
         );
 
         return $shipperCountry;
+    }
+
+
+    /**
+     * Check if shipment auto creation is enabled.
+     *
+     * @param mixed $store
+     * @return bool
+     */
+    public function isShipmentAutoCreateEnabled($store = null)
+    {
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_ENABLED, $store);
+    }
+
+    /**
+     * Obtain the status of orders applicable for shipment auto creation.
+     *
+     * @param mixed $store
+     * @return string[]
+     */
+    public function getAutoCreateOrderStatus($store = null)
+    {
+        $status = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS, $store);
+        return explode(',', $status);
     }
 }

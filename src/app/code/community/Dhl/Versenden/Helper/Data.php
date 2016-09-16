@@ -158,7 +158,6 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function addStatusHistoryComment(Mage_Sales_Model_Order $order, $message, $messageType)
     {
-        // TODO(nr): use psr log types
         // TODO(nr): add dhl message type indicator, i.e. some icon
         if ($messageType === Zend_Log::ERR) {
             $message = sprintf('%s %s', '(x)', $message);

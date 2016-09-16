@@ -90,6 +90,9 @@ class LabelCollection implements \IteratorAggregate, \Countable
      */
     public function addItem(Label $label)
     {
+        //FIXME(nr): shipment number must not be used as key
+        // → failed orders have no shipment number
+        // → still they have a status with code and message that must be retrieved.
         $this->labels[$label->getShipmentNumber()] = $label;
 
         return $this;

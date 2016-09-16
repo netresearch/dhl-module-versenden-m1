@@ -126,6 +126,7 @@ class Label
 
     /**
      * @param Adapter $pdfLib
+     * @return string
      */
     public function getAllLabels(Adapter $pdfLib)
     {
