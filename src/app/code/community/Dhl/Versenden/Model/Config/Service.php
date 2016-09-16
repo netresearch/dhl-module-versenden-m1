@@ -306,10 +306,14 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         );
 
         // set autocreate service details to remaining services
-        $collection = new Service\Collection($items);
-        $selection  = ShipmentOrder\ServiceSelection::fromArray($autoCreateValues);
-        $this->setServiceValues($collection, $selection);
+        /** @var Service\Type\Generic $service */
+        foreach ($services as $service) {
+            if (isset($autoCreateValues[$service->getCode()])) {
+                $service->setValue($autoCreateValues[$service->getCode()]);
+            }
+        }
 
+        $collection = new Service\Collection($items);
         return $collection;
     }
 
