@@ -202,7 +202,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $shippingProducts = \Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
         $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
-        $serviceFilter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, true);
+        $serviceFilter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
         $filteredServiceCollection = $serviceFilter->filterServiceCollection($services);
 
         $serviceData = array(
