@@ -77,7 +77,7 @@
                     </update_carrier>
                 </observers>
             </sales_order_place_after>
-            <dhl_versenden_set_postal_facility>
+            <dhl_versenden_fetch_postal_facility>
                 <observers>
                     <prepare_postal_facility>
                         <class>dhl_versenden/observer</class>
@@ -85,7 +85,7 @@
                         <type>singleton</type>
                     </prepare_postal_facility>
                 </observers>
-            </dhl_versenden_set_postal_facility>
+            </dhl_versenden_fetch_postal_facility>
             <payment_method_is_active>
                 <observers>
                     <disable_cod_payment>
@@ -177,6 +177,15 @@
                     </delete_shipping_label>
                 </observers>
             </sales_order_shipment_track_delete_before>
+            <adminhtml_widget_container_html_before>
+                <observers>
+                    <replace_address_form>
+                        <class>dhl_versenden/observer</class>
+                        <method>replaceAddressForm</method>
+                        <type>singleton</type>
+                    </replace_address_form>
+                </observers>
+            </adminhtml_widget_container_html_before>
         </events>
     </adminhtml>
     <frontend>

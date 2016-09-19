@@ -90,8 +90,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
         Mage::dispatchEvent(
-            'dhl_versenden_set_postal_facility', array(
-                'quote_address'   => $address,
+            'dhl_versenden_fetch_postal_facility', array(
+                'customer_address'   => $address,
                 'postal_facility' => $facility,
             )
         );

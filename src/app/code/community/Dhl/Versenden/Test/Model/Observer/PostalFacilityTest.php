@@ -71,7 +71,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
         $observer = new Varien_Event_Observer();
         $observer->setData(array(
             'postal_facility' => $postalFacility,
-            'quote_address' => $address,
+            'customer_address' => $address,
         ));
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
@@ -108,7 +108,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
         $observer = new Varien_Event_Observer();
         $observer->setData(array(
             'postal_facility' => $postalFacility,
-            'quote_address' => $address,
+            'customer_address' => $address,
         ));
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
@@ -145,7 +145,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
         $observer = new Varien_Event_Observer();
         $observer->setData(array(
             'postal_facility' => $postalFacility,
-            'quote_address' => $address,
+            'customer_address' => $address,
         ));
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
@@ -171,7 +171,7 @@ class Dhl_Versenden_Test_Model_Observer_PostalFacilityTest
         $observer = new Varien_Event_Observer();
         $observer->setData(array(
             'postal_facility' => $postalFacility,
-            'quote_address' => $address,
+            'customer_address' => $address,
         ));
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
