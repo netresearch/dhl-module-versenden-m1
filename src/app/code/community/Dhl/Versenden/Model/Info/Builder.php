@@ -76,12 +76,16 @@ class Dhl_Versenden_Model_Info_Builder
 
         // set processed recipient address
         $countryDirectory = Mage::getModel('directory/country')->loadByCode($shippingAddress->getCountryId());
-        $street = Mage::helper('dhl_versenden/address')->splitStreet($shippingAddress->getStreetFull());
+        $street = $shippingAddress->getStreetFull();
+        if (is_array($street)) {
+            $street = trim(implode("\n", $street));
+        }
+        $street = Mage::helper('dhl_versenden/address')->splitStreet($street);
         // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
         Mage::dispatchEvent(
-            'dhl_versenden_set_postal_facility', array(
-                'quote_address'   => $shippingAddress,
+            'dhl_versenden_fetch_postal_facility', array(
+                'customer_address'   => $shippingAddress,
                 'postal_facility' => $facility,
             )
         );

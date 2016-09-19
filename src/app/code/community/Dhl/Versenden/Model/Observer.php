@@ -166,7 +166,7 @@ class Dhl_Versenden_Model_Observer
      * - post_number: text(10)
      *
      * Event:
-     * - dhl_versenden_set_postal_facility
+     * - dhl_versenden_fetch_postal_facility
      *
      * @param Varien_Event_Observer $observer
      */
@@ -179,8 +179,8 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        /** @var Mage_Sales_Model_Quote_Address $address */
-        $address    = $observer->getQuoteAddress();
+        /** @var Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $address */
+        $address    = $observer->getCustomerAddress();
         $station    = $address->getStreetFull();
         $postNumber = $address->getCompany();
 
@@ -376,5 +376,44 @@ class Dhl_Versenden_Model_Observer
         };
 
         $collection->walk($unserializeInfo);
+    }
+
+    /**
+     * Override form block as defined via container properties when additional
+     * DHL Versenden address fields need to be displayed.
+     * - event: adminhtml_widget_container_html_before
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function replaceAddressForm(Varien_Event_Observer $observer)
+    {
+        $container = $observer->getData('block');
+        if (!$container instanceof Mage_Adminhtml_Block_Sales_Order_Address) {
+            return;
+        }
+
+        $address = Mage::registry('order_address');
+        if (!$address || ($address->getAddressType() !== Mage_Customer_Model_Address_Abstract::TYPE_SHIPPING)) {
+            return;
+        }
+
+        $shippingMethod = $address->getOrder()->getShippingMethod(true);
+        if ($shippingMethod->getData('carrier_code') !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            return;
+        }
+
+        $info = $address->getData('dhl_versenden_info');
+        if (!$info instanceof \Dhl\Versenden\Info) {
+            return;
+        }
+
+        $origAddressForm = $container->getChild('form');
+        if (!$origAddressForm) {
+            return;
+        }
+
+        $dhlAddressForm = Mage::app()->getLayout()->getBlock('dhl_versenden_form');
+        $dhlAddressForm->setDisplayVatValidationButton($origAddressForm->getDisplayVatValidationButton());
+        $container->setChild('form', $dhlAddressForm);
     }
 }
