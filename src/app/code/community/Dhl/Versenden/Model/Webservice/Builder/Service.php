@@ -86,13 +86,6 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             $serviceDetails[\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $insuranceAmount;
         }
 
-        // add gogreen service details
-        $isGoGreen = $this->shipperConfig->getAccountSettings($salesEntity->getStoreId())->isGoGreen();
-        if ($isGoGreen) {
-            $selectedServices[\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
-            $serviceDetails[\Dhl\Versenden\Shipment\Service\GoGreen::CODE] = $isGoGreen;
-        }
-
         // add cod service details
         $paymentMethod = $salesEntity->getPayment()->getMethod();
         $isCod = $this->shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId());
