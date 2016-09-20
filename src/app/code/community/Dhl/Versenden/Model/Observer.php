@@ -189,19 +189,19 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        if (strpos($station, 'Packstation') === 0) {
+        if (stripos($station, 'Packstation') === 0) {
             $facility->setData(
                 array(
                     'shop_type'   => PostalFacility::TYPE_PACKSTATION,
-                    'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                    'shop_number' => preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station),
                     'post_number' => $postNumber,
                 )
             );
-        } elseif (strpos($station, 'Postfiliale') === 0) {
+        } elseif (stripos($station, 'Postfiliale') === 0) {
             $facility->setData(
                 array(
                     'shop_type'   => PostalFacility::TYPE_POSTFILIALE,
-                    'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                    'shop_number' => preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station),
                     'post_number' => $postNumber,
                 )
             );
