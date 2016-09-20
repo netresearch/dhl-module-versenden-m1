@@ -41,7 +41,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator
     /**
      * @return string
      */
-    public function getLabelHtml()
+    public function getLabelHtml($idSuffix = '')
     {
         $value = $this->getData('value');
         if ($value) {
@@ -53,6 +53,9 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator
         return $html;
     }
 
+    /**
+     * @return string
+     */
     public function getElementHtml()
     {
         $html = '';
