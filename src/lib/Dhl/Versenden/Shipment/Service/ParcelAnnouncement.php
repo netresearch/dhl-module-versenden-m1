@@ -37,7 +37,7 @@ namespace Dhl\Versenden\Shipment\Service;
 class ParcelAnnouncement extends Type\Boolean
 {
     const CODE = 'parcelAnnouncement';
-    const DISPLAY_MODE_OPTIONAL = 2;
+    const DISPLAY_MODE_OPTIONAL = '2';
 
     /**
      * ParcelAnnouncement constructor.
