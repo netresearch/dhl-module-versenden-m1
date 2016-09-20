@@ -20,7 +20,7 @@ config:
   default/carriers/dhlversenden/sandbox_mode:          "1"
   stores/store_two/carriers/dhlversenden/sandbox_mode: "0"
 
-  default/carriers/dhlversenden/account_user:            "303"
+  default/carriers/dhlversenden/account_user:            "303TEST"
   default/carriers/dhlversenden/account_signature:       "magento"
   default/carriers/dhlversenden/account_ekp:             "4711xx4711"
   default/carriers/dhlversenden/account_gogreen_enabled: "0"
