@@ -23,9 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\RequestData\ShippingInfo;
+use \Dhl\Versenden\Shipment\Service;
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection;
+
 /**
  * Dhl_Versenden_Test_Model_Shipping_InfoTest
  *
@@ -127,5 +127,197 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $this->assertEquals($streetName, $unserialized->getReceiver()->getParcelShop()->streetName);
         $this->assertEquals($streetNumber, $unserialized->getReceiver()->getParcelShop()->streetNumber);
         $this->assertEquals($countryCode, $unserialized->getReceiver()->getParcelShop()->countryISOCode);
+    }
+
+    /**
+     * @test
+     */
+    public function updateVersendenInfo()
+    {
+        // set service #1
+        $preferredLocation = 'Foo';
+        $versendenInfo = new \Dhl\Versenden\Info();
+        $versendenInfo->getServices()->preferredLocation = $preferredLocation;
+
+        // check if service is included
+        $services = $versendenInfo->getServices()->toArray();
+        $this->assertArrayHasKey('preferred_location', $services);
+        $this->assertEquals($preferredLocation, $services['preferred_location']);
+
+        // add service #2
+        $preferredNeighbour = 'Bar';
+        $services['preferred_neighbour'] = $preferredNeighbour;
+        $versendenInfo->getServices()->fromArray($services);
+
+        // check if services are included
+        $this->assertEquals($preferredNeighbour, $versendenInfo->getServices()->preferredNeighbour);
+        $this->assertEquals($preferredLocation, $versendenInfo->getServices()->preferredLocation);
+
+        // add packstation
+        $stationId = '808';
+        $streetNumber = '303';
+        $postalFacility = array(
+            'packstation_number' => $stationId,
+            'post_number' => '12345678'
+        );
+        $receiver = array(
+            'packstation' => $postalFacility,
+        );
+        $versendenInfo->getReceiver()->fromArray($receiver);
+
+        // check if packstation is included
+        $this->assertSame($stationId, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+
+        // add address data
+        $receiver = $versendenInfo->getReceiver()->toArray();
+        $receiver['street'] = 'Place de la Foo';
+        $receiver['street_number'] = $streetNumber;
+        $versendenInfo->getReceiver()->fromArray($receiver);
+
+        $this->assertSame($stationId, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        $this->assertSame($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+    }
+
+    /**
+     * @test
+     */
+    public function wrongSchemaVersion()
+    {
+        $versendenInfo = new \Dhl\Versenden\Info();
+        $schemaVersion = 'Foo';
+        $preferredLocation = 'Bar';
+
+        $versendenInfo->schemaVersion = $schemaVersion;
+        $versendenInfo->getServices()->preferredLocation = $preferredLocation;
+
+        $json = \Dhl\Versenden\Info\Serializer::serialize($versendenInfo);
+        $unserialized = \Dhl\Versenden\Info\Serializer::unserialize($json);
+        $this->assertNull($unserialized);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_ShipperConfigTest
+     */
+    public function buildFromSalesEntityWithServices()
+    {
+        $countryId = 'DE';
+        $streetName = 'Street Name';
+        $streetNumber = '127';
+        $streetSupplement = 'Address Addition';
+        $street = array("$streetName $streetNumber", $streetSupplement);
+
+        $address = Mage::getModel('sales/quote_address');
+        $address->setCountryId($countryId);
+        $address->setStreet($street);
+
+        $preferredLocation = 'Garage';
+        $selectedServices = array(
+            Service\PreferredLocation::CODE => Service\PreferredLocation::CODE,
+        );
+        $serviceDetails = array(
+            Service\PreferredLocation::CODE => $preferredLocation,
+        );
+        $serviceInfo = array(
+            'shipment_service' => $selectedServices,
+            'service_setting' => $serviceDetails,
+        );
+
+        $builder = new Dhl_Versenden_Model_Info_Builder();
+        $versendenInfo = $builder->infoFromSales($address, $serviceInfo, 'store_one');
+        $this->assertEquals($preferredLocation, $versendenInfo->getServices()->preferredLocation);
+        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        $this->assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_ShipperConfigTest
+     */
+    public function buildFromSalesEntityWithPackstation()
+    {
+        $countryId = 'DE';
+        $streetName = 'PackStation';
+        $streetNumber = '127';
+        $streetSupplement = 'Address Addition';
+        $street = array("$streetName $streetNumber", $streetSupplement);
+
+        $address = Mage::getModel('sales/quote_address');
+        $address->setCountryId($countryId);
+        $address->setStreet($street);
+
+        $selectedServices = array();
+        $serviceDetails = array();
+        $serviceInfo = array(
+            'shipment_service' => $selectedServices,
+            'service_setting' => $serviceDetails,
+        );
+
+        $builder = new Dhl_Versenden_Model_Info_Builder();
+        $versendenInfo = $builder->infoFromSales($address, $serviceInfo, 'store_one');
+        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        $this->assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
+
+        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        $this->assertNull($versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber);
+        $this->assertNull($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_ShipperConfigTest
+     */
+    public function buildFromSalesEntityWithPostfiliale()
+    {
+        $countryId = 'DE';
+        $streetName = 'Postfiliale';
+        $streetNumber = '127';
+        $streetSupplement = 'Address Addition';
+        $street = array("$streetName $streetNumber", $streetSupplement);
+
+        $address = Mage::getModel('sales/quote_address');
+        $address->setCountryId($countryId);
+        $address->setStreet($street);
+
+        $selectedServices = array();
+        $serviceDetails = array();
+        $serviceInfo = array(
+            'shipment_service' => $selectedServices,
+            'service_setting' => $serviceDetails,
+        );
+
+        $builder = new Dhl_Versenden_Model_Info_Builder();
+        $versendenInfo = $builder->infoFromSales($address, $serviceInfo, 'store_one');
+        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        $this->assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
+
+        $this->assertNull($versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber);
+        $this->assertNull($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber);
+    }
+
+    /**
+     * @test
+     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider()
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_ShipperConfigTest
+     *
+     * @param \Dhl\Versenden\Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
+     */
+    public function buildFromRequestData($shipmentOrder, $expectation)
+    {
+        $builder = new Dhl_Versenden_Model_Info_Builder();
+        $versendenInfo = $builder->infoFromRequestData($shipmentOrder);
+
+        $this->assertEquals($expectation->getReceiverStreetName(), $versendenInfo->getReceiver()->streetName);
+        $this->assertEquals($expectation->getReceiverStreetNumber(), $versendenInfo->getReceiver()->streetNumber);
+        $this->assertEquals($expectation->getReceiverAddressAddition(), $versendenInfo->getReceiver()->addressAddition);
     }
 }

@@ -46,6 +46,10 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
     {
         /** @var \Dhl\Versenden\Info $origInfo */
         $origInfo = $address->getData('dhl_versenden_info');
+        if (!$origInfo instanceof Dhl\Versenden\Info) {
+            return;
+        }
+
         $services = $origInfo->getServices()->toArray();
 
         $infoBuilder = Mage::getModel('dhl_versenden/info_builder');
@@ -187,11 +191,11 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         $data       = $this->getRequest()->getPost();
         if ($data && $address->getId()) {
             $address->addData($data);
-            $this->_addVersendenData($address, $data);
 
             try {
-                $address->implodeStreetAddress()
-                    ->save();
+                $address->implodeStreetAddress();
+                $this->_addVersendenData($address, $data);
+                $address->save();
 
                 // dispatch versenden info update success
                 $this->_dispatchVersendenData($address);
