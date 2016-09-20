@@ -39,7 +39,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     implements Mage_Shipping_Model_Carrier_Interface
 {
     const CODE = 'dhlversenden';
-    const PACKAGE_MIN_WEIGHT = 0.2;
+    const PACKAGE_MIN_WEIGHT = 0.01;
 
     const EXPORT_TYPE_COMMERCIAL_SAMPLE = 'COMMERCIAL_SAMPLE';
     const EXPORT_TYPE_DOCUMENT          = 'DOCUMENT';
