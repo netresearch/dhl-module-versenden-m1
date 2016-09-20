@@ -403,7 +403,6 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
             \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::CODE => 'A21',
             \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE => 'Chimney',
             \Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE => 'Santa Berger',
-            \Dhl\Versenden\Shipment\Service\GoGreen::CODE => true,
             \Dhl\Versenden\Shipment\Service\Cod::CODE => 40.96,
             \Dhl\Versenden\Shipment\Service\Insurance::CODE =>  34.06,
             \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE => true,
@@ -433,10 +432,6 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $this->assertEquals(
             $serviceSelection[\Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE],
             $shipmentServices->getPreferredNeighbour()->getDetails()
-        );
-        $this->assertEquals(
-            $serviceSelection[\Dhl\Versenden\Shipment\Service\GoGreen::CODE],
-            $shipmentServices->getGoGreen()->getActive()
         );
         $this->assertEquals(
             $serviceSelection[\Dhl\Versenden\Shipment\Service\Cod::CODE],

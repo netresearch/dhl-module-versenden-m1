@@ -40,14 +40,11 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_SIGNATURE       = 'account_signature';
     const CONFIG_XML_FIELD_EKP             = 'account_ekp';
     const CONFIG_XML_FIELD_PARTICIPATION   = 'account_participation';
-    const CONFIG_XML_FIELD_GOGREEN_ENABLED = 'account_gogreen_enabled';
 
     const CONFIG_XML_FIELD_SANDBOX_USER            = 'sandbox_account_user';
     const CONFIG_XML_FIELD_SANDBOX_SIGNATURE       = 'sandbox_account_signature';
     const CONFIG_XML_FIELD_SANDBOX_EKP             = 'sandbox_account_ekp';
     const CONFIG_XML_FIELD_SANDBOX_PARTICIPATION   = 'sandbox_account_participation';
-    const CONFIG_XML_FIELD_SANDBOX_GOGREEN_ENABLED = 'sandbox_account_gogreen_enabled';
-
 
     const CONFIG_XML_FIELD_BANKDATA_OWNER      = 'bankdata_owner';
     const CONFIG_XML_FIELD_BANKDATA_BANKNAME   = 'bankdata_bankname';
@@ -109,14 +106,12 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER, $store));
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE, $store);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP, $store);
-            $goGreen   = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_GOGREEN_ENABLED, $store);
 
             $participation = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION, $store);
         } else {
             $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER, $store));
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE, $store);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_EKP, $store);
-            $goGreen   = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_SANDBOX_GOGREEN_ENABLED, $store);
 
             $participation = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_PARTICIPATION, $store);
         }
@@ -125,7 +120,6 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $user,
             $signature,
             $ekp,
-            $goGreen,
             $participation
         );
     }

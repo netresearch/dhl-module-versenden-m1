@@ -76,7 +76,6 @@ class Filter
             Product::CODE_PAKET_NATIONAL => [
                 BulkyGoods::CODE,
                 Cod::CODE,
-                GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PreferredLocation::CODE,
@@ -87,13 +86,11 @@ class Filter
             ],
             Product::CODE_WELTPAKET => [
                 BulkyGoods::CODE,
-                GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
             ],
             Product::CODE_EUROPAKET => [
-                GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
@@ -101,7 +98,6 @@ class Filter
             Product::CODE_KURIER_TAGGLEICH => [
                 DayOfDelivery::CODE,
                 DeliveryTimeFrame::CODE,
-                GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
@@ -110,7 +106,6 @@ class Filter
             Product::CODE_KURIER_WUNSCHZEIT => [
                 DayOfDelivery::CODE,
                 DeliveryTimeFrame::CODE,
-                GoGreen::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
@@ -140,7 +135,6 @@ class Filter
 
         $this->postalFacilityServices = [
             Cod::CODE, // up to 1500 euro
-            GoGreen::CODE,
             Insurance::CODE,
             ParcelAnnouncement::CODE,
             PrintOnlyIfCodeable::CODE,

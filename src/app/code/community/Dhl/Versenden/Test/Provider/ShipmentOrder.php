@@ -40,7 +40,6 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $shipperAccountUser = 'Shipper Account User';
         $shipperAccountSignature = 'ABCDEF1234567890=';
         $shipperAccountEkp = '1234567890';
-        $shipperAccountGoGreen = true;
         $shipperAccountParticipation = '77';
 
         $shipperBankDataAccountOwner = 'Shipper BankData Account Owner';
@@ -136,7 +135,6 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $serviceSettingsInsurance = 'B';
         $serviceSettingsBulkyGoods = true;
         $serviceSettingsCod = false;
-        $serviceSettingsGoGreen = $shipperAccountGoGreen;
         $serviceSettingsPrintOnlyIfCodeable = $globalSettingsPrintOnlyIfCodeable;
 
         $sequenceNumber = 77;
@@ -144,7 +142,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
 
         $expectation = new Dhl_Versenden_Test_Expectation_ShipmentOrder(
             $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-            $shipperAccountGoGreen, $shipperAccountParticipation,
+            $shipperAccountParticipation,
 
             $shipperBankDataAccountOwner, $shipperBankDataBankName, $shipperBankDataIban,
             $shipperBankDataBic, $shipperBankDataNote1, $shipperBankDataNote2,
@@ -185,7 +183,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
 
         $shipperAccount = new RequestData\ShipmentOrder\Shipper\Account(
             $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-            $shipperAccountGoGreen, $shipperAccountParticipation
+            $shipperAccountParticipation
         );
         $shipperBankData = new RequestData\ShipmentOrder\Shipper\BankData(
             $shipperBankDataAccountOwner, $shipperBankDataBankName,
@@ -268,7 +266,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $serviceSettingsParcelAnnouncement,
             $serviceSettingsVisualCheckOfAge, $serviceSettingsReturnShipment,
             $serviceSettingsInsurance, $serviceSettingsBulkyGoods, $serviceSettingsCod,
-            $serviceSettingsGoGreen, $serviceSettingsPrintOnlyIfCodeable
+            $serviceSettingsPrintOnlyIfCodeable
         );
 
 

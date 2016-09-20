@@ -43,8 +43,6 @@ class Account extends RequestData
     private $signature;
     /** @var string */
     private $ekp;
-    /** @var bool */
-    private $goGreen;
     /** @var string */
     private $participation;
 
@@ -53,10 +51,9 @@ class Account extends RequestData
      * @param string $user
      * @param string $signature
      * @param string $ekp
-     * @param bool $goGreen
      * @param string $participation
      */
-    public function __construct($user, $signature, $ekp, $goGreen, $participation)
+    public function __construct($user, $signature, $ekp, $participation)
     {
         $this->validateLength('EKP', $ekp, 10, 10);
         $this->validateLength('Participation', $participation, 2, 2);
@@ -64,7 +61,6 @@ class Account extends RequestData
         $this->user = $user;
         $this->signature = $signature;
         $this->ekp = $ekp;
-        $this->goGreen = $goGreen;
         $this->participation = $participation;
     }
 
@@ -90,14 +86,6 @@ class Account extends RequestData
     public function getEkp()
     {
         return $this->ekp;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isGoGreen()
-    {
-        return $this->goGreen;
     }
 
     /**

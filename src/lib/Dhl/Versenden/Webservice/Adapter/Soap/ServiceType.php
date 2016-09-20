@@ -131,11 +131,6 @@ class ServiceType implements RequestType
             $service->setPreferredDay($pdConfig);
         }
 
-        if ($requestData->isGoGreen()) {
-            $ggConfig = new Serviceconfiguration($requestData->isGoGreen());
-            $service->setGoGreen($ggConfig);
-        }
-
         if ($perishables = false) {
             $pConfig = new Serviceconfiguration($perishables);
             $service->setPerishables($pConfig);

@@ -22,8 +22,6 @@
 "Participation Return Shipment","Participation Return Shipment"
 "DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.","DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales."
 "The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales.","The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales."
-"Enable GoGreen","Enable GoGreen"
-"Please ensure that your contract supports <em>GoGreen</em> environmentally-friendly shipping before changing this setting.","Please ensure that your contract supports <em>GoGreen</em> environmentally-friendly shipping before changing this setting."
 "Shipment Orders","Shipment Orders"
 "Print Only If Codeable","Print Only If Codeable"
 "If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.","If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds."

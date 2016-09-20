@@ -42,8 +42,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /** @var string */
     protected $shipperAccountEkp;
     /** @var string */
-    protected $shipperAccountGoGreen;
-    /** @var string */
     protected $shipperAccountParticipation;
 
     /** @var string */
@@ -202,7 +200,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $shipperAccountUser
      * @param string $shipperAccountSignature
      * @param string $shipperAccountEkp
-     * @param string $shipperAccountGoGreen
      * @param string $shipperAccountParticipation
      * @param string $shipperBankDataAccountOwner
      * @param string $shipperBankDataBankName
@@ -280,7 +277,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      */
     public function __construct(
         $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-        $shipperAccountGoGreen, $shipperAccountParticipation,
+        $shipperAccountParticipation,
 
         $shipperBankDataAccountOwner, $shipperBankDataBankName, $shipperBankDataIban,
         $shipperBankDataBic, $shipperBankDataNote1, $shipperBankDataNote2,
@@ -324,7 +321,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->shipperAccountUser = $shipperAccountUser;
         $this->shipperAccountSignature = $shipperAccountSignature;
         $this->shipperAccountEkp = $shipperAccountEkp;
-        $this->shipperAccountGoGreen = $shipperAccountGoGreen;
         $this->shipperAccountParticipation = $shipperAccountParticipation;
         $this->shipperBankDataAccountOwner = $shipperBankDataAccountOwner;
         $this->shipperBankDataBankName = $shipperBankDataBankName;
@@ -423,14 +419,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     public function getShipperAccountEkp()
     {
         return $this->shipperAccountEkp;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShipperAccountGoGreen()
-    {
-        return $this->shipperAccountGoGreen;
     }
 
     /**

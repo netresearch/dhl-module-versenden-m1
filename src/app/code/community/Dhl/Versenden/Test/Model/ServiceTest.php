@@ -168,18 +168,6 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     /**
      * @test
      */
-    public function frontendOutputHidden()
-    {
-        $hiddenService = new Service\GoGreen('', true, false);
-
-        $this->assertContains('type="hidden"', $hiddenService->getSelectorHtml());
-        $this->assertEmpty($hiddenService->getLabelHtml());
-        $this->assertEquals('', $hiddenService->getValueHtml());
-    }
-
-    /**
-     * @test
-     */
     public function frontendOutputSelect()
     {
         $selectService = new Service\VisualCheckOfAge('', true, false, [
@@ -299,24 +287,6 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         //TODO(nr): check for date picker element
         $this->assertNotEmpty($service->getValueHtml());
 
-        // hidden
-        $name = 'Hidden Foo';
-        $isEnabled = true;
-        $isSelected = true;
-
-        $service = new Service\GoGreen($name, $isEnabled, $isSelected);
-
-        $this->assertEquals(Service\GoGreen::CODE, $service->getCode());
-        $this->assertEquals('hidden', $service->getFrontendInputType());
-        $this->assertEquals($name, $service->getName());
-        $this->assertSame($isEnabled, $service->isEnabled());
-        $this->assertSame($isSelected, $service->isSelected());
-        $this->assertSame($isSelected, $service->getValue());
-        $this->assertFalse($service->isCustomerService());
-
-        $this->assertContains($service->getCode(), $service->getSelectorHtml());
-        $this->assertEmpty($service->getLabelHtml());
-        $this->assertEmpty($service->getValueHtml());
 
         // select
         $name = 'Option Foo';
