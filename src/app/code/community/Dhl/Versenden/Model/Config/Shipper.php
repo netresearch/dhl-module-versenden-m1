@@ -106,14 +106,14 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     public function getAccountSettings($store = null)
     {
         if (!$this->isSandboxModeEnabled($store)) {
-            $user      = $this->getStoreConfig(self::CONFIG_XML_FIELD_USER, $store);
+            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER, $store));
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE, $store);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP, $store);
             $goGreen   = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_GOGREEN_ENABLED, $store);
 
             $participation = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION, $store);
         } else {
-            $user      = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER, $store);
+            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER, $store));
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE, $store);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_EKP, $store);
             $goGreen   = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_SANDBOX_GOGREEN_ENABLED, $store);

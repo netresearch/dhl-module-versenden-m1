@@ -57,7 +57,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 
         $prodAccount = $config->getAccountSettings('store_two');
         $this->assertInstanceOf(ShipperAccount::class, $prodAccount);
-        $this->assertEquals('303', $prodAccount->getUser());
+        $this->assertEquals('303test', $prodAccount->getUser());
         $this->assertEquals('magento', $prodAccount->getSignature());
         $this->assertEquals('4711xx4711', $prodAccount->getEkp());
         $this->assertFalse($prodAccount->isGoGreen());
