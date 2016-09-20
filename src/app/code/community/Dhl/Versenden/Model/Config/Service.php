@@ -61,7 +61,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     protected function initDayOfDelivery($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Day Of Delivery");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_DAYOFDELIVERY, $store);
+        $isAvailable = false;
         $isSelected  = false;
         $placeholder = Mage::helper('dhl_versenden/data')->__("Select Date");
 
@@ -75,7 +75,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     protected function initDeliveryTimeFrame($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Delivery Time Frame");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_DELIVERYTIMEFRAME, $store);
+        $isAvailable = false;
         $isSelected  = false;
         $options     = array(
             '10001200' => '10:00 - 12:00',
@@ -126,20 +126,19 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     protected function initParcelAnnouncement($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Parcel Announcement");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PARCELANNOUNCEMENT, $store);
+        $isAvailable = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARCELANNOUNCEMENT, $store);
         $isSelected  = false;
 
         return new Service\ParcelAnnouncement($name, $isAvailable, $isSelected);
     }
 
     /**
-     * @param mixed $store
      * @return Service\VisualCheckOfAge
      */
-    protected function initVisualCheckOfAge($store = null)
+    protected function initVisualCheckOfAge()
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Visual Check of Age");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_VISUALCHECKOFAGE, $store);
+        $isAvailable = true;
         $isSelected  = false;
         $options     = array(
             Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
@@ -150,39 +149,36 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
-     * @param mixed $store
      * @return Service\ReturnShipment
      */
-    protected function initReturnShipment($store = null)
+    protected function initReturnShipment()
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Return Shipment");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_RETURNSHIPMENT, $store);
+        $isAvailable = true;
         $isSelected  = false;
 
         return new Service\ReturnShipment($name, $isAvailable, $isSelected);
     }
 
     /**
-     * @param mixed $store
      * @return Service\Insurance
      */
-    protected function initInsurance($store = null)
+    protected function initInsurance()
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Additional Insurance");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_INSURANCE, $store);
+        $isAvailable = true;
         $isSelected  = false;
 
         return new Service\Insurance($name, $isAvailable, $isSelected);
     }
 
     /**
-     * @param mixed $store
      * @return Service\BulkyGoods
      */
-    protected function initBulkyGoods($store = null)
+    protected function initBulkyGoods()
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Bulky Goods");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_BULKYGOODS, $store);
+        $isAvailable = true;
         $isSelected  = false;
 
         return new Service\BulkyGoods($name, $isAvailable, $isSelected);

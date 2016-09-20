@@ -61,7 +61,7 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         $bgServices = array_filter($defaultServices, function ($service) {
             return ($service instanceof Service\BulkyGoods);
         });
-        $this->assertEmpty($bgServices);
+        $this->assertNotEmpty($bgServices);
 
         // (3) parcel announcement is set to optional via config fixture
         // → should be in the list of enabled services
