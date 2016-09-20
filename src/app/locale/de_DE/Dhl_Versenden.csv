@@ -39,7 +39,7 @@
 "These payment methods will be treated as COD methods during shipping order requests.","Diese Zahlarten werden bei der Übermittlung von Versandaufträgen als Nachnahme-Zahlart behandelt."
 "COD Charge","Nachnahmegebühr"
 "Set the COD charge (€) to be added to the total order amount during shipping order requests.","Geben Sie die Nachnahmegebühr in Euro an, die bei der Übermittlung von Versandaufträgen zum Gesamtbetrag hinzuaddiert werden soll."
-"Additional Services","Zusatzleistungen"
+"Enable Services In Checkout","Aktiviere Services im Checkout"
 "Day Of Delivery","Wunschtag"
 "Enable Day Of Delivery", "Wunschtag aktivieren"
 "Allow customers to choose a day of delivery during checkout.","Lassen Sie Kunden im Checkout einen bevorzugten Zustelltag bestimmen."

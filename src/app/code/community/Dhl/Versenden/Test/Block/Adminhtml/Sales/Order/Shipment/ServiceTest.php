@@ -146,7 +146,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
 
         // bulkyGoods disabled via config
         $code = \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
-        $this->assertNull($services->getItem($code));
+        $this->assertTrue($services->getItem($code)->isEnabled());
 
         // preferredLocation enabled via config and preselected via dhl_versenden_info
         $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
