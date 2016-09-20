@@ -179,19 +179,6 @@
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
                         </account_participation_returnshipment>
-                        <account_gogreen_enabled translate="label comment">
-                            <label>Enable GoGreen</label>
-                            <comment><![CDATA[Please ensure that your contract supports <em>GoGreen</em> environmentally-friendly shipping before changing this setting.]]></comment>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>250</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <sandbox_mode>0</sandbox_mode>
-                            </depends>
-                        </account_gogreen_enabled>
 
                         <dhlversenden_fields_shipment translate="label">
                             <label>Shipment Orders</label>

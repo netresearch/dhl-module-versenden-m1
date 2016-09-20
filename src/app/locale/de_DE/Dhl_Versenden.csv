@@ -22,8 +22,6 @@
 "Participation Return Shipment","Teilnahmenummer Retourenbeileger"
 "DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.","Die Zugangsdaten für den Zugriff auf das DHL Geschäftskundenportal erhalten DHL Vertragskunden über den Vertrieb DHL Paket."
 "The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales.","Die Teilnahmenummer ist 2-stellig numerisch von 00 bis 99 oder alphanumerisch von AA bis ZZ. Sie wird vom DHL Vertrieb vergeben."
-"Enable GoGreen","GoGreen aktivieren"
-"Please ensure that your contract supports <em>GoGreen</em> environmentally-friendly shipping before changing this setting.","Bitte stellen Sie sicher, dass der umweltfreundliche Versand mit <em>GoGreen</em> in Ihrem Vertrag aktiviert ist, bevor Sie diese Einstellung ändern."
 "Shipment Orders","Versandaufträge"
 "Print Only If Codeable","Nur leitkodierbare Versandaufträge erteilen"
 "If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.","Ist diese Option auf <em>Ja</em> gestellt, so wird nur dann ein kostenpflichtiges Label erstellt, wenn die DHL-Adressprüfung erfolgreich ist."

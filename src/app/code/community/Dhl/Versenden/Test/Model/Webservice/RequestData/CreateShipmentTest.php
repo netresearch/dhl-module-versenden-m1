@@ -100,10 +100,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
             $order->getShipper()->getAccount()->getEkp()
         );
         $this->assertEquals(
-            $expectation->getShipperAccountGoGreen(),
-            $order->getShipper()->getAccount()->isGoGreen()
-        );
-        $this->assertEquals(
             $expectation->getShipperAccountParticipation(),
             $order->getShipper()->getAccount()->getParticipation()
         );
