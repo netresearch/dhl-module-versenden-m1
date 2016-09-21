@@ -353,19 +353,19 @@ class Dhl_Versenden_Model_Observer
 
     /**
      * Convert serialized info to Info object.
-     * - event: model_load_after
-     * - event: model_save_after
+     * - event: sales_order_address_collection_load_after
      *
      * @param Varien_Event_Observer $observer
      */
-    public function unserializeVersendenInfos(Varien_Event_Observer $observer)
+    public function unserializeVersendenInfoItems(Varien_Event_Observer $observer)
     {
         $collection = $observer->getData('order_address_collection');
-        if (!$collection instanceof Mage_Sales_Model_Resource_Order_Address_Collection) {
+        if (!$collection instanceof Mage_Sales_Model_Resource_Order_Address_Collection
+            && !$collection instanceof Mage_Sales_Model_Resource_Quote_Address_Collection) {
             return;
         }
 
-        $unserializeInfo = function (Mage_Sales_Model_Order_Address $address) {
+        $unserializeInfo = function (Mage_Customer_Model_Address_Abstract $address) {
             $info = $address->getData('dhl_versenden_info');
             if (!$info || !is_string($info)) {
                 return;
@@ -408,7 +408,7 @@ class Dhl_Versenden_Model_Observer
         }
 
         $origAddressForm = $container->getChild('form');
-        if (!$origAddressForm) {
+        if (!$origAddressForm instanceof Mage_Adminhtml_Block_Sales_Order_Create_Form_Address) {
             return;
         }
 

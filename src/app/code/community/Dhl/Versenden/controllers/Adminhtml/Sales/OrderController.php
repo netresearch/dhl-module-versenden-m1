@@ -100,7 +100,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getPostfiliale()->city = $versendenInfo->getReceiver()->city;
             $versendenInfo->getReceiver()->getPostfiliale()->country = $versendenInfo->getReceiver()->country;
             $versendenInfo->getReceiver()->getPostfiliale()->countryISOCode = $versendenInfo->getReceiver()->countryISOCode;
-            $versendenInfo->getReceiver()->getPostfiliale()->packstationNumber = $postfilialeData['postfilial_number'];
+            $versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber = $postfilialeData['postfilial_number'];
             $versendenInfo->getReceiver()->getPostfiliale()->postNumber = $postfilialeData['post_number'];
         } else {
             // otherwise clear

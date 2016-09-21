@@ -148,4 +148,76 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $dhlObserver->serializeVersendenInfo($observer);
         $this->assertJson($address->getData('dhl_versenden_info'));
     }
+
+    /**
+     * @test
+     * @loadFixture Model_ObserverTest
+     */
+    public function unserializeVersendenInfoItemsWrongAddressType()
+    {
+        $observer = new Varien_Event_Observer();
+
+        $addressCollection = $this->getMockBuilder(Varien_Object::class)
+            ->setMethods(array('walk'))
+            ->getMock();
+        $addressCollection
+            ->expects($this->never())
+            ->method('walk');
+        $observer->setData('object', $addressCollection);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->unserializeVersendenInfoItems($observer);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ObserverTest
+     */
+    public function unserializeVersendenInfoItemsWrongType()
+    {
+        $observer = new Varien_Event_Observer();
+
+        $versendenInfo = new Varien_Object();
+        $addressCollection = $this->getResourceModelMock('sales/quote_address_collection', array('walk'));
+        $addressCollection
+            ->expects($this->never())
+            ->method('walk');
+        $observer->setData('object', $addressCollection);
+
+        $address = Mage::getModel('sales/quote_address')->load(100);
+        $address->setData('dhl_versenden_info', $versendenInfo);
+        /** @var Mage_Sales_Model_Resource_Quote_Address_Collection $addressCollection */
+        $addressCollection->addItem($address);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->unserializeVersendenInfoItems($observer);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ObserverTest
+     */
+    public function unserializeVersendenInfoItemsOk()
+    {
+        $observer = new Varien_Event_Observer();
+
+        $versendenInfo = '{"schemaVersion":"1.0"}';
+
+        // load collection and remove all items while retaining "collection_loaded" status
+        $collection = Mage::getResourceModel('sales/quote_address_collection')->load();
+        $addressIds = $collection->getColumnValues('address_id');
+        foreach ($addressIds as $addressId) {
+            $collection->removeItemByKey($addressId);
+        }
+
+        // add address with versenden info json to collection
+        $address = Mage::getModel('sales/quote_address')->load(100);
+        $address->setData('dhl_versenden_info', $versendenInfo);
+        $collection->addItem($address);
+
+        $observer->setData('order_address_collection', $collection);
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->unserializeVersendenInfoItems($observer);
+        $this->assertInstanceOf(\Dhl\Versenden\Info::class, $address->getData('dhl_versenden_info'));
+    }
 }
