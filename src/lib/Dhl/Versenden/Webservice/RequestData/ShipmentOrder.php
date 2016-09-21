@@ -128,17 +128,20 @@ class ShipmentOrder extends RequestData
         $this->serviceSelection = $serviceSelection;
         $this->exportDocuments = $exportDocuments;
 
+        $procedure = Product::getProcedure($productCode);
         $this->accountNumber = sprintf(
             '%s%s%s',
             $shipper->getAccount()->getEkp(),
-            Product::getProcedure($productCode),
-            $shipper->getAccount()->getParticipation()
+            $procedure,
+            $shipper->getAccount()->getParticipation($procedure)
         );
+
+        $procedure = Product::getProcedureReturn($productCode);
         $this->returnShipmentAccountNumber = sprintf(
             '%s%s%s',
             $shipper->getAccount()->getEkp(),
-            Product::getProcedureReturn(),
-            $shipper->getAccount()->getParticipation()
+            $procedure,
+            $shipper->getAccount()->getParticipation($procedure)
         );
 
         $this->productCode         = $productCode;

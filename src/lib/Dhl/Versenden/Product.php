@@ -45,15 +45,17 @@ class Product
     const CODE_PAKET_CONNECT        = 'V87PARCEL';
     const CODE_PAKET_INTERNATIONAL  = 'V82PARCEL';
 
-    const PROCEDURE_PAKET_NATIONAL      = '01';
-    const PROCEDURE_WELTPAKET           = '53';
-    const PROCEDURE_EUROPAKET           = '54';
-    const PROCEDURE_KURIER_TAGGLEICH    = '01';
-    const PROCEDURE_KURIER_WUNSCHZEIT   = '01';
-    const PROCEDURE_PAKET_AUSTRIA       = '86';
-    const PROCEDURE_PAKET_CONNECT       = '87';
-    const PROCEDURE_PAKET_INTERNATIONAL = '82';
-    const PROCEDURE_RETURNSHIPMENT      = '07';
+    const PROCEDURE_PAKET_NATIONAL          = '01';
+    const PROCEDURE_WELTPAKET               = '53';
+    const PROCEDURE_EUROPAKET               = '54';
+    const PROCEDURE_KURIER_TAGGLEICH        = '01';
+    const PROCEDURE_KURIER_WUNSCHZEIT       = '01';
+    const PROCEDURE_PAKET_AUSTRIA           = '86';
+    const PROCEDURE_PAKET_CONNECT           = '87';
+    const PROCEDURE_PAKET_INTERNATIONAL     = '82';
+    const PROCEDURE_RETURNSHIPMENT_NATIONAL = '07';
+    const PROCEDURE_RETURNSHIPMENT_AUSTRIA  = '83';
+    const PROCEDURE_RETURNSHIPMENT_CONNECT  = '85';
 
     /**
      * Obtain all product codes.
@@ -77,12 +79,12 @@ class Product
     /**
      * Obtain procedure number by product code.
      *
-     * @param $code
+     * @param string $code Product code
      * @return string
      */
     public static function getProcedure($code)
     {
-        $participations = array(
+        $procedures = array(
             self::CODE_PAKET_NATIONAL => self::PROCEDURE_PAKET_NATIONAL,
             self::CODE_WELTPAKET => self::PROCEDURE_WELTPAKET,
             self::CODE_EUROPAKET => self::PROCEDURE_EUROPAKET,
@@ -93,21 +95,32 @@ class Product
             self::CODE_PAKET_INTERNATIONAL => self::PROCEDURE_PAKET_INTERNATIONAL,
         );
 
-        if (!isset($participations[$code])) {
+        if (!isset($procedures[$code])) {
             return '';
         }
 
-        return $participations[$code];
+        return $procedures[$code];
     }
 
     /**
      * Obtain procedure number for return shipments.
      *
+     * @param string $code Product code
      * @return string
      */
-    public static function getProcedureReturn()
+    public static function getProcedureReturn($code)
     {
-        return self::PROCEDURE_RETURNSHIPMENT;
+        $procedures = array(
+            self::CODE_PAKET_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
+            self::CODE_PAKET_AUSTRIA => self::PROCEDURE_RETURNSHIPMENT_AUSTRIA,
+            self::CODE_PAKET_CONNECT => self::PROCEDURE_RETURNSHIPMENT_CONNECT,
+        );
+
+        if (!isset($procedures[$code])) {
+            return '';
+        }
+
+        return $procedures[$code];
     }
 
     /**

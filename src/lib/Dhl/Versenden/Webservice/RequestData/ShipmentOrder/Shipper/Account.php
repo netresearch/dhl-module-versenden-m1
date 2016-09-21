@@ -43,25 +43,27 @@ class Account extends RequestData
     private $signature;
     /** @var string */
     private $ekp;
-    /** @var string */
-    private $participation;
+    /** @var string[] */
+    private $participations;
 
     /**
      * Account constructor.
      * @param string $user
      * @param string $signature
      * @param string $ekp
-     * @param string $participation
+     * @param string[] $participations
      */
-    public function __construct($user, $signature, $ekp, $participation)
+    public function __construct($user, $signature, $ekp, $participations)
     {
         $this->validateLength('EKP', $ekp, 10, 10);
-        $this->validateLength('Participation', $participation, 2, 2);
+        foreach ($participations as $procedure => $participation) {
+            $this->validateLength('Participation', $participation, 2, 2);
+        }
 
         $this->user = $user;
         $this->signature = $signature;
         $this->ekp = $ekp;
-        $this->participation = $participation;
+        $this->participations = $participations;
     }
 
     /**
@@ -89,10 +91,22 @@ class Account extends RequestData
     }
 
     /**
-     * @return string
+     * @return \string[]
      */
-    public function getParticipation()
+    public function getParticipations()
     {
-        return $this->participation;
+        return $this->participations;
+    }
+
+    /**
+     * @param string $procedure
+     * @return null|string
+     */
+    public function getParticipation($procedure)
+    {
+        if (!isset($this->participations[$procedure])) {
+            return null;
+        }
+        return $this->participations[$procedure];
     }
 }
