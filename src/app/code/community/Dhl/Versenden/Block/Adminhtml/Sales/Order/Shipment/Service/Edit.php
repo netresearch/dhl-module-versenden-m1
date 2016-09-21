@@ -49,7 +49,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
         $shippingAddress = $this->getShipment()->getShippingAddress();
         $serviceConfig = Mage::getModel('dhl_versenden/config_service');
 
-        $enabledServices = $serviceConfig->getEnabledServices($storeId);
+        $enabledServices = $serviceConfig->getServices($storeId);
 
         $shippingInfoJson = $shippingAddress->getData('dhl_versenden_info');
         $shippingInfoObj = json_decode($shippingInfoJson);

@@ -231,7 +231,7 @@
                         </shipment_dhlcodmethods>
 
                         <dhlversenden_fields_service translate="label">
-                            <label>Enable Services In Checkout</label>
+                            <label>Additional Services In Checkout</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>400</sort_order>
                             <show_in_default>1</show_in_default>
@@ -467,7 +467,7 @@
 
                         <dhlversenden_fields_bankdata translate="label">
                             <label>Bank Data</label>
-                            <comment>Bank data as required for cash on delivery shipments</comment>
+                            <comment>Bank data as required for cash on delivery payments</comment>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>700</sort_order>
                             <show_in_default>1</show_in_default>
