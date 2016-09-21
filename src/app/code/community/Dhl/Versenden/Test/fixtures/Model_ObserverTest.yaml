@@ -95,7 +95,18 @@ tables:
 
   sales/order:
    - entity_id: 10
+     shipping_method: 'dhlversenden_foo'
+     status: 'pending'
+     store_id: 1
+     total_qty_ordered: 2
    - entity_id: 20
+     shipping_method: 'dhlversenden_fox'
+     status: 'processing'
+     store_id: 1
+     total_qty_ordered: 2
+   - entity_id: 17
+     shipping_method: 'xyz_foo'
+     store_id: 2
 
   sales/shipment:
    - entity_id: 100

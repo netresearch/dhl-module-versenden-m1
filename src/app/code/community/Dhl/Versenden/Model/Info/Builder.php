@@ -223,7 +223,6 @@ class Dhl_Versenden_Model_Info_Builder
             'insurance' => $shipmentOrder->getServiceSelection()->getInsurance(),
             'bulkyGoods' => $shipmentOrder->getServiceSelection()->isBulkyGoods(),
             'cod' => $shipmentOrder->getServiceSelection()->getCod(),
-            'goGreen' => $shipmentOrder->getServiceSelection()->isGoGreen(),
             'printOnlyIfCodeable' => $shipmentOrder->getServiceSelection()->isPrintOnlyIfCodeable(),
         );
         $versendenInfo->getServices()->fromArray($serviceInfo, false);

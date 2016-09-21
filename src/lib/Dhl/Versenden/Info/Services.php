@@ -57,7 +57,5 @@ class Services extends ArrayableInfo
     /** @var bool|float false or amount */
     public $cod;
     /** @var bool false or true */
-    public $goGreen;
-    /** @var bool false or true */
     public $printOnlyIfCodeable;
 }

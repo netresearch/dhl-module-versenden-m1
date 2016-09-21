@@ -45,6 +45,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
      */
     public function getServices()
     {
+        // obtain enabled services
         $storeId = $this->getShipment()->getStoreId();
         $shippingAddress = $this->getShipment()->getShippingAddress();
         $serviceConfig = Mage::getModel('dhl_versenden/config_service');
@@ -61,6 +62,16 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
             $storeId
         );
 
+        // set default service values from config
+        $printOnlyIfCodeable = Mage::getModel('dhl_versenden/config_shipment')->getSettings($storeId)
+            ->isPrintOnlyIfCodeable();
+        $availableServices->getItem(Service\PrintOnlyIfCodeable::CODE)->setValue($printOnlyIfCodeable);
+
+        if ($availableServices->getItem(Service\ParcelAnnouncement::CODE)) {
+            $availableServices->getItem(Service\ParcelAnnouncement::CODE)->setValue(true);
+        }
+
+        // set/override service values from pre-selection
         /** @var \Dhl\Versenden\Info $versendenInfo */
         $versendenInfo = $shippingAddress->getData('dhl_versenden_info');
         if (!$versendenInfo instanceof \Dhl\Versenden\Info) {
@@ -71,18 +82,6 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
         foreach ($availableServices as $availableService) {
             $code = $availableService->getCode();
             $serviceSelection = $versendenInfo->getServices()->{$code};
-
-            if ($code == Service\PrintOnlyIfCodeable::CODE) {
-                // add global printOnlyIfCodeable setting
-                $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
-                $serviceSelection = $shipmentConfig->getSettings($storeId)->isPrintOnlyIfCodeable();
-            }
-
-            if ( ($code == Service\ParcelAnnouncement::CODE) && ($serviceSelection === null) ) {
-                // add global parcelAnnouncement setting, no selection from checkout yet
-                $serviceSelection = true;
-            }
-
             if ($serviceSelection !== null) {
                 $availableService->setValue($serviceSelection);
             }
