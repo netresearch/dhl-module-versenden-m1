@@ -76,4 +76,30 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
         $dhlMethods = $config->getSettings($storeId)->getShippingMethods();
         return $this->helper('core/data')->jsonEncode($dhlMethods);
     }
+
+    /**
+     * Obtain Frontend Service hint text based on service code.
+     *
+     * @param $serviceCode
+     * @return string
+     */
+    public function getServiceHintText($serviceCode)
+    {
+        $msg = '';
+        if ($serviceCode === \Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE) {
+            $msg = $this->__(
+                'Determine a person in your immediate neighborhood whom we can hand out your parcel.' . ' ' .
+                'This person should live in the same building, directly opposite or next door.'
+            );
+        }
+
+        if ($serviceCode === \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE) {
+            $msg = $this->__(
+                'Choose a weather-protected and non-visible place on your property' .
+                ', where we can deposit the parcel in your absence.'
+            );
+        }
+
+        return $msg;
+    }
 }

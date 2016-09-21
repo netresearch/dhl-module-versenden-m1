@@ -32,6 +32,7 @@
         alt="<?php echo $this->__('DHL Additional Services') ?>"
         title="<?php echo $this->__('DHL Additional Services') ?>"
     />
+    <span><?php echo $this->__('Ihr DHL Wunschpaket');?></span>
     <dl>
         <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
         <?php foreach ($this->getServices() as $service): ?>
@@ -41,6 +42,9 @@
             </dt>
             <dd class="service-<?php echo $service->getFrontendInputType(); ?>">
                 <?php echo $service->getValueHtml(); ?>
+                <div class="service-tooltip">
+                    <div><?php echo $this->getServiceHintText($service->getCode()); ?></div>
+                </div>
             </dd>
         <?php endforeach; ?>
     </dl>
