@@ -210,6 +210,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     {
         $collection = new Service\Collection();
 
+        // customer/checkout services
         $dayOfDelivery = $this->initDayOfDelivery($store);
         $collection->addItem($dayOfDelivery);
 
@@ -225,18 +226,20 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $parcelAnnouncement = $this->initParcelAnnouncement($store);
         $collection->addItem($parcelAnnouncement);
 
-        $visualCheckOfAge = $this->initVisualCheckOfAge($store);
+        // merchant/admin services
+        $visualCheckOfAge = $this->initVisualCheckOfAge();
         $collection->addItem($visualCheckOfAge);
 
-        $returnShipment = $this->initReturnShipment($store);
+        $returnShipment = $this->initReturnShipment();
         $collection->addItem($returnShipment);
 
-        $insurance = $this->initInsurance($store);
+        $insurance = $this->initInsurance();
         $collection->addItem($insurance);
 
-        $bulkyGoods = $this->initBulkyGoods($store);
+        $bulkyGoods = $this->initBulkyGoods();
         $collection->addItem($bulkyGoods);
 
+        // implicit/config services
         $printOnlyIfCodeable = $this->initPrintOnlyIfCodeable($store);
         $collection->addItem($printOnlyIfCodeable);
 
