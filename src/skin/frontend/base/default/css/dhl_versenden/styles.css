@@ -8,6 +8,13 @@
     margin-bottom: 10px;
 }
 
+#checkout-dhlversenden-services > span {
+    padding: 5px 0;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 #checkout-dhlversenden-services dt label {
     padding: 0;
     margin-bottom: 5px;
@@ -38,6 +45,73 @@
 
 #checkout-dhlversenden-services dd {
     margin-bottom: 10px;
+}
+
+
+.with-tooltip {}
+.service-tooltip {
+    display:inline-block;
+    width:15px;
+    height:15px;
+    position:relative;
+    z-index:1;
+    background:url(../../images/dhl_versenden/icon-tooltip.png) no-repeat 0 0;
+    cursor:help;
+    vertical-align:middle;
+}
+.service-tooltip:hover {
+    z-index:100;
+}
+.service-tooltip > span {
+    display:none;
+}
+.service-tooltip:hover > div:hover,
+.service-tooltip > div {
+    width:301px;
+    background:#f6f6f6 url(../../images/dhl_versenden/bkg_tooltip.png) repeat-y 100%;
+    opacity:0;
+    position:absolute;
+    z-index:999;
+    left:-296px;
+    bottom:28px;
+    padding:0 12px;
+    color:#464d50;
+    visibility:hidden;
+}
+
+.service-tooltip > div:before {
+    position:absolute;
+    top:-5px;
+    left:0;
+    content:'';
+    width:325px;
+    height:5px;
+    overflow:hidden;
+    background:url(../../images/dhl_versenden/bkg_tooltip.png) no-repeat 0 0;
+}
+.service-tooltip > div:after {
+    position:absolute;
+    bottom:-14px;
+    left:-1px;
+    content:'';
+    width:325px;
+    height:14px;
+    overflow:hidden;
+    background:url(../../images/dhl_versenden/bkg_tooltip.png) no-repeat -325px 0;
+}
+
+
+.service-tooltip:hover > div {
+    opacity:1;
+    width:325px;
+    visibility:visible;
+    bottom:30px; }
+
+.service-tooltip:hover > div {
+    opacity:1;
+    width:325px;
+    visibility:visible;
+    bottom:30px;
 }
 
 #checkout-dhlversenden-services dd.service-boolean {
