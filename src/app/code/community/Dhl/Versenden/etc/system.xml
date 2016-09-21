@@ -153,11 +153,10 @@
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
                         </account_ekp>
-                        <account_participation_dhlpaket translate="label tooltip">
-                            <label>Participation DHL Paket</label>
-                            <tooltip>The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales.</tooltip>
-                            <frontend_type>text</frontend_type>
-                            <validate>required-entry validate-length minimum-length-2 maximum-length-2</validate>
+                        <account_participation translate="label">
+                            <label>Participation Numbers</label>
+                            <frontend_model>dhl_versenden/adminhtml_form_field_participation</frontend_model>
+                            <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
                             <sort_order>240</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -165,20 +164,7 @@
                             <depends>
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
-                        </account_participation_dhlpaket>
-                        <account_participation_returnshipment translate="label tooltip">
-                            <label>Participation Return Shipment</label>
-                            <tooltip>The participation is 2 numerical digits from 00 to 99 or alphanumerical digits from AA to ZZ. It is allocated by DHL Sales.</tooltip>
-                            <frontend_type>text</frontend_type>
-                            <validate>required-entry validate-length minimum-length-2 maximum-length-2</validate>
-                            <sort_order>240</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <sandbox_mode>0</sandbox_mode>
-                            </depends>
-                        </account_participation_returnshipment>
+                        </account_participation>
 
                         <dhlversenden_fields_shipment translate="label">
                             <label>Shipment Orders</label>

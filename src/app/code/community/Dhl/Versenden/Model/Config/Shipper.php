@@ -107,13 +107,18 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE, $store);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP, $store);
 
-            $participation = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION, $store);
+            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION, $store);
         } else {
             $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER, $store));
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE, $store);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_EKP, $store);
 
-            $participation = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_PARTICIPATION, $store);
+            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_PARTICIPATION, $store);
+        }
+
+        $participation = array();
+        foreach ($participations as $participationEntry) {
+            $participation[$participationEntry['procedure']] = $participationEntry['participation'];
         }
 
         return new ShipperData\Account(
@@ -259,7 +264,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * Obtain shipper country from module configuration.
-     * 
+     *
      * @see Dhl_Versenden_Model_Config::getShipperCountry()
      * @param mixed $store
      * @return string
