@@ -343,19 +343,4 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         );
         return $filter->filterServiceCollection($services);
     }
-
-    /**
-     * @deprecated
-     * @param Service\Collection $serviceCollection
-     * @param \Dhl\Versenden\Info\Services $serviceSelection
-     */
-    public function setServiceValues(Service\Collection $serviceCollection,
-                                     \Dhl\Versenden\Info\Services $serviceSelection)
-    {
-        $services = $serviceCollection->getItems();
-        /** @var Service\Type\Generic $service */
-        foreach ($services as $service) {
-            $service->setValue($serviceSelection->{$service->getCode()});
-        }
-    }
 }
