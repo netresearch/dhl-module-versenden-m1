@@ -61,6 +61,11 @@ class ShipmentService
     protected $PreferredDay = null;
 
     /**
+     * @var Serviceconfiguration $GoGreen
+     */
+    protected $GoGreen = null;
+
+    /**
      * @var Serviceconfiguration $Perishables
      */
     protected $Perishables = null;
@@ -311,6 +316,24 @@ class ShipmentService
     public function setPreferredDay($PreferredDay)
     {
       $this->PreferredDay = $PreferredDay;
+      return $this;
+    }
+
+    /**
+     * @return Serviceconfiguration
+     */
+    public function getGoGreen()
+    {
+      return $this->GoGreen;
+    }
+
+    /**
+     * @param Serviceconfiguration $GoGreen
+     * @return \Dhl\Bcs\Api\ShipmentService
+     */
+    public function setGoGreen($GoGreen)
+    {
+      $this->GoGreen = $GoGreen;
       return $this;
     }
 
