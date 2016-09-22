@@ -137,12 +137,17 @@ class ShipmentOrder extends RequestData
         );
 
         $procedure = Product::getProcedureReturn($productCode);
-        $this->returnShipmentAccountNumber = sprintf(
-            '%s%s%s',
-            $shipper->getAccount()->getEkp(),
-            $procedure,
-            $shipper->getAccount()->getParticipation($procedure)
-        );
+        if ($procedure) {
+            $this->returnShipmentAccountNumber = sprintf(
+                '%s%s%s',
+                $shipper->getAccount()->getEkp(),
+                $procedure,
+                $shipper->getAccount()->getParticipation($procedure)
+            );
+        } else {
+            // return shipment not applicable to the currently selected product
+            $this->returnShipmentAccountNumber = '';
+        }
 
         $this->productCode         = $productCode;
         $this->shipmentDate        = $shipmentDate;
