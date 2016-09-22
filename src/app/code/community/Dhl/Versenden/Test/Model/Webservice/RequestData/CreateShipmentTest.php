@@ -99,9 +99,12 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
             $expectation->getShipperAccountEkp(),
             $order->getShipper()->getAccount()->getEkp()
         );
+
+        $productCode = $expectation->getShipmentSettingsProduct();
+        $procedure = \Dhl\Versenden\Product::getProcedure($productCode);
         $this->assertEquals(
-            $expectation->getShipperAccountParticipation(),
-            $order->getShipper()->getAccount()->getParticipation()
+            $expectation->getShipperAccountParticipation($procedure),
+            $order->getShipper()->getAccount()->getParticipation($procedure)
         );
 
         $this->assertEquals(
