@@ -40,7 +40,16 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $shipperAccountUser = 'Shipper Account User';
         $shipperAccountSignature = 'ABCDEF1234567890=';
         $shipperAccountEkp = '1234567890';
-        $shipperAccountParticipation = '77';
+        $shipperAccountParticipation = array(
+            \Dhl\Versenden\Product::PROCEDURE_PAKET_NATIONAL => '01',
+            \Dhl\Versenden\Product::PROCEDURE_WELTPAKET => '01',
+            \Dhl\Versenden\Product::PROCEDURE_PAKET_AUSTRIA => '02',
+            \Dhl\Versenden\Product::PROCEDURE_PAKET_CONNECT => '02',
+            \Dhl\Versenden\Product::PROCEDURE_PAKET_INTERNATIONAL => '01',
+            \Dhl\Versenden\Product::PROCEDURE_RETURNSHIPMENT_NATIONAL => '01',
+            \Dhl\Versenden\Product::PROCEDURE_RETURNSHIPMENT_AUSTRIA => '02',
+            \Dhl\Versenden\Product::PROCEDURE_RETURNSHIPMENT_CONNECT => '02',
+        );
 
         $shipperBankDataAccountOwner = 'Shipper BankData Account Owner';
         $shipperBankDataBankName = 'Shipper BankData Bank Name';

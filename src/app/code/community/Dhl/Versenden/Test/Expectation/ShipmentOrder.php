@@ -41,8 +41,8 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     protected $shipperAccountSignature;
     /** @var string */
     protected $shipperAccountEkp;
-    /** @var string */
-    protected $shipperAccountParticipation;
+    /** @var string[] */
+    protected $shipperAccountParticipations;
 
     /** @var string */
     protected $shipperBankDataAccountOwner;
@@ -200,7 +200,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $shipperAccountUser
      * @param string $shipperAccountSignature
      * @param string $shipperAccountEkp
-     * @param string $shipperAccountParticipation
+     * @param string[] $shipperAccountParticipations
      * @param string $shipperBankDataAccountOwner
      * @param string $shipperBankDataBankName
      * @param string $shipperBankDataIban
@@ -277,7 +277,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      */
     public function __construct(
         $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
-        $shipperAccountParticipation,
+        $shipperAccountParticipations,
 
         $shipperBankDataAccountOwner, $shipperBankDataBankName, $shipperBankDataIban,
         $shipperBankDataBic, $shipperBankDataNote1, $shipperBankDataNote2,
@@ -321,7 +321,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->shipperAccountUser = $shipperAccountUser;
         $this->shipperAccountSignature = $shipperAccountSignature;
         $this->shipperAccountEkp = $shipperAccountEkp;
-        $this->shipperAccountParticipation = $shipperAccountParticipation;
+        $this->shipperAccountParticipations = $shipperAccountParticipations;
         $this->shipperBankDataAccountOwner = $shipperBankDataAccountOwner;
         $this->shipperBankDataBankName = $shipperBankDataBankName;
         $this->shipperBankDataIban = $shipperBankDataIban;
@@ -422,11 +422,23 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getShipperAccountParticipation()
+    public function getShipperAccountParticipations()
     {
-        return $this->shipperAccountParticipation;
+        return $this->shipperAccountParticipations;
+    }
+
+    /**
+     * @param string $procedure
+     * @return null|string
+     */
+    public function getShipperAccountParticipation($procedure)
+    {
+        if (!isset($this->shipperAccountParticipations[$procedure])) {
+            return null;
+        }
+        return $this->shipperAccountParticipations[$procedure];
     }
 
     /**
