@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver\PostalFacility;
+use Dhl\Versenden\Info\Receiver\PostalFacility;
 
 /**
  * Dhl_Versenden_Model_Observer
@@ -109,14 +109,11 @@ class Dhl_Versenden_Model_Observer
      */
     public function saveShippingSettings(Varien_Event_Observer $observer)
     {
-        //TODO(nr): rework DHL Versenden Info handling
-
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = $observer->getQuote();
         $shippingAddress = $quote->getShippingAddress();
-        /** @var Dhl_Versenden_Model_Config_Shipment $shipmentConfig */
-        $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
 
+        $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
         if (!$shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
             // customer selected a shipping method not to be processed via DHL Versenden
             return;
@@ -124,43 +121,14 @@ class Dhl_Versenden_Model_Observer
 
         /** @var Mage_Core_Controller_Request_Http $request */
         $request = $observer->getRequest();
-
-        /** @var Dhl_Versenden_Model_Webservice_Builder_Receiver $receiverBuilder */
-        $args = array(
-            'country_directory' => Mage::getModel('directory/country'),
-            'helper'            => Mage::helper('dhl_versenden/address'),
+        $infoBuilder = Mage::getModel('dhl_versenden/info_builder');
+        $serviceInfo = array(
+            'shipment_service' => $request->getPost('shipment_service', array()),
+            'service_setting' => $request->getPost('service_setting', array()),
         );
-        $receiverBuilder = Mage::getModel('dhl_versenden/webservice_builder_receiver', $args);
-        $receiver = $receiverBuilder->getReceiver($shippingAddress);
+        $versendenInfo = $infoBuilder->infoFromSales($shippingAddress, $serviceInfo, $quote->getStoreId());
 
-        /** @var Dhl_Versenden_Model_Webservice_Builder_Service $serviceBuilder */
-        $args = array(
-            'shipper_config'  => Mage::getModel('dhl_versenden/config_shipper'),
-            'shipment_config' => $shipmentConfig,
-        );
-
-        $services = $request->getPost('shipment_service', array());
-        $settings = $request->getPost('service_setting', array());
-
-        $services[\Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE] =
-            $shipmentConfig->getSettings($quote->getStoreId())->isPrintOnlyIfCodeable();
-        $services[\Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE] =
-            Mage::getModel('dhl_versenden/config_service')
-                ->getServices($quote->getStoreId())
-                ->getItem(\Dhl\Versenden\Shipment\Service\ParcelAnnouncement::CODE)
-                ->isEnabled();
-
-        $serviceBuilder = Mage::getModel('dhl_versenden/webservice_builder_service', $args);
-        $serviceSettings = $serviceBuilder->getServiceSelection(
-            $quote,
-            array(
-                'shipment_service' => $services,
-                'service_setting'  => $settings,
-            )
-        );
-
-        $shippingInfo = new \Dhl\Versenden\Webservice\RequestData\ShippingInfo($receiver, $serviceSettings);
-        $shippingAddress->setData('dhl_versenden_info', json_encode($shippingInfo, JSON_FORCE_OBJECT));
+        $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
     }
 
     /**
@@ -198,7 +166,7 @@ class Dhl_Versenden_Model_Observer
      * - post_number: text(10)
      *
      * Event:
-     * - dhl_versenden_set_postal_facility
+     * - dhl_versenden_fetch_postal_facility
      *
      * @param Varien_Event_Observer $observer
      */
@@ -211,8 +179,8 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        /** @var Mage_Sales_Model_Quote_Address $address */
-        $address    = $observer->getQuoteAddress();
+        /** @var Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $address */
+        $address    = $observer->getCustomerAddress();
         $station    = $address->getStreetFull();
         $postNumber = $address->getCompany();
 
@@ -221,19 +189,19 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        if (strpos($station, 'Packstation') === 0) {
+        if (stripos($station, 'Packstation') === 0) {
             $facility->setData(
                 array(
                     'shop_type'   => PostalFacility::TYPE_PACKSTATION,
-                    'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                    'shop_number' => preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station),
                     'post_number' => $postNumber,
                 )
             );
-        } elseif (strpos($station, 'Postfiliale') === 0) {
+        } elseif (stripos($station, 'Postfiliale') === 0) {
             $facility->setData(
                 array(
                     'shop_type'   => PostalFacility::TYPE_POSTFILIALE,
-                    'shop_number' => preg_filter('/^.*([\d]{3})$/', '$1', $station),
+                    'shop_number' => preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station),
                     'post_number' => $postNumber,
                 )
             );
@@ -336,5 +304,116 @@ class Dhl_Versenden_Model_Observer
 
         $track->getShipment()->setShippingLabel(null);
         $track->getShipment()->save();
+    }
+
+    /**
+     * Convert Info object to serialized representation.
+     * - event: model_save_before
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function serializeVersendenInfo(Varien_Event_Observer $observer)
+    {
+        $address = $observer->getData('object');
+        if (!$address instanceof Mage_Customer_Model_Address_Abstract) {
+            return;
+        }
+
+        $info = $address->getData('dhl_versenden_info');
+        if (!$info || !$info instanceof \Dhl\Versenden\Info) {
+            return;
+        }
+
+        $serializer = new \Dhl\Versenden\Info\Serializer();
+        $address->setData('dhl_versenden_info', $serializer->serialize($info));
+    }
+
+    /**
+     * Convert serialized info to Info object.
+     * - event: model_load_after
+     * - event: model_save_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function unserializeVersendenInfo(Varien_Event_Observer $observer)
+    {
+        $address = $observer->getData('object');
+        if (!$address instanceof Mage_Customer_Model_Address_Abstract) {
+            return;
+        }
+
+        $info = $address->getData('dhl_versenden_info');
+        if (!$info || !is_string($info)) {
+            return;
+        }
+
+        $serializer = new \Dhl\Versenden\Info\Serializer();
+        $address->setData('dhl_versenden_info', $serializer->unserialize($info));
+    }
+
+    /**
+     * Convert serialized info to Info object.
+     * - event: sales_order_address_collection_load_after
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function unserializeVersendenInfoItems(Varien_Event_Observer $observer)
+    {
+        $collection = $observer->getData('order_address_collection');
+        if (!$collection instanceof Mage_Sales_Model_Resource_Order_Address_Collection
+            && !$collection instanceof Mage_Sales_Model_Resource_Quote_Address_Collection) {
+            return;
+        }
+
+        $unserializeInfo = function (Mage_Customer_Model_Address_Abstract $address) {
+            $info = $address->getData('dhl_versenden_info');
+            if (!$info || !is_string($info)) {
+                return;
+            }
+
+            $serializer = new \Dhl\Versenden\Info\Serializer();
+            $address->setData('dhl_versenden_info', $serializer->unserialize($info));
+        };
+
+        $collection->walk($unserializeInfo);
+    }
+
+    /**
+     * Override form block as defined via container properties when additional
+     * DHL Versenden address fields need to be displayed.
+     * - event: adminhtml_widget_container_html_before
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function replaceAddressForm(Varien_Event_Observer $observer)
+    {
+        $container = $observer->getData('block');
+        if (!$container instanceof Mage_Adminhtml_Block_Sales_Order_Address) {
+            return;
+        }
+
+        $address = Mage::registry('order_address');
+        if (!$address || ($address->getAddressType() !== Mage_Customer_Model_Address_Abstract::TYPE_SHIPPING)) {
+            return;
+        }
+
+        $shippingMethod = $address->getOrder()->getShippingMethod(true);
+        if ($shippingMethod->getData('carrier_code') !== Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE) {
+            return;
+        }
+
+        $info = $address->getData('dhl_versenden_info');
+        if (!$info instanceof \Dhl\Versenden\Info) {
+            return;
+        }
+
+        $origAddressForm = $container->getChild('form');
+        if (!$origAddressForm instanceof Mage_Adminhtml_Block_Sales_Order_Create_Form_Address) {
+            return;
+        }
+
+        $dhlAddressForm = Mage::app()->getLayout()->getBlock('dhl_versenden_form');
+        $dhlAddressForm->setDisplayVatValidationButton($origAddressForm->getDisplayVatValidationButton());
+        $container->setChild('form', $dhlAddressForm);
     }
 }

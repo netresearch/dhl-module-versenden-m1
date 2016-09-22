@@ -33,7 +33,7 @@ namespace Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ParcelShop extends PostalFacility implements \JsonSerializable
+class ParcelShop extends PostalFacility
 {
     /** @var string */
     private $parcelShopNumber;
@@ -85,17 +85,5 @@ class ParcelShop extends PostalFacility implements \JsonSerializable
     public function getStreetNumber()
     {
         return $this->streetNumber;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
     }
 }

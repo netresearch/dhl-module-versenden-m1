@@ -142,8 +142,8 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         $facility = new Varien_Object();
 
         Mage::dispatchEvent(
-            'dhl_versenden_set_postal_facility', array(
-                'quote_address'   => $address,
+            'dhl_versenden_fetch_postal_facility', array(
+                'customer_address'   => $address,
                 'postal_facility' => $facility,
             )
         );
