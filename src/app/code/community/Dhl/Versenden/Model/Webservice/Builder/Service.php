@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection;
+use \Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Service
  *
@@ -77,34 +78,63 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
         $selectedServices = $serviceInfo['shipment_service'];
         $serviceDetails = $serviceInfo['service_setting'];
 
-        // add additional insurance service details
-        $isInsurance = isset($selectedServices[\Dhl\Versenden\Shipment\Service\Insurance::CODE])
-            && $selectedServices[\Dhl\Versenden\Shipment\Service\Insurance::CODE];
-        if ($isInsurance) {
-            $insuranceAmount = number_format($salesEntity->getBaseGrandTotal(), 2);
-            $selectedServices[\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $isInsurance;
-            $serviceDetails[\Dhl\Versenden\Shipment\Service\Insurance::CODE] = $insuranceAmount;
-        }
+        $dayOfDelivery = isset($selectedServices[Service\DayOfDelivery::CODE])
+            ? $serviceDetails[Service\DayOfDelivery::CODE]
+            : false;
 
-        // add cod service details
+        $deliveryTimeFrame = isset($selectedServices[Service\DeliveryTimeFrame::CODE])
+            ? $serviceDetails[Service\DeliveryTimeFrame::CODE]
+            : false;
+
+        $preferredLocation = isset($selectedServices[Service\PreferredLocation::CODE])
+            ? $serviceDetails[Service\PreferredLocation::CODE]
+            : false;
+
+        $preferredNeighbour = isset($selectedServices[Service\PreferredNeighbour::CODE])
+            ? $serviceDetails[Service\PreferredNeighbour::CODE]
+            : false;
+
+        $parcelAnnouncement = isset($selectedServices[Service\ParcelAnnouncement::CODE])
+            ? (bool)$selectedServices[Service\ParcelAnnouncement::CODE]
+            : false;
+
+        $visualCheckOfAge = isset($selectedServices[Service\VisualCheckOfAge::CODE])
+            ? $serviceDetails[Service\VisualCheckOfAge::CODE]
+            : false;
+
+        $returnShipment = isset($selectedServices[Service\ReturnShipment::CODE])
+            ? (bool)$selectedServices[Service\ReturnShipment::CODE]
+            : false;
+
+        $insurance = isset($selectedServices[Service\Insurance::CODE])
+            ? number_format($salesEntity->getBaseGrandTotal(), 2)
+            : false;
+
+        $bulkyGoods = isset($selectedServices[Service\BulkyGoods::CODE])
+            ? (bool)$selectedServices[Service\BulkyGoods::CODE]
+            : false;
+
         $paymentMethod = $salesEntity->getPayment()->getMethod();
-        $isCod = $this->shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId());
-        if ($isCod) {
-            $codAmount = number_format($salesEntity->getBaseGrandTotal(), 2);
-            $selectedServices[\Dhl\Versenden\Shipment\Service\Cod::CODE] = $isCod;
-            $serviceDetails[\Dhl\Versenden\Shipment\Service\Cod::CODE] = $codAmount;
-        }
+        $cod = $this->shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId())
+            ? number_format($salesEntity->getBaseGrandTotal(), 2)
+            : false;
 
+        $printOnlyIfCodeable = isset($selectedServices[Service\PrintOnlyIfCodeable::CODE])
+            ? (bool)$selectedServices[Service\PrintOnlyIfCodeable::CODE]
+            : false;
 
-        $settings = array();
-
-        foreach ($selectedServices as $name => $isSelected) {
-            if ($isSelected) {
-                $settings[$name] = isset($serviceDetails[$name]) ? $serviceDetails[$name] : true;
-            }
-        }
-
-        return ServiceSelection::fromArray($settings);
-
+        return new ServiceSelection(
+            $dayOfDelivery,
+            $deliveryTimeFrame,
+            $preferredLocation,
+            $preferredNeighbour,
+            $parcelAnnouncement,
+            $visualCheckOfAge,
+            $returnShipment,
+            $insurance,
+            $bulkyGoods,
+            $cod,
+            $printOnlyIfCodeable
+        );
     }
 }

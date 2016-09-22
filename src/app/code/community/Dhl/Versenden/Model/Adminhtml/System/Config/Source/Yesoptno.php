@@ -35,9 +35,9 @@
  */
 class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
 {
-    const N   = 0;
-    const Y   = 1;
-    const OPT = 2;
+    const N   = '0';
+    const Y   = '1';
+    const OPT = '2';
 
     /**
      * Options getter

@@ -128,16 +128,19 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
     /**
      * @test
      * @loadFixture Model_ConfigTest
-     * @dataProvider dataProvider
-     *
-     * @param string $jsonInfo
      */
-    public function getServicesForEdit($jsonInfo)
+    public function selectedServicesForEdit()
     {
+        $preferredLocation = 'Garage';
+
+        $info = new \Dhl\Versenden\Info();
+        $info->getServices()->bulkyGoods = true;
+        $info->getServices()->preferredLocation = $preferredLocation;
+
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
         $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
-        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $jsonInfo);
+        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
 
         /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
@@ -155,17 +158,45 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
 
     /**
      * @test
-     * @loadFixture Model_ConfigTest
-     * @dataProvider dataProvider
-     *
-     * @param string $jsonInfo
      */
-    public function getServicesForView($jsonInfo)
+    public function allServicesForEdit()
     {
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+
+        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        $services = $block->getServices();
+        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+
+        /** @var Dhl\Versenden\Shipment\Service\Type\Generic $service */
+        foreach ($services as $service) {
+            if ($service->getCode() === \Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE) {
+                // PrintOnlyIfCodeable is enabled via config
+                $this->assertTrue($service->isSelected());
+            } else {
+                $this->assertFalse($service->isSelected());
+            }
+        }
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function selectedServicesForView()
+    {
+        $preferredLocation = 'Garage';
+
+        $info = new \Dhl\Versenden\Info();
+        $info->getServices()->bulkyGoods = true;
+        $info->getServices()->preferredLocation = $preferredLocation;
+
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View $block */
         $block = Mage::app()->getLayout()->createBlock(self::VIEW_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
-        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $jsonInfo);
+        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
 
         /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
@@ -179,6 +210,32 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         // preferredLocation enabled via config and preselected via dhl_versenden_info
         $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
         $this->assertEquals('Garage', $services->getItem($code)->getValue());
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function allServicesForView()
+    {
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View $block */
+        $block = Mage::app()->getLayout()->createBlock(self::VIEW_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+
+        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        $services = $block->getServices();
+        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+
+        /** @var Dhl\Versenden\Shipment\Service\Type\Generic $service */
+        foreach ($services as $service) {
+            if ($service->getCode() === \Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE) {
+                // PrintOnlyIfCodeable is enabled via config
+                $this->assertTrue($service->isSelected());
+            } else {
+                $this->assertFalse($service->isSelected());
+            }
+        }
     }
 
     /**

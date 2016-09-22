@@ -306,25 +306,41 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         );
 
         // set autocreate service details to remaining services
-        $collection = new Service\Collection($items);
-        $selection  = ShipmentOrder\ServiceSelection::fromArray($autoCreateValues);
-        $this->setServiceValues($collection, $selection);
+        /** @var Service\Type\Generic $service */
+        foreach ($services as $service) {
+            if (isset($autoCreateValues[$service->getCode()])) {
+                $service->setValue($autoCreateValues[$service->getCode()]);
+            }
+        }
 
+        $collection = new Service\Collection($items);
         return $collection;
     }
 
     /**
-     * @param Service\Collection $serviceCollection
-     * @param ShipmentOrder\ServiceSelection $serviceSelection
+     * Obtain the service objects that are enabled via module configuration and
+     * applicable to the given order parameters.
+     *
+     * @param string $shipperCountry
+     * @param string $recipientCountry
+     * @param bool $isPostalFacility
+     * @param bool $onlyCustomerServices
+     * @param mixed $store
+     * @return Service\Collection
      */
-    public function setServiceValues(
-        Service\Collection $serviceCollection,
-        ShipmentOrder\ServiceSelection $serviceSelection
-    ) {
-        $services = $serviceCollection->getItems();
-        /** @var Service\Type\Generic $service */
-        foreach ($services as $service) {
-            $service->setValue($serviceSelection->getServiceValue($service->getCode()));
-        }
+    public function getAvailableServices($shipperCountry, $recipientCountry, $isPostalFacility,
+                                         $onlyCustomerServices = false, $store = null)
+    {
+        $services = $this->getEnabledServices($store);
+
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
+        $shippingProducts = \Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+
+        $filter = new \Dhl\Versenden\Shipment\Service\Filter(
+            $shippingProducts,
+            $isPostalFacility,
+            $onlyCustomerServices
+        );
+        return $filter->filterServiceCollection($services);
     }
 }

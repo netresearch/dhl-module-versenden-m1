@@ -45,8 +45,9 @@ class PostalFacilityType implements RequestType
      */
     public static function prepare(RequestData $requestData = null)
     {
+        $postalFacilityType = null;
         if (!$requestData instanceof Receiver\PostalFacility) {
-            return null;
+            return $postalFacilityType;
         }
 
         $countryType = new VersendenApi\CountryType();
@@ -55,39 +56,32 @@ class PostalFacilityType implements RequestType
         $countryType->setState($requestData->getState());
 
         if ($requestData instanceof Receiver\Packstation) {
-            $packStationType = new VersendenApi\PackStationType(
+            $postalFacilityType = new VersendenApi\PackStationType(
                 $requestData->getPackstationNumber(),
                 $requestData->getZip(),
                 $requestData->getCity(),
                 $countryType
             );
-            $packStationType->setPostNumber($requestData->getPostNumber());
-            return $packStationType;
-        }
-
-        if ($requestData instanceof Receiver\Postfiliale) {
-            return new VersendenApi\PostfilialeType(
+            $postalFacilityType->setPostNumber($requestData->getPostNumber());
+        } elseif ($requestData instanceof Receiver\Postfiliale) {
+            $postalFacilityType = new VersendenApi\PostfilialeType(
                 $requestData->getPostfilialNumber(),
                 $requestData->getPostNumber(),
                 $requestData->getZip(),
                 $requestData->getCity(),
                 $countryType
             );
-        }
-
-        if ($requestData instanceof Receiver\ParcelShop) {
-            $parcelShopType = new VersendenApi\ParcelShopType(
+        } elseif ($requestData instanceof Receiver\ParcelShop) {
+            $postalFacilityType = new VersendenApi\ParcelShopType(
                 $requestData->getParcelShopNumber(),
                 $requestData->getZip(),
                 $requestData->getCity(),
                 $countryType
             );
-            $parcelShopType->setStreetName($requestData->getStreetName());
-            $parcelShopType->setStreetNumber($requestData->getStreetNumber());
-
-            return $parcelShopType;
+            $postalFacilityType->setStreetName($requestData->getStreetName());
+            $postalFacilityType->setStreetNumber($requestData->getStreetNumber());
         }
 
-        return null;
+        return $postalFacilityType;
     }
 }

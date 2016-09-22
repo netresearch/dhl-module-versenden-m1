@@ -183,7 +183,6 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     }
 
     /**
-     * @test
      * @dataProvider dataProvider
      * @loadFixture Model_ConfigTest
      * @loadFixture Model_ShipmentConfigTest
@@ -193,6 +192,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
      */
     public function shipmentToShipmentOrderWithJson($jsonInfo)
     {
+        $info = \Dhl\Versenden\Info\Serializer::unserialize($jsonInfo);
+
         $sequenceNumber = '303';
         $incrementId    = '808';
         $shipmentDate   = '2016-12-24';
@@ -211,7 +212,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
 
         $shippingAddress = new Mage_Sales_Model_Order_Address();
-        $shippingAddress->setData('dhl_versenden_info', $jsonInfo);
+        $shippingAddress->setData('dhl_versenden_info', $info);
         $payment = new Mage_Sales_Model_Order_Payment();
         $payment->setMethod('checkmo');
         $order = new Mage_Sales_Model_Order();

@@ -260,7 +260,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         );
         $exportDocumentCollection->addItem($exportDocument);
 
-        $serviceSelection = RequestData\ShipmentOrder\ServiceSelection::fromProperties(
+        $serviceSelection = new RequestData\ShipmentOrder\ServiceSelection(
             $serviceSettingsDayOfDelivery, $serviceSettingsDeliveryTimeFrame,
             $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
             $serviceSettingsParcelAnnouncement,

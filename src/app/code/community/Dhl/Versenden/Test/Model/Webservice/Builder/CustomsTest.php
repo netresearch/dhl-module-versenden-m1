@@ -41,6 +41,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
      */
     public function getExportDocuments()
     {
+        // prepare data
         $invoiceNumber = '103000002';
 
         $packageSequenceNumber = '303';
@@ -91,14 +92,19 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         );
         $packageInfo = array($packageSequenceNumber => $package);
 
+        // transform prepared data to structured request data
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs');
-
         $documents = $builder->getExportDocuments($invoiceNumber, $customsInfo, $packageInfo);
+
+        // assert item was added and type check
         $this->assertInstanceOf(Export\DocumentCollection::class, $documents);
         $this->assertCount(1, $documents);
+        foreach ($documents as $document) {
+            $this->assertInstanceOf(Export\Document::class, $document);
+        }
 
+        // assert transformed data object (export document) contains all prepared data
         $document = $documents->getItem($packageSequenceNumber);
-        $this->assertInstanceOf(Export\Document::class, $document);
         $this->assertEquals($packageSequenceNumber, $document->getPackageId());
         $this->assertEquals($invoiceNumber, $document->getInvoiceNumber());
         $this->assertEquals(
@@ -116,9 +122,13 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         $this->assertEquals($customsInfo['export_notification'], $document->isElectronicExportNotification());
 
 
+        // assert transformed data object (export positions) contains all prepared data
         $positions = $document->getPositions();
         $this->assertInstanceOf(Export\PositionCollection::class, $positions);
         $this->assertCount(2, $positions);
+        foreach ($positions as $position) {
+            $this->assertInstanceOf(Export\Position::class, $position);
+        }
 
         $position = $positions->getItem($itemSequenceNumberOne);
         $this->assertEquals($itemSequenceNumberOne, $position->getSequenceNumber());
@@ -155,5 +165,31 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         $this->assertEquals($package['items'][$itemSequenceNumberTwo]['qty'], $position->getAmount());
         $this->assertEquals($package['items'][$itemSequenceNumberTwo]['weight'], $position->getNetWeightInKG());
         $this->assertEquals($package['items'][$itemSequenceNumberTwo]['customs_value'], $position->getValue());
+
+        // add another item
+        $this->assertNull($positions->getItem('unknownSequenceNumber'));
+        $positionItems = $positions->getItems();
+        $positionItems[] = new Export\Position('unknownSequenceNumber', 'Foo', 'CN', '', 2, 0.8, 19.9);
+        $positions->setItems($positionItems);
+        $this->assertCount(3, $positions);
+        $this->assertNotNull($positions->getItem('unknownSequenceNumber'));
+
+        $packageSequenceNumberTwo = '808';
+        $document = new Export\Document(
+            $packageSequenceNumberTwo,
+            $document->getInvoiceNumber(),
+            $document->getExportType(),
+            $document->getExportTypeDescription(),
+            $document->getTermsOfTrade(),
+            $document->getAdditionalFee(),
+            $document->getPlaceOfCommital(),
+            $document->getPermitNumber(),
+            $document->getAttestationNumber(),
+            $document->isElectronicExportNotification(),
+            $document->getPositions()
+        );
+        $documents->setItems(array($document));
+        $this->assertNull($documents->getItem($packageSequenceNumber));
+        $this->assertNotNull($documents->getItem($packageSequenceNumberTwo));
     }
 }

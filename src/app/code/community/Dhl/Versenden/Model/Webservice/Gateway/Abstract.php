@@ -285,6 +285,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $args = array('config' => $shipmentConfig);
         $settingsBuilder = Mage::getModel('dhl_versenden/webservice_builder_settings', $args);
 
+        $infoBuilder = Mage::getModel('dhl_versenden/info_builder');
 
         $args = array(
             'shipper_builder'  => $shipperBuilder,
@@ -293,6 +294,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
             'package_builder'  => $packageBuilder,
             'customs_builder'  => $customsBuilder,
             'settings_builder' => $settingsBuilder,
+            'info_builder'     => $infoBuilder,
         );
         $orderBuilder = Mage::getModel('dhl_versenden/webservice_builder_order', $args);
 
@@ -305,17 +307,6 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
             $serviceInfo,
             $customsInfo,
             $gkApiProduct
-        );
-
-        // update shipping info
-        $shippingInfo = new Webservice\RequestData\ShippingInfo(
-            $shipmentOrder->getReceiver(),
-            $shipmentOrder->getServiceSelection(),
-            $shipmentOrder->getPackages()
-        );
-        $shipment->getShippingAddress()->setData(
-            'dhl_versenden_info',
-            json_encode($shippingInfo, JSON_FORCE_OBJECT)
         );
 
         return $shipmentOrder;
