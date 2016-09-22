@@ -76,4 +76,11 @@
     <adminhtml_sales_order_shipment_view>
         <update handle="packaging_popup"/>
     </adminhtml_sales_order_shipment_view>
+
+    <adminhtml_sales_order_address>
+        <reference name="sales_order_address.form.container">
+            <!-- Added via observer if conditions apply -->
+            <block type="dhl_versenden/adminhtml_sales_order_address_form" name="dhl_versenden_form" />
+        </reference>
+    </adminhtml_sales_order_address>
 </layout>

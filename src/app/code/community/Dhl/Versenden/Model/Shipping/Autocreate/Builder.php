@@ -220,21 +220,18 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $serviceData['shipment_service'][Service\PrintOnlyIfCodeable::CODE] =
             $this->shipmentConfig->getSettings($this->order->getStoreId())->isPrintOnlyIfCodeable();
 
-        // set customer services from checkout
         //TODO(nr): iterate over all customer services and set according to checkout selection
-        $shippingInfoJson = $this->order->getShippingAddress()->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if ($shippingInfo) {
-            $services = $shippingInfo->getServiceSelection();
+        // set customer services from checkout
+        /** @var \Dhl\Versenden\Info $versendenInfo */
+        $versendenInfo = $this->order->getShippingAddress()->getData('dhl_versenden_info');
+        if ($versendenInfo instanceof \Dhl\Versenden\Info) {
+            $serviceData['shipment_service'][Service\PreferredLocation::CODE] = (bool)$versendenInfo->getServices()->preferredLocation;
+            $serviceData['service_setting'][Service\PreferredLocation::CODE] = $versendenInfo->getServices()->preferredLocation;
 
-            $serviceData['shipment_service'][Service\PreferredLocation::CODE] = (bool)$services->getPreferredLocation();
-            $serviceData['service_setting'][Service\PreferredLocation::CODE] = $services->getPreferredLocation();
+            $serviceData['shipment_service'][Service\PreferredNeighbour::CODE] = (bool)$versendenInfo->getServices()->preferredNeighbour;
+            $serviceData['service_setting'][Service\PreferredNeighbour::CODE] = $versendenInfo->getServices()->preferredNeighbour;
 
-            $serviceData['shipment_service'][Service\PreferredNeighbour::CODE] = (bool)$services->getPreferredNeighbour();
-            $serviceData['service_setting'][Service\PreferredNeighbour::CODE] = $services->getPreferredNeighbour();
-
-            $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = (bool)$services->getParcelAnnouncement();
+            $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = (bool)$versendenInfo->getServices()->parcelAnnouncement;
         }
 
         $request->setData('services', $serviceData);

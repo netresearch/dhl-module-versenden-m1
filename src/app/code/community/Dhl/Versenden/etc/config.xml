@@ -77,7 +77,7 @@
                     </update_carrier>
                 </observers>
             </sales_order_place_after>
-            <dhl_versenden_set_postal_facility>
+            <dhl_versenden_fetch_postal_facility>
                 <observers>
                     <prepare_postal_facility>
                         <class>dhl_versenden/observer</class>
@@ -85,7 +85,7 @@
                         <type>singleton</type>
                     </prepare_postal_facility>
                 </observers>
-            </dhl_versenden_set_postal_facility>
+            </dhl_versenden_fetch_postal_facility>
             <payment_method_is_active>
                 <observers>
                     <disable_cod_payment>
@@ -95,6 +95,42 @@
                     </disable_cod_payment>
                 </observers>
             </payment_method_is_active>
+            <model_save_before>
+                <observers>
+                    <serialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>serializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </serialize_versenden_info>
+                </observers>
+            </model_save_before>
+            <model_load_after>
+                <observers>
+                    <unserialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_info>
+                </observers>
+            </model_load_after>
+            <model_save_after>
+                <observers>
+                    <unserialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_info>
+                </observers>
+            </model_save_after>
+            <sales_order_address_collection_load_after>
+                <observers>
+                    <unserialize_versenden_infos>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfoItems</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_infos>
+                </observers>
+            </sales_order_address_collection_load_after>
         </events>
         <fieldsets>
             <sales_convert_quote_address>
@@ -141,6 +177,15 @@
                     </delete_shipping_label>
                 </observers>
             </sales_order_shipment_track_delete_before>
+            <adminhtml_widget_container_html_before>
+                <observers>
+                    <replace_address_form>
+                        <class>dhl_versenden/observer</class>
+                        <method>replaceAddressForm</method>
+                        <type>singleton</type>
+                    </replace_address_form>
+                </observers>
+            </adminhtml_widget_container_html_before>
         </events>
     </adminhtml>
     <frontend>
@@ -222,8 +267,7 @@
                 <service_preferredlocation_placeholder>e.g. garage, terrace</service_preferredlocation_placeholder>
                 <service_preferredneighbour_enabled>0</service_preferredneighbour_enabled>
                 <service_preferredneighbour_placeholder>name, street and street number</service_preferredneighbour_placeholder>
-                <service_packstation_enabled>0</service_packstation_enabled>
-                <service_parcelannouncement_enabled>1</service_parcelannouncement_enabled>
+                <service_parcelannouncement_enabled>0</service_parcelannouncement_enabled>
                 <service_visualcheckofage_enabled>1</service_visualcheckofage_enabled>
                 <service_returnshipment_enabled>1</service_returnshipment_enabled>
                 <service_insurance_enabled>1</service_insurance_enabled>

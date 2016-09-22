@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Product;
-use \Dhl\Versenden\Shipment\Service\Type as Service;
+use \Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
  *
@@ -39,47 +38,65 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
 {
     /**
      * Obtain the services that are enabled via config. Customer's service
-     * selection from checkout is read from shipping address.
+     * selection from checkout is read from shipping address. Services from
+     * config are added.
      *
-     * @return \Dhl\Versenden\Shipment\Service\Type\Generic[]
+     * @return Service\Type\Generic[]
      */
     public function getServices()
     {
+        // obtain enabled services
         $storeId = $this->getShipment()->getStoreId();
         $shippingAddress = $this->getShipment()->getShippingAddress();
         $serviceConfig = Mage::getModel('dhl_versenden/config_service');
 
-        $enabledServices = $serviceConfig->getServices($storeId);
-
-        $shippingInfoJson = $shippingAddress->getData('dhl_versenden_info');
-        $shippingInfoObj = json_decode($shippingInfoJson);
-        $shippingInfo = \Dhl\Versenden\Webservice\RequestData\ObjectMapper::getShippingInfo((object)$shippingInfoObj);
-        if ($shippingInfo !== null) {
-            $serviceSelection = $shippingInfo->getServiceSelection();
-            $serviceConfig->setServiceValues($enabledServices, $serviceSelection);
-        }
-
-
         $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
         $recipientCountry = $shippingAddress->getCountryId();
-        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
-
-        $shippingProducts = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
         $isPostalFacility = $this->helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
-        $filter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
-        $filteredCollection = $filter->filterServiceCollection($enabledServices);
+        $availableServices = $serviceConfig->getAvailableServices(
+            $shipperCountry,
+            $recipientCountry,
+            $isPostalFacility,
+            false,
+            $storeId
+        );
 
-        return $filteredCollection;
+        // set default service values from config
+        $printOnlyIfCodeable = Mage::getModel('dhl_versenden/config_shipment')->getSettings($storeId)
+            ->isPrintOnlyIfCodeable();
+        $availableServices->getItem(Service\PrintOnlyIfCodeable::CODE)->setValue($printOnlyIfCodeable);
+
+        if ($availableServices->getItem(Service\ParcelAnnouncement::CODE)) {
+            $availableServices->getItem(Service\ParcelAnnouncement::CODE)->setValue(true);
+        }
+
+        // set/override service values from pre-selection
+        /** @var \Dhl\Versenden\Info $versendenInfo */
+        $versendenInfo = $shippingAddress->getData('dhl_versenden_info');
+        if (!$versendenInfo instanceof \Dhl\Versenden\Info) {
+            return $availableServices;
+        }
+
+        /** @var Service\Type\Generic $availableService */
+        foreach ($availableServices as $availableService) {
+            $code = $availableService->getCode();
+            $serviceSelection = $versendenInfo->getServices()->{$code};
+            if ($serviceSelection !== null) {
+                $availableService->setValue($serviceSelection);
+            }
+        }
+
+        return $availableServices;
     }
 
     /**
-     * @param Service\Generic $service
-     * @return Service\Renderer
+     * @param Service\Type\Generic $service
+     * @return Service\Type\Renderer
      */
-    public function getRenderer(Service\Generic $service)
+    public function getRenderer(Service\Type\Generic $service)
     {
-        $renderer = new Service\Renderer($service);
+        $renderer = new Service\Type\Renderer($service);
         return $renderer;
     }
 }

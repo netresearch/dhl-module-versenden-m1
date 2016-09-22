@@ -109,7 +109,10 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
     public function autoCreateStatusNotOk()
     {
         $statusText = 'Hard validation error';
-        $statusMessage = 'The foo is not bar.';
+        $statusMessagePartOne = 'The foo is not bar.';
+        $statusMessagePartTwo = 'The fox is not pink.';
+
+        $statusMessage = array($statusMessagePartOne, $statusMessagePartTwo);
 
         $status          = new ResponseData\Status\Item('0', '1101', $statusText, $statusMessage);
         $labelCollection = new ResponseData\CreateShipment\LabelCollection();
@@ -147,7 +150,10 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $this->assertEmpty($shipmentCollection);
         /** @var Mage_Sales_Model_Order_Status_History $historyItem */
         foreach ($historyCollection as $historyItem) {
-            $this->assertEquals("(x) $statusText $statusMessage", $historyItem->getComment());
+            $this->assertEquals(
+                "(x) $statusText $statusMessagePartOne $statusMessagePartTwo",
+                $historyItem->getComment()
+            );
         }
     }
 

@@ -35,93 +35,61 @@ use Dhl\Versenden\Webservice\RequestData;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class ServiceSelection extends RequestData implements \JsonSerializable
+class ServiceSelection extends RequestData
 {
     /** @var bool|string false or date */
-    private $dayOfDelivery = false;
+    private $dayOfDelivery;
     /** @var bool|string false or time */
-    private $deliveryTimeFrame = false;
+    private $deliveryTimeFrame;
     /** @var bool|string false or location */
-    private $preferredLocation = false;
+    private $preferredLocation;
     /** @var bool|string false or neighbour address */
-    private $preferredNeighbour = false;
+    private $preferredNeighbour;
     /** @var bool false or true */
-    private $parcelAnnouncement = false;
+    private $parcelAnnouncement;
     /** @var bool|string false or A16 or A18 */
-    private $visualCheckOfAge = false;
+    private $visualCheckOfAge;
     /** @var bool false or true */
-    private $returnShipment = false;
+    private $returnShipment;
     /** @var bool|float false or amount */
-    private $insurance = false;
+    private $insurance;
     /** @var bool false or true */
-    private $bulkyGoods = false;
+    private $bulkyGoods;
     /** @var bool|float false or amount */
-    private $cod = false;
+    private $cod;
     /** @var bool false or true */
-    private $printOnlyIfCodeable = false;
+    private $printOnlyIfCodeable;
 
     /**
-     * Constructs ServiceSettings object from array with values that differ from initial settings
-     *
-     *
-     * @param array $options service setting options that differ from default
-     *
-     * @return ServiceSelection
-     */
-    public static function fromArray(array $options)
-    {
-        $instance = new self();
-        array_walk(
-            $options,
-            function (&$value, $key, &$instance) {
-                if (property_exists($instance, $key)) {
-                    $instance->$key = $value;
-                }
-            },
-            $instance
-        );
-
-        return $instance;
-    }
-
-
-    /**
-     * Constructs service setting object from giving each property explicitly
-     *
+     * ServiceSelection constructor.
      * @param bool|string $dayOfDelivery
      * @param bool|string $deliveryTimeFrame
      * @param bool|string $preferredLocation
      * @param bool|string $preferredNeighbour
-     * @param int         $parcelAnnouncement
+     * @param bool $parcelAnnouncement
      * @param bool|string $visualCheckOfAge
-     * @param bool        $returnShipment
-     * @param bool|float  $insurance
-     * @param bool        $bulkyGoods
-     * @param bool|float  $cod
-     * @param bool        $printOnlyIfCodeable
-     *
-     * @return ServiceSelection
+     * @param bool $returnShipment
+     * @param bool|float $insurance
+     * @param bool $bulkyGoods
+     * @param bool|float $cod
+     * @param bool $printOnlyIfCodeable
      */
-
-    public static function fromProperties(
+    public function __construct(
         $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
         $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance,
-        $bulkyGoods, $cod, $printOnlyIfCodeable
-    ) {
-        $instance = new self();
-        $instance->dayOfDelivery = $dayOfDelivery;
-        $instance->deliveryTimeFrame = $deliveryTimeFrame;
-        $instance->preferredLocation = $preferredLocation;
-        $instance->preferredNeighbour = $preferredNeighbour;
-        $instance->parcelAnnouncement = $parcelAnnouncement;
-        $instance->visualCheckOfAge = $visualCheckOfAge;
-        $instance->returnShipment = $returnShipment;
-        $instance->insurance = $insurance;
-        $instance->bulkyGoods = $bulkyGoods;
-        $instance->cod = $cod;
-        $instance->printOnlyIfCodeable = $printOnlyIfCodeable;
-
-        return $instance;
+        $bulkyGoods, $cod, $printOnlyIfCodeable)
+    {
+        $this->dayOfDelivery = $dayOfDelivery;
+        $this->deliveryTimeFrame = $deliveryTimeFrame;
+        $this->preferredLocation = $preferredLocation;
+        $this->preferredNeighbour = $preferredNeighbour;
+        $this->parcelAnnouncement = $parcelAnnouncement;
+        $this->visualCheckOfAge = $visualCheckOfAge;
+        $this->returnShipment = $returnShipment;
+        $this->insurance = $insurance;
+        $this->bulkyGoods = $bulkyGoods;
+        $this->cod = $cod;
+        $this->printOnlyIfCodeable = $printOnlyIfCodeable;
     }
 
     /**
@@ -210,31 +178,5 @@ class ServiceSelection extends RequestData implements \JsonSerializable
     public function isPrintOnlyIfCodeable()
     {
         return $this->printOnlyIfCodeable;
-    }
-
-    /**
-     * @param string $serviceCode
-     * @return mixed
-     */
-    public function getServiceValue($serviceCode)
-    {
-        if (property_exists(static::class, $serviceCode)) {
-            return $this->{$serviceCode};
-        }
-
-        return null;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     *
-     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *        which is a value of any type other than a resource.
-     * @since 5.4.0
-     */
-    public function jsonSerialize()
-    {
-        return get_object_vars($this);
     }
 }

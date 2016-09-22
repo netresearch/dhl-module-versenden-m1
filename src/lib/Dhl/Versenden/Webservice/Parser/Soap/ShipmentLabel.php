@@ -63,17 +63,4 @@ abstract class ShipmentLabel extends Shipment implements Parser
 
         return $label;
     }
-
-    /**
-     * @param VersendenApi\LabelData[] $labelData
-     * @return ResponseData\CreateShipment\LabelCollection
-     */
-    protected function parseLabels(array $labelData)
-    {
-        $labelCollection = new ResponseData\CreateShipment\LabelCollection();
-        foreach ($labelData as $label) {
-            $labelCollection->addItem($this->parseLabel($label));
-        }
-        return $labelCollection;
-    }
 }
