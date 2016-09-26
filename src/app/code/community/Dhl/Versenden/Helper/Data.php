@@ -154,17 +154,9 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * @param Mage_Sales_Model_Order $order
      * @param string $message
-     * @param string $messageType
      */
-    public function addStatusHistoryComment(Mage_Sales_Model_Order $order, $message, $messageType)
+    public function addStatusHistoryComment(Mage_Sales_Model_Order $order, $message)
     {
-        // TODO(nr): add dhl message type indicator, i.e. some icon
-        if ($messageType === Zend_Log::ERR) {
-            $message = sprintf('%s %s', '(x)', $message);
-        } else {
-            $message = sprintf('%s %s', '(i)', $message);
-        }
-
         $history = Mage::getModel('sales/order_status_history')
             ->setOrder($order)
             ->setStatus($order->getStatus())
@@ -174,23 +166,5 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         $historyCollection = $order->getStatusHistoryCollection();
         $historyCollection->addItem($history);
         $historyCollection->save();
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order $order
-     * @param string $message
-     */
-    public function addStatusHistoryError(Mage_Sales_Model_Order $order, $message)
-    {
-        $this->addStatusHistoryComment($order, $message, Zend_Log::ERR);
-    }
-
-    /**
-     * @param Mage_Sales_Model_Order $order
-     * @param string $message
-     */
-    public function addStatusHistoryInfo(Mage_Sales_Model_Order $order, $message)
-    {
-        $this->addStatusHistoryComment($order, $message, Zend_Log::INFO);
     }
 }

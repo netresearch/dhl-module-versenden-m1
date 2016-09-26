@@ -69,7 +69,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         );
 
         $missingArguments = array_diff_key($argDef, $args);
-        if (count($missingArguments)) {
+        if (!empty($missingArguments)) {
             $message = sprintf('required arguments missing: %s', implode(', ', array_keys($missingArguments)));
             throw new Mage_Core_Exception($message);
         }
@@ -79,7 +79,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         };
         $invalidArguments = array_filter(array_keys($argDef), $invalidArgumentFilter);
 
-        if (count($invalidArguments)) {
+        if (!empty($invalidArguments)) {
             $message = sprintf('invalid arguments: %s', implode(', ', $invalidArguments));
             throw new Mage_Core_Exception($message);
         }
@@ -196,6 +196,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $globalSettings = $this->settingsBuilder->getSettings($shipment->getStoreId());
 
+        //TODO(nr): remove printOnlyIfCodeable parameter as it is read from service selection
         $shipmentOrder = new RequestData\ShipmentOrder(
             $sequenceNumber,
             $shipment->getOrder()->getIncrementId(),

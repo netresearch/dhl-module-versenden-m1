@@ -45,7 +45,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
     {
         $documentCollection = new Export\DocumentCollection();
 
-        if (!count($customsInfo)) {
+        if (empty($customsInfo)) {
             return $documentCollection;
         }
 

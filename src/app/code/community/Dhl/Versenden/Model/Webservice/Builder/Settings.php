@@ -59,8 +59,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Settings
      * @param mixed $store
      * @return GlobalSettings
      */
-    public function getSettings($storeId)
+    public function getSettings($store)
     {
-        return $this->config->getSettings($storeId);
+        return $this->config->getSettings($store);
     }
 }

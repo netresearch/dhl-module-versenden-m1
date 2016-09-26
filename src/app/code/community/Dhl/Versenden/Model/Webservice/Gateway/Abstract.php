@@ -51,6 +51,10 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     const OPERATION_UPDATE_SHIPMENT_ORDER = 'updateShipmentOrder';
     const OPERATION_VALIDATE_SHIPMENT = 'validateShipment';
 
+    const WEBSERVICE_VERSION_MAJOR = '2';
+    const WEBSERVICE_VERSION_MINOR = '1';
+    const WEBSERVICE_VERSION_BUILD = '';
+
     /**
      * @param Dhl_Versenden_Model_Config_Shipper $config
      * @return Webservice\Adapter
@@ -81,42 +85,6 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      * @return ResponseData\DeleteShipment
      */
     abstract protected function doDeleteShipmentOrder(RequestData\DeleteShipment $requestData);
-
-    /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     */
-    protected function createShipmentOrderBefore(array $shipmentRequests)
-    {
-        $eventData = array('shipment_requests' => $shipmentRequests);
-        Mage::dispatchEvent('dhl_versenden_create_shipment_order_before', $eventData);
-    }
-
-    /**
-     * @param ResponseData\CreateShipment $result
-     */
-    protected function createShipmentOrderAfter(ResponseData\CreateShipment $result)
-    {
-        $eventData = array('result' => $result);
-        Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
-    }
-
-    /**
-     * @param string[] $shipmentNumbers
-     */
-    protected function deleteShipmentOrderBefore(array $shipmentNumbers)
-    {
-        $eventData = array('shipment_numbers' => $shipmentNumbers);
-        Mage::dispatchEvent('dhl_versenden_delete_shipment_order_before', $eventData);
-    }
-
-    /**
-     * @param ResponseData\DeleteShipment $result
-     */
-    protected function deleteShipmentOrderAfter(ResponseData\DeleteShipment $result)
-    {
-        $eventData = array('result' => $result);
-        Mage::dispatchEvent('dhl_versenden_delete_shipment_order_after', $eventData);
-    }
 
     /**
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
@@ -163,16 +131,21 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     }
 
     /**
+     * Prepare request data and pass on to concrete gateway.
+     *
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return RequestData\CreateShipment
+     * @return ResponseData\CreateShipment
      * @throws RequestData\ValidationException
      */
-    protected function prepareCreateShipmentOrderData(array $shipmentRequests)
+    public function createShipmentOrder(array $shipmentRequests)
     {
-        $wsVersion = new RequestData\Version('2', '1');
+        $eventData = array('shipment_requests' => $shipmentRequests);
+        Mage::dispatchEvent('dhl_versenden_create_shipment_order_before', $eventData);
+
+        $wsVersion = new RequestData\Version(self::WEBSERVICE_VERSION_MAJOR, self::WEBSERVICE_VERSION_MINOR);
         $shipmentOrders = $this->prepareShipmentOrders($shipmentRequests);
 
-        // handle validation errors in shipment request data
+        // collect validation errors in shipment request data
         $shipmentOrderErrors = array();
         foreach ($shipmentRequests as $shipmentRequest) {
             if ($shipmentRequest->hasData('request_data_exception')) {
@@ -183,54 +156,36 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
                 );
             }
         }
-
-        if (count($shipmentOrderErrors)) {
+        if (!empty($shipmentOrderErrors)) {
             $msg = sprintf('%s %s', 'The shipment request(s) had errors.', implode("\n", $shipmentOrderErrors));
             throw new RequestData\ValidationException($msg);
         }
 
         /** @var RequestData\CreateShipment $requestData */
-        return new RequestData\CreateShipment($wsVersion, $shipmentOrders);
-    }
-
-    /**
-     * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return ResponseData\CreateShipment
-     */
-    public function createShipmentOrder(array $shipmentRequests)
-    {
-        $this->createShipmentOrderBefore($shipmentRequests);
-
-        $requestData = $this->prepareCreateShipmentOrderData($shipmentRequests);
+        $requestData = new RequestData\CreateShipment($wsVersion, $shipmentOrders);
         $result = $this->doCreateShipmentOrder($requestData);
 
-        $this->createShipmentOrderAfter($result);
+        $eventData = array('result' => $result);
+        Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
 
         return $result;
     }
 
     /**
      * @param string[] $shipmentNumbers
-     * @return RequestData\DeleteShipment
-     */
-    protected function prepareDeleteShipmentOrderData(array $shipmentNumbers)
-    {
-        $wsVersion = new RequestData\Version('2', '1');
-        return new RequestData\DeleteShipment($wsVersion, $shipmentNumbers);
-    }
-
-        /**
-     * @param string[] $shipmentNumbers
      * @return ResponseData\DeleteShipment
      */
     public function deleteShipmentOrder(array $shipmentNumbers)
     {
-        $this->deleteShipmentOrderBefore($shipmentNumbers);
+        $eventData = array('shipment_numbers' => $shipmentNumbers);
+        Mage::dispatchEvent('dhl_versenden_delete_shipment_order_before', $eventData);
 
-        $requestData = $this->prepareDeleteShipmentOrderData($shipmentNumbers);
+        $wsVersion = new RequestData\Version(self::WEBSERVICE_VERSION_MAJOR, self::WEBSERVICE_VERSION_MINOR);
+        $requestData = new RequestData\DeleteShipment($wsVersion, $shipmentNumbers);
         $result = $this->doDeleteShipmentOrder($requestData);
 
-        $this->deleteShipmentOrderAfter($result);
+        $eventData = array('result' => $result);
+        Mage::dispatchEvent('dhl_versenden_delete_shipment_order_after', $eventData);
 
         return $result;
     }

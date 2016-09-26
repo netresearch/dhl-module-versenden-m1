@@ -46,7 +46,10 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
     protected $config;
 
     /**
-     * Dhl_Versenden_Model_Webservice_Logger_Abstract constructor.
+     * Dhl_Versenden_Model_Log constructor.
+     *
+     * @param mixed[] $args
+     * @throws Mage_Core_Exception
      */
     public function __construct($args)
     {

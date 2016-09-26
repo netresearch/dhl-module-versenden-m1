@@ -67,7 +67,8 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
             ->isPrintOnlyIfCodeable();
         $availableServices->getItem(Service\PrintOnlyIfCodeable::CODE)->setValue($printOnlyIfCodeable);
 
-        if ($availableServices->getItem(Service\ParcelAnnouncement::CODE)) {
+        $parcelAnnouncement = $availableServices->getItem(Service\ParcelAnnouncement::CODE);
+        if (($parcelAnnouncement instanceof Service\ParcelAnnouncement) && !$parcelAnnouncement->isCustomerService()) {
             $availableServices->getItem(Service\ParcelAnnouncement::CODE)->setValue(true);
         }
 

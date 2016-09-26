@@ -53,7 +53,7 @@ abstract class Select extends Text
      * @param string $name
      * @param bool $isEnabled
      * @param bool $isSelected
-     * @paramt string[] $options
+     * @param string[] $options
      */
     public function __construct($name, $isEnabled, $isSelected, $options)
     {

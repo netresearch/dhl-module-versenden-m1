@@ -78,39 +78,39 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
         $selectedServices = $serviceInfo['shipment_service'];
         $serviceDetails = $serviceInfo['service_setting'];
 
-        $dayOfDelivery = isset($selectedServices[Service\DayOfDelivery::CODE])
+        $dayOfDelivery = !empty($selectedServices[Service\DayOfDelivery::CODE])
             ? $serviceDetails[Service\DayOfDelivery::CODE]
             : false;
 
-        $deliveryTimeFrame = isset($selectedServices[Service\DeliveryTimeFrame::CODE])
+        $deliveryTimeFrame = !empty($selectedServices[Service\DeliveryTimeFrame::CODE])
             ? $serviceDetails[Service\DeliveryTimeFrame::CODE]
             : false;
 
-        $preferredLocation = isset($selectedServices[Service\PreferredLocation::CODE])
+        $preferredLocation = !empty($selectedServices[Service\PreferredLocation::CODE])
             ? $serviceDetails[Service\PreferredLocation::CODE]
             : false;
 
-        $preferredNeighbour = isset($selectedServices[Service\PreferredNeighbour::CODE])
+        $preferredNeighbour = !empty($selectedServices[Service\PreferredNeighbour::CODE])
             ? $serviceDetails[Service\PreferredNeighbour::CODE]
             : false;
 
-        $parcelAnnouncement = isset($selectedServices[Service\ParcelAnnouncement::CODE])
+        $parcelAnnouncement = !empty($selectedServices[Service\ParcelAnnouncement::CODE])
             ? (bool)$selectedServices[Service\ParcelAnnouncement::CODE]
             : false;
 
-        $visualCheckOfAge = isset($selectedServices[Service\VisualCheckOfAge::CODE])
+        $visualCheckOfAge = !empty($selectedServices[Service\VisualCheckOfAge::CODE])
             ? $serviceDetails[Service\VisualCheckOfAge::CODE]
             : false;
 
-        $returnShipment = isset($selectedServices[Service\ReturnShipment::CODE])
+        $returnShipment = !empty($selectedServices[Service\ReturnShipment::CODE])
             ? (bool)$selectedServices[Service\ReturnShipment::CODE]
             : false;
 
-        $insurance = isset($selectedServices[Service\Insurance::CODE])
+        $insurance = !empty($selectedServices[Service\Insurance::CODE])
             ? number_format($salesEntity->getBaseGrandTotal(), 2)
             : false;
 
-        $bulkyGoods = isset($selectedServices[Service\BulkyGoods::CODE])
+        $bulkyGoods = !empty($selectedServices[Service\BulkyGoods::CODE])
             ? (bool)$selectedServices[Service\BulkyGoods::CODE]
             : false;
 
@@ -119,7 +119,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             ? number_format($salesEntity->getBaseGrandTotal(), 2)
             : false;
 
-        $printOnlyIfCodeable = isset($selectedServices[Service\PrintOnlyIfCodeable::CODE])
+        $printOnlyIfCodeable = !empty($selectedServices[Service\PrintOnlyIfCodeable::CODE])
             ? (bool)$selectedServices[Service\PrintOnlyIfCodeable::CODE]
             : false;
 

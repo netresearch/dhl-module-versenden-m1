@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 use \Dhl\Versenden\Shipment\Service;
+
 /**
  * Dhl_Versenden_Model_Config_Service
  *
@@ -60,6 +60,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initDayOfDelivery($store = null)
     {
+        //TODO(nr): replace by PreferredDay service
         $name        = Mage::helper('dhl_versenden/data')->__("Day Of Delivery");
         $isAvailable = false;
         $isSelected  = false;
@@ -74,6 +75,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initDeliveryTimeFrame($store = null)
     {
+        //TODO(nr): replace by PreferredTime service
         $name        = Mage::helper('dhl_versenden/data')->__("Delivery Time Frame");
         $isAvailable = false;
         $isSelected  = false;

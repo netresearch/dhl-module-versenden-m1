@@ -23,8 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper as ShipperData;
+use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper as Shipper;
 /**
  * Dhl_Versenden_Model_Config_Shipper
  *
@@ -97,8 +96,13 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * TODO(nr): do not create RequestData objects while reading from config.
+     * instead, read plain values and convert prior to actual webservice call.
+     */
+
+    /**
      * @param mixed $store
-     * @return ShipperData\Account
+     * @return Shipper\Account
      */
     public function getAccountSettings($store = null)
     {
@@ -121,7 +125,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $participation[$participationEntry['procedure']] = $participationEntry['participation'];
         }
 
-        return new ShipperData\Account(
+        return new Shipper\Account(
             $user,
             $signature,
             $ekp,
@@ -131,7 +135,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return ShipperData\BankData
+     * @return Shipper\BankData
      */
     public function getBankData($store = null)
     {
@@ -143,7 +147,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $note2        = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE2, $store);
         $accountRef   = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_ACCOUNTREF, $store);
 
-        return new ShipperData\BankData(
+        return new Shipper\BankData(
             $accountOwner,
             $bankName,
             $iban,
@@ -156,7 +160,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return ShipperData\Contact
+     * @return Shipper\Contact
      */
     public function getContact($store = null)
     {
@@ -180,7 +184,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $email = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_EMAIL, $store);
         $contactPerson = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_PERSON, $store);
 
-        return new ShipperData\Contact(
+        return new Shipper\Contact(
             $name1,
             $name2,
             $name3,
@@ -201,7 +205,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return ShipperData\Contact|ShipperData\ReturnReceiver
+     * @return Shipper\Contact|Shipper\ReturnReceiver
      */
     public function getReturnReceiver($store = null)
     {
@@ -229,7 +233,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $email = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_EMAIL, $store);
         $contactPerson = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_PERSON, $store);
 
-        return new ShipperData\ReturnReceiver(
+        return new Shipper\ReturnReceiver(
             $name1,
             $name2,
             $name3,
@@ -250,11 +254,11 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return ShipmentOrder\Shipper
+     * @return Shipper
      */
     public function getShipper($store = null)
     {
-        return new ShipmentOrder\Shipper(
+        return new Shipper(
             $this->getAccountSettings($store),
             $this->getBankData($store),
             $this->getContact($store),
