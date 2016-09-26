@@ -59,8 +59,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Shipper
      * @param mixed $store
      * @return Shipper
      */
-    public function getShipper($storeId)
+    public function getShipper($store)
     {
-        return $this->config->getShipper($storeId);
+        return $this->config->getShipper($store);
     }
 }

@@ -174,6 +174,7 @@ class CreateShipmentRequestType implements RequestType
             new VersendenApi\Serviceconfiguration($document->isElectronicExportNotification())
         );
 
+        $exportDocPositions = [];
         /** @var RequestData\ShipmentOrder\Export\Position $position */
         foreach ($document->getPositions() as $position) {
             $exportDocPosition = new VersendenApi\ExportDocPosition(

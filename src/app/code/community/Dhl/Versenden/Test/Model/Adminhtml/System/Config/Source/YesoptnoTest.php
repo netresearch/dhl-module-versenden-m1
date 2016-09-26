@@ -41,7 +41,7 @@ class Dhl_Versenden_Test_Model_Adminhtml_System_Config_Source_YesoptnoTest
      */
     public function toOptionArray()
     {
-        $expected = ['No', 'Yes', 'Optional'];
+        $expected = array('No', 'Yes', 'Optional');
 
         $source = new Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno();
         $options = $source->toOptionArray();
@@ -49,13 +49,13 @@ class Dhl_Versenden_Test_Model_Adminhtml_System_Config_Source_YesoptnoTest
         $this->assertInternalType('array', $options);
         $this->assertCount(3, $options);
 
-        array_walk($options, function ($option) use ($expected) {
+        foreach ($options as $option) {
             $this->assertInternalType('array', $option);
             $this->assertArrayHasKey('value', $option);
             $this->assertArrayHasKey('label', $option);
 
             $this->assertArrayHasKey($option['value'], $expected);
             $this->assertEquals($expected[$option['value']], $option['label']);
-        });
+        }
     }
 }

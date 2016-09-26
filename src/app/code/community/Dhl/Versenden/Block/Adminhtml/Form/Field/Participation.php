@@ -28,6 +28,9 @@
  * Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
  * DHL Versenden participation numbers combined form field (frontend model)
  *
+ * TODO(nr): set proper id to grid in order to enable field dependencies
+ * @see template/system/config/form/field/array.phtml
+ *
  * @category Dhl
  * @package  Dhl_Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
@@ -66,8 +69,8 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
     }
 
     /**
-     * (non-PHPdoc)
      * @see Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract::_prepareArrayRow()
+     * @param Varien_Object $row
      */
     protected function _prepareArrayRow(Varien_Object $row)
     {
@@ -76,7 +79,7 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
             'selected="selected"'
         );
 
-        return parent::_prepareArrayRow($row);
+        parent::_prepareArrayRow($row);
     }
 
     /**

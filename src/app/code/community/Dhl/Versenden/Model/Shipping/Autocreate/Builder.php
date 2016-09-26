@@ -192,6 +192,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
     protected function setServices(Mage_Shipping_Model_Shipment_Request $request)
     {
         $storeId = $this->order->getStoreId();
+
         // set merchant services from autocreate config
         $services = $this->serviceConfig->getAutoCreateServices($storeId);
         $shippingAddress = $this->order->getShippingAddress();
@@ -216,29 +217,42 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
         }
 
+
         // add printOnlyIfCodeable flag from config
         $serviceData['shipment_service'][Service\PrintOnlyIfCodeable::CODE] =
-            $this->shipmentConfig->getSettings($this->order->getStoreId())->isPrintOnlyIfCodeable();
+            $this->shipmentConfig->getSettings($storeId)->isPrintOnlyIfCodeable();
+        // add parcelAnnouncement flag from config
+        $parcelAnnouncement = $this->serviceConfig->getEnabledServices($storeId)
+                ->getItem(Service\ParcelAnnouncement::CODE);
+        if (($parcelAnnouncement instanceof Service\ParcelAnnouncement) && !$parcelAnnouncement->isCustomerService()) {
+            $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = true;
+        }
 
-        //TODO(nr): iterate over all customer services and set according to checkout selection
-        // set customer services from checkout
+
+        // set customer services from checkout (includes parcelAnnouncement if configured as "optional")
         /** @var \Dhl\Versenden\Info $versendenInfo */
         $versendenInfo = $this->order->getShippingAddress()->getData('dhl_versenden_info');
         if ($versendenInfo instanceof \Dhl\Versenden\Info) {
-            $serviceData['shipment_service'][Service\PreferredLocation::CODE] = (bool)$versendenInfo->getServices()->preferredLocation;
-            $serviceData['service_setting'][Service\PreferredLocation::CODE] = $versendenInfo->getServices()->preferredLocation;
-
-            $serviceData['shipment_service'][Service\PreferredNeighbour::CODE] = (bool)$versendenInfo->getServices()->preferredNeighbour;
-            $serviceData['service_setting'][Service\PreferredNeighbour::CODE] = $versendenInfo->getServices()->preferredNeighbour;
-
-            $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = (bool)$versendenInfo->getServices()->parcelAnnouncement;
+            $customerServices = $this->serviceConfig->getAvailableServices(
+                $shipperCountry,
+                $recipientCountry,
+                $isPostalFacility,
+                true,
+                $storeId
+            );
+            /** @var Service\Type\Generic $customerService */
+            foreach ($customerServices as $customerService) {
+                $code = $customerService->getCode();
+                $serviceData['shipment_service'][$code] = (bool)$versendenInfo->getServices()->{$code};
+                $serviceData['service_setting'][$code] = (string)$versendenInfo->getServices()->{$code};
+            }
         }
 
         $request->setData('services', $serviceData);
     }
 
     /**
-     * Calculate the product to be used with the current shipment.
+     * Determine the product to be used with the current shipment.
      *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
