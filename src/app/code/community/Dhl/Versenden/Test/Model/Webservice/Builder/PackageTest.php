@@ -45,10 +45,10 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
      */
     public function constructorArgUnitOfMeasureMissing()
     {
-        Mage::getModel('dhl_versenden/webservice_builder_package', array(
+        $args = array(
             'min_weight' => $this->minWeight,
-        ));
-
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
     }
 
     /**
@@ -57,10 +57,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
      */
     public function constructorArgUnitOfMeasureWrongType()
     {
-        Mage::getModel('dhl_versenden/webservice_builder_package', array(
+        $args = array(
             'unit_of_measure' => new stdClass(),
             'min_weight'      => $this->minWeight,
-        ));
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
     }
 
     /**
@@ -69,9 +70,10 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
      */
     public function constructorArgMinWeightMissing()
     {
-        Mage::getModel('dhl_versenden/webservice_builder_package', array(
+        $args = array(
             'unit_of_measure' => 'G',
-        ));
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
     }
 
     /**
@@ -80,10 +82,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
      */
     public function constructorArgMinWeightWrongType()
     {
-        Mage::getModel('dhl_versenden/webservice_builder_package', array(
+        $args = array(
             'unit_of_measure' => 'G',
             'min_weight'      => new stdClass(),
-        ));
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
     }
 
     /**
@@ -120,10 +123,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
         );
 
         /** @var Dhl_Versenden_Model_Webservice_Builder_Package $builder */
-        $builder = Mage::getModel('dhl_versenden/webservice_builder_package', array(
+        $args = array(
             'unit_of_measure' => 'KG',
             'min_weight'      => $this->minWeight,
-        ));
+        );
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
         $packageCollection = $builder->getPackages($packageInfo);
         $this->assertInstanceOf(PackageCollection::class, $packageCollection);
@@ -163,10 +167,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
         );
 
         /** @var Dhl_Versenden_Model_Webservice_Builder_Package $builder */
-        $builder = Mage::getModel('dhl_versenden/webservice_builder_package', array(
+        $args = array(
             'unit_of_measure' => 'G',
             'min_weight'      => $this->minWeight,
-        ));
+        );
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
         $packageCollection = $builder->getPackages($packageInfo);
         $this->assertInstanceOf(PackageCollection::class, $packageCollection);

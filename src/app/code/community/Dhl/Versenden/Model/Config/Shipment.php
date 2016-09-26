@@ -65,6 +65,10 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
             $codPaymentMethods = explode(',', $codPaymentMethods);
         }
 
+        /**
+         * TODO(nr): do not create RequestData objects while reading from config.
+         * instead, read plain values and convert prior to actual webservice call.
+         */
         return new GlobalSettings(
             $printOnlyIfCodeable,
             $unitOfMeasure,
@@ -83,7 +87,11 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      */
     public function canProcessMethod($shippingMethod, $store = null)
     {
-        //TODO(nr): check if shipping origin is DE or AT
+        if (!in_array($this->getShipperCountry($store), array('AT', 'DE'))) {
+            // shipper country is not supported, regardless of shipping method.
+            return false;
+        }
+
         return in_array($shippingMethod, $this->getSettings($store)->getShippingMethods());
     }
 

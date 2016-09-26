@@ -48,7 +48,7 @@ abstract class RequestData
      */
     public function validateLength($name, $value, $minLength, $maxLength)
     {
-        if ( ($minLength > 0) && !strlen($value) ) {
+        if ( ($minLength > 0) && ($value == "") ) {
             throw new RequestData\ValidationException("$name is a required value.");
         }
 

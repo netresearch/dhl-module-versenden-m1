@@ -49,24 +49,22 @@ class Dhl_Versenden_Model_Observer
         $autoloader = Mage::helper('dhl_versenden/autoloader');
 
         $dhlLibs = array('Versenden', 'Bcs');
-        array_walk($dhlLibs,
-            function($libDir) use ($autoloader) {
-                $autoloader->addNamespace(
-                    "Dhl\\$libDir\\", // prefix
-                    sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
-                );
-            }
-        );
+        $addDhlLibs = function($libDir) use ($autoloader) {
+            $autoloader->addNamespace(
+                "Dhl\\$libDir\\", // prefix
+                sprintf('%s/Dhl/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
+            );
+        };
+        array_walk($dhlLibs, $addDhlLibs);
 
         $externalLibs = array('Psr');
-        array_walk($externalLibs,
-            function($libDir) use ($autoloader) {
-                $autoloader->addNamespace(
-                    "$libDir\\", // prefix
-                    sprintf('%s/Netresearch/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
-                );
-            }
-        );
+        $addExternalLibs = function($libDir) use ($autoloader) {
+            $autoloader->addNamespace(
+                "$libDir\\", // prefix
+                sprintf('%s/Netresearch/%s/', Mage::getBaseDir('lib'), $libDir) // baseDir
+            );
+        };
+        array_walk($externalLibs, $addExternalLibs);
 
         $autoloader->register();
     }
@@ -79,7 +77,7 @@ class Dhl_Versenden_Model_Observer
      */
     public function appendServices(Varien_Event_Observer $observer)
     {
-        $block = $observer->getBlock();
+        $block = $observer->getData('block');
         if (!$block instanceof Mage_Checkout_Block_Onepage_Shipping_Method_Available) {
             return;
         }
@@ -141,12 +139,12 @@ class Dhl_Versenden_Model_Observer
     public function updateCarrier(Varien_Event_Observer $observer)
     {
         /** @var Mage_Sales_Model_Order $order */
-        $order          = $observer->getOrder();
+        $order          = $observer->getData('order');
         $shippingMethod = $order->getShippingMethod();
         /** @var Dhl_Versenden_Model_Config_Shipment $config */
         $config         = Mage::getModel('dhl_versenden/config_shipment');
 
-        if ($config->canProcessMethod($shippingMethod)) {
+        if ($config->canProcessMethod($shippingMethod, $order->getStoreId())) {
             $parts          = explode('_', $shippingMethod);
             $parts[0]       = Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE;
             $shippingMethod = implode('_', $parts);

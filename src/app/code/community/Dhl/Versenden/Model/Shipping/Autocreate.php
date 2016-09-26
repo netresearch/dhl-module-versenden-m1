@@ -97,7 +97,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
             $shipmentStatus = $result->getCreatedItems()->getItem($shipmentNumber)->getStatus();
 
             if ($shipmentStatus->isError()) {
-                Mage::helper('dhl_versenden/data')->addStatusHistoryError(
+                Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
                     $shipmentRequest->getOrderShipment()->getOrder(),
                     sprintf('%s %s', $shipmentStatus->getStatusText(), $shipmentStatus->getStatusMessage())
                 );

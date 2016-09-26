@@ -65,9 +65,10 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function constructorArgHelperMissing()
     {
-        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
-        ));
+        );
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
     }
 
     /**
@@ -76,10 +77,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function constructorArgHelperWrongType()
     {
-        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
             'helper' => new stdClass()
-        ));
+        );
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
     }
 
     /**
@@ -87,10 +89,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function getReceiver()
     {
-        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
             'helper' => Mage::helper('dhl_versenden/address')
-        ));
+        );
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
         $lastName = 'Bar';
@@ -136,10 +139,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function packStationAddressToReceiver()
     {
-        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
             'helper' => Mage::helper('dhl_versenden/address')
-        ));
+        );
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
         $lastName = 'Bar';
@@ -180,10 +184,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function postOfficeAddressToReceiver()
     {
-        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
             'helper' => Mage::helper('dhl_versenden/address')
-        ));
+        );
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
         $lastName = 'Bar';
@@ -225,10 +230,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function parcelShopAddressToReceiver()
     {
-        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
+        $args = array(
             'country_directory' => Mage::getModel('directory/country'),
             'helper' => Mage::helper('dhl_versenden/address')
-        ));
+        );
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
         $lastName = 'Bar';

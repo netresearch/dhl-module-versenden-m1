@@ -41,6 +41,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     protected function getCustomerServices()
     {
+        // TODO(nr): replace by PreferredDay and PreferredTime services
         return [
             new Service\DayOfDelivery('', true, false, ''),
             new Service\DeliveryTimeFrame('', true, false, [
@@ -284,7 +285,6 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         $this->assertContains($service->getCode(), $service->getSelectorHtml());
         $this->assertContains($service->getCode(), $service->getLabelHtml());
-        //TODO(nr): check for date picker element
         $this->assertNotEmpty($service->getValueHtml());
 
 

@@ -72,6 +72,7 @@ class Dhl_Versenden_Test_Model_Config_ShipmentTest extends EcomDev_PHPUnit_Test_
 
     /**
      * @test
+     * @loadFixture Model_ShipmentConfigTest
      */
     public function canProcessMethod()
     {

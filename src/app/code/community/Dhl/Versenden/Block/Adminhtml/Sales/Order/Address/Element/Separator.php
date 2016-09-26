@@ -39,6 +39,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator
     extends Varien_Data_Form_Element_Abstract
 {
     /**
+     * @param string $idSuffix
      * @return string
      */
     public function getLabelHtml($idSuffix = '')

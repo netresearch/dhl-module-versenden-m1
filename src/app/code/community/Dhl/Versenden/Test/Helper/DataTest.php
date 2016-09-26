@@ -184,14 +184,14 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         /** @var Mage_Sales_Model_Order $order */
         /** @var Mage_Sales_Model_Resource_Order_Status_History_Collection $history */
         $this->assertCount(0, $history);
-        $helper->addStatusHistoryInfo($order, $comment);
+        $helper->addStatusHistoryComment($order, $comment);
         $this->assertCount(1, $history);
-        $helper->addStatusHistoryError($order, $comment);
+        $helper->addStatusHistoryComment($order, $comment);
         $this->assertCount(2, $history);
 
         /** @var Mage_Sales_Model_Order_Status_History $item */
         foreach ($history as $item) {
-            $this->assertStringEndsWith($comment, $item->getComment());
+            $this->assertEquals($comment, $item->getComment());
         }
     }
 }

@@ -46,7 +46,7 @@ class Zend implements Adapter
         $pdfOut = new \Zend_Pdf();
 
         foreach ($pages as $page) {
-            if (!is_string($page) || !strlen($page)) {
+            if (!is_string($page) || $page === "") {
                 continue;
             }
 

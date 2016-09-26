@@ -62,10 +62,9 @@ class Position extends RequestData
      * @param float $netWeightInKG
      * @param float $value
      */
-    public function __construct(
-        $sequenceNumber, $description, $countryCodeOrigin,
-        $tariffNumber, $amount, $netWeightInKG, $value
-    ) {
+    public function __construct($sequenceNumber, $description, $countryCodeOrigin,
+                                $tariffNumber, $amount, $netWeightInKG, $value)
+    {
         $this->sequenceNumber = $sequenceNumber;
         $this->description = $description;
         $this->countryCodeOrigin = $countryCodeOrigin;

@@ -46,6 +46,7 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Shipping_Allmethods
      */
     public function toOptionArray($isMultiSelect = false)
     {
-        return parent::toOptionArray($showActiveOnlyFlag = false);
+        $showActiveOnlyFlag = $isMultiSelect;
+        return parent::toOptionArray($showActiveOnlyFlag);
     }
 }
