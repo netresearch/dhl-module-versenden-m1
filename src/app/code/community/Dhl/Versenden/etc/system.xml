@@ -83,7 +83,7 @@
                         </sandbox_mode>
                         <logging_enabled translate="label comment">
                             <label>Enable Logging</label>
-                            <comment><![CDATA[Please ensure that the Magento-Log is also activated. Data will be written to <em>dhlversenden.log</em>.]]></comment>
+                            <comment><![CDATA[Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>.]]></comment>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>150</sort_order>

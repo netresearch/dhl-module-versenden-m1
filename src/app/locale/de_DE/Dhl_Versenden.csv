@@ -8,7 +8,7 @@
 "No","Nein"
 "Sandbox Mode","Sandbox-Modus"
 "Enable Logging","Protokollierung aktivieren"
-"Please ensure that the Magento-Log is also activated. Data will be written to <em>dhlversenden.log</em>.","Bitte stellen Sie sicher, dass auch das Magento-Log aktiviert ist. Die Protokollierung wird in die Datei <em>dhlversenden.log</em> schreiben."
+"Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>.","Bitte stellen Sie sicher, dass auch das Magento-Log aktiviert ist. Die Protokollierung wird in die Datei <em>dhl_versenden.log</em> schreiben."
 "Log Level","Protokollstufe"
 "Beware: Log level <em>Debug</em> will result in large log files.","Achtung: <em>Debug</em>-Protokollierung erzeugt große Log-Dateien."
 "Error","Error"
