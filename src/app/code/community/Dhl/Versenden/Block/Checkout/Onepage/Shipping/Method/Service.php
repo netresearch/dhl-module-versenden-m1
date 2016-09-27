@@ -24,7 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Shipment\Service as Service;
-use \Dhl\Versenden\Product;
+
 /**
  * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
  *
@@ -78,28 +78,26 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
-     * Obtain Frontend Service hint text based on service code.
+     * Obtain Frontend Service hint based on service code.
      *
-     * @param $serviceCode
+     * @param string $serviceCode
      * @return string
      */
-    public function getServiceHintText($serviceCode)
+    public function getServiceHint($serviceCode)
     {
-        $msg = '';
-        if ($serviceCode === \Dhl\Versenden\Shipment\Service\PreferredNeighbour::CODE) {
-            $msg = $this->__(
-                'Determine a person in your immediate neighborhood whom we can hand out your parcel.' . ' ' .
-                'This person should live in the same building, directly opposite or next door.'
-            );
+        switch ($serviceCode) {
+            case Service\PreferredLocation::CODE:
+                $msg = 'Choose a weather-protected and non-visible place on your property,'
+                    . ' where we can deposit the parcel in your absence.';
+                break;
+            case Service\PreferredNeighbour::CODE:
+                $msg = 'Determine a person in your immediate neighborhood whom we can hand out your parcel.'
+                    . ' This person should live in the same building, directly opposite or next door.';
+                break;
+            default:
+                $msg = '';
         }
 
-        if ($serviceCode === \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE) {
-            $msg = $this->__(
-                'Choose a weather-protected and non-visible place on your property' .
-                ', where we can deposit the parcel in your absence.'
-            );
-        }
-
-        return $msg;
+        return $msg ? $this->__($msg) : '';
     }
 }

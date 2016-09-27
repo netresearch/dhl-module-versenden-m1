@@ -42,9 +42,13 @@
             </dt>
             <dd class="service-<?php echo $service->getFrontendInputType(); ?>">
                 <?php echo $service->getValueHtml(); ?>
-                <div class="service-tooltip">
-                    <div><?php echo $this->getServiceHintText($service->getCode()); ?></div>
-                </div>
+
+                <?php $tooltip = $this->getServiceHint($service->getCode()); ?>
+                <?php if ($tooltip !== ''): ?>
+                    <div class="service-tooltip">
+                        <div><?php echo $tooltip ?></div>
+                    </div>
+                <?php endif; ?>
             </dd>
         <?php endforeach; ?>
     </dl>
