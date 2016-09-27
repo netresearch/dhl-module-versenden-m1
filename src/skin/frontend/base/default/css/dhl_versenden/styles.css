@@ -47,8 +47,14 @@
     margin-bottom: 10px;
 }
 
+#checkout-dhlversenden-services dd.service-boolean {
+    display: none;
+}
 
-.with-tooltip {}
+#checkout-dhlversenden-services dd input {
+    min-width: 200px;
+}
+
 .service-tooltip {
     display:inline-block;
     width:15px;
@@ -62,9 +68,7 @@
 .service-tooltip:hover {
     z-index:100;
 }
-.service-tooltip > span {
-    display:none;
-}
+
 .service-tooltip:hover > div:hover,
 .service-tooltip > div {
     width:301px;
@@ -77,8 +81,9 @@
     padding:0 12px;
     color:#464d50;
     visibility:hidden;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
 }
-
 .service-tooltip > div:before {
     position:absolute;
     top:-5px;
@@ -99,25 +104,9 @@
     overflow:hidden;
     background:url(../../images/dhl_versenden/bkg_tooltip.png) no-repeat -325px 0;
 }
-
-
 .service-tooltip:hover > div {
     opacity:1;
-    width:325px;
-    visibility:visible;
-    bottom:30px; }
-
-.service-tooltip:hover > div {
-    opacity:1;
-    width:325px;
+    width:301px;
     visibility:visible;
     bottom:30px;
-}
-
-#checkout-dhlversenden-services dd.service-boolean {
-    display: none;
-}
-
-#checkout-dhlversenden-services dd input {
-    min-width: 200px;
 }
