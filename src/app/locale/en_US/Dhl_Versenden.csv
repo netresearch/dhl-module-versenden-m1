@@ -8,7 +8,7 @@
 "No","No"
 "Sandbox Mode","Sandbox Mode"
 "Enable Logging","Enable Logging"
-"Please ensure that the Magento-Log is also activated. Data will be written to <em>dhlversenden.log</em>.","Please ensure that the Magento-Log is also activated. Data will be written to <em>dhlversenden.log</em>."
+"Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>.","Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>."
 "Log Level","Log Level"
 "Beware: Log level <em>Debug</em> will result in large log files.","Beware: Log level <em>Debug</em> will result in large log files."
 "Error","Error"

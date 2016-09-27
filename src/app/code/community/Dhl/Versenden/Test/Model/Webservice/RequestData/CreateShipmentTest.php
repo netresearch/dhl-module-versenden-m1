@@ -70,10 +70,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
         $order = current($orders);
 
         $this->assertEquals(14, strlen($order->getAccountNumber()));
-        $this->assertEquals(
-            $expectation->isGlobalSettingsPrintOnlyIfCodeable(),
-            $order->isPrintOnlyIfCodeable()
-        );
+
         $this->assertEquals(
             $expectation->getLabelResponseType(),
             $order->getLabelResponseType()
@@ -334,10 +331,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
         $this->assertNull($order->getReceiver()->getParcelShop());
 
         $this->assertEquals(
-            $expectation->isGlobalSettingsPrintOnlyIfCodeable(),
-            $order->isPrintOnlyIfCodeable()
-        );
-        $this->assertEquals(
             $expectation->getGlobalSettingsLabelType(),
             $order->getLabelResponseType()
         );
@@ -386,6 +379,14 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
         $this->assertEquals(
             $expectation->isServiceSettingsBulkyGoods(),
             $order->getServiceSelection()->isBulkyGoods()
+        );
+        $this->assertEquals(
+            $expectation->getServiceSettingsCod(),
+            $order->getServiceSelection()->getCod()
+        );
+        $this->assertEquals(
+            $expectation->isServiceSettingsPrintOnlyIfCodeable(),
+            $order->getServiceSelection()->isPrintOnlyIfCodeable()
         );
     }
 }

@@ -33,8 +33,23 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shipping
+class Dhl_Versenden_Model_Shipping_Autocreate
 {
+    /** @var Dhl_Versenden_Model_Log */
+    protected $logger;
+
+    /**
+     * Dhl_Versenden_Model_Shipping_Autocreate constructor.
+     */
+    public function __construct($args = array())
+    {
+        if (!isset($args['logger']) || !$args['logger'] instanceof Dhl_Versenden_Model_Log) {
+            throw new Mage_Core_Exception('missing or invalid argument: logger');
+        }
+
+        $this->logger = $args['logger'];
+    }
+
     /**
      * @param Mage_Sales_Model_Resource_Order_Collection $collection
      * @return Mage_Shipping_Model_Shipment_Request[]
@@ -63,7 +78,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate extends Mage_Shipping_Model_Shippi
 
                 $shipmentRequests[$order->getId()] = $request;
             } catch (Exception $e) {
-                Mage::logException($e);
+                $this->logger->error($e->getMessage(), array('exception' => $e));
             }
         }
 

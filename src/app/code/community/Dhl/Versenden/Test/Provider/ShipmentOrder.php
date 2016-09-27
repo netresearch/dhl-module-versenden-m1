@@ -111,7 +111,6 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $packstationPackstationNumber = 'Packstation 808';
         $packstationPostNumber = '654321';
 
-        $globalSettingsPrintOnlyIfCodeable = true;
         $globalSettingsLabelType = 'R2D2';
 
         $packageId = '1';
@@ -144,7 +143,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $serviceSettingsInsurance = 'B';
         $serviceSettingsBulkyGoods = true;
         $serviceSettingsCod = false;
-        $serviceSettingsPrintOnlyIfCodeable = $globalSettingsPrintOnlyIfCodeable;
+        $serviceSettingsPrintOnlyIfCodeable = true;
 
         $sequenceNumber = 77;
         $labelResponseType = $globalSettingsLabelType;
@@ -178,7 +177,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $receiverState, $receiverPhone, $receiverEmail, $receiverContactPerson,
             $packstationZip, $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
 
-            $globalSettingsPrintOnlyIfCodeable, $globalSettingsLabelType,
+            $globalSettingsLabelType,
 
             $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight,
             $shipmentSettingsProduct, $serviceSettingsDayOfDelivery,
@@ -186,6 +185,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $serviceSettingsPreferredNeighbour, $serviceSettingsParcelAnnouncement,
             $serviceSettingsVisualCheckOfAge, $serviceSettingsReturnShipment,
             $serviceSettingsInsurance, $serviceSettingsBulkyGoods,
+            $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable,
 
             $sequenceNumber, $labelResponseType
         );
@@ -290,7 +290,6 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $exportDocumentCollection,
             $shipmentSettingsProduct,
             $shipmentSettingsDate,
-            $globalSettingsPrintOnlyIfCodeable,
             $labelResponseType
         );
 

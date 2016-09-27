@@ -50,6 +50,17 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
     }
 
     /**
+     * @return Dhl_Versenden_Model_Log
+     */
+    protected function getLogger()
+    {
+        $config = Mage::getModel('dhl_versenden/config');
+        $logger = Mage::getModel('dhl_versenden/log', array('config' => $config));
+
+        return $logger;
+    }
+
+    /**
      * @test
      * @loadFixture Model_ShipperConfigTest
      * @loadFixture Model_AutoCreateTest
@@ -88,7 +99,9 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $collection->addShippingMethodFilter();
         $collection->addShipmentFilter();
 
-        $createdLabelsCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+        /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
+        $autocreate = Mage::getModel('dhl_versenden/shipping_autocreate', array('logger' => $this->getLogger()));
+        $createdLabelsCount = $autocreate->autoCreate($collection);
         $this->assertEquals(1, $createdLabelsCount);
 
         /** @var Mage_Sales_Model_Order $order */
@@ -139,7 +152,9 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $collection->addShippingMethodFilter();
         $collection->addShipmentFilter();
 
-        $createdLabelsCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+        /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
+        $autocreate = Mage::getModel('dhl_versenden/shipping_autocreate', array('logger' => $this->getLogger()));
+        $createdLabelsCount = $autocreate->autoCreate($collection);
         $this->assertEquals(0, $createdLabelsCount);
 
         /** @var Mage_Sales_Model_Order $order */
@@ -164,7 +179,9 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
     {
         /** @var Dhl_Versenden_Model_Resource_Autocreate_Collection $collection */
         $collection         = Mage::getResourceModel('dhl_versenden/autocreate_collection');
-        $createdLabelsCount = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+        /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
+        $autocreate = Mage::getModel('dhl_versenden/shipping_autocreate', array('logger' => $this->getLogger()));
+        $createdLabelsCount = $autocreate->autoCreate($collection);
 
         $this->assertEquals(0, $createdLabelsCount);
     }

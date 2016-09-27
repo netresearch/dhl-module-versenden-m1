@@ -158,8 +158,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /** @var string */
     protected $packstationPostNumber;
 
-    /** @var bool */
-    protected $globalSettingsPrintOnlyIfCodeable;
     /** @var string */
     protected $globalSettingsLabelType;
 
@@ -185,10 +183,14 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     protected $serviceSettingsVisualCheckOfAge;
     /** @var bool false or true */
     protected $serviceSettingsReturnShipment;
-    /** @var bool|string false or A or B */
+    /** @var bool|float false or order total */
     protected $serviceSettingsInsurance;
     /** @var bool false or true */
     protected $serviceSettingsBulkyGoods;
+    /** @var bool|float false or order total */
+    protected $serviceSettingsCod;
+    /** @var bool false or true */
+    protected $serviceSettingsPrintOnlyIfCodeable;
 
     /** @var int */
     protected $sequenceNumber;
@@ -257,7 +259,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $packstationCity
      * @param string $packstationPackstationNumber
      * @param string $packstationPostNumber
-     * @param bool $globalSettingsPrintOnlyIfCodeable
      * @param string $globalSettingsLabelType
      * @param string $shipmentSettingsDate
      * @param string $shipmentSettingsReference
@@ -270,8 +271,10 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param int $serviceSettingsParcelAnnouncement
      * @param bool|string $serviceSettingsVisualCheckOfAge
      * @param bool $serviceSettingsReturnShipment
-     * @param bool|string $serviceSettingsInsurance
+     * @param bool|float $serviceSettingsInsurance
      * @param bool $serviceSettingsBulkyGoods
+     * @param bool|float $serviceSettingsCod
+     * @param bool $serviceSettingsPrintOnlyIfCodeable
      * @param int $sequenceNumber
      * @param string $labelResponseType
      */
@@ -306,7 +309,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $receiverPhone, $receiverEmail, $receiverContactPerson, $packstationZip,
         $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
 
-        $globalSettingsPrintOnlyIfCodeable, $globalSettingsLabelType,
+        $globalSettingsLabelType,
 
         $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight, $shipmentSettingsProduct,
 
@@ -314,7 +317,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
         $serviceSettingsParcelAnnouncement, $serviceSettingsVisualCheckOfAge,
         $serviceSettingsReturnShipment, $serviceSettingsInsurance,
-        $serviceSettingsBulkyGoods,
+        $serviceSettingsBulkyGoods, $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable,
 
         $sequenceNumber, $labelResponseType
     ) {
@@ -378,7 +381,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->packstationCity = $packstationCity;
         $this->packstationPackstationNumber = $packstationPackstationNumber;
         $this->packstationPostNumber = $packstationPostNumber;
-        $this->globalSettingsPrintOnlyIfCodeable = $globalSettingsPrintOnlyIfCodeable;
         $this->globalSettingsLabelType = $globalSettingsLabelType;
         $this->shipmentSettingsDate = $shipmentSettingsDate;
         $this->shipmentSettingsReference = $shipmentSettingsReference;
@@ -393,6 +395,8 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->serviceSettingsReturnShipment = $serviceSettingsReturnShipment;
         $this->serviceSettingsInsurance = $serviceSettingsInsurance;
         $this->serviceSettingsBulkyGoods = $serviceSettingsBulkyGoods;
+        $this->serviceSettingsCod = $serviceSettingsCod;
+        $this->serviceSettingsPrintOnlyIfCodeable = $serviceSettingsPrintOnlyIfCodeable;
         $this->sequenceNumber = $sequenceNumber;
         $this->labelResponseType = $labelResponseType;
     }
@@ -890,14 +894,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     }
 
     /**
-     * @return boolean
-     */
-    public function isGlobalSettingsPrintOnlyIfCodeable()
-    {
-        return $this->globalSettingsPrintOnlyIfCodeable;
-    }
-
-    /**
      * @return string
      */
     public function getGlobalSettingsLabelType()
@@ -1007,6 +1003,22 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     public function isServiceSettingsBulkyGoods()
     {
         return $this->serviceSettingsBulkyGoods;
+    }
+
+    /**
+     * @return bool|float
+     */
+    public function getServiceSettingsCod()
+    {
+        return $this->serviceSettingsCod;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isServiceSettingsPrintOnlyIfCodeable()
+    {
+        return $this->serviceSettingsPrintOnlyIfCodeable;
     }
 
     /**
