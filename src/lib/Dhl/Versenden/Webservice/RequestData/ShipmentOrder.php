@@ -34,7 +34,6 @@ use Dhl\Versenden\Webservice\RequestData;
  * - general
  *   -- billing number (EKP + Procedure + Participation)
  *   -- return billing number (EKP + Procedure + Participation)
- *   -- printOnlyIfCodeable flag
  *   -- labelResponseType
  *   -- product code
  * - shipper
@@ -49,7 +48,7 @@ use Dhl\Versenden\Webservice\RequestData;
  *   -- shipment date
  * - services
  *   -- selectable
- *   -- implicit (cod status, parcel announcement)
+ *   -- implicit (cod status, parcel announcement, printOnlyIfCodeable)
  * It is supposed to be independent of the services that processes the shipment order.
  *
  * @category Dhl
@@ -85,8 +84,6 @@ class ShipmentOrder extends RequestData
     private $accountNumber;
     /** @var string */
     private $returnShipmentAccountNumber;
-    /** @var bool */
-    private $printOnlyIfCodeable;
     /** @var string */
     private $labelResponseType;
 
@@ -102,7 +99,6 @@ class ShipmentOrder extends RequestData
      * @param ShipmentOrder\Export\DocumentCollection   $exportDocuments
      * @param string                                    $productCode
      * @param string                                    $shipmentDate
-     * @param bool                                      $printOnlyIfCodeable
      * @param string                                    $labelType
      */
     public function __construct(
@@ -115,7 +111,6 @@ class ShipmentOrder extends RequestData
         ShipmentOrder\Export\DocumentCollection $exportDocuments,
         $productCode,
         $shipmentDate,
-        $printOnlyIfCodeable,
         $labelType = self::LABEL_TYPE_B64
     ) {
         $this->sequenceNumber = $sequenceNumber;
@@ -151,7 +146,6 @@ class ShipmentOrder extends RequestData
 
         $this->productCode         = $productCode;
         $this->shipmentDate        = $shipmentDate;
-        $this->printOnlyIfCodeable = $printOnlyIfCodeable;
         $this->labelResponseType   = $labelType;
     }
 
@@ -241,14 +235,6 @@ class ShipmentOrder extends RequestData
     public function getShipmentDate()
     {
         return $this->shipmentDate;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isPrintOnlyIfCodeable()
-    {
-        return $this->printOnlyIfCodeable;
     }
 
     /**

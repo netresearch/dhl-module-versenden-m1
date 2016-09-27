@@ -196,7 +196,6 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $globalSettings = $this->settingsBuilder->getSettings($shipment->getStoreId());
 
-        //TODO(nr): remove printOnlyIfCodeable parameter as it is read from service selection
         $shipmentOrder = new RequestData\ShipmentOrder(
             $sequenceNumber,
             $shipment->getOrder()->getIncrementId(),
@@ -207,7 +206,6 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $exportDocuments,
             $gkApiProduct,
             $shipmentDate,
-            $globalSettings->isPrintOnlyIfCodeable(),
             $globalSettings->getLabelType()
         );
 

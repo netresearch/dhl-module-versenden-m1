@@ -37,6 +37,14 @@
  */
 class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $writerMock = $this->getModelMock('dhl_versenden/logger_writer', array('log', 'logException'));
+        $this->replaceByMock('singleton', 'dhl_versenden/logger_writer', $writerMock);
+    }
+
     /**
      * @test
      * @loadFixture Model_ShipperConfigTest
@@ -63,7 +71,14 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
         $numVersendenOrders = 1;
         $numSuccess = 1;
 
-        $autocreateMock = $this->getModelMock('dhl_versenden/shipping_autocreate', array('autoCreate'));
+        $autocreateMock = $this->getModelMock(
+            'dhl_versenden/shipping_autocreate',
+            array('autoCreate'),
+            false,
+            array(),
+            '',
+            false
+        );
         $autocreateMock
             ->expects($this->once())
             ->method('autoCreate')

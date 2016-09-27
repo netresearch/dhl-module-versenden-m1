@@ -52,7 +52,7 @@ class Dhl_Versenden_Model_Cron
         $observer = new Dhl_Versenden_Model_Observer();
         $observer->registerAutoload();
 
-        $writer = Mage::getModel('dhl_versenden/logger_writer');
+        $writer = Mage::getSingleton('dhl_versenden/logger_writer');
         $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
 
         $config = Mage::getModel('dhl_versenden/config');
@@ -87,7 +87,9 @@ class Dhl_Versenden_Model_Cron
             $collection->addStatusFilter($orderStatus);
             $collection->addStoreFilter($stores);
 
-            $num = Mage::getModel('dhl_versenden/shipping_autocreate')->autoCreate($collection);
+            /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
+            $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $this->logger));
+            $num = $autocreate->autoCreate($collection);
 
             $schedule->setMessages(sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize()));
             $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
