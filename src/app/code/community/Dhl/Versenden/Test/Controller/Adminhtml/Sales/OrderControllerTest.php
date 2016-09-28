@@ -314,8 +314,8 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
                 'address_addition' => '',
-                'parcelshop' => array(
-                    'parcelshop_number' => $parcelShopNumber,
+                'parcel_shop' => array(
+                    'parcel_shop_number' => $parcelShopNumber,
                     'street_name' => $streetName,
                     'street_number' => $streetNumber,
                 ),
