@@ -41,7 +41,7 @@ class Label
     /** @var CreationState */
     private $status;
     /** @var string */
-    private $shipmentNumber;
+    private $sequenceNumber;
     /** @var string */
     private $label;
     /** @var string */
@@ -54,17 +54,17 @@ class Label
     /**
      * Label constructor.
      * @param CreationState $status
-     * @param string $shipmentNumber
+     * @param string $sequenceNumber
      * @param string $label
      * @param string $returnLabel
      * @param string $exportLabel
      * @param string $codLabel
      */
-    public function __construct(CreationState $status, $shipmentNumber, $label,
+    public function __construct(CreationState $status, $sequenceNumber, $label,
                                 $returnLabel = null, $exportLabel = null, $codLabel = null
     ) {
         $this->status = $status;
-        $this->shipmentNumber = $shipmentNumber;
+        $this->sequenceNumber = $sequenceNumber;
         $this->label = $label;
         $this->returnLabel = $returnLabel;
         $this->exportLabel = $exportLabel;
@@ -82,9 +82,9 @@ class Label
     /**
      * @return string
      */
-    public function getShipmentNumber()
+    public function getSequenceNumber()
     {
-        return $this->shipmentNumber;
+        return $this->sequenceNumber;
     }
 
     /**
