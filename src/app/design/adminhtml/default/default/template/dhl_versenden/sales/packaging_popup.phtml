@@ -221,10 +221,10 @@ document.observe("dom:loaded", function() {
         </div>
         <div class="buttons-set a-right">
             <button type="button" class="scalable disabled SavePackagesBtn" disabled="disabled" onclick="packaging.confirmPackagingWithServices();" title="<?php echo Mage::helper('sales')->__('Products should be added to package(s)')?>">
-                <span><span><span><?php echo Mage::helper('sales')->__('OK') ?></span></span></span>
+                <span><span><span><?php echo $this->__('OK') ?></span></span></span>
             </button>
             <button type="button" class="scalable" onclick="packaging.cancelPackaging();">
-                <span><span><span><?php echo Mage::helper('sales')->__('Cancel') ?></span></span></span>
+                <span><span><span><?php echo $this->__('Cancel') ?></span></span></span>
             </button>
         </div>
     </div>
