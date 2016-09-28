@@ -89,7 +89,14 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getPackstation()->postNumber = $packstationData['post_number'];
         } else {
             // otherwise clear
-            $versendenInfo->getReceiver()->getPackstation()->fromArray(array());
+            $versendenInfo->getReceiver()->getPackstation()->fromArray(array(
+                'zip' => null,
+                'city' => null,
+                'country' => null,
+                'country_iso_code' => null,
+                'packstation_number' => null,
+                'post_number' => null,
+            ));
         }
 
         $postfilialeData = (isset($versendenData['postfiliale']) && $versendenData['postfiliale'])
@@ -106,7 +113,14 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getPostfiliale()->postNumber = $postfilialeData['post_number'];
         } else {
             // otherwise clear
-            $versendenInfo->getReceiver()->getPostfiliale()->fromArray(array());
+            $versendenInfo->getReceiver()->getPostfiliale()->fromArray(array(
+                'zip' => null,
+                'city' => null,
+                'country' => null,
+                'country_iso_code' => null,
+                'postfilial_number' => null,
+                'post_number' => null,
+            ));
         }
 
         $parcelShopData = (isset($versendenData['parcel_shop']) && $versendenData['parcel_shop'])
@@ -125,7 +139,15 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getParcelShop()->streetNumber = $parcelShopData['street_number'];
         } else {
             // otherwise clear
-            $versendenInfo->getReceiver()->getParcelShop()->fromArray(array());
+            $versendenInfo->getReceiver()->getParcelShop()->fromArray(array(
+                'zip' => null,
+                'city' => null,
+                'country' => null,
+                'country_iso_code' => null,
+                'parcel_shop_number' => null,
+                'street_name' => null,
+                'street_number' => null,
+            ));
         }
 
         $address->setData('dhl_versenden_info', $versendenInfo);
