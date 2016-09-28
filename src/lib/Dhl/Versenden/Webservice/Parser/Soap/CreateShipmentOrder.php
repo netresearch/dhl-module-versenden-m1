@@ -55,7 +55,7 @@ class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
         /** @var VersendenApi\CreationState $creationState */
         foreach ($creationStates as $creationState) {
             $sequence[$creationState->getSequenceNumber()] = $creationState->getLabelData()->getShipmentNumber();
-            $label = $this->parseLabel($creationState->getLabelData());
+            $label = $this->parseLabel($creationState);
             $labels->addItem($label);
         }
 

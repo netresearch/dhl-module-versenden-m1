@@ -40,25 +40,25 @@ use \Dhl\Versenden\Webservice\ResponseData;
 abstract class ShipmentLabel extends Shipment implements Parser
 {
     /**
-     * @param VersendenApi\LabelData $labelData
+     * @param VersendenApi\CreationState $state
      * @return ResponseData\CreateShipment\Label
      */
-    protected function parseLabel(VersendenApi\LabelData $labelData)
+    protected function parseLabel(VersendenApi\CreationState $state)
     {
         $labelStatus = new ResponseData\Status\Item(
-            $labelData->getShipmentNumber(),
-            $labelData->getStatus()->getStatusCode(),
-            $labelData->getStatus()->getStatusText(),
-            $labelData->getStatus()->getStatusMessage()
+            $state->getSequenceNumber(),
+            $state->getLabelData()->getStatus()->getStatusCode(),
+            $state->getLabelData()->getStatus()->getStatusText(),
+            $state->getLabelData()->getStatus()->getStatusMessage()
         );
 
         $label = new ResponseData\CreateShipment\Label(
             $labelStatus,
-            $labelData->getShipmentNumber(),
-            $labelData->getLabelData(),
-            $labelData->getReturnLabelData(),
-            $labelData->getExportLabelData(),
-            $labelData->getCodLabelData()
+            $state->getSequenceNumber(),
+            $state->getLabelData()->getLabelData(),
+            $state->getLabelData()->getReturnLabelData(),
+            $state->getLabelData()->getExportLabelData(),
+            $state->getLabelData()->getCodLabelData()
         );
 
         return $label;
