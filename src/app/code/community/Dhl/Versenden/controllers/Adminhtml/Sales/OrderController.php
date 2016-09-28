@@ -109,10 +109,10 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getPostfiliale()->fromArray(array());
         }
 
-        $parcelShopData = (isset($versendenData['parcelshop']) && $versendenData['parcelshop'])
-            ? $versendenData['parcelshop']
+        $parcelShopData = (isset($versendenData['parcel_shop']) && $versendenData['parcel_shop'])
+            ? $versendenData['parcel_shop']
             : array();
-        if (isset($parcelShopData['parcelshop_number']) && $parcelShopData['parcelshop_number']
+        if (isset($parcelShopData['parcel_shop_number']) && $parcelShopData['parcel_shop_number']
             && isset($parcelShopData['street_name']) && $parcelShopData['street_name']
             && isset($parcelShopData['street_number']) && $parcelShopData['street_number']) {
             // update postal facility using POST data.
@@ -120,7 +120,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getParcelShop()->city = $versendenInfo->getReceiver()->city;
             $versendenInfo->getReceiver()->getParcelShop()->country = $versendenInfo->getReceiver()->country;
             $versendenInfo->getReceiver()->getParcelShop()->countryISOCode = $versendenInfo->getReceiver()->countryISOCode;
-            $versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber = $parcelShopData['parcelshop_number'];
+            $versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber = $parcelShopData['parcel_shop_number'];
             $versendenInfo->getReceiver()->getParcelShop()->streetName = $parcelShopData['street_name'];
             $versendenInfo->getReceiver()->getParcelShop()->streetNumber = $parcelShopData['street_number'];
         } else {

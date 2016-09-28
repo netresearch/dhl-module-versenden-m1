@@ -130,15 +130,15 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
     {
         $src = $this->getSkinUrl('images/dhl_versenden/icon-parcelShop.png');
         $fieldset->addField(
-            'versenden_info_parcelshop',
+            'versenden_info_parcel_shop',
             'separator',
             array('value' => '<img src="' . $src . '" alt="DHL Parcel Shop"/>')
         );
 
-        $fieldset->addField("versenden_info_parcelshop_number", 'text', array(
-            'name'  => "versenden_info[parcel_shop][parcelshop_number]",
-            'label' => $this->__('Parcelshop Number'),
-            'value' => isset($receiverData['parcelshop_number']) ? $receiverData['parcelshop_number'] : '',
+        $fieldset->addField("versenden_info_parcel_shop_number", 'text', array(
+            'name'  => "versenden_info[parcel_shop][parcel_shop_number]",
+            'label' => $this->__('Parcel Shop Number'),
+            'value' => isset($receiverData['parcel_shop_number']) ? $receiverData['parcel_shop_number'] : '',
         ));
         $fieldset->addField('versenden_info_parcel_shop_street_name', 'text', array(
             'name'  => "versenden_info[parcel_shop][street_name]",
