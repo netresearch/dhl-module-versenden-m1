@@ -108,8 +108,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
         foreach ($shipmentRequests as $orderId => $shipmentRequest) {
             $shipment = $shipmentRequest->getOrderShipment();
-            $shipmentNumber = $result->getShipmentNumber($orderId);
-            $shipmentStatus = $result->getCreatedItems()->getItem($shipmentNumber)->getStatus();
+            $shipmentStatus = $result->getCreatedItems()->getItem($orderId)->getStatus();
 
             if ($shipmentStatus->isError()) {
                 Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
@@ -117,10 +116,10 @@ class Dhl_Versenden_Model_Shipping_Autocreate
                     sprintf('%s %s', $shipmentStatus->getStatusText(), $shipmentStatus->getStatusMessage())
                 );
             } else {
-                $labels = $result->getCreatedItems()->getItem($shipmentNumber)->getAllLabels($pdfLib);
+                $labels = $result->getCreatedItems()->getItem($orderId)->getAllLabels($pdfLib);
                 $shipment->setShippingLabel($labels);
                 $track = Mage::getModel('sales/order_shipment_track')
-                    ->setNumber($shipmentNumber)
+                    ->setNumber($result->getShipmentNumber($orderId))
                     ->setCarrierCode($carrier->getCarrierCode())
                     ->setTitle($carrier->getConfigData('title'));
                 $shipment->addTrack($track);

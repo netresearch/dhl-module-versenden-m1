@@ -195,9 +195,8 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         try {
             $result = Mage::getModel('dhl_versenden/webservice_gateway_soap')
                 ->createShipmentOrder($shipmentRequests);
-            $shipmentNumber = $result->getShipmentNumber($sequenceNumber);
 
-            $shipmentStatus = $result->getCreatedItems()->getItem($shipmentNumber)->getStatus();
+            $shipmentStatus = $result->getCreatedItems()->getItem($sequenceNumber)->getStatus();
             if ($shipmentStatus->isError()) {
                 throw new Webservice\ResponseData\Status\Exception($shipmentStatus);
             }
@@ -205,8 +204,8 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
             $pdfLib = new \Dhl\Versenden\Pdf\Adapter\Zend();
             $responseData = array(
                 'info' => array(array(
-                    'tracking_number' => $shipmentNumber,
-                    'label_content'   => $result->getCreatedItems()->getItem($shipmentNumber)->getAllLabels($pdfLib),
+                    'tracking_number' => $result->getShipmentNumber($sequenceNumber),
+                    'label_content'   => $result->getCreatedItems()->getItem($sequenceNumber)->getAllLabels($pdfLib),
                 ))
             );
             $response->setData($responseData);
