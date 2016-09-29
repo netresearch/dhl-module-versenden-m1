@@ -61,6 +61,11 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
             'label' => $this->__('Street Number'),
             'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
         ));
+        $fieldset->addField('versenden_info_address_addition', 'text', array(
+            'name'  => "versenden_info[address_addition]",
+            'label' => $this->__('Address Addition'),
+            'value' => isset($receiverData['address_addition']) ? $receiverData['address_addition'] : '',
+        ));
     }
 
     /**

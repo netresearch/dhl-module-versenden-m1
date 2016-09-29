@@ -163,6 +163,7 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
             'versenden_info' => array(
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
+                'address_addition' => '',
                 'packstation' => array(
                     'packstation_number' => $facilityNumber,
                 ),
@@ -215,6 +216,7 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
             'versenden_info' => array(
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
+                'address_addition' => '',
                 'packstation' => array(
                     'packstation_number' => $packStationNumber,
                     'post_number' => $postNumber,
@@ -263,6 +265,7 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
             'versenden_info' => array(
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
+                'address_addition' => '',
                 'postfiliale' => array(
                     'postfilial_number' => $postfilialNumber,
                     'post_number' => $postNumber,
@@ -310,6 +313,7 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
             'versenden_info' => array(
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
+                'address_addition' => '',
                 'parcelshop' => array(
                     'parcelshop_number' => $parcelShopNumber,
                     'street_name' => $streetName,
