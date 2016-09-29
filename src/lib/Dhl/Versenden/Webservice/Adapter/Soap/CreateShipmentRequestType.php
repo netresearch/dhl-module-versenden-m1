@@ -74,6 +74,10 @@ class CreateShipmentRequestType implements RequestType
             $shipmentDetailsType->setNotification($notificationType);
         }
 
+        if ($shipmentOrder->getServiceSelection()->getCod()) {
+            $bankDataType = BankType::prepare($shipmentOrder->getShipper()->getBankData());
+            $shipmentDetailsType->setBankData($bankDataType);
+        }
 
         return $shipmentDetailsType;
     }
@@ -201,7 +205,12 @@ class CreateShipmentRequestType implements RequestType
         $details        = static::prepareShipmentDetails($shipmentOrder);
         $shipper        = static::prepareShipper($shipmentOrder->getShipper()->getContact());
         $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
-        $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
+
+        if ($shipmentOrder->getServiceSelection()->isReturnShipment()) {
+            $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
+        } else {
+            $returnReceiver = null;
+        }
 
         $exportDocument = static::prepareExportDocument($shipmentOrder->getExportDocuments());
 
