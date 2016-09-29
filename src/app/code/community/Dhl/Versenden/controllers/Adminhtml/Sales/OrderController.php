@@ -68,9 +68,11 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         $versendenData = (isset($data['versenden_info']) && $data['versenden_info'])
             ? $data['versenden_info']
             : array();
-        if (isset($versendenData['street_name']) && isset($versendenData['street_number'])) {
+        if (isset($versendenData['street_name']) && isset($versendenData['street_number'])
+            && isset($versendenData['address_addition'])) {
             $versendenInfo->getReceiver()->streetName = $versendenData['street_name'];
             $versendenInfo->getReceiver()->streetNumber = $versendenData['street_number'];
+            $versendenInfo->getReceiver()->addressAddition = $versendenData['address_addition'];
         }
 
         $packstationData = (isset($versendenData['packstation']) && $versendenData['packstation'])
