@@ -26,6 +26,7 @@ Das Modul *DHL_Versenden* für Magento® …
 
 .. contents:: Endbenutzer-Dokumentation
 
+
 Voraussetzungen
 ===============
 
@@ -49,7 +50,29 @@ Folgende PHP-Versionen werden vom Modul unterstützt:
 - PHP 5.6
 - PHP 5.5
 
-Für die Anbindung der API muss die PHP SOAP Erweiterung auf dem Webserver installiert und aktiviert sein.
+Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
+Webserver installiert und aktiviert sein.
+
+
+Hinweise zur Verwendung des Moduls
+==================================
+
+Versandursprung und Währung
+---------------------------
+
+Die Extension *DHL Versenden* für Magento® wendet sich an Händler mit Sitz in
+Deutschland oder Österreich. Stellen Sie sicher, dass die Absenderadressen in den
+drei im Abschnitt Modulkonfiguration_ genannten Bereichen korrekt ist.
+
+Die Basiswährung der Installation wird als Euro angenommen. Es findet keine
+Konvertierung aus anderen Währungen statt.
+
+Sprachunterstützung
+-------------------
+
+Das Modul unterstützt die Lokalisierungen ``en_US`` und ``de_DE``. Die Übersetzungen
+sind in den CSV-Übersetzungsdateien gepflegt und somit auch durch Dritt-Module anpassbar.
+
 
 Installation und Konfiguration
 ==============================
@@ -103,11 +126,11 @@ Darüber hinaus wird die Protokollierung konfiguriert. Wenn die Protokollierung
 der *DHL Versenden* Extension sowie das allgemeine Logging
 (*System → Konfiguration → Erweitert → Entwickleroptionen → Log Einstellungen*)
 aktiviert sind, werden Webservice-Nachrichten in der Datei ``var/log/dhl_versenden.log``
-aufgezeichnet. Dabei haben Sie die Auswahl zwischen drei Protokollstufen
+aufgezeichnet. Dabei haben Sie die Auswahl zwischen drei Protokollstufen:
 
-* ``Error`` zeichnet Fehler in der Kommunikation zwischen Shop und DHL Webservice auf.
+* ``Error`` zeichnet Fehler in der Kommunikation zwischen Shop und DHL Webservice auf,
 * ``Warning`` zeichnet Kommunikationsfehler sowie Fehler, die auf den Inhalt der
-  Nachrichten zurückgehen (bspw. Adressvalidierung, ungültige Service-Auswahl), auf.
+  Nachrichten zurückgehen (bspw. Adressvalidierung, ungültige Service-Auswahl), auf und
 * ``Debug`` zeichnet sämtliche Nachrichten auf.
 
 .. admonition:: Hinweis
@@ -128,9 +151,9 @@ Im Konfigurationsbereich *Versandaufträge* werden Einstellungen vorgenommen, di
 für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich sind.
 
 * *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
-  so werden nur Labels für seitens DHL validierte Lieferadressen erzeugt. Andernfalls
-  wird DHL im Rahmen der Zustellung versuchen, fehlerhafte Lieferadressen korrekt
-  zuzuordnen, wobei ein Nachkodierungsentgelt erhoben wird.
+  so werden nur Labels für seitens DHL erfolgreich validierte Lieferadressen erzeugt.
+  Andernfalls wird DHL im Rahmen der Zustellung versuchen, fehlerhafte Lieferadressen
+  korrekt zuzuordnen, wobei ein Nachkodierungsentgelt erhoben wird.
 * *Gewichtseinheit*: Legen Sie fest, ob die Gewichtsangaben in Ihrem Katalog in
   Gramm oder Kilogramm gepflegt sind. Bei Bedarf wird das Gewicht während der
   Übertragung an den DHL Webservice auf Kilogramm umgerechnet.
@@ -138,7 +161,7 @@ für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich s
   Versandkostenberechnung im Checkout verwendet werden sollen. Die hier ausgewählten
   Versandarten werden in der nachgelagerten Lieferscheinerstellung über den
   DHL Geschäftskundenversand abgewickelt.
-* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welche Zahlarten
+* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
   es sich um Nachnahme-Zahlarten handelt. Diese Information wird benötigt, um
   bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen.
 
@@ -167,20 +190,21 @@ Im Konfigurationsbereich *Automatische Sendungserstellung* legen Sie fest, ob
 automatisch Lieferscheine erzeugt und Paketaufkleber abgerufen werden sollen.
 
 Darüber hinaus können Sie bestimmen, welchen Bestell-Status eine Bestellung haben
-soll, um während der automatischen Sendungserstellung berücksichtigt zu werden
-und welche Services dabei standardmäßig hinzugebucht werden sollen.
+muss, um während der automatischen Sendungserstellung berücksichtigt zu werden.
+Außerdem legen Sie hier diejenigen Services fest, die standardmäßig hinzugebucht
+werden sollen.
 
 Kontaktinformationen
 ~~~~~~~~~~~~~~~~~~~~
 
 Im Konfigurationsbereich *Kontaktinformationen* legen Sie fest, welche Absenderdaten
-während der Erstellung von Versandaufträgen übertragen werden sollen.
+während der Erstellung von Versandaufträgen an DHL übermittelt werden sollen.
 
 Bankverbindung
 ~~~~~~~~~~~~~~
 
 Im Konfigurationsbereich *Bankverbindung* legen Sie fest, welche Bankdaten im
-Rahmen von Nachnahme-Versandaufträgen an den DHL Webservice übertragen werden.
+Rahmen von Nachnahme-Versandaufträgen an DHL übermittelt werden.
 Der vom Kunden erhobene Nachnahmebetrag wird auf dieses Konto transferiert.
 
 Retourenbeileger
@@ -189,24 +213,6 @@ Retourenbeileger
 Im Konfigurationsbereich *Retourenbeileger* legen Sie fest, welche Empfängeradresse
 auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 
-Hinweise zur Verwendung des Moduls
-==================================
-
-Versandursprung und Währung
----------------------------
-
-Die Extension *DHL Versenden* für Magento® wendet sich an Händler mit Sitz in
-Deutschland und Österreich. Stellen Sie sicher, dass die Absenderadressen in den
-drei im Abschnitt Modulkonfiguration_ genannten Bereichen korrekt ist.
-
-Die Basiswährung der Installation wird als Euro angenommen. Es findet keine
-Konvertierung aus anderen Währungen statt.
-
-Sprachunterstützung
--------------------
-
-Das Modul unterstützt die Lokalisierungen ``en_US`` und ``de_DE``. Die Übersetzungen
-sind in den CSV-Übersetzungsdateien gepflegt und somit auch durch Dritt-Module anpassbar.
 
 Ablaufbeschreibung und Features
 ===============================
@@ -249,7 +255,8 @@ von DHL Lieferadressen im Checkout:
 * Das Format *Postfiliale 123* im Feld *Straße* wird erkannt.
 * Ein numerischer Wert im Feld *Firma* wird als Postnummer erkannt.
 
-Eine umfassendere Unterstützung von DHL Lieferadressen bietet die separate
+Eine umfassendere Unterstützung von DHL Lieferadressen im Zusammenspiel mit der
+Erteilung von Versandaufträgen über den DHL Webservice bietet die separate
 Extension `DHL Location Finder`_ ab der Version 1.0.2:
 
 * Interaktive Karte zur Auswahl der DHL Lieferadresse
@@ -261,8 +268,7 @@ Extension `DHL Location Finder`_ ab der Version 1.0.2:
 Erstellen eines Versandauftrags
 -------------------------------
 
-Im Folgenden Abschnitt wird beschrieben, wie zu einer Bestellung, die mit einer
-mit dem DHL Geschäftskundenversand verknüpften Versandart ein Versandauftrag
+Im Folgenden Abschnitt wird beschrieben, wie zu einer Bestellung ein Versandauftrag
 erstellt und ein Paketaufkleber abgerufen wird.
 
 Nationale Sendungen
@@ -278,11 +284,12 @@ Es öffnet sich die Seite *Neuer Versand für Bestellung*. Wählen Sie die Check
 *Paketaufkleber erstellen* an und betätigen Sie den Button *Lieferschein erstellen…*.
 
 .. image:: images/de/button_submit_shipment.png
+   :scale: 75 %
 
-Es öffnet sich nun ein Popup zur Definition der im Paket enthaltenen Produkte.
+Es öffnet sich nun ein Popup zur Definition der im Paket enthaltenen Artikel.
 Betätigen Sie den Button *Artikel hinzufügen*, markieren Sie die bestellten
-Produkte und betätigen Sie den Button *Gewählte Artikel zum Paket hinzufügen*.
-Die Angabe der Paketmaße ist optional.
+Produkte und bestätigen Sie Ihre Auswahl durch Klick auf
+*Gewählte Artikel zum Paket hinzufügen*. Die Angabe der Paketmaße ist optional.
 
 .. admonition:: Hinweis
 
@@ -299,7 +306,7 @@ Internationale Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Bei Sendungen mit einer Lieferadresse außerhalb der EU werden zusätzliche Felder
-im Popup zur Definition der im Paket enthaltenen Produkte eingeblendet. Geben
+im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet. Geben
 Sie für den Abruf der notwendigen Exportdokumente mindestens die Zolltarifnummern
 sowie den Inhaltstyp der Sendung an.
 
@@ -311,13 +318,13 @@ Service-Auswahl
 Neben den im Checkout verfügbaren Zusatzleistungen, die sich an den Endverbraucher
 wenden, stehen für den DHL Geschäftskundenversand weitere, an den Händler gerichtete,
 Services zur Verfügung. Die für die aktuelle Lieferadresse möglichen Zusatzleistungen
-werden im Popup zur Definition der im Paket enthaltenen Produkte eingeblendet.
+werden im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet.
 
 .. image:: images/de/merchant_services.png
    :scale: 75 %
 
 Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, ebenso
-wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) aus der
+wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
 
 Drucken eines Paketaufklebers
@@ -395,19 +402,24 @@ detailliert nachvollziehen.
 
    Wenn Sie die automatische Sendungserstellung verwenden, prüfen Sie regelmäßig
    den Status Ihrer Bestellungen, um die wiederholte Übertragung invalider
-   Versandaufträge einzuschränken.
+   Versandaufträge zu vermeiden.
 
 Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
 
-* Im Popup zur Definition der im Paket enthaltenen Produkte können ungültige
+* Im Popup zur Definition der im Paket enthaltenen Artikel können ungültige
   Zusatzleistungen abgewählt werden.
-* Im Popup zur Definition der im Paket enthaltenen Produkte kann die
+* Im Popup zur Definition der im Paket enthaltenen Artikel kann die
   Adressvalidierung für einen betroffenen Versandauftrag abgewählt werden, so
   dass DHL die kostenpflichtige Nachkodierung (Korrektur der Lieferadresse)
   übernimmt.
 * In der Detail-Ansicht der Bestellung oder des Lieferscheins kann die
   Lieferadresse korrigiert werden. Betätigen Sie dazu den Link *Bearbeiten*
-  in der Box *Versandadresse*. Im nun angezeigten Formular können Sie im oberen
+  in der Box *Versandadresse*.
+
+  .. image:: images/de/edit_address_link.png
+     :scale: 75 %
+
+  Im nun angezeigten Formular können Sie im oberen
   Bereich die Standard-Felder der Lieferadresse bearbeiten und im unteren Bereich
   die zusätzlichen, für den DHL Geschäftskundenversand spezifischen Felder:
 
@@ -416,8 +428,20 @@ Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
   * Postfiliale
   * Paket-Shop
 
-Wurde die Fehlerursache behoben, so kann das manuelle
-`Erstellen eines Versandauftrags`_ erneut durchgeführt werden.
+
+.. image:: images/de/edit_address_form.png
+   :scale: 75 %
+
+Speichern Sie anschließend die Adresse. Wurde die Fehlerursache behoben, so kann
+das manuelle `Erstellen eines Versandauftrags`_ erneut durchgeführt werden.
+
+Wurde ein Versandauftrag über den Webservice erfolgreich erstellt und sollen
+dennoch nachträgliche Korrekturen vorgenommen werden, so stornieren Sie den
+Versandauftrag wie im Abschnitt `Stornieren eines Versandauftrags`_ beschrieben
+und betätigen Sie anschließend den Button *Paketaufkleber erstellen…* in
+derselben Box *Versand- und Trackinginformationen*. Es gilt dasselbe Vorgehen
+wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
+
 
 Modul deinstallieren oder deaktivieren
 ======================================
@@ -432,6 +456,7 @@ Gehen Sie wie folgt vor, um das Modul zu *deinstallieren*:
 
 Das Modul wird *deaktiviert*, wenn der Knoten ``active`` in der Datei
 ``app/etc/modules/Dhl_Versenden.xml`` von **true** auf **false** abgeändert wird.
+
 
 Technischer Support
 ===================
