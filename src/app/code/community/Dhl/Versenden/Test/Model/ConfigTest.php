@@ -35,6 +35,17 @@
  */
 class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
 {
+    protected function disableSandboxMode()
+    {
+        $path = sprintf(
+            '%s/%s/%s',
+            Dhl_Versenden_Model_Config::CONFIG_SECTION,
+            Dhl_Versenden_Model_Config::CONFIG_GROUP,
+            Dhl_Versenden_Model_Config::CONFIG_XML_PATH_SANDBOX_MODE
+        );
+        Mage::app()->getStore()->setConfig($path, '0');
+    }
+
     /**
      * @test
      * @loadFixture Model_ConfigTest
@@ -76,9 +87,13 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
     public function isSandboxModeEnabled()
     {
         $config = new Dhl_Versenden_Model_Config();
+
+        // sandbox
         $this->assertTrue($config->isSandboxModeEnabled());
-        $this->assertTrue($config->isSandboxModeEnabled('store_one'));
-        $this->assertFalse($config->isSandboxModeEnabled('store_two'));
+
+        // production
+        $this->disableSandboxMode();
+        $this->assertFalse($config->isSandboxModeEnabled());
     }
 
     /**
@@ -100,6 +115,12 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
     {
         $config = new Dhl_Versenden_Model_Config();
 
+        // sandbox
+        $this->assertEquals('uBar', $config->getWebserviceAuthUsername());
+        $this->assertEquals('pBar', $config->getWebserviceAuthPassword());
+
+        // production
+        $this->disableSandboxMode();
         $this->assertEquals('uFoo', $config->getWebserviceAuthUsername());
         $this->assertEquals('pFoo', $config->getWebserviceAuthPassword());
     }
@@ -112,7 +133,11 @@ class Dhl_Versenden_Test_Model_ConfigTest extends EcomDev_PHPUnit_Test_Case
     {
         $config = new Dhl_Versenden_Model_Config();
 
+        // sandbox
         $this->assertEquals('sandbox endpoint', $config->getEndpoint());
-        $this->assertNull($config->getEndpoint('store_two'));
+
+        // production
+        $this->disableSandboxMode();
+        $this->assertNull($config->getEndpoint());
     }
 }

@@ -101,23 +101,22 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
      */
 
     /**
-     * @param mixed $store
      * @return Shipper\Account
      */
-    public function getAccountSettings($store = null)
+    public function getAccountSettings()
     {
-        if (!$this->isSandboxModeEnabled($store)) {
-            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER, $store));
-            $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE, $store);
-            $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP, $store);
+        if (!$this->isSandboxModeEnabled()) {
+            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER));
+            $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE);
+            $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP);
 
-            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION, $store);
+            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION);
         } else {
-            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER, $store));
-            $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE, $store);
-            $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_EKP, $store);
+            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER));
+            $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE);
+            $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_EKP);
 
-            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_PARTICIPATION, $store);
+            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_PARTICIPATION);
         }
 
         $participation = array();
@@ -259,7 +258,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     public function getShipper($store = null)
     {
         return new Shipper(
-            $this->getAccountSettings($store),
+            $this->getAccountSettings(),
             $this->getBankData($store),
             $this->getContact($store),
             $this->getReturnReceiver($store)
