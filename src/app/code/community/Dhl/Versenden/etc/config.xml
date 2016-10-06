@@ -276,10 +276,13 @@
 
                 <shipment_autocreate_order_status>pending,processing</shipment_autocreate_order_status>
 
-                <webservice_auth_username>magento_1</webservice_auth_username>
-                <webservice_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</webservice_auth_password>
+                <webservice_auth_username>NRMAG_1</webservice_auth_username>
+                <webservice_auth_password>UlWwlRXgmQre9AP0irEF98MAVX8tCv</webservice_auth_password>
 
                 <sandbox_endpoint>https://cig.dhl.de/services/sandbox/soap</sandbox_endpoint>
+                <sandbox_auth_username>magento_1</sandbox_auth_username>
+                <sandbox_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</sandbox_auth_password>
+
                 <sandbox_account_user>2222222222_01</sandbox_account_user>
                 <sandbox_account_signature>pass</sandbox_account_signature>
                 <sandbox_account_ekp>2222222222</sandbox_account_ekp>

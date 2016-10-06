@@ -43,15 +43,18 @@ class Dhl_Versenden_Model_Config
 
     const CONFIG_XML_PATH_CARRIER_TITLE    = 'title';
     const CONFIG_XML_PATH_SANDBOX_MODE     = 'sandbox_mode';
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT = 'sandbox_endpoint';
     const CONFIG_XML_PATH_LOGGING_ENABLED  = 'logging_enabled';
     const CONFIG_XML_PATH_LOG_LEVEL        = 'log_level';
 
     const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'webservice_auth_username';
     const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'webservice_auth_password';
 
-    const CONFIG_XML_PATH_AUTOCREATE_ENABLED                    = 'shipment_autocreate_enabled';
-    const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS               = 'shipment_autocreate_order_status';
+    const CONFIG_XML_PATH_SANDBOX_ENDPOINT      = 'sandbox_endpoint';
+    const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'sandbox_auth_username';
+    const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'sandbox_auth_password';
+
+    const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
+    const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
 
     /**
      * Wrap store config access.
@@ -116,12 +119,11 @@ class Dhl_Versenden_Model_Config
     /**
      * Check if carrier should request test labels only.
      *
-     * @param mixed $store
      * @return bool
      */
-    public function isSandboxModeEnabled($store = null)
+    public function isSandboxModeEnabled()
     {
-        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SANDBOX_MODE, $store);
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SANDBOX_MODE);
     }
 
     /**
@@ -139,6 +141,21 @@ class Dhl_Versenden_Model_Config
 
         return ($isEnabled && $isLevelEnabled);
     }
+
+    /**
+     * Obtain the webservice endpoint address (location).
+     *
+     * @return string Null in production mode: use default from WSDL.
+     */
+    public function getEndpoint()
+    {
+        if ($this->isSandboxModeEnabled()) {
+            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT);
+        }
+
+        return null;
+    }
+
     /**
      * Obtain username for CIG authentication.
      *
@@ -146,6 +163,10 @@ class Dhl_Versenden_Model_Config
      */
     public function getWebserviceAuthUsername()
     {
+        if ($this->isSandboxModeEnabled()) {
+            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME);
+        }
+
         return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_USERNAME);
     }
 
@@ -156,22 +177,11 @@ class Dhl_Versenden_Model_Config
      */
     public function getWebserviceAuthPassword()
     {
-        return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
-    }
-
-    /**
-     * Obtain the webservice endpoint address (location).
-     *
-     * @param mixed $store
-     * @return string Null in production mode: use default from WSDL.
-     */
-    public function getEndpoint($store = null)
-    {
-        if ($this->isSandboxModeEnabled($store)) {
-            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT, $store);
+        if ($this->isSandboxModeEnabled()) {
+            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD);
         }
 
-        return null;
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_WS_AUTH_PASSWORD);
     }
 
     /**

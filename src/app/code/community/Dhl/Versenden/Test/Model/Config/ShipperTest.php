@@ -53,13 +53,6 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertEquals('pass', $testAccount->getSignature());
         $this->assertEquals('2222222222', $testAccount->getEkp());
         $this->assertEquals('01', $testAccount->getParticipation('01'));
-
-        $prodAccount = $config->getAccountSettings('store_two');
-        $this->assertInstanceOf(ShipperAccount::class, $prodAccount);
-        $this->assertEquals('303test', $prodAccount->getUser());
-        $this->assertEquals('magento', $prodAccount->getSignature());
-        $this->assertEquals('4711xx4711', $prodAccount->getEkp());
-        $this->assertEquals('01', $prodAccount->getParticipation('01'));
     }
 
     /**
@@ -195,7 +188,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
 
         $storeShipper = $config->getShipper('store_two');
         $this->assertInstanceOf(Shipper::class, $storeShipper);
-        $this->assertEquals('magento', $storeShipper->getAccount()->getSignature());
+        $this->assertEquals('pass', $storeShipper->getAccount()->getSignature());
         $this->assertEquals("AT999", $storeShipper->getBankData()->getIban());
         $this->assertEquals("Bar City", $storeShipper->getContact()->getCity());
         $this->assertEquals("Return City", $storeShipper->getReturnReceiver()->getCity());

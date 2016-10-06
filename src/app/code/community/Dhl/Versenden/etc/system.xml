@@ -81,7 +81,7 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>140</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
+                            <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </sandbox_mode>
                         <logging_enabled translate="label comment">
@@ -114,8 +114,8 @@
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>200</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                         </dhlversenden_fields_account>
                         <account_user translate="label tooltip">
                             <label>User</label>
@@ -124,8 +124,8 @@
                             <validate>required-entry</validate>
                             <sort_order>210</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends>
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
@@ -137,8 +137,8 @@
                             <validate>required-entry</validate>
                             <sort_order>220</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends>
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
@@ -150,8 +150,8 @@
                             <validate>required-entry validate-length minimum-length-10 maximum-length-10</validate>
                             <sort_order>230</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends>
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
@@ -162,8 +162,8 @@
                             <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
                             <sort_order>240</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
                             <depends>
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
