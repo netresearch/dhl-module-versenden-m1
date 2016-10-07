@@ -22,7 +22,11 @@
 DHL Versenden: Paketversand für DHL Geschäftskunden
 ===================================================
 
-Das Modul *DHL_Versenden* für Magento® …
+Das Modul *DHL Versenden* für Magento® ermöglicht es Händlern mit einem
+DHL Geschäftskundenkonto, Sendungen über die DHL Geschäftskundenversand API
+anzulegen und Versandscheine (Paketaufkleber) abzurufen. Die Extension
+ermöglicht dabei auch das Hinzubuchen von Zusatzleistungen sowie den Abruf von
+Exportdokumenten für den internationalen Versand.
 
 .. contents:: Endbenutzer-Dokumentation
 
@@ -110,7 +114,7 @@ Für die Abwicklung von Versandaufträgen relevant sind drei Konfigurationsberei
 .. admonition:: Hinweis
 
    Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
-   sind Kernbestandteile von Magento und binden die Schnittstelle von DHL USA an,
+   sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an,
    nicht jedoch den DHL Geschäftskundenversand.
 
 Im Folgenden werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
