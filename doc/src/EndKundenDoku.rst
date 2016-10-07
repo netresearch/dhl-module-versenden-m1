@@ -111,13 +111,29 @@ Für die Abwicklung von Versandaufträgen relevant sind drei Konfigurationsberei
     System → Konfiguration → Verkäufe → Versandeinstellungen → Herkunft
     System → Konfiguration → Verkäufe → Versandarten → DHL Versenden
 
+Stellen Sie sicher, dass die erforderlichen Felder aus den Bereichen
+Store-Information und Herkunft ausgefüllt sind:
+
+* Store-Information
+
+  * Store-Name
+  * Store-Kontakttelefon
+* Herkunft
+
+  * Land
+  * Region/Bundesland
+  * Postleitzahl
+  * Stadt
+  * Straße
+
+Im Folgenden werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
+
 .. admonition:: Hinweis
 
    Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
    sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an,
    nicht jedoch den DHL Geschäftskundenversand.
 
-Im Folgenden werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
 
 Allgemeine Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
