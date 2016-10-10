@@ -28,8 +28,15 @@ anzulegen und Versandscheine (Paketaufkleber) abzurufen. Die Extension
 ermöglicht dabei auch das Hinzubuchen von Zusatzleistungen sowie den Abruf von
 Exportdokumenten für den internationalen Versand.
 
+.. raw:: pdf
+
+   PageBreak
+
 .. contents:: Endbenutzer-Dokumentation
 
+.. raw:: pdf
+
+   PageBreak
 
 Voraussetzungen
 ===============
@@ -77,6 +84,9 @@ Sprachunterstützung
 Das Modul unterstützt die Lokalisierungen ``en_US`` und ``de_DE``. Die Übersetzungen
 sind in den CSV-Übersetzungsdateien gepflegt und somit auch durch Dritt-Module anpassbar.
 
+.. raw:: pdf
+
+   PageBreak
 
 Installation und Konfiguration
 ==============================
