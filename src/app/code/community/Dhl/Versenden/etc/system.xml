@@ -133,7 +133,7 @@
                         <account_signature translate="label tooltip">
                             <label>Signature</label>
                             <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
-                            <frontend_type>text</frontend_type>
+                            <frontend_type>password</frontend_type>
                             <validate>required-entry</validate>
                             <sort_order>220</sort_order>
                             <show_in_default>1</show_in_default>
