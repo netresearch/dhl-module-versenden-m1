@@ -1,0 +1,68 @@
+<?php
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 5
+ *
+ * @category  design
+ * @package   base_default
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+?>
+<?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
+<?php if (count($this->getServices())): ?>
+    <div id="checkout-dhlversenden-services" style="display: none;">
+        <img
+            src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
+            alt="<?php echo $this->__('DHL Additional Services') ?>"
+            title="<?php echo $this->__('DHL Additional Services') ?>"
+        />
+        <span><?php echo $this->__('Ihr DHL Wunschpaket');?></span>
+        <dl>
+            <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
+            <?php foreach ($this->getServices() as $service): ?>
+                <dt class="service-<?php echo $service->getFrontendInputType(); ?>">
+                    <?php echo $service->getSelectorHtml() ?>
+                    <?php echo $service->getLabelHtml() ?>
+                </dt>
+                <dd class="service-<?php echo $service->getFrontendInputType(); ?>">
+                    <?php echo $service->getValueHtml(); ?>
+
+                    <?php $tooltip = $this->getServiceHint($service->getCode()); ?>
+                    <?php if ($tooltip !== ''): ?>
+                        <div class="service-tooltip">
+                            <div><?php echo $tooltip ?></div>
+                        </div>
+                    <?php endif; ?>
+                </dd>
+            <?php endforeach; ?>
+        </dl>
+        <script type="text/javascript">
+            //<![CDATA[
+            var serviceContainer = new DhlServiceContainer(
+                'checkout-dhlversenden-services',
+                '<?php echo $this->getDhlMethods(); ?>'
+            );
+            serviceContainer.toggleServiceContainer();
+
+            serviceContainer.registerMethodChange();
+            serviceContainer.registerServiceDetailsChange();
+            //]]>
+        </script>
+    </div>
+<?php endif; ?>

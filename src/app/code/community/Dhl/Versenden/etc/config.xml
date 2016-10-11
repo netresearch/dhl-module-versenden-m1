@@ -1,8 +1,34 @@
 <?xml version="1.0"?>
+<!--
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 5
+ *
+ * @category  Dhl
+ * @package   Dhl_Versenden
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+-->
 <config>
     <modules>
         <Dhl_Versenden>
-            <version>0.1.0</version>
+            <version>1.0.0</version>
         </Dhl_Versenden>
     </modules>
     <global>
@@ -19,7 +45,11 @@
         <models>
             <dhl_versenden>
                 <class>Dhl_Versenden_Model</class>
+                <resourceModel>dhl_versenden_resource</resourceModel>
             </dhl_versenden>
+            <dhl_versenden_resource>
+                <class>Dhl_Versenden_Model_Resource</class>
+            </dhl_versenden_resource>
         </models>
         <resources>
             <dhl_versenden_setup>
@@ -28,11 +58,242 @@
                 </setup>
             </dhl_versenden_setup>
         </resources>
+        <events>
+            <controller_front_init_before>
+                <observers>
+                    <register_autoload>
+                        <class>dhl_versenden/observer</class>
+                        <method>registerAutoload</method>
+                        <type>singleton</type>
+                    </register_autoload>
+                </observers>
+            </controller_front_init_before>
+            <sales_order_place_after>
+                <observers>
+                    <update_carrier>
+                        <class>dhl_versenden/observer</class>
+                        <method>updateCarrier</method>
+                        <type>singleton</type>
+                    </update_carrier>
+                </observers>
+            </sales_order_place_after>
+            <dhl_versenden_fetch_postal_facility>
+                <observers>
+                    <prepare_postal_facility>
+                        <class>dhl_versenden/observer</class>
+                        <method>preparePostalFacility</method>
+                        <type>singleton</type>
+                    </prepare_postal_facility>
+                </observers>
+            </dhl_versenden_fetch_postal_facility>
+            <payment_method_is_active>
+                <observers>
+                    <disable_cod_payment>
+                        <class>dhl_versenden/observer</class>
+                        <method>disableCodPayment</method>
+                        <type>singleton</type>
+                    </disable_cod_payment>
+                </observers>
+            </payment_method_is_active>
+            <model_save_before>
+                <observers>
+                    <serialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>serializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </serialize_versenden_info>
+                </observers>
+            </model_save_before>
+            <model_load_after>
+                <observers>
+                    <unserialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_info>
+                </observers>
+            </model_load_after>
+            <model_save_after>
+                <observers>
+                    <unserialize_versenden_info>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfo</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_info>
+                </observers>
+            </model_save_after>
+            <sales_order_address_collection_load_after>
+                <observers>
+                    <unserialize_versenden_infos>
+                        <class>dhl_versenden/observer</class>
+                        <method>unserializeVersendenInfoItems</method>
+                        <type>singleton</type>
+                    </unserialize_versenden_infos>
+                </observers>
+            </sales_order_address_collection_load_after>
+        </events>
+        <fieldsets>
+            <sales_convert_quote_address>
+                <dhl_versenden_info>
+                    <to_order_address>*</to_order_address>
+                </dhl_versenden_info>
+            </sales_convert_quote_address>
+        </fieldsets>
     </global>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Dhl_Versenden_Adminhtml before="Mage_Adminhtml">Dhl_Versenden_Adminhtml</Dhl_Versenden_Adminhtml>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <layout>
+            <updates>
+                <dhl_versenden>
+                    <file>dhl_versenden.xml</file>
+                </dhl_versenden>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <dhl_versenden>
+                    <files>
+                        <default>Dhl_Versenden.csv</default>
+                    </files>
+                </dhl_versenden>
+            </modules>
+        </translate>
+        <events>
+            <sales_order_shipment_track_delete_before>
+                <observers>
+                    <delete_shipping_label>
+                        <class>dhl_versenden/observer</class>
+                        <method>deleteShippingLabel</method>
+                    </delete_shipping_label>
+                </observers>
+            </sales_order_shipment_track_delete_before>
+            <adminhtml_widget_container_html_before>
+                <observers>
+                    <replace_address_form>
+                        <class>dhl_versenden/observer</class>
+                        <method>replaceAddressForm</method>
+                        <type>singleton</type>
+                    </replace_address_form>
+                </observers>
+            </adminhtml_widget_container_html_before>
+        </events>
+    </adminhtml>
+    <frontend>
+        <layout>
+            <updates>
+                <dhl_versenden>
+                    <file>dhl_versenden.xml</file>
+                </dhl_versenden>
+            </updates>
+        </layout>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <append_shipment_method_services>
+                        <class>dhl_versenden/observer</class>
+                        <method>appendServices</method>
+                        <type>singleton</type>
+                    </append_shipment_method_services>
+                </observers>
+            </core_block_abstract_to_html_after>
+            <checkout_controller_onepage_save_shipping_method>
+                <observers>
+                    <save_service_settings>
+                        <class>dhl_versenden/observer</class>
+                        <method>saveShippingSettings</method>
+                        <type>singleton</type>
+                    </save_service_settings>
+                </observers>
+            </checkout_controller_onepage_save_shipping_method>
+        </events>
+        <translate>
+            <modules>
+                <dhl_versenden>
+                    <files>
+                        <default>Dhl_Versenden.csv</default>
+                    </files>
+                </dhl_versenden>
+            </modules>
+        </translate>
+    </frontend>
+    <crontab>
+    <jobs>
+        <dhlversenden_shipment_autocreate>
+            <schedule>
+                <cron_expr>*/15 * * * *</cron_expr>
+            </schedule>
+            <run>
+                <model>dhl_versenden/cron::shipmentAutoCreate</model>
+            </run>
+        </dhlversenden_shipment_autocreate>
+    </jobs>
+    </crontab>
+    <default>
+        <dhl_versenden>
+            <dev>
+                <autoload_enabled>1</autoload_enabled>
+            </dev>
+        </dhl_versenden>
+        <carriers>
+            <!-- This default value resolve a problem with CE 1.7 with missing value for the content type -->
+            <dhlint>
+                <content_type>D</content_type>
+            </dhlint>
+            <dhlversenden>
+                <model>dhl_versenden/shipping_carrier_versenden</model>
+
+                <title>DHL Versenden</title>
+                <active>1</active>
+                <sandbox_mode>1</sandbox_mode>
+                <logging_enabled>1</logging_enabled>
+                <log_level>3</log_level>
+                <account_participation backend_model="adminhtml/system_config_backend_serialized_array"><![CDATA[a:8:{s:18:"_1474470283335_335";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"01";}s:18:"_1474470313676_676";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1474470331582_582";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1474470336494_494";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1474470342334_334";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1474470366806_806";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:18:"_1474470375822_822";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1474470376509_509";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></account_participation>
+                <shipment_printonlyifcodeable>1</shipment_printonlyifcodeable>
+                <shipment_unitofmeasure>KG</shipment_unitofmeasure>
+                <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
+                <service_dayofdelivery_enabled>0</service_dayofdelivery_enabled>
+                <service_deliverytimeframe_enabled>0</service_deliverytimeframe_enabled>
+                <service_preferredlocation_enabled>0</service_preferredlocation_enabled>
+                <service_preferredlocation_placeholder>e.g. garage, terrace</service_preferredlocation_placeholder>
+                <service_preferredneighbour_enabled>0</service_preferredneighbour_enabled>
+                <service_preferredneighbour_placeholder>name, street and street number</service_preferredneighbour_placeholder>
+                <service_parcelannouncement_enabled>0</service_parcelannouncement_enabled>
+                <service_visualcheckofage_enabled>1</service_visualcheckofage_enabled>
+                <service_returnshipment_enabled>1</service_returnshipment_enabled>
+                <service_insurance_enabled>1</service_insurance_enabled>
+                <service_bulkygoods_enabled>1</service_bulkygoods_enabled>
+                <returnshipment_use_shipper>1</returnshipment_use_shipper>
+
+                <shipment_autocreate_order_status>pending,processing</shipment_autocreate_order_status>
+
+                <webservice_auth_username>NRMAG_1</webservice_auth_username>
+                <webservice_auth_password>UlWwlRXgmQre9AP0irEF98MAVX8tCv</webservice_auth_password>
+
+                <sandbox_endpoint>https://cig.dhl.de/services/sandbox/soap</sandbox_endpoint>
+                <sandbox_auth_username>magento_1</sandbox_auth_username>
+                <sandbox_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</sandbox_auth_password>
+
+                <sandbox_account_user>2222222222_01</sandbox_account_user>
+                <sandbox_account_signature>pass</sandbox_account_signature>
+                <sandbox_account_ekp>2222222222</sandbox_account_ekp>
+                <sandbox_account_participation backend_model="adminhtml/system_config_backend_serialized_array"><![CDATA[a:8:{s:18:"_1474470283335_335";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"01";}s:18:"_1474470313676_676";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1474470331582_582";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1474470336494_494";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1474470342334_334";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1474470366806_806";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:18:"_1474470375822_822";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1474470376509_509";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></sandbox_account_participation>
+            </dhlversenden>
+        </carriers>
+    </default>
     <phpunit>
         <suite>
             <modules>
-                <Dhl_Versenden />
+                <Dhl_Versenden/>
             </modules>
         </suite>
     </phpunit>
