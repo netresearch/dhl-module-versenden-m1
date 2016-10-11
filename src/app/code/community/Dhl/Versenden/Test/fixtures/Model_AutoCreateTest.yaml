@@ -1,0 +1,131 @@
+scope:
+  store: # Initializes store views
+# Store 1
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: store_one
+      name: Store One
+      is_active: 1
+# Store 2
+    - store_id: 2
+      website_id: 1
+      group_id: 1
+      code: store_two
+      name: Store Two
+      is_active: 1
+
+config:
+  stores/store_one/carriers/dhlversenden/shipment_autocreate_enabled: 1
+  stores/store_two/carriers/dhlversenden/shipment_autocreate_enabled: 0
+
+tables:
+  sales/order:
+   - entity_id: 10
+     shipping_method: 'dhlversenden_foo'
+     status: 'pending'
+     store_id: 1
+     total_qty_ordered: 2
+
+   - entity_id: 11
+     shipping_method: 'dhlversenden_fox'
+     status: 'processing'
+     store_id: 1
+     total_qty_ordered: 2
+
+   - entity_id: 17
+     shipping_method: 'xyz_foo'
+     store_id: 2
+
+  sales/order_item:
+   - item_id: 10
+     order_id: 10
+     qty_ordered: 2
+
+   - item_id: 11
+     order_id: 11
+     qty_ordered: 2
+
+  sales/order_payment:
+   - entity_id: 10
+     parent_id: 10
+     method: 'cashondelivery'
+
+   - entity_id: 11
+     parent_id: 11
+     method: 'checkmo'
+
+  sales/order_address:
+   - entity_id: 100
+     parent_id: 10
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "shipping"
+     prefix: "Mrs."
+
+   - entity_id: 101
+     parent_id: 10
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "billing"
+     prefix: "Mrs."
+
+   - entity_id: 110
+     parent_id: 11
+     region_id: 19
+     region: "Georgia"
+     postcode: "30328"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "55 Glenlake Parkway NE"
+     city: "Atlanta"
+     email: "magento.customer@ups.com"
+     telephone: "1-800-PICK-UPS"
+     country_id: "US"
+     address_type: "shipping"
+     prefix: "Mrs."
+
+   - entity_id: 111
+     parent_id: 11
+     region_id: 19
+     region: "Georgia"
+     postcode: "30328"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "55 Glenlake Parkway NE"
+     city: "Atlanta"
+     email: "magento.customer@ups.com"
+     telephone: "1-800-PICK-UPS"
+     country_id: "US"
+     address_type: "billing"
+     prefix: "Mrs."
+
+  sales/shipment:
+   - entity_id: 11
+     order_id: 11
+     shipping_address_id: 110
+     billing_address_id:  120
+
+  sales/shipment_item:
+   - item_id: 110
+     product_id: 110
+     parent_id: 11
+   - item_id: 111
+     product_id: 111
+     parent_id: 11

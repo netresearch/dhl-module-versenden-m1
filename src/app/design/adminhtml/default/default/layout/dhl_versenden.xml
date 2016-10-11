@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Dhl Versenden
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to
+ * newer versions in the future.
+ *
+ * PHP version 5
+ *
+ * @category  design
+ * @package   default_default
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @copyright 2016 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
+ */
+-->
+<layout version="0.1.0">
+    <packaging_popup>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>dhl_versenden.css</stylesheet>
+            </action>
+        </reference>
+
+        <reference name="form">
+            <!-- packaging popup -->
+            <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
+                   name="shipment_packaging"
+                   template="sales/order/shipment/packaging/popup.phtml">
+                <action method="setTemplate">
+                    <template helper="dhl_versenden/data/getPackagingPopupTemplate">
+                        <name>dhl_versenden/sales/packaging_popup.phtml</name>
+                        <block>shipment_packaging</block>
+                    </template>
+                </action>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_service_edit"
+                       name="shipping_services"
+                       template="dhl_versenden/sales/shipping_services.phtml"/>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_customs"
+                       name="shipping_customs"
+                       template="dhl_versenden/sales/shipping_customs.phtml"/>
+            </block>
+
+            <!-- packaging info -->
+            <block type="dhl_versenden/adminhtml_sales_order_shipment_packaging"
+                   name="shipment_packed"
+                   template="sales/order/shipment/packaging/packed.phtml">
+                <action method="setTemplate">
+                    <template helper="dhl_versenden/data/getPackagingPackedTemplate">
+                        <name>dhl_versenden/sales/packaging_packed.phtml</name>
+                        <block>shipment_packed</block>
+                    </template>
+                </action>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_service_view"
+                       name="shipping_services"
+                       template="dhl_versenden/sales/shipping_services.phtml"/>
+            </block>
+        </reference>
+    </packaging_popup>
+
+    <adminhtml_sales_order_shipment_new>
+        <update handle="packaging_popup"/>
+    </adminhtml_sales_order_shipment_new>
+
+    <adminhtml_sales_order_shipment_view>
+        <update handle="packaging_popup"/>
+    </adminhtml_sales_order_shipment_view>
+
+    <adminhtml_sales_order_address>
+        <reference name="sales_order_address.form.container">
+            <!-- Added via observer if conditions apply -->
+            <block type="dhl_versenden/adminhtml_sales_order_address_form" name="dhl_versenden_form" />
+        </reference>
+    </adminhtml_sales_order_address>
+</layout>

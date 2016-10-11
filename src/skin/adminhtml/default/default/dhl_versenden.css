@@ -1,0 +1,64 @@
+/* size up the packaging popup for additional service and customs info */
+.packaging-window {
+    margin:-300px 0 0 -571px;
+}
+.packaging-window .packaging-content {
+    max-height: 600px;
+}
+
+#packaging-dhlversenden-services,
+#packaging-dhlversenden-customs {
+    background: #f6f6f6;
+    border: 2px solid #d4d4d4;
+    margin: 0 0 10px;
+    padding: 10px;
+    overflow: hidden;
+}
+#packaging-dhlversenden-services > div,
+#packaging-dhlversenden-customs > div {
+    font-weight: bold;
+}
+#packaging-dhlversenden-services > dl,
+#packaging-dhlversenden-customs > table {
+    border-top: 1px solid #ccc;
+    padding: 10px 0 0;
+    margin: 3px 0 0;
+    width: 100%;
+}
+#packaging-dhlversenden-services dt,
+#packaging-dhlversenden-services dd {
+    min-height: 20px;
+}
+#packaging-dhlversenden-services dt {
+    float: left;
+    clear: left;
+    min-width: 150px;
+    padding-left: 20px;
+    text-align: right;
+    display: block;
+    position: relative;
+}
+#packaging-dhlversenden-services dt label {
+    font-weight: bold;
+}
+#packaging-dhlversenden-services dt input[type=checkbox] {
+    position: absolute;
+    left: 0;
+}
+#packaging-dhlversenden-services dd {
+    margin: 0 0 0 190px;
+    padding: 0 0 0.5em 0;
+}
+#packaging-dhlversenden-services dd:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+#packaging-dhlversenden-services input[type=text] {
+    width: 274px;
+    padding: 2px;
+}
+#packaging-dhlversenden-services select {
+    width: 280px;
+    min-height: 17px;
+}

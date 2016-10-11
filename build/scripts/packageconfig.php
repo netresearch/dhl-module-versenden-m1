@@ -59,7 +59,7 @@ class PackageConfig
     protected $authorName = 'Christoph Aßmann';
     protected $authorUser = 'christoph_';
     protected $authorEmail = 'christoph.assmann@netresearch.de';
-    protected $phpMin = '5.4.0';
+    protected $phpMin = '5.5.0';
     protected $phpMax = '7.9.0';
     protected $skipVersionCompare = false;
 

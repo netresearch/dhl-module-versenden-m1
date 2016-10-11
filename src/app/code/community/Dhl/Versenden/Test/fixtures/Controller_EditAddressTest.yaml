@@ -1,0 +1,103 @@
+tables:
+  sales/order:
+   - entity_id: 10
+     shipping_method: 'dhlversenden_foo'
+     status: 'pending'
+     store_id: 1
+     total_qty_ordered: 2
+
+   - entity_id: 11
+     shipping_method: 'dhlversenden_fox'
+     status: 'processing'
+     store_id: 1
+     total_qty_ordered: 2
+
+   - entity_id: 17
+     shipping_method: 'xyz_foo'
+     store_id: 2
+
+  sales/order_item:
+   - item_id: 10
+     order_id: 10
+     qty_ordered: 2
+
+   - item_id: 11
+     order_id: 11
+     qty_ordered: 2
+
+  sales/order_payment:
+   - entity_id: 10
+     parent_id: 10
+     method: 'cashondelivery'
+
+   - entity_id: 11
+     parent_id: 11
+     method: 'checkmo'
+
+  sales/order_address:
+   - entity_id: 100
+     parent_id: 10
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "shipping"
+     prefix: "Mrs."
+     dhl_versenden_info: '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":"142","postNumber":"1234820","zip":"04229","city":"Leipzig","country":"Deutschland","countryISOCode":"DE","state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Herr Christoph A\u00dfmann","name2":"Netresearch GmbH & Co. KG","name3":null,"streetName":"Zschochersche Str.","streetNumber":"42","addressAddition":"","dispatchingInformation":null,"zip":"04229","city":"Leipzig","country":"Deutschland","countryISOCode":"DE","state":"Sachsen","phone":"0341","email":"christoph.assmann@netresearch.de","contactPerson":null},"services":{"dayOfDelivery":false,"deliveryTimeFrame":false,"preferredLocation":false,"preferredNeighbour":false,"parcelAnnouncement":true,"visualCheckOfAge":false,"returnShipment":false,"insurance":false,"bulkyGoods":false,"cod":false,"printOnlyIfCodeable":true}}'
+
+   - entity_id: 101
+     parent_id: 10
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "billing"
+     prefix: "Mrs."
+
+   - entity_id: 110
+     parent_id: 11
+     region_id: 19
+     region: "Georgia"
+     postcode: "30328"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "55 Glenlake Parkway NE"
+     city: "Atlanta"
+     email: "magento.customer@ups.com"
+     telephone: "1-800-PICK-UPS"
+     country_id: "US"
+     address_type: "shipping"
+     prefix: "Mrs."
+
+   - entity_id: 111
+     parent_id: 11
+     region_id: 19
+     region: "Georgia"
+     postcode: "30328"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "55 Glenlake Parkway NE"
+     city: "Atlanta"
+     email: "magento.customer@ups.com"
+     telephone: "1-800-PICK-UPS"
+     country_id: "US"
+     address_type: "billing"
+     prefix: "Mrs."
+
+   - entity_id: 170
+     parent_id: 17
+
+   - entity_id: 171
+     parent_id: 17
