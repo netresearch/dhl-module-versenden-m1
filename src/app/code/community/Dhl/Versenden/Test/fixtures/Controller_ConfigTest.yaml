@@ -1,0 +1,22 @@
+scope:
+  store:
+# Store 1
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: store_one
+      name: Store One
+      is_active: 1
+# Store 2
+    - store_id: 2
+      website_id: 1
+      group_id: 1
+      code: store_two
+      name: Store Two
+      is_active: 1
+
+config:
+  default/web/url/use_store: 0
+  default/carriers/dhlint/content_type: "D"
+  default/dev/template/allow_symlink: 1
+  default/advanced/modules_disable_output/Mage_Index: 1

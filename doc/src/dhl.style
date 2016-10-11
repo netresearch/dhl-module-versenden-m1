@@ -7,10 +7,19 @@
         "margin-right":"2cm"
     },
     "styles": [
+        ["bodytext", {
+            "alignment":"TA_LEFT"
+        }],
         ["footertable", {
             "commands": [
                 [ "VALIGN", [ 0, 0 ], [ -1, -1 ], "TOP" ]
             ]
+        }],
+        ["code", {
+            "fontSize":"7.5"
+        }],
+        ["bullet-list", {
+            "spaceAfter": 4
         }],
         ["rightalign" , {
             "parent": "bodytext",

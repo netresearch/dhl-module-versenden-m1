@@ -6,12 +6,12 @@ shipping API into the order processing workflow.
 
 Facts
 -----
-- version: 0.1.0
+- version: 1.0.0
 - extension key: Dhl_Versenden
 - [extension on Magento Connect](http://www.magentocommerce.com/magento-connect/dhl-versenden-1234.html)
 - Magento Connect 2.0 extension key: http://connect20.magentocommerce.com/community/Dhl_Versenden
 - [extension on GitLab](https://git.netresearch.de/dhl/versenden-m1)
-- [direct download link](http://connect.magentocommerce.com/community/get/Dhl_Versenden-0.1.0.tgz)
+- [direct download link](http://connect.magentocommerce.com/community/get/Dhl_Versenden-1.0.0.tgz)
 
 Description
 -----------
@@ -45,11 +45,25 @@ in the documentation.
 Uninstallation
 --------------
 1. Remove all extension files from your Magento installation
-2. Remove the database columns from the shipping address entity (t.b.d.)
+2. Clean up the database.
+
+
+    ALTER TABLE `sales_flat_quote_address` DROP COLUMN `dhl_versenden_info`;
+
+    ALTER TABLE `sales_flat_order_address` DROP COLUMN `dhl_versenden_info`;
+
+    DELETE FROM `core_config_data` WHERE `path` LIKE 'carriers/dhlversenden/%';
+    
+    DELETE FROM `core_resource` WHERE `code` = 'dhl_versenden_setup';
 
 Support
 -------
-If you have any issues with this extension, contact the support (t.b.d.)
+In case of questions or problems, please have a look at the
+[Support Portal (FAQ)](http://dhl.support.netresearch.de/) first.
+
+If the issue cannot be resolved, you can contact the support team via the
+[Support Portal](http://dhl.support.netresearch.de/) or by sending an email
+to <dhl.support@netresearch.de>.
 
 Developer
 ---------

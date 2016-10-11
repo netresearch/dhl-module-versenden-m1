@@ -1,0 +1,208 @@
+thunstrasse_39:
+  street_name: "Thunstraße"
+  street_number: "39"
+  supplement: ""
+nonnenstrasse:
+  street_name: "Nonnenstraße"
+  street_number: ""
+  supplement: ""
+tulpenweg:
+  street_name: "Tulpenweg"
+  street_number: ""
+  supplement: ""
+tulpenweg_:
+  street_name: "Tulpenweg"
+  street_number: ""
+  supplement: ""
+nonnenstrasse_11c:
+  street_name: "Nonnenstraße"
+  street_number: "11c"
+  supplement: ""
+nonnenstrasse11c:
+  street_name: "Nonnenstraße11c"
+  street_number: ""
+  supplement: ""
+nonnenstrasse_44_46:
+  street_name: "Nonnenstraße"
+  street_number: "44-46"
+  supplement: ""
+nonnenstrasse_44_46_haus_c:
+  street_name: "Nonnenstraße"
+  street_number: "44-46"
+  supplement: "Haus C"
+leipziger_strasse_117_zimmer_321:
+  street_name: "Leipziger Straße"
+  street_number: "117"
+  supplement: "Zimmer 321"
+lilienweg_14:
+  street_name: "Lilienweg"
+  street_number: "14"
+  supplement: ""
+lilienweg_4:
+  street_name: "Lilienweg"
+  street_number: "4"
+  supplement: ""
+richard_strauss_strasse_4:
+  street_name: "Richard Strauß Straße"
+  street_number: "4"
+  supplement: ""
+mittelstrasse_6:
+  street_name: "Mittelstrasse"
+  street_number: "6"
+  supplement: ""
+hauptstr_6:
+  street_name: "Hauptstr."
+  street_number: "6"
+  supplement: ""
+alte_dorfstraße_4:
+  street_name: "Alte Dorfstraße"
+  street_number: "4"
+  supplement: ""
+alfons_mitnacht_str_5:
+  street_name: "Alfons-Mitnacht Str."
+  street_number: "5"
+  supplement: ""
+seilerweg_5:
+  street_name: "Seilerweg"
+  street_number: "5"
+  supplement: ""
+aegirsvej_4:
+  street_name: "Ægirsvej"
+  street_number: "4"
+  supplement: ""
+hilgartshausener_hauptstrasse_49:
+  street_name: "Hilgartshausener Hauptstraße"
+  street_number: "49"
+  supplement: ""
+erich_weinert_strasse_87:
+  street_name: "erich-weinert-strasse"
+  street_number: "87"
+  supplement: ""
+m4_8:
+  street_name: "M4"
+  street_number: "8"
+  supplement: ""
+strasse_1:
+  street_name: "1.Straße"
+  street_number: ""
+  supplement: ""
+wiesencenter_bayreuther_strasse_108_2_stock:
+  street_name: "Bayreuther Str."
+  street_number: "108"
+  supplement: "Wiesentcenter 2. Stock"
+neue_strasse_28_1_stock:
+  street_name: "Neue Straße"
+  street_number: "28"
+  supplement: "1.Stock"
+kirchengasse_7_1_stock_zi_4:
+  street_name: "Kirchengasse"
+  street_number: "7"
+  supplement: "1. Stock Zi.Nr. 4"
+pallaswiesenstr_57_App_235:
+  street_name: "Pallaswiesenstr."
+  street_number: "57"
+  supplement: "App. 235"
+neue_str_55_whg_3:
+  street_name: "Neue Str."
+  street_number: "55"
+  supplement: "Whg. 3"
+apenrader_str_16_whg_3:
+  street_name: "Apenrader Str."
+  street_number: "16"
+  supplement: "Whg. 3"
+d_6_2:
+  street_name: "D 6"
+  street_number: "2"
+  supplement: ""
+r4_7:
+  street_name: "R4"
+  street_number: "7"
+  supplement: ""
+lieblgasse_2_41_7_21:
+  street_name: "Lieblgasse"
+  street_number: "2/41/7/21"
+  supplement: ""
+1752_oto_iwatsukiku:
+  street_name: "Oto"
+  street_number: "1752"
+  supplement: "Iwatsukiku"
+3940_radio_road_unit_110:
+  street_name: "Radio Road"
+  street_number: "3940"
+  supplement: "Unit 110"
+1101_madison_st_600:
+  street_name: "Madison St"
+  street_number: "1101"
+  supplement: "# 600"
+1523_6th_ave:
+  street_name: "6th Ave"
+  street_number: "1523"
+  supplement: ""
+81_quai_charles_de_gaulle:
+  street_name: "quai Charles de Gaulle"
+  street_number: "81"
+  supplement: ""
+nafarroa_kalea_9:
+  street_name: "Nafarroa Kalea"
+  street_number: "9"
+  supplement: ""
+av_libertad_53:
+  street_name: "Av. Libertad"
+  street_number: "53"
+  supplement: ""
+vanzada_errepidea_1:
+  street_name: "vanzada Errepidea"
+  street_number: "1"
+  supplement: ""
+88_century_blvd_pudong:
+  street_name: "Century Blvd"
+  street_number: "88"
+  supplement: "Pudong"
+mannerheimintie_13A2:
+  street_name: "Mannerheimintie"
+  street_number: "13A2"
+  supplement: ""
+mannerheimintie_13_A2:
+  street_name: "Mannerheimintie"
+  street_number: "13 A2"
+  supplement: ""
+mannerheimintie_13_A_2:
+  street_name: "Mannerheimintie"
+  street_number: "13 A 2"
+  supplement: ""
+7_place_de_l_hotel_de_ville:
+  street_name: "place de l'Hôtel de Ville"
+  street_number: "7"
+  supplement: ""
+488_west_57_street:
+  street_name: "West 57 Street"
+  street_number: "488"
+  supplement: ""
+574_e_10th_street:
+  street_name: "E 10th Street"
+  street_number: "574"
+  supplement: ""
+neuhof_13_15:
+  street_name: "Neuhof"
+  street_number: "13 / 15"
+  supplement: ""
+no_133_shangdong_st:
+  street_name: "Shangdong St."
+  street_number: "133"
+  supplement: ""
+56_route_de_geneve:
+  street_name: "route de Genève"
+  street_number: "56"
+  supplement: ""
+no_59_yangfangdian_xi:
+  street_name: "Yangfangdian Xi"
+  street_number: "59"
+  supplement: ""
+514_3_daechi_dong:
+  street_name: "Daechi-Dong"
+  street_number: "514-3"
+  supplement: ""
+san_millan_3_10:
+  street_name: "San Millán"
+  street_number: "3-10"
+  supplement: ""
