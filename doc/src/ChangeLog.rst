@@ -24,3 +24,15 @@ DHL Business Customer Shipping
 
 ChangeLog
 =========
+
+.. list-table::
+   :header-rows: 1
+   :widths: 2 2 10
+
+   * - **Revision**
+     - **Date**
+     - **Description**
+
+   * - 1.0.0
+     - 17.10.2016
+     - Initial Release
