@@ -91,4 +91,9 @@ class Info extends Info\AbstractInfo
 
         return $info;
     }
+
+    public function __toString()
+    {
+        return \DHL\Versenden\Info\Serializer::serialize($this);
+    }
 }
