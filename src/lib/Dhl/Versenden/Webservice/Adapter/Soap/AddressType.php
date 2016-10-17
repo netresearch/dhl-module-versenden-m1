@@ -44,9 +44,8 @@ class AddressType implements RequestType
      */
     public static function prepare(RequestData $requestData)
     {
-        $countryType = new VersendenApi\CountryType();
+        $countryType = new VersendenApi\CountryType($requestData->getCountryISOCode());
         $countryType->setCountry($requestData->getCountry());
-        $countryType->setCountryISOCode($requestData->getCountryISOCode());
         $countryType->setState($requestData->getState());
 
         $requestType = new VersendenApi\NativeAddressType(
