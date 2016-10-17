@@ -20,10 +20,12 @@ class CountryType
      */
     protected $state = null;
 
-    
-    public function __construct()
+    /**
+     * @param countryISOType $countryISOCode
+     */
+    public function __construct($countryISOCode)
     {
-    
+      $this->countryISOCode = $countryISOCode;
     }
 
     /**

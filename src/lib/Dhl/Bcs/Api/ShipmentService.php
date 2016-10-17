@@ -16,6 +16,11 @@ class ShipmentService
     protected $DeliveryTimeframe = null;
 
     /**
+     * @var ServiceconfigurationDeliveryTimeframe $PreferredTime
+     */
+    protected $PreferredTime = null;
+
+    /**
      * @var ServiceconfigurationISR $IndividualSenderRequirement
      */
     protected $IndividualSenderRequirement = null;
@@ -24,6 +29,11 @@ class ShipmentService
      * @var Serviceconfiguration $PackagingReturn
      */
     protected $PackagingReturn = null;
+
+    /**
+     * @var Serviceconfiguration $ReturnImmediately
+     */
+    protected $ReturnImmediately = null;
 
     /**
      * @var Serviceconfiguration $NoticeOfNonDeliverability
@@ -158,6 +168,24 @@ class ShipmentService
     }
 
     /**
+     * @return ServiceconfigurationDeliveryTimeframe
+     */
+    public function getPreferredTime()
+    {
+      return $this->PreferredTime;
+    }
+
+    /**
+     * @param ServiceconfigurationDeliveryTimeframe $PreferredTime
+     * @return \Dhl\Bcs\Api\ShipmentService
+     */
+    public function setPreferredTime($PreferredTime)
+    {
+      $this->PreferredTime = $PreferredTime;
+      return $this;
+    }
+
+    /**
      * @return ServiceconfigurationISR
      */
     public function getIndividualSenderRequirement()
@@ -190,6 +218,24 @@ class ShipmentService
     public function setPackagingReturn($PackagingReturn)
     {
       $this->PackagingReturn = $PackagingReturn;
+      return $this;
+    }
+
+    /**
+     * @return Serviceconfiguration
+     */
+    public function getReturnImmediately()
+    {
+      return $this->ReturnImmediately;
+    }
+
+    /**
+     * @param Serviceconfiguration $ReturnImmediately
+     * @return \Dhl\Bcs\Api\ShipmentService
+     */
+    public function setReturnImmediately($ReturnImmediately)
+    {
+      $this->ReturnImmediately = $ReturnImmediately;
       return $this;
     }
 
