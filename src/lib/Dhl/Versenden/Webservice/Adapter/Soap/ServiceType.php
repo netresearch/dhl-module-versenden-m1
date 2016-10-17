@@ -58,20 +58,9 @@ class ServiceType implements RequestType
     {
         $service = new VersendenApi\ShipmentService();
 
-        if ($requestData->getDayOfDelivery()) {
-            $dodConfig = new ServiceconfigurationDateOfDelivery(
-                true,
-                $requestData->getDayOfDelivery()
-            );
-            $service->setDayOfDelivery($dodConfig);
-        }
-
-        if ($requestData->getDeliveryTimeFrame()) {
-            $dtfConfig = new ServiceconfigurationDeliveryTimeframe(
-                true,
-                $requestData->getDeliveryTimeFrame()
-            );
-            $service->setDeliveryTimeframe($dtfConfig);
+        if ($requestData->getPreferredTime()) {
+            $ptConfig = new ServiceconfigurationDeliveryTimeframe(true, $requestData->getPreferredTime());
+            $service->setPreferredTime($ptConfig);
         }
 
         if ($individualSenderRequirement = false) {
@@ -126,8 +115,8 @@ class ServiceType implements RequestType
             $service->setPreferredNeighbour($pnConfig);
         }
 
-        if ($preferredDay = false) {
-            $pdConfig = new ServiceconfigurationDetails(true, '');
+        if ($requestData->getPreferredDay()) {
+            $pdConfig = new ServiceconfigurationDetails(true, $requestData->getPreferredDay());
             $service->setPreferredDay($pdConfig);
         }
 
