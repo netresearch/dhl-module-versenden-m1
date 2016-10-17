@@ -213,8 +213,8 @@ class Dhl_Versenden_Model_Info_Builder
         $versendenInfo->getReceiver()->fromArray($receiverInfo, false);
 
         $serviceInfo = array(
-            'dayOfDelivery' => $shipmentOrder->getServiceSelection()->getDayOfDelivery(),
-            'deliveryTimeFrame' => $shipmentOrder->getServiceSelection()->getDeliveryTimeFrame(),
+            'preferredDay' => $shipmentOrder->getServiceSelection()->getPreferredDay(),
+            'preferredTime' => $shipmentOrder->getServiceSelection()->getPreferredTime(),
             'preferredLocation' => $shipmentOrder->getServiceSelection()->getPreferredLocation(),
             'preferredNeighbour' => $shipmentOrder->getServiceSelection()->getPreferredNeighbour(),
             'parcelAnnouncement' => $shipmentOrder->getServiceSelection()->getParcelAnnouncement(),

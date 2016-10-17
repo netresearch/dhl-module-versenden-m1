@@ -38,9 +38,9 @@ use Dhl\Versenden\Webservice\RequestData;
 class ServiceSelection extends RequestData
 {
     /** @var bool|string false or date */
-    private $dayOfDelivery;
+    private $preferredDay;
     /** @var bool|string false or time */
-    private $deliveryTimeFrame;
+    private $preferredTime;
     /** @var bool|string false or location */
     private $preferredLocation;
     /** @var bool|string false or neighbour address */
@@ -62,8 +62,8 @@ class ServiceSelection extends RequestData
 
     /**
      * ServiceSelection constructor.
-     * @param bool|string $dayOfDelivery
-     * @param bool|string $deliveryTimeFrame
+     * @param bool|string $preferredDay
+     * @param bool|string $preferredTime
      * @param bool|string $preferredLocation
      * @param bool|string $preferredNeighbour
      * @param bool $parcelAnnouncement
@@ -75,12 +75,12 @@ class ServiceSelection extends RequestData
      * @param bool $printOnlyIfCodeable
      */
     public function __construct(
-        $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour,
+        $preferredDay, $preferredTime, $preferredLocation, $preferredNeighbour,
         $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance,
         $bulkyGoods, $cod, $printOnlyIfCodeable)
     {
-        $this->dayOfDelivery = $dayOfDelivery;
-        $this->deliveryTimeFrame = $deliveryTimeFrame;
+        $this->preferredDay = $preferredDay;
+        $this->preferredTime = $preferredTime;
         $this->preferredLocation = $preferredLocation;
         $this->preferredNeighbour = $preferredNeighbour;
         $this->parcelAnnouncement = $parcelAnnouncement;
@@ -95,17 +95,17 @@ class ServiceSelection extends RequestData
     /**
      * @return bool|string
      */
-    public function getDayOfDelivery()
+    public function getPreferredDay()
     {
-        return $this->dayOfDelivery;
+        return $this->preferredDay;
     }
 
     /**
      * @return bool|string
      */
-    public function getDeliveryTimeFrame()
+    public function getPreferredTime()
     {
-        return $this->deliveryTimeFrame;
+        return $this->preferredTime;
     }
 
     /**

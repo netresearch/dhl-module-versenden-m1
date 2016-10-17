@@ -261,8 +261,8 @@
                 <shipment_printonlyifcodeable>1</shipment_printonlyifcodeable>
                 <shipment_unitofmeasure>KG</shipment_unitofmeasure>
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
-                <service_dayofdelivery_enabled>0</service_dayofdelivery_enabled>
-                <service_deliverytimeframe_enabled>0</service_deliverytimeframe_enabled>
+                <service__preferredday_enabled>0</service__preferredday_enabled>
+                <service_preferredtime_enabled>0</service_preferredtime_enabled>
                 <service_preferredlocation_enabled>0</service_preferredlocation_enabled>
                 <service_preferredlocation_placeholder>e.g. garage, terrace</service_preferredlocation_placeholder>
                 <service_preferredneighbour_enabled>0</service_preferredneighbour_enabled>

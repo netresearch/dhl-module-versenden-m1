@@ -78,12 +78,12 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
         $selectedServices = $serviceInfo['shipment_service'];
         $serviceDetails = $serviceInfo['service_setting'];
 
-        $dayOfDelivery = !empty($selectedServices[Service\DayOfDelivery::CODE])
-            ? $serviceDetails[Service\DayOfDelivery::CODE]
+        $preferredDay = !empty($selectedServices[Service\PreferredDay::CODE])
+            ? $serviceDetails[Service\PreferredDay::CODE]
             : false;
 
-        $deliveryTimeFrame = !empty($selectedServices[Service\DeliveryTimeFrame::CODE])
-            ? $serviceDetails[Service\DeliveryTimeFrame::CODE]
+        $preferredTime = !empty($selectedServices[Service\PreferredTime::CODE])
+            ? $serviceDetails[Service\PreferredTime::CODE]
             : false;
 
         $preferredLocation = !empty($selectedServices[Service\PreferredLocation::CODE])
@@ -124,8 +124,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             : false;
 
         return new ServiceSelection(
-            $dayOfDelivery,
-            $deliveryTimeFrame,
+            $preferredDay,
+            $preferredTime,
             $preferredLocation,
             $preferredNeighbour,
             $parcelAnnouncement,
