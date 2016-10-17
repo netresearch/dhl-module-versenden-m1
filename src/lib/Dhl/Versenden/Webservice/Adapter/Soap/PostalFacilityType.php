@@ -50,9 +50,8 @@ class PostalFacilityType implements RequestType
             return $postalFacilityType;
         }
 
-        $countryType = new VersendenApi\CountryType();
+        $countryType = new VersendenApi\CountryType($requestData->getCountryISOCode());
         $countryType->setCountry($requestData->getCountry());
-        $countryType->setCountryISOCode($requestData->getCountryISOCode());
         $countryType->setState($requestData->getState());
 
         if ($requestData instanceof Receiver\Packstation) {
