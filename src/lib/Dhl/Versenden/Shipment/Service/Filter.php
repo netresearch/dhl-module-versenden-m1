@@ -83,6 +83,8 @@ class Filter
                 PrintOnlyIfCodeable::CODE,
                 ReturnShipment::CODE,
                 VisualCheckOfAge::CODE,
+                PreferredDay::CODE,
+                PreferredTime::CODE
             ],
             Product::CODE_WELTPAKET => [
                 BulkyGoods::CODE,
@@ -96,16 +98,12 @@ class Filter
                 PrintOnlyIfCodeable::CODE,
             ],
             Product::CODE_KURIER_TAGGLEICH => [
-                DayOfDelivery::CODE,
-                DeliveryTimeFrame::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
                 ReturnShipment::CODE,
             ],
             Product::CODE_KURIER_WUNSCHZEIT => [
-                DayOfDelivery::CODE,
-                DeliveryTimeFrame::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,

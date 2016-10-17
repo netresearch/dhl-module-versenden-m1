@@ -170,9 +170,9 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /** @var string */
     protected $shipmentSettingsProduct;
 
-    protected $serviceSettingsDayOfDelivery;
+    protected $serviceSettingsPreferredDay;
     /** @var bool|string false or time */
-    protected $serviceSettingsDeliveryTimeFrame;
+    protected $serviceSettingsPreferredTime;
     /** @var bool|string false or location */
     protected $serviceSettingsPreferredLocation;
     /** @var bool|string false or neighbour address */
@@ -264,8 +264,8 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $shipmentSettingsReference
      * @param float $shipmentSettingsWeight
      * @param string $shipmentSettingsProduct
-     * @param $serviceSettingsDayOfDelivery
-     * @param bool|string $serviceSettingsDeliveryTimeFrame
+     * @param $serviceSettingsPreferredDay
+     * @param bool|string $serviceSettingsPreferredTime
      * @param bool|string $serviceSettingsPreferredLocation
      * @param bool|string $serviceSettingsPreferredNeighbour
      * @param int $serviceSettingsParcelAnnouncement
@@ -313,7 +313,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
 
         $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight, $shipmentSettingsProduct,
 
-        $serviceSettingsDayOfDelivery, $serviceSettingsDeliveryTimeFrame,
+        $serviceSettingsPreferredDay, $serviceSettingsPreferredTime,
         $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
         $serviceSettingsParcelAnnouncement, $serviceSettingsVisualCheckOfAge,
         $serviceSettingsReturnShipment, $serviceSettingsInsurance,
@@ -386,8 +386,8 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->shipmentSettingsReference = $shipmentSettingsReference;
         $this->shipmentSettingsWeight = $shipmentSettingsWeight;
         $this->shipmentSettingsProduct = $shipmentSettingsProduct;
-        $this->serviceSettingsDayOfDelivery = $serviceSettingsDayOfDelivery;
-        $this->serviceSettingsDeliveryTimeFrame = $serviceSettingsDeliveryTimeFrame;
+        $this->serviceSettingsPreferredDay = $serviceSettingsPreferredDay;
+        $this->serviceSettingsPreferredTime = $serviceSettingsPreferredTime;
         $this->serviceSettingsPreferredLocation = $serviceSettingsPreferredLocation;
         $this->serviceSettingsPreferredNeighbour = $serviceSettingsPreferredNeighbour;
         $this->serviceSettingsParcelAnnouncement = $serviceSettingsParcelAnnouncement;
@@ -936,17 +936,17 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     /**
      * @return mixed
      */
-    public function getServiceSettingsDayOfDelivery()
+    public function getServiceSettingsPreferredDay()
     {
-        return $this->serviceSettingsDayOfDelivery;
+        return $this->serviceSettingsPreferredDay;
     }
 
     /**
      * @return bool|string
      */
-    public function getServiceSettingsDeliveryTimeFrame()
+    public function getServiceSettingsPreferredTime()
     {
-        return $this->serviceSettingsDeliveryTimeFrame;
+        return $this->serviceSettingsPreferredTime;
     }
 
     /**

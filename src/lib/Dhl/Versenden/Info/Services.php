@@ -37,9 +37,9 @@ namespace Dhl\Versenden\Info;
 class Services extends ArrayableInfo
 {
     /** @var bool|string false or date */
-    public $dayOfDelivery;
+    public $preferredDay;
     /** @var bool|string false or time */
-    public $deliveryTimeFrame;
+    public $preferredTime;
     /** @var bool|string false or location */
     public $preferredLocation;
     /** @var bool|string false or neighbour address */

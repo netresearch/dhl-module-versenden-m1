@@ -26,7 +26,7 @@
 namespace Dhl\Versenden\Shipment\Service;
 
 /**
- * DayOfDelivery
+ * PreferredDay
  *
  * @category Dhl
  * @package  Dhl\Versenden\Service
@@ -34,24 +34,23 @@ namespace Dhl\Versenden\Shipment\Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class DayOfDelivery extends Type\Date
+class PreferredDay extends Type\Radio
 {
-    const CODE = 'dayOfDelivery';
+    const CODE = 'preferredDay';
 
     /**
-     * DayOfDelivery constructor.
+     * DeliveryTimeFrame constructor.
      *
      * @param string $name
      * @param bool $isEnabled
      * @param bool $isSelected
-     * @param string $placeholder
-     * @param int $maxLength
+     * @param string[] $options
      */
-    public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 100)
+    public function __construct($name, $isEnabled, $isSelected, $options)
     {
         $this->customerService = true;
 
-        parent::__construct($name, $isEnabled, $isSelected, $placeholder, $maxLength);
+        parent::__construct($name, $isEnabled, $isSelected, $options);
     }
 
 

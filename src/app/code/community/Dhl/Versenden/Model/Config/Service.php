@@ -36,8 +36,8 @@ use \Dhl\Versenden\Shipment\Service;
  */
 class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 {
-    const CONFIG_XML_FIELD_DAYOFDELIVERY = 'service_dayofdelivery_enabled';
-    const CONFIG_XML_FIELD_DELIVERYTIMEFRAME = 'service_deliverytimeframe_enabled';
+    const CONFIG_XML_FIELD_PREFERREDDAY = 'service_preferredday_enabled';
+    const CONFIG_XML_FIELD_PREFERREDTIME = 'service_preferredtime_enabled';
     const CONFIG_XML_FIELD_PREFERREDLOCATION = 'service_preferredlocation_enabled';
     const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'service_preferredlocation_placeholder';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR = 'service_preferredneighbour_enabled';
@@ -56,28 +56,34 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
-     * @return Service\DayOfDelivery
+     * @return Service\PreferredDay
      */
-    protected function initDayOfDelivery($store = null)
+    protected function initPreferredDay($store = null)
     {
-        //TODO(nr): replace by PreferredDay service
-        $name        = Mage::helper('dhl_versenden/data')->__("Day Of Delivery");
-        $isAvailable = false;
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Day");
+        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
         $isSelected  = false;
-        $placeholder = Mage::helper('dhl_versenden/data')->__("Select Date");
+        $options     = array();
 
-        return new Service\DayOfDelivery($name, $isAvailable, $isSelected, $placeholder);
+        $start = date("Y-m-d");
+        for ($i = 2; $i < 7; $i++) {
+            $date = new DateTime($start);
+            $tmpDate = $date->add(new DateInterval("P{$i}D"));
+            $tmpDate = $tmpDate->format("Y-m-d");
+            $options[$tmpDate] = $tmpDate;
+        }
+
+        return new Service\PreferredDay($name, $isAvailable, $isSelected, $options);
     }
 
     /**
      * @param mixed $store
-     * @return Service\DeliveryTimeFrame
+     * @return Service\PreferredTime
      */
-    protected function initDeliveryTimeFrame($store = null)
+    protected function initPreferredTime($store = null)
     {
-        //TODO(nr): replace by PreferredTime service
-        $name        = Mage::helper('dhl_versenden/data')->__("Delivery Time Frame");
-        $isAvailable = false;
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Time");
+        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDTIME, $store);
         $isSelected  = false;
         $options     = array(
             '10001200' => '10:00 - 12:00',
@@ -88,7 +94,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             '19002100' => '19:00 - 21:00',
         );
 
-        return new Service\DeliveryTimeFrame($name, $isAvailable, $isSelected, $options);
+        return new Service\PreferredTime($name, $isAvailable, $isSelected, $options);
     }
 
     /**
@@ -213,11 +219,11 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $collection = new Service\Collection();
 
         // customer/checkout services
-        $dayOfDelivery = $this->initDayOfDelivery($store);
-        $collection->addItem($dayOfDelivery);
+        $preferredDay = $this->initPreferredDay($store);
+        $collection->addItem($preferredDay);
 
-        $deliveryTimeFrame = $this->initDeliveryTimeFrame($store);
-        $collection->addItem($deliveryTimeFrame);
+        $preferredTime = $this->initPreferredTime($store);
+        $collection->addItem($preferredTime);
 
         $preferredLocation = $this->initPreferredLocation($store);
         $collection->addItem($preferredLocation);
