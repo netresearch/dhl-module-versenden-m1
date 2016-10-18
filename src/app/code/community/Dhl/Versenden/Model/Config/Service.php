@@ -38,6 +38,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 {
     const CONFIG_XML_FIELD_PREFERREDDAY = 'service_preferredday_enabled';
     const CONFIG_XML_FIELD_PREFERREDTIME = 'service_preferredtime_enabled';
+    const CONFIG_XML_FIELD_CUTOFFTIME = 'service_cutoff_time';
     const CONFIG_XML_FIELD_PREFERREDLOCATION = 'service_preferredlocation_enabled';
     const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'service_preferredlocation_placeholder';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR = 'service_preferredneighbour_enabled';
