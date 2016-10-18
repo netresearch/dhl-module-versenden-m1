@@ -34,7 +34,7 @@ namespace Dhl\Versenden\Shipment\Service\Type;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-abstract class Radio extends Generic
+abstract class Radio extends Text
 {
     protected $frontendInputType = 'radio';
 
@@ -73,31 +73,6 @@ abstract class Radio extends Generic
     /**
      * @return string
      */
-    public function getSelectorHtml()
-    {
-        $format = <<<'HTML'
-<input type="checkbox" id="shipment_service_%s" name="shipment_service[%s]" value="%s" class="checkbox" %s />
-HTML;
-
-        $checked = (bool)$this->isSelected() ? 'checked="checked"' : '';
-        return sprintf($format, $this->getCode(), $this->getCode(), $this->getCode(), $checked);
-    }
-
-    /**
-     * @return string
-     */
-    public function getLabelHtml()
-    {
-        $format = <<<'HTML'
-<label for="shipment_service_%sDetails">%s</label>
-HTML;
-
-        return sprintf($format, $this->getCode(), $this->getName());
-    }
-
-    /**
-     * @return string
-     */
     public function getValueHtml()
     {
         $options = $this->getOptions();
@@ -106,12 +81,12 @@ HTML;
         $optionsHtml = array_reduce(
             $values,
             function ($carry, $value) use ($options) {
-                $selected = ($value == $this->getValue()) ? 'selected="selected"' : '';
+                $checked = ($value == $this->getValue()) ? 'checked="checked"' : '';
                 $carry .= sprintf(
                     '<input type="radio" name="service_setting[%s]" id="shipment_service_%sDetails" %s value="%s"> %s',
                     $this->getCode(),
                     $this->getCode(),
-                    $selected,
+                    $checked,
                     $value,
                     $options[$value]
                 );

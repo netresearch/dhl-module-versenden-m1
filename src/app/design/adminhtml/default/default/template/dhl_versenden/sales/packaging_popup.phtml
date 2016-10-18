@@ -36,7 +36,7 @@ document.observe("dom:loaded", function() {
 
         var serviceContainer = $('packaging-dhlversenden-services');
         if (serviceContainer) {
-            serviceContainer.select('input[type=checkbox]', 'input[type=text]', 'select').each(function (elm) {
+            serviceContainer.select('input[type=checkbox]', 'input[type=text]', 'select', 'input[type=radio]:checked').each(function (elm) {
                 this[elm.name] = elm.getValue();
             }, requestData);
         }
