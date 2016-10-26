@@ -345,12 +345,12 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
         );
 
         $this->assertEquals(
-            $expectation->getServiceSettingsDayOfDelivery(),
-            $order->getServiceSelection()->getDayOfDelivery()
+            $expectation->getServiceSettingsPreferredDay(),
+            $order->getServiceSelection()->getPreferredDay()
         );
         $this->assertEquals(
-            $expectation->getServiceSettingsDeliveryTimeFrame(),
-            $order->getServiceSelection()->getDeliveryTimeFrame()
+            $expectation->getServiceSettingsPreferredTime(),
+            $order->getServiceSelection()->getPreferredTime()
         );
         $this->assertEquals(
             $expectation->getServiceSettingsPreferredLocation(),

@@ -204,6 +204,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $versendenInfo = '{"schemaVersion":"1.0"}';
 
         // load collection and remove all items while retaining "collection_loaded" status
+        /** @var Mage_Sales_Model_Resource_Quote_Address_Collection $collection */
         $collection = Mage::getResourceModel('sales/quote_address_collection')->load();
         $addressIds = $collection->getColumnValues('address_id');
         foreach ($addressIds as $addressId) {

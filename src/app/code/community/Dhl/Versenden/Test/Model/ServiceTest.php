@@ -25,6 +25,7 @@
  */
 use \Dhl\Versenden\Shipment\Service\Collection as ServiceCollection;
 use \Dhl\Versenden\Shipment\Service;
+
 /**
  * Dhl_Versenden_Test_Model_ServiceTest
  *
@@ -41,21 +42,25 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     protected function getCustomerServices()
     {
-        // TODO(nr): replace by PreferredDay and PreferredTime services
-        return [
-            new Service\DayOfDelivery('', true, false, ''),
-            new Service\DeliveryTimeFrame('', true, false, [
-                '10001200' => '10:00 - 12:00',
-                '12001400' => '12:00 - 14:00',
-                '14001600' => '14:00 - 16:00',
-                '16001800' => '16:00 - 18:00',
-                '18002000' => '18:00 - 20:00',
-                '19002100' => '19:00 - 21:00',
-            ]),
+        return array(
+            new Service\PreferredDay('', true, false, array('')),
+            new Service\PreferredTime(
+                '',
+                true,
+                false,
+                array(
+                    '10001200' => '10:00 - 12:00',
+                    '12001400' => '12:00 - 14:00',
+                    '14001600' => '14:00 - 16:00',
+                    '16001800' => '16:00 - 18:00',
+                    '18002000' => '18:00 - 20:00',
+                    '19002100' => '19:00 - 21:00',
+                )
+            ),
             new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false),
             new Service\PreferredLocation('', true, false, ''),
             new Service\PreferredNeighbour('', true, false, ''),
-        ];
+        );
     }
 
     /**
@@ -63,15 +68,20 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     protected function getMerchantServices()
     {
-        return [
+        return array(
             new Service\BulkyGoods('', true, false),
             new Service\Insurance('', true, false),
             new Service\ReturnShipment('', true, false),
-            new Service\VisualCheckOfAge('', true, false, [
-                Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
-                Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
-            ]),
-        ];
+            new Service\VisualCheckOfAge(
+                '',
+                true,
+                false,
+                array(
+                    Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
+                    Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
+                )
+            ),
+        );
     }
 
     /**
@@ -92,12 +102,18 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $customerServices = $this->getCustomerServices();
         $merchantServices = $this->getMerchantServices();
 
-        array_walk($customerServices, function (Service\Type\Generic $service) {
-            $this->assertTrue($service->isCustomerService());
-        });
-        array_walk($merchantServices, function (Service\Type\Generic $service) {
-            $this->assertFalse($service->isCustomerService());
-        });
+        array_walk(
+            $customerServices,
+            function(Service\Type\Generic $service) {
+                $this->assertTrue($service->isCustomerService());
+            }
+        );
+        array_walk(
+            $merchantServices,
+            function(Service\Type\Generic $service) {
+                $this->assertFalse($service->isCustomerService());
+            }
+        );
     }
 
     /**
@@ -108,13 +124,16 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function selectHasOptions()
     {
         $services = $this->getServices();
-        array_walk($services, function (Service\Type\Generic $service) {
-            if ($service instanceof Service\Type\Select) {
-                $serviceOptions = $service->getOptions();
-                $this->assertInternalType('array', $serviceOptions);
-                $this->assertNotEmpty($serviceOptions, get_class($service));
+        array_walk(
+            $services,
+            function(Service\Type\Generic $service) {
+                if ($service instanceof Service\Type\Select) {
+                    $serviceOptions = $service->getOptions();
+                    $this->assertInternalType('array', $serviceOptions);
+                    $this->assertNotEmpty($serviceOptions, get_class($service));
+                }
             }
-        });
+        );
     }
 
     /**
@@ -122,16 +141,16 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function serviceCollection()
     {
-        $collection = new ServiceCollection();
+        $collection       = new ServiceCollection();
         $customerServices = $this->getCustomerServices();
         $collection->setItems($customerServices);
 
-        $getClassNames = function ($object) {
+        $getClassNames = function($object) {
             return get_class($object);
         };
 
         // in === out
-        $serviceClassNames = array_map($getClassNames, $customerServices);
+        $serviceClassNames    = array_map($getClassNames, $customerServices);
         $collectionClassNames = array_map($getClassNames, $collection->getItems());
         $this->assertEmpty(array_diff($serviceClassNames, $collectionClassNames));
 
@@ -171,10 +190,15 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function frontendOutputSelect()
     {
-        $selectService = new Service\VisualCheckOfAge('', true, false, [
-            Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
-            Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
-        ]);
+        $selectService = new Service\VisualCheckOfAge(
+            '',
+            true,
+            false,
+            array(
+                Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
+                Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
+            )
+        );
 
         $this->assertContains('type="checkbox"', $selectService->getSelectorHtml());
         $this->assertContains('label for', $selectService->getLabelHtml());
@@ -200,7 +224,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         // assert passthrough
         $boolService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false);
-        $renderer = new Service\Type\Renderer($boolService);
+        $renderer    = new Service\Type\Renderer($boolService);
 
         $this->assertEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
         $this->assertEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
@@ -208,7 +232,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         // assert readonly values, service not selected
         $yesValue = 'Foo';
-        $noValue = 'Bar';
+        $noValue  = 'Bar';
         $renderer = new Service\Type\Renderer($boolService, true);
         $renderer->setSelectedYes($yesValue);
         $renderer->setSelectedNo($noValue);
@@ -220,7 +244,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         // assert readonly values, service not selected
         $boolService = new Service\Insurance('', true, true);
-        $renderer = new Service\Type\Renderer($boolService, true);
+        $renderer    = new Service\Type\Renderer($boolService, true);
         $renderer->setSelectedYes($yesValue);
         $renderer->setSelectedNo($noValue);
 
@@ -230,7 +254,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $this->assertEquals($yesValue, $renderer->getValueHtml());
 
         // assert readonly values, service with details
-        $neighbour = 'Alf';
+        $neighbour   = 'Alf';
         $textService = new Service\PreferredNeighbour('', true, true, '');
         $textService->setValue($neighbour);
         $renderer = new Service\Type\Renderer($textService, true);
@@ -247,8 +271,8 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function typeTest()
     {
         // boolean
-        $name = 'Bool Foo';
-        $isEnabled = true;
+        $name       = 'Bool Foo';
+        $isEnabled  = true;
         $isSelected = false;
 
         $service = new Service\BulkyGoods($name, $isEnabled, $isSelected);
@@ -266,17 +290,17 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $this->assertEmpty($service->getValueHtml());
 
         // date
-        $name = 'Date Foo';
-        $placeholder = 'XXX';
-        $isEnabled = true;
-        $isSelected = true;
-        $value = '2016-12-24';
+        $name        = 'Radio Foo';
+        $placeholder = array('XXX');
+        $isEnabled   = true;
+        $isSelected  = true;
+        $value       = '2016-12-24';
 
-        $service = new Service\DayOfDelivery($name, $isEnabled, $isSelected, $placeholder);
+        $service = new Service\PreferredDay($name, $isEnabled, $isSelected, $placeholder);
         $service->setValue($value);
 
-        $this->assertEquals(Service\DayOfDelivery::CODE, $service->getCode());
-        $this->assertEquals('date', $service->getFrontendInputType());
+        $this->assertEquals(Service\PreferredDay::CODE, $service->getCode());
+        $this->assertEquals('radio', $service->getFrontendInputType());
         $this->assertEquals($name, $service->getName());
         $this->assertSame($isEnabled, $service->isEnabled());
         $this->assertSame($isSelected, $service->isSelected());
@@ -289,11 +313,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
 
         // select
-        $name = 'Option Foo';
-        $isEnabled = true;
+        $name       = 'Option Foo';
+        $isEnabled  = true;
         $isSelected = true;
-        $value = 'bar';
-        $options = array('foo' => 'fox', 'bar' => 'baz');
+        $value      = 'bar';
+        $options    = array('foo' => 'fox', 'bar' => 'baz');
 
         $service = new Service\VisualCheckOfAge($name, $isEnabled, $isSelected, $options);
         $service->setValue($value);
@@ -311,11 +335,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $this->assertContains('selected', $service->getValueHtml());
 
         // text
-        $name = 'Text Foo';
+        $name        = 'Text Foo';
         $placeholder = 'XXX';
-        $isEnabled = true;
-        $isSelected = true;
-        $value = 'bar';
+        $isEnabled   = true;
+        $isSelected  = true;
+        $value       = 'bar';
 
         $service = new Service\PreferredLocation($name, $isEnabled, $isSelected, $placeholder);
         $service->setValue($value);
@@ -338,11 +362,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function filter()
     {
-        $enabledServices = new Service\Collection($this->getServices());
-        $shippingProducts = array(\Dhl\Versenden\Product::CODE_PAKET_AUSTRIA);
-        $isPostalFacility = false;
+        $enabledServices      = new Service\Collection($this->getServices());
+        $shippingProducts     = array(\Dhl\Versenden\Product::CODE_PAKET_AUSTRIA);
+        $isPostalFacility     = false;
         $onlyCustomerServices = false;
-        $filter = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
+        $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
 
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
@@ -367,11 +391,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function filterPostalFacility()
     {
-        $enabledServices = new Service\Collection($this->getServices());
-        $shippingProducts = array(\Dhl\Versenden\Product::CODE_PAKET_NATIONAL);
-        $isPostalFacility = true;
+        $enabledServices      = new Service\Collection($this->getServices());
+        $shippingProducts     = array(\Dhl\Versenden\Product::CODE_PAKET_NATIONAL);
+        $isPostalFacility     = true;
         $onlyCustomerServices = false;
-        $filter = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
+        $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
 
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
@@ -396,24 +420,16 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     public function filterCustomerServices()
     {
-        $enabledServices = new Service\Collection($this->getServices());
-        $shippingProducts = array(\Dhl\Versenden\Product::CODE_KURIER_WUNSCHZEIT);
-        $isPostalFacility = false;
+        $enabledServices      = new Service\Collection($this->getServices());
+        $shippingProducts     = array(\Dhl\Versenden\Product::CODE_KURIER_WUNSCHZEIT);
+        $isPostalFacility     = false;
         $onlyCustomerServices = true;
-        $filter = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
+        $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
 
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
         $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
-        $this->assertCount(3, $filteredCollection);
-        $this->assertInstanceOf(
-            Service\DayOfDelivery::class,
-            $filteredCollection->getItem(Service\DayOfDelivery::CODE)
-        );
-        $this->assertInstanceOf(
-            Service\DeliveryTimeFrame::class,
-            $filteredCollection->getItem(Service\DeliveryTimeFrame::CODE)
-        );
+        $this->assertCount(1, $filteredCollection);
         $this->assertInstanceOf(
             Service\ParcelAnnouncement::class,
             $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
