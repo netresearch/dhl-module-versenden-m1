@@ -23,7 +23,6 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Shipment\Service;
 use \Dhl\Versenden\Webservice\RequestData;
 use \Dhl\Versenden\Webservice\ResponseData;
 use \Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
@@ -398,8 +397,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function parseServices()
     {
-        $dayOfDelivery = '2016-12-24';
-        $deliveryTimeFrame = '19002100';
+        $preferredDay = '2016-12-24';
+        $preferredTime = '19002100';
         $visualCheckOfAge = 'A21';
         $returnShipment = false;
         $preferredLocation = 'Chimney';
@@ -411,15 +410,15 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $printOnlyIfCodeable = true;
 
         $requestData = new RequestData\ShipmentOrder\ServiceSelection(
-            $dayOfDelivery, $deliveryTimeFrame, $preferredLocation, $preferredNeighbour, $parcelAnnouncement,
+            $preferredDay, $preferredTime, $preferredLocation, $preferredNeighbour, $parcelAnnouncement,
             $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods, $cod, $printOnlyIfCodeable
         );
         $shipmentServices = SoapAdapter\ServiceType::prepare($requestData);
 
         $this->assertInstanceOf(\Dhl\Bcs\Api\ShipmentService::class, $shipmentServices);
 
-        $this->assertEquals($dayOfDelivery, $shipmentServices->getDayOfDelivery()->getDetails());
-        $this->assertEquals($deliveryTimeFrame, $shipmentServices->getDeliveryTimeframe()->getType());
+        $this->assertEquals($preferredDay, $shipmentServices->getPreferredDay()->getDetails());
+        $this->assertEquals($preferredTime, $shipmentServices->getPreferredTime()->getType());
         $this->assertEquals($visualCheckOfAge, $shipmentServices->getVisualCheckOfAge()->getType());
         // $returnShipment is no ServiceType service
         $this->assertEquals($preferredLocation, $shipmentServices->getPreferredLocation()->getDetails());

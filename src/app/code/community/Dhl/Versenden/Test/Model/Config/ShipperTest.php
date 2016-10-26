@@ -52,7 +52,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertEquals('2222222222_01', $testAccount->getUser());
         $this->assertEquals('pass', $testAccount->getSignature());
         $this->assertEquals('2222222222', $testAccount->getEkp());
-        $this->assertEquals('01', $testAccount->getParticipation('01'));
+        $this->assertEquals('04', $testAccount->getParticipation('01'));
     }
 
     /**

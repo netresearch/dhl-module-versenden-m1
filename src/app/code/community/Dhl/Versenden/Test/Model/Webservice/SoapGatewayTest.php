@@ -108,7 +108,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             array('utcToCet', 'serviceSelectionToServiceSettings', 'shippingAddressToReceiver')
         );
         $helperMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('utcToCet')
             ->willReturn($shipmentDate);
         $this->replaceByMock('helper', 'dhl_versenden/data', $helperMock);
@@ -136,7 +136,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             false
         );
         $serviceBuilderMock
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getServiceSelection')
             ->willReturn($serviceSelection);
         $this->replaceByMock('model', 'dhl_versenden/webservice_builder_service', $serviceBuilderMock);
@@ -180,6 +180,19 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             $shipmentOrder->getServiceSelection()->isBulkyGoods(),
             $expectation->isServiceSettingsBulkyGoods()
         );
+
+        // Check correct Response if using a non existing product
+        $productCode = 'Foo';
+        $shipmentOrder = Mage::getModel('dhl_versenden/webservice_gateway_soap')->shipmentToShipmentOrder(
+            $sequenceNumber,
+            $shipment,
+            $packageInfo,
+            $serviceInfo,
+            $customsInfo,
+            $productCode
+        );
+
+        $this->assertEmpty($shipmentOrder->getReturnShipmentAccountNumber());
     }
 
     /**
