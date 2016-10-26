@@ -76,20 +76,25 @@ abstract class Radio extends Text
     public function getValueHtml()
     {
         $options = $this->getOptions();
-        $values = array_keys($options);
+        $values  = array_keys($options);
 
         $optionsHtml = array_reduce(
             $values,
-            function ($carry, $value) use ($options) {
+            function($carry, $value) use ($options) {
                 $checked = ($value == $this->getValue()) ? 'checked="checked"' : '';
                 $carry .= sprintf(
-                    '<input type="radio" name="service_setting[%s]" id="shipment_service_%sDetails" %s value="%s"> %s',
+                    '<div>' .
+                    '<input type="radio" name="service_setting[%s]" id="shipment_service_%s" %s value="%s">' .
+                    '<label for="shipment_service_%s">%s</label>' .
+                    '</div>',
                     $this->getCode(),
-                    $this->getCode(),
+                    $this->getCode() . '_' . $value,
                     $checked,
                     $value,
+                    $this->getCode() . '_' . $value,
                     $options[$value]
                 );
+
                 return $carry;
             }
         );
