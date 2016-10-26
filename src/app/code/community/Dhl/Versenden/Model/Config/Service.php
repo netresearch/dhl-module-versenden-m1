@@ -57,21 +57,35 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     *
      * @return Service\PreferredDay
      */
     protected function initPreferredDay($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Preferred Day");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
+        $cutOffTime  = explode(',', $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store));
         $isSelected  = false;
         $options     = array();
 
-        $start = date("Y-m-d");
-        for ($i = 2; $i < 7; $i++) {
-            $date = new DateTime($start);
+        $holidayCheck = new Mal_Holidays();
+        /** @var Mage_Core_Model_Date $dateModel */
+        $dateModel  = Mage::getSingleton('core/date');
+        $start      = $dateModel->date("Y-m-d H:i:s");
+        $cutOffTime = $dateModel->gmtTimestamp($cutOffTime[0] . ':' . $cutOffTime[1] . ':' . $cutOffTime[2]);
+        $startDate  = ($cutOffTime < $dateModel->gmtTimestamp($start)) ? 3 : 2;
+        $endDate    = $startDate + 5;
+
+        for ($i = $startDate; $i < $endDate; $i++) {
+            $date    = new DateTime($start);
             $tmpDate = $date->add(new DateInterval("P{$i}D"));
             $tmpDate = $tmpDate->format("Y-m-d");
-            $options[$tmpDate] = $tmpDate;
+            if (($dateModel->date('N', strtotime($tmpDate)) == 7) || $holidayCheck::isHoliday($tmpDate)) {
+                $endDate++;
+                $options[$tmpDate] = array('value' => $dateModel->date("d-D", $tmpDate), 'disabled' => true);
+            } else {
+                $options[$tmpDate] = array('value' => $dateModel->date("d-D", $tmpDate), 'disabled' => false);
+            }
         }
 
         return new Service\PreferredDay($name, $isAvailable, $isSelected, $options);
@@ -87,12 +101,12 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDTIME, $store);
         $isSelected  = false;
         $options     = array(
-            '10001200' => '10:00 - 12:00',
-            '12001400' => '12:00 - 14:00',
-            '14001600' => '14:00 - 16:00',
-            '16001800' => '16:00 - 18:00',
-            '18002000' => '18:00 - 20:00',
-            '19002100' => '19:00 - 21:00',
+            '10001200' => '10 - 12',
+            '12001400' => '12 - 14',
+            '14001600' => '14 - 16',
+            '16001800' => '16 - 18',
+            '18002000' => '18 - 20',
+            '19002100' => '19 - 21',
         );
 
         return new Service\PreferredTime($name, $isAvailable, $isSelected, $options);
