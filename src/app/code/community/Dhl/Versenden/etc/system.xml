@@ -29,7 +29,7 @@
     <sections>
         <carriers>
             <groups>
-                <dhlversenden translate="label comment">
+                <dhlversenden>
                     <label>DHL Versenden</label>
                     <comment>DHL Business Customer Shipping</comment>
                     <frontend_type>text</frontend_type>
@@ -39,7 +39,7 @@
                     <show_in_store>1</show_in_store>
                     <fields>
 
-                        <dhlversenden_fields_general translate="label">
+                        <dhlversenden_fields_general>
                             <label>General Settings</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>100</sort_order>
@@ -47,7 +47,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </dhlversenden_fields_general>
-                        <info translate="label">
+                        <info>
                             <label>Module</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_info</frontend_model>
                             <sort_order>110</sort_order>
@@ -55,7 +55,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </info>
-                        <title translate="label">
+                        <title>
                             <label>Title</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>120</sort_order>
@@ -65,7 +65,7 @@
                         </title>
                         <!--temporary disable setting as it is not evaluated anywhere -->
                         <!--
-                        <active translate="label">
+                        <active>
                             <label>Enabled for Checkout</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -75,7 +75,7 @@
                             <show_in_store>0</show_in_store>
                         </active>
                         -->
-                        <sandbox_mode translate="label">
+                        <sandbox_mode>
                             <label>Sandbox Mode</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -84,7 +84,7 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </sandbox_mode>
-                        <logging_enabled translate="label comment">
+                        <logging_enabled>
                             <label>Enable Logging</label>
                             <comment><![CDATA[Please ensure that the Magento-Log is also activated. Data will be written to <em>dhl_versenden.log</em>.]]></comment>
                             <frontend_type>select</frontend_type>
@@ -94,7 +94,7 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </logging_enabled>
-                        <log_level translate="label comment">
+                        <log_level>
                             <label>Log Level</label>
                             <comment><![CDATA[Beware: Log level <em>Debug</em> will result in large log files.]]></comment>
                             <frontend_type>select</frontend_type>
@@ -108,7 +108,7 @@
                             </depends>
                         </log_level>
 
-                        <dhlversenden_fields_account translate="label comment">
+                        <dhlversenden_fields_account>
                             <label>Account Data</label>
                             <comment>Basic account data as required in production mode</comment>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
@@ -117,7 +117,7 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </dhlversenden_fields_account>
-                        <account_user translate="label tooltip">
+                        <account_user>
                             <label>User</label>
                             <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                             <frontend_type>text</frontend_type>
@@ -130,7 +130,7 @@
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
                         </account_user>
-                        <account_signature translate="label tooltip">
+                        <account_signature>
                             <label>Signature</label>
                             <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                             <frontend_type>password</frontend_type>
@@ -143,7 +143,7 @@
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
                         </account_signature>
-                        <account_ekp translate="label tooltip">
+                        <account_ekp>
                             <label>EKP</label>
                             <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
                             <frontend_type>text</frontend_type>
@@ -156,7 +156,7 @@
                                 <sandbox_mode>0</sandbox_mode>
                             </depends>
                         </account_ekp>
-                        <account_participation translate="label">
+                        <account_participation>
                             <label>Participation Numbers</label>
                             <frontend_model>dhl_versenden/adminhtml_form_field_participation</frontend_model>
                             <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
@@ -169,7 +169,7 @@
                             </depends>
                         </account_participation>
 
-                        <dhlversenden_fields_shipment translate="label">
+                        <dhlversenden_fields_shipment>
                             <label>Shipment Orders</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>300</sort_order>
@@ -177,7 +177,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </dhlversenden_fields_shipment>
-                        <shipment_printonlyifcodeable translate="label tooltip">
+                        <shipment_printonlyifcodeable>
                             <label>Print Only If Codeable</label>
                             <tooltip><![CDATA[If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.]]></tooltip>
                             <frontend_type>select</frontend_type>
@@ -187,7 +187,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </shipment_printonlyifcodeable>
-                        <shipment_unitofmeasure translate="label comment">
+                        <shipment_unitofmeasure>
                             <label>Weight Unit</label>
                             <tooltip>Configure the product weight unit that is used in the Catalog.</tooltip>
                             <frontend_type>select</frontend_type>
@@ -197,7 +197,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_unitofmeasure>
-                        <shipment_dhlmethods translate="label tooltip comment">
+                        <shipment_dhlmethods>
                             <label>Shipping Methods for DHL Versenden</label>
                             <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
                             <comment>These shipping methods will be processed with DHL Versenden.</comment>
@@ -208,7 +208,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_dhlmethods>
-                        <shipment_dhlcodmethods translate="label tooltip comment">
+                        <shipment_dhlcodmethods>
                             <label>Cash On Delivery Payment Methods for DHL Versenden</label>
                             <tooltip>These payment methods will be treated as COD methods during shipping order requests.</tooltip>
                             <frontend_type>multiselect</frontend_type>
@@ -219,7 +219,7 @@
                             <show_in_store>0</show_in_store>
                         </shipment_dhlcodmethods>
 
-                        <dhlversenden_fields_service translate="label">
+                        <dhlversenden_fields_service>
                             <label>Additional Services In Checkout</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>400</sort_order>
@@ -289,7 +289,7 @@
                             <show_in_store>1</show_in_store>
                         </service_preferredtime_enabled>
 
-                        <dhlversenden_fields_shipment_autocreate translate="label">
+                        <dhlversenden_fields_shipment_autocreate>
                             <label>Automatic Shipment Creation</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>500</sort_order>
@@ -358,7 +358,7 @@
                             <show_in_store>1</show_in_store>
                         </shipment_autocreate_service_bulkygoods>
 
-                        <dhlversenden_fields_contact translate="label">
+                        <dhlversenden_fields_contact>
                             <label>Contact Data</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>600</sort_order>
@@ -366,7 +366,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </dhlversenden_fields_contact>
-                        <contact_name1 translate="label">
+                        <contact_name1>
                             <label>Name of Sender</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-50</validate>
@@ -375,7 +375,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_name1>
-                        <contact_name2 translate="label">
+                        <contact_name2>
                             <label>Name of Company</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
@@ -384,7 +384,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_name2>
-                        <contact_name3 translate="label">
+                        <contact_name3>
                             <label>Name of Company (2)</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
@@ -393,7 +393,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_name3>
-                        <contact_streetname translate="label">
+                        <contact_streetname>
                             <label>Street Name</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-35</validate>
@@ -402,7 +402,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_streetname>
-                        <contact_streetnumber translate="label">
+                        <contact_streetnumber>
                             <label>Street Number</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-5</validate>
@@ -457,7 +457,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_countryid>
-                        <contact_phone translate="label">
+                        <contact_phone>
                             <label>Phone Number</label>
                             <validate>validate-length maximum-length-20</validate>
                             <frontend_type>text</frontend_type>
@@ -466,7 +466,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_phone>
-                        <contact_email translate="label">
+                        <contact_email>
                             <label>Email Address</label>
                             <validate>validate-email validate-length maximum-length-50</validate>
                             <frontend_type>text</frontend_type>
@@ -475,7 +475,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </contact_email>
-                        <contact_person translate="label">
+                        <contact_person>
                             <label>First Name and Last Name of Contact Person</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
@@ -485,7 +485,7 @@
                             <show_in_store>0</show_in_store>
                         </contact_person>
 
-                        <dhlversenden_fields_bankdata translate="label">
+                        <dhlversenden_fields_bankdata>
                             <label>Bank Data</label>
                             <comment>Bank data as required for cash on delivery payments</comment>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
@@ -494,7 +494,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </dhlversenden_fields_bankdata>
-                        <bankdata_owner translate="label">
+                        <bankdata_owner>
                             <label>Account Owner</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-80</validate>
@@ -503,7 +503,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </bankdata_owner>
-                        <bankdata_bankname translate="label">
+                        <bankdata_bankname>
                             <label>Bank Name</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-80</validate>
@@ -512,7 +512,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </bankdata_bankname>
-                        <bankdata_iban translate="label">
+                        <bankdata_iban>
                             <label>IBAN</label>
                             <validate>required-entry validate-alphanum validate-length maximum-length-34</validate>
                             <frontend_type>text</frontend_type>
@@ -521,7 +521,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </bankdata_iban>
-                        <bankdata_bic translate="label">
+                        <bankdata_bic>
                             <label>BIC</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-alphanum validate-length maximum-length-11</validate>
@@ -530,7 +530,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </bankdata_bic>
-                        <bankdata_note1 translate="label">
+                        <bankdata_note1>
                             <label>Reason for Payment</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
@@ -539,7 +539,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </bankdata_note1>
-                        <bankdata_note2 translate="label">
+                        <bankdata_note2>
                             <label>Reason for Payment (2)</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
@@ -548,7 +548,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </bankdata_note2>
-                        <bankdata_accountreference translate="label">
+                        <bankdata_accountreference>
                             <label>Account Reference to Customer Profile</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-35</validate>
@@ -558,7 +558,7 @@
                             <show_in_store>0</show_in_store>
                         </bankdata_accountreference>
 
-                        <dhlversenden_fields_returnshipment translate="label">
+                        <dhlversenden_fields_returnshipment>
                             <label>Return Shipment</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
                             <sort_order>800</sort_order>
@@ -575,7 +575,7 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </returnshipment_use_shipper>
-                        <returnshipment_name1 translate="label">
+                        <returnshipment_name1>
                             <label>Name of Receiver</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-50</validate>
@@ -587,7 +587,7 @@
                                 <returnshipment_use_shipper>0</returnshipment_use_shipper>
                             </depends>
                         </returnshipment_name1>
-                        <returnshipment_name2 translate="label">
+                        <returnshipment_name2>
                             <label>Name of Company</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
@@ -599,7 +599,7 @@
                                 <returnshipment_use_shipper>0</returnshipment_use_shipper>
                             </depends>
                         </returnshipment_name2>
-                        <returnshipment_name3 translate="label">
+                        <returnshipment_name3>
                             <label>Name of Company (2)</label>
                             <frontend_type>text</frontend_type>
                             <validate>validate-length maximum-length-50</validate>
@@ -611,7 +611,7 @@
                                 <returnshipment_use_shipper>0</returnshipment_use_shipper>
                             </depends>
                         </returnshipment_name3>
-                        <returnshipment_streetname translate="label">
+                        <returnshipment_streetname>
                             <label>Street Name</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-35</validate>
@@ -623,7 +623,7 @@
                                 <returnshipment_use_shipper>0</returnshipment_use_shipper>
                             </depends>
                         </returnshipment_streetname>
-                        <returnshipment_streetnumber translate="label">
+                        <returnshipment_streetnumber>
                             <label>Street Number</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-5</validate>
