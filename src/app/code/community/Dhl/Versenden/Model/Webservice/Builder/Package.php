@@ -93,9 +93,27 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
                 $heightInCM = $packageDetails['params']['height'];
             }
 
-            $package = new ShipmentOrder\Package(
+            $packageWeightUnit = $packageDetails['params']['weight_units'];
+
+            if ($this->unitOfMeasure == 'G') {
+                if ($packageWeightUnit == 'G') {
+                    $weightInKG = max($packageDetails['params']['weight'], $this->minWeight);
+                    $weightInKG = bcmul($weightInKG, '0.001', 3);
+                } else {
+                    $weightInKG = max(bcmul($packageDetails['params']['weight'], '1000', 3), $this->minWeight);
+                    $weightInKG = bcmul($weightInKG, '0.001', 3);
+                }
+            } else {
+                if ($packageWeightUnit == 'G') {
+                    $weightInKG = max(bcmul($packageDetails['params']['weight'], '0.001', 3), $this->minWeight);
+                } else {
+                    $weightInKG = max($packageDetails['params']['weight'], $this->minWeight);
+                }
+            }
+
+            $package    = new ShipmentOrder\Package(
                 $id,
-                max($packageDetails['params']['weight'], $this->minWeight),
+                $weightInKG,
                 $lenghtInCM,
                 $widthInCM,
                 $heightInCM
