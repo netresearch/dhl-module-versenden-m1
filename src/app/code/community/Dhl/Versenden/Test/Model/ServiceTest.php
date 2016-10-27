@@ -291,15 +291,15 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         // date
         $name        = 'Radio Foo';
-        $placeholder = array('XXX');
+        $placeholder = array('XXX' => '10 - 12');
         $isEnabled   = true;
         $isSelected  = true;
         $value       = '2016-12-24';
 
-        $service = new Service\PreferredDay($name, $isEnabled, $isSelected, $placeholder);
+        $service = new Service\PreferredTime($name, $isEnabled, $isSelected, $placeholder);
         $service->setValue($value);
 
-        $this->assertEquals(Service\PreferredDay::CODE, $service->getCode());
+        $this->assertEquals(Service\PreferredTime::CODE, $service->getCode());
         $this->assertEquals('radio', $service->getFrontendInputType());
         $this->assertEquals($name, $service->getName());
         $this->assertSame($isEnabled, $service->isEnabled());
@@ -434,5 +434,26 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
             Service\ParcelAnnouncement::class,
             $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
         );
+    }
+
+    /**
+     * @test
+     */
+    public function preferredDayRendererTest()
+    {
+        // date
+        $name        = 'Preferred Day Foo';
+        $options = array('XXX' => array('disabled' => true, 'value' => '24-Mit'));
+        $isEnabled   = true;
+        $isSelected  = true;
+        $value       = '2016-12-24';
+
+        $service = new Service\PreferredDay($name, $isEnabled, $isSelected, $options);
+        $service->setValue($value);
+
+        $this->assertEquals(Service\PreferredDay::CODE, $service->getCode());
+        $this->assertEquals('radio', $service->getFrontendInputType());
+
+        $this->assertNotEmpty($service->getValueHtml());
     }
 }
