@@ -36,11 +36,11 @@
         <dl>
             <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
             <?php foreach ($this->getServices() as $service): ?>
-                <dt class="service-<?php echo $service->getFrontendInputType(); ?>">
+                <dt class="service-<?php echo $service->getFrontendInputType(). ' '. $service::CODE; ?>">
                     <?php echo $service->getSelectorHtml() ?>
                     <?php echo $service->getLabelHtml() ?>
                 </dt>
-                <dd class="service-<?php echo $service->getFrontendInputType(); ?>">
+                <dd class="service-<?php echo $service->getFrontendInputType(). ' '. $service::CODE; ?>">
                     <?php echo $service->getValueHtml(); ?>
 
                     <?php $tooltip = $this->getServiceHint($service->getCode()); ?>
