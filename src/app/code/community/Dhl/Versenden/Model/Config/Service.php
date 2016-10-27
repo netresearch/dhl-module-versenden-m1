@@ -64,7 +64,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Preferred Day");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
-        $cutOffTime  = explode(',', $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store));
+        $cutOffTime  = $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
         $isSelected  = false;
         $options     = array();
 
@@ -72,7 +72,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         /** @var Mage_Core_Model_Date $dateModel */
         $dateModel  = Mage::getSingleton('core/date');
         $start      = $dateModel->date("Y-m-d H:i:s");
-        $cutOffTime = $dateModel->gmtTimestamp($cutOffTime[0] . ':' . $cutOffTime[1] . ':' . $cutOffTime[2]);
+        $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
         $startDate  = ($cutOffTime < $dateModel->gmtTimestamp($start)) ? 3 : 2;
         $endDate    = $startDate + 5;
 
