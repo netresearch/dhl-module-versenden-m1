@@ -67,24 +67,49 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $cutOffTime  = $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
         $isSelected  = false;
         $options     = array();
+        $gmtSaveTimeFormat = "Y-m-d 12:00:00";
 
         $holidayCheck = new Mal_Holidays();
         /** @var Mage_Core_Model_Date $dateModel */
         $dateModel  = Mage::getSingleton('core/date');
-        $start      = $dateModel->date("Y-m-d H:i:s");
+        $start      = $dateModel->gmtDate("Y-m-d H:i:s");
         $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
         $startDate  = ($cutOffTime < $dateModel->gmtTimestamp($start)) ? 3 : 2;
         $endDate    = $startDate + 5;
 
         for ($i = $startDate; $i < $endDate; $i++) {
-            $date    = new DateTime($start);
-            $tmpDate = $date->add(new DateInterval("P{$i}D"));
-            $tmpDate = $tmpDate->format("Y-m-d");
-            if (($dateModel->date('N', strtotime($tmpDate)) == 7) || $holidayCheck::isHoliday($tmpDate)) {
+            $date      = new DateTime($start);
+            $tmpDate   = $date->add(new DateInterval("P{$i}D"));
+            $checkDate = $tmpDate->format($gmtSaveTimeFormat);
+            $tmpDate   = $tmpDate->format("Y-m-d");
+            $disabled  = false;
+            if (($dateModel->gmtDate('N', strtotime($checkDate)) == 7) || $holidayCheck::isHoliday($checkDate)) {
                 $endDate++;
-                $options[$tmpDate] = array('value' => $dateModel->date("d-D", $tmpDate), 'disabled' => true);
-            } else {
-                $options[$tmpDate] = array('value' => $dateModel->date("d-D", $tmpDate), 'disabled' => false);
+                $disabled = true;
+            }
+            $options[$tmpDate] =
+                array(
+                    'value'    => $dateModel->gmtDate("d-", $checkDate) .
+                        Mage::helper('dhl_versenden/data')->__($dateModel->gmtDate("D", $checkDate)),
+                    'disabled' => $disabled
+                );
+        }
+
+        // Only for Backend rendering with selected day
+        if ($shipment = Mage::registry('current_shipment')) {
+            $selectedValue = $shipment->getShippingAddress()
+                                      ->getData('dhl_versenden_info')
+                                      ->getServices()->{Service\PreferredDay::CODE};
+            if (!array_key_exists($selectedValue, $options)) {
+                $tmpDate                 = new DateTime($selectedValue);
+                $tmpDate                 = $dateModel
+                    ->gmtDate($gmtSaveTimeFormat, $tmpDate->format($gmtSaveTimeFormat));
+                $options[$selectedValue] =
+                    array(
+                        'value'    => $dateModel->gmtDate("d-", $tmpDate) .
+                            Mage::helper('dhl_versenden/data')->__($dateModel->gmtDate("D", $tmpDate)),
+                        'disabled' => false
+                    );
             }
         }
 
