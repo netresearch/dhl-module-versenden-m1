@@ -99,5 +99,42 @@ DhlServiceContainer.prototype = {
                 });
             });
         }
+    },
+
+    /**
+     * Perform action when user checked preferred Day or preferred Time.
+     */
+    registerCalendarChange: function () {
+        var currentClass = this;
+        var idRadioElement = ['shipment_service_preferredDay','shipment_service_preferredTime'];
+        idRadioElement.each( function (id) {
+            currentClass.getSeviceListener(id);
+        });
+    },
+
+    /**
+     * Change CSS Class and set radio as checked or unchecked
+     * @param idRadioElement
+     */
+    getSeviceListener: function (idRadioElement) {
+        var classNameRadioChecked = 'radio-checked';
+        if (this.serviceContainer instanceof Element) {
+            this.serviceContainer.select('[id^=' + idRadioElement + '_]').each(function (radioElm) {
+                radioElm.observe('click', function () {
+                    if (!this.hasClassName(classNameRadioChecked)) {
+                        $$('[id^=' + idRadioElement + '_]').each(function (checked) {
+                            checked.removeClassName(classNameRadioChecked);
+                        });
+                        $(idRadioElement).checked = true;
+                        this.addClassName(classNameRadioChecked);
+                    }
+                    else {
+                        $(idRadioElement).checked = false;
+                        this.removeClassName(classNameRadioChecked);
+                        this.checked = false;
+                    }
+                });
+            });
+        }
     }
 };
