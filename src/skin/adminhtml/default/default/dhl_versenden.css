@@ -62,3 +62,56 @@
     width: 280px;
     min-height: 17px;
 }
+
+#packaging-dhlversenden-services dt,
+#packaging-dhlversenden-services dd {
+    padding: 5px 0;
+}
+
+#packaging-dhlversenden-services dd.service-radio input {
+    display: none;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div,
+#packaging-dhlversenden-services dd.preferredTime > div {
+    display: inline-block;
+    width: 16%;
+    max-width: 60px;
+    background: #EEF4F2;
+    margin-right: .6666666%;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div label,
+#packaging-dhlversenden-services dd.preferredTime > div label {
+    display: block;
+    text-align: center;
+    cursor: pointer;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div input:not(:disabled) + label:hover {
+    background-color: #e3e3e3;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div label {
+    border-top: 10px solid #ccc;
+    padding: 8px 0;
+}
+
+#packaging-dhlversenden-services dd.preferredTime > div label {
+    padding: 4px 0;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div span {
+    display: block;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div input[disabled="disabled"] + label {
+    color: #cecece;
+    cursor: inherit;
+}
+
+#packaging-dhlversenden-services dd.preferredDay > div input:checked + label,
+#packaging-dhlversenden-services dd.preferredTime > div input:checked + label {
+    font-weight: bold;
+    background-color: #fc0;
+}

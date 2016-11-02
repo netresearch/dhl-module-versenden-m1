@@ -36,10 +36,11 @@
                     <?php echo $renderer->getSelectorHtml(); ?>
                     <?php echo $renderer->getLabelHtml(); ?>
                 </dt>
-                <dd class="service-<?php echo $service->getFrontendInputType(); ?>">
+                <dd class="service-<?php echo $service->getFrontendInputType(). ' '. $service::CODE;?>">
                     <?php echo $renderer->getValueHtml(); ?>
                 </dd>
             <?php endforeach; ?>
         </dl>
     </div>
 <?php endif; ?>
+
