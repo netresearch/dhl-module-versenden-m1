@@ -71,7 +71,7 @@ class PreferredDay extends Type\Radio
                 $carry .= sprintf(
                     '<div>' .
                     '<input type="radio" name="service_setting[%s]" id="shipment_service_%s" %s %s value="%s">' .
-                    '<label for="shipment_service_%s"><span>%s</span><span>%s</span></label>' .
+                    '<label for="shipment_service_%s" title="%s"><span>%s</span><span>%s</span></label>' .
                     '</div>',
                     $this->getCode(),
                     $this->getCode() . '_' . $value,
@@ -79,6 +79,7 @@ class PreferredDay extends Type\Radio
                     $disabled,
                     $value,
                     $this->getCode() . '_' . $value,
+                    $value,
                     $optionValues[0],
                     $optionValues[1]
                 );
