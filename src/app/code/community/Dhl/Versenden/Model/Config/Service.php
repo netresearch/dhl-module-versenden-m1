@@ -95,8 +95,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
                 );
         }
 
+        $shipment = Mage::registry('current_shipment');
         // Only for Backend rendering with selected day
-        if ($shipment = Mage::registry('current_shipment')) {
+        if ($shipment) {
             $selectedValue = $shipment->getShippingAddress()
                                       ->getData('dhl_versenden_info')
                                       ->getServices()->{Service\PreferredDay::CODE};
