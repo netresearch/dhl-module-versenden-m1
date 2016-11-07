@@ -113,7 +113,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
         $name = 'Foo Name';
         $streetName = 'Foo Street Name';
 
-        // street number too long
+        // house number too long
         $streetNumber = 'Foo 12345a';
 
         $postalCode = 'Foo Zip';

@@ -228,7 +228,7 @@
                             <show_in_store>1</show_in_store>
                         </dhlversenden_fields_service>
                         <service_preferredlocation_enabled>
-                            <label>Enable Preferred Location</label>
+                            <label>Enable Preferred location</label>
                             <tooltip>Allow customers to declare a preferred parcel location during checkout.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -403,7 +403,7 @@
                             <show_in_store>0</show_in_store>
                         </contact_streetname>
                         <contact_streetnumber>
-                            <label>Street Number</label>
+                            <label>House number</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-5</validate>
                             <sort_order>621</sort_order>
@@ -624,7 +624,7 @@
                             </depends>
                         </returnshipment_streetname>
                         <returnshipment_streetnumber>
-                            <label>Street Number</label>
+                            <label>House number</label>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length maximum-length-5</validate>
                             <sort_order>831</sort_order>

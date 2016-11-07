@@ -262,7 +262,7 @@ im Checkout-Schritt *Versandart* eine dieser DHL-Versandarten, so werden ihm die
 in der Konfiguration aktivierten Zusatzleistungen zur Wahl gestellt.
 
 .. image:: images/de/checkout_services.png
-   :scale: 50 %
+   :scale: 180 %
 
 Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen deaktiviert,
 falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung
@@ -342,6 +342,10 @@ sowie den Inhaltstyp der Sendung an.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 
+.. raw:: pdf
+
+   PageBreak
+
 Service-Auswahl
 ~~~~~~~~~~~~~~~
 
@@ -351,7 +355,7 @@ Services zur Verfügung. Die für die aktuelle Lieferadresse möglichen Zusatzle
 werden im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet.
 
 .. image:: images/de/merchant_services.png
-   :scale: 75 %
+   :scale: 175 %
 
 Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, ebenso
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
@@ -472,6 +476,9 @@ und betätigen Sie anschließend den Button *Paketaufkleber erstellen…* in
 derselben Box *Versand- und Trackinginformationen*. Es gilt dasselbe Vorgehen
 wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
 
+.. raw:: pdf
+
+   PageBreak
 
 Modul deinstallieren oder deaktivieren
 ======================================
