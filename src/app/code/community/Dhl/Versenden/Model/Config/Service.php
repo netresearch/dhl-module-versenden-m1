@@ -150,7 +150,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredLocation($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Location");
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred location");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDLOCATION, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER, $store);

@@ -58,7 +58,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
         ));
         $fieldset->addField('versenden_info_street_number', 'text', array(
             'name'  => "versenden_info[street_number]",
-            'label' => $this->__('Street Number'),
+            'label' => $this->__('House number'),
             'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
         ));
         $fieldset->addField('versenden_info_address_addition', 'text', array(
@@ -147,7 +147,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
         ));
         $fieldset->addField('versenden_info_parcel_shop_street_number', 'text', array(
             'name'  => "versenden_info[parcel_shop][street_number]",
-            'label' => $this->__('Street Number'),
+            'label' => $this->__('House number'),
             'value' => isset($receiverData['street_number']) ? $receiverData['street_number'] : '',
         ));
     }
