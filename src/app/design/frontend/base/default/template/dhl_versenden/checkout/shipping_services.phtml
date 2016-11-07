@@ -32,7 +32,9 @@
             alt="<?php echo $this->__('DHL Additional Services') ?>"
             title="<?php echo $this->__('DHL Additional Services') ?>"
         />
-        <span><?php echo $this->__('Ihr DHL Wunschpaket');?></span>
+        <span><?php echo $this->__(
+            'Thanks to the flexible recipient services of DHL Wunschpaket, you decide when and where you want to receive your parcels. You may now choose, where DHL shall deposit your shipment when you are not at home.'
+            );?></span>
         <dl>
             <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
             <?php foreach ($this->getServices() as $service): ?>
