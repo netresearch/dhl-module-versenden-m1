@@ -33,16 +33,16 @@
             title="<?php echo $this->__('DHL Additional Services') ?>"
         />
         <span><?php echo $this->__(
-            'Thanks to the flexible recipient services of DHL Wunschpaket, you decide when and where you want to receive your parcels. You may now choose, where DHL shall deposit your shipment when you are not at home.'
-            );?></span>
+                'Thanks to the flexible recipient services of DHL Wunschpaket, you decide when and where you want to receive your parcels.<br/> You may now choose, where DHL shall deposit your shipment when you are not at home.'
+            ); ?></span>
         <dl>
             <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
             <?php foreach ($this->getServices() as $service): ?>
-                <dt class="service-<?php echo $service->getFrontendInputType(). ' '. $service::CODE; ?>">
+                <dt class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $service->getSelectorHtml() ?>
                     <?php echo $service->getLabelHtml() ?>
                 </dt>
-                <dd class="service-<?php echo $service->getFrontendInputType(). ' '. $service::CODE; ?>">
+                <dd class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $service->getValueHtml(); ?>
 
                     <?php $tooltip = $this->getServiceHint($service->getCode()); ?>
@@ -54,6 +54,15 @@
                 </dd>
             <?php endforeach; ?>
         </dl>
+        <?php if (!$this->isShippingAddressDHLLocation()): ?>
+            <span>
+                <a
+                    href="javascript:void(0)"
+                    onclick="checkout.gotoSection('shipping'); document.getElementById('opc-shipping').scrollIntoView();">
+                    <?php echo $this->__('Or as an alternative choose a shipment to Packstation or Filiale.'); ?>
+                </a>
+            </span>
+        <?php endif; ?>
         <script type="text/javascript">
             //<![CDATA[
             var serviceContainer = new DhlServiceContainer(

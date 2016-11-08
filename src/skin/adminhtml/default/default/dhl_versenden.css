@@ -1,7 +1,8 @@
 /* size up the packaging popup for additional service and customs info */
 .packaging-window {
-    margin:-300px 0 0 -571px;
+    margin: -300px 0 0 -571px;
 }
+
 .packaging-window .packaging-content {
     max-height: 600px;
 }
@@ -14,10 +15,12 @@
     padding: 10px;
     overflow: hidden;
 }
+
 #packaging-dhlversenden-services > div,
 #packaging-dhlversenden-customs > div {
     font-weight: bold;
 }
+
 #packaging-dhlversenden-services > dl,
 #packaging-dhlversenden-customs > table {
     border-top: 1px solid #ccc;
@@ -25,10 +28,12 @@
     margin: 3px 0 0;
     width: 100%;
 }
+
 #packaging-dhlversenden-services dt,
 #packaging-dhlversenden-services dd {
     min-height: 20px;
 }
+
 #packaging-dhlversenden-services dt {
     float: left;
     clear: left;
@@ -38,26 +43,32 @@
     display: block;
     position: relative;
 }
+
 #packaging-dhlversenden-services dt label {
     font-weight: bold;
 }
+
 #packaging-dhlversenden-services dt input[type=checkbox] {
     position: absolute;
     left: 0;
 }
+
 #packaging-dhlversenden-services dd {
     margin: 0 0 0 190px;
     padding: 0 0 0.5em 0;
 }
+
 #packaging-dhlversenden-services dd:after {
     content: '';
     display: table;
     clear: both;
 }
+
 #packaging-dhlversenden-services input[type=text] {
     width: 274px;
     padding: 2px;
 }
+
 #packaging-dhlversenden-services select {
     width: 280px;
     min-height: 17px;
@@ -88,7 +99,8 @@
     cursor: pointer;
 }
 
-#packaging-dhlversenden-services dd.preferredDay > div input:not(:disabled) + label:hover {
+#packaging-dhlversenden-services dd.preferredDay > div input:not(:disabled):not(:checked) + label:hover,
+#packaging-dhlversenden-services dd.preferredTime > div input:not(:disabled):not(:checked) + label:hover {
     background-color: #e3e3e3;
 }
 
