@@ -14,7 +14,7 @@
 #checkout-dhlversenden-services > span {
     padding: 5px 0;
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
 }
 
@@ -30,7 +30,7 @@
     background-color: #f4f4f4;
     min-width: 250px;
     padding: 6px 10px 6px 40px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: normal;
 }
 
@@ -56,6 +56,7 @@
 
 #checkout-dhlversenden-services dd input {
     min-width: 200px;
+    font-size: 13px;
 }
 
 #checkout-dhlversenden-services dt,
