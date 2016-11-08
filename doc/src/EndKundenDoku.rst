@@ -202,6 +202,10 @@ Im Konfigurationsbereich *DHL Zusatzleistungen im Checkout* legen Sie fest,
 welche im Rahmen des DHL Geschäftskundenversand zubuchbaren Services dem Kunden
 angeboten werden.
 
+* *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
+  an welchem die Lieferung ankommen soll.
+* *Wunschzeit*: Der Kunde wählt ein Zeitfenster für seine Sendung,
+  in welchem die Lieferung ankommen soll.
 * *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft

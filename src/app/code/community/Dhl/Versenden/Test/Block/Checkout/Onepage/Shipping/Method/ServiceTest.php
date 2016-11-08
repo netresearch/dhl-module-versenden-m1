@@ -19,17 +19,20 @@
  * @category  Dhl
  * @package   Dhl_Versenden
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author    Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Shipment\Service;
+
 /**
  * Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
  *
  * @category Dhl
  * @package  Dhl_Versenden
  * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
+ * @author   Benjamin Heuer <benjamin.heuer@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
@@ -57,7 +60,6 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
             ->method('getQuote')
             ->willReturn($quote);
         $this->replaceByMock('block', self::BLOCK_ALIAS, $blockMock);
-
     }
 
     /**
@@ -96,7 +98,7 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
-        $json = $block->getDhlMethods();
+        $json    = $block->getDhlMethods();
         $methods = Mage::helper('core/data')->jsonDecode($json);
         $this->assertInternalType('array', $methods);
         $this->assertCount(2, $methods);
@@ -116,5 +118,37 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         $this->assertNotEmpty($block->getServiceHint(Service\PreferredLocation::CODE));
         $this->assertNotEmpty($block->getServiceHint(Service\PreferredNeighbour::CODE));
         $this->assertEmpty($block->getServiceHint(Service\ParcelAnnouncement::CODE));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function isShippingAddressDHLLocation()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        // No Location Data is used (normal order)
+        $isAddressLocation = $block->isShippingAddressDHLLocation();
+        $this->assertEquals(false, $isAddressLocation);
+
+        // Got DHL Location fields from Shipping Address
+        $block->getQuote()->getShippingAddress()->setData('dhl_station_type', 'packstation');
+        $isAddressLocation = $block->isShippingAddressDHLLocation();
+        $this->assertEquals(true, $isAddressLocation);
+
+        // Got Info Object but with no location data
+        $versendenInfo = new \Dhl\Versenden\Info();
+        $block->getQuote()->getShippingAddress()->setData('dhl_station_type', null);
+        $block->getQuote()->getShippingAddress()->setData('dhl_versenden_info', $versendenInfo);
+        $isAddressLocation = $block->isShippingAddressDHLLocation();
+        $this->assertEquals(false, $isAddressLocation);
+
+        // Got Info Object with location data
+        $versendenInfo->getReceiver()->getPackstation()->packstationNumber = 1234567;
+        $block->getQuote()->getShippingAddress()->setData('dhl_versenden_info', $versendenInfo);
+        $isAddressLocation = $block->isShippingAddressDHLLocation();
+        $this->assertEquals(true, $isAddressLocation);
     }
 }
