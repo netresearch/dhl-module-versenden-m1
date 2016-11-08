@@ -64,6 +64,42 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
+     * Check if the shipping address is already a dhl location
+     *
+     * @return boolean
+     */
+    public function isShippingAddressDHLLocation()
+    {
+        $shippingAddress = $this->getQuote()->getShippingAddress();
+
+        if (!empty($shippingAddress->getData('dhl_station_type'))
+            || (!empty($shippingAddress->getData('dhl_versenden_info'))
+                && $this->isReceiverLocationUsed($shippingAddress->getData('dhl_versenden_info')))
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param \Dhl\Versenden\Info $versendenInfo
+     *
+     * @return boolean
+     */
+    protected function isReceiverLocationUsed($versendenInfo)
+    {
+        if ($versendenInfo->getReceiver()->packstation->packstationNumber
+            || $versendenInfo->getReceiver()->postfiliale->postfilialNumber
+            || $versendenInfo->getReceiver()->parcelShop->parcelShopNumber
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Obtain the shipping methods that should be processed with DHL Versenden.
      *
      * @return string json encoded methods array
