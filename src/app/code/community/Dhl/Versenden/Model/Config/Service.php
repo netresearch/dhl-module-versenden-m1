@@ -101,7 +101,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             $selectedValue = $shipment->getShippingAddress()
                                       ->getData('dhl_versenden_info')
                                       ->getServices()->{Service\PreferredDay::CODE};
-            if (!array_key_exists($selectedValue, $options)) {
+            if ($selectedValue && !array_key_exists($selectedValue, $options)) {
                 $tmpDate                 = new DateTime($selectedValue);
                 $tmpDate                 = $dateModel
                     ->gmtDate($gmtSaveTimeFormat, $tmpDate->format($gmtSaveTimeFormat));
