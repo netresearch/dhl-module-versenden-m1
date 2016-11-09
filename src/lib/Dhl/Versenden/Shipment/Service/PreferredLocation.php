@@ -40,11 +40,12 @@ class PreferredLocation extends Type\Text
 
     /**
      * PreferredLocation constructor.
+     *
      * @param string $name
-     * @param bool $isEnabled
-     * @param bool $isSelected
+     * @param bool   $isEnabled
+     * @param bool   $isSelected
      * @param string $placeholder
-     * @param int $maxLength
+     * @param int    $maxLength
      */
     public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 100)
     {
@@ -53,5 +54,26 @@ class PreferredLocation extends Type\Text
         parent::__construct($name, $isEnabled, $isSelected, $placeholder, $maxLength);
     }
 
+    /**
+     * @return string
+     */
+    public function getValueHtml()
+    {
+        $format = <<<'HTML'
+<input type="text" name="service_setting[%s]" value="%s" class="input-text input-with-checkbox validate-with-neighbour"
+       maxlength="%d" id="shipment_service_%sDetails" data-select-id="shipment_service_%s" placeholder="%s" />
+HTML;
+
+        return sprintf(
+            $format,
+            $this->getCode(),
+            htmlspecialchars($this->getValue(), ENT_COMPAT, 'UTF-8', false),
+            $this->getMaxLength(),
+            $this->getCode(),
+            $this->getCode(),
+            $this->getPlaceholder()
+        );
+
+    }
 
 }
