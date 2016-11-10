@@ -178,3 +178,12 @@
     bottom: 30px;
 }
 
+.dhl-services {
+    border: 1px solid rgb(255,204,0);
+    position: relative;
+    left: -15px;
+    padding: 5px 15px;
+    margin-top: 5px;
+    display: inline-block;
+}
+
