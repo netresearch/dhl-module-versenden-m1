@@ -97,7 +97,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
         $shipment = Mage::registry('current_shipment');
         // Only for Backend rendering with selected day
-        if ($shipment) {
+        if ($shipment && $shipment->getShippingAddress()) {
             $selectedValue = $shipment->getShippingAddress()
                                       ->getData('dhl_versenden_info')
                                       ->getServices()->{Service\PreferredDay::CODE};
@@ -126,14 +126,20 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $name        = Mage::helper('dhl_versenden/data')->__("Preferred Time");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDTIME, $store);
         $isSelected  = false;
-        $options     = array(
-            '10001200' => '10 - 12',
-            '12001400' => '12 - 14',
-            '14001600' => '14 - 16',
-            '16001800' => '16 - 18',
-            '18002000' => '18 - 20',
-            '19002100' => '19 - 21',
-        );
+        $options     = array();
+        if (Mage::app()->getStore()->isAdmin() || Mage::getDesign()->getArea() == 'adminhtml') {
+            $options = $options + array(
+                    '10001200' => '10 - 12*',
+                    '12001400' => '12 - 14*',
+                    '14001600' => '14 - 16*',
+                    '16001800' => '16 - 18*',
+                );
+        }
+
+        $options = $options + array(
+                '18002000' => '18 - 20',
+                '19002100' => '19 - 21',
+            );
 
         return new Service\PreferredTime($name, $isAvailable, $isSelected, $options);
     }

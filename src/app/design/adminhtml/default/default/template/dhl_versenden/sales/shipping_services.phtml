@@ -36,8 +36,11 @@
                     <?php echo $renderer->getSelectorHtml(); ?>
                     <?php echo $renderer->getLabelHtml(); ?>
                 </dt>
-                <dd class="service-<?php echo $service->getFrontendInputType(). ' '. $service::CODE;?>">
+                <dd class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $renderer->getValueHtml(); ?>
+                    <?php if ($service::CODE == 'preferredTime'): ?>
+                        <?php echo $this->__('* Marketing Text'); ?>
+                    <?php endif; ?>
                 </dd>
             <?php endforeach; ?>
         </dl>
