@@ -442,11 +442,11 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function preferredDayRendererTest()
     {
         // date
-        $name        = 'Preferred Day Foo';
-        $options = array('XXX' => array('disabled' => true, 'value' => '24-Mit'));
-        $isEnabled   = true;
-        $isSelected  = true;
-        $value       = '2016-12-24';
+        $name       = 'Preferred Day Foo';
+        $options    = array('XXX' => array('disabled' => true, 'value' => '24-Mit'));
+        $isEnabled  = true;
+        $isSelected = true;
+        $value      = '2016-12-24';
 
         $service = new Service\PreferredDay($name, $isEnabled, $isSelected, $options);
         $service->setValue($value);
@@ -455,5 +455,53 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $this->assertEquals('radio', $service->getFrontendInputType());
 
         $this->assertNotEmpty($service->getValueHtml());
+
+        // Check different cases for preferred day
+        $serviceModel = new Dhl_Versenden_Model_Config_Service();
+        Mage::getConfig()
+            ->saveConfig('carriers/dhlversenden/service_preferredlocation_placeholder', '15,00,00', 'default', 0);
+
+        $infoObject                              = new \Dhl\Versenden\Info();
+        $infoObject->getServices()->preferredDay = '2015-12-10';
+
+        $modelMock = $this->getModelMock('core/date', array('gmtDate'));
+        $modelMock
+            ->expects($this->any())
+            ->method('gmtDate')
+            ->will(
+                $this->onConsecutiveCalls(
+                    '2015-12-20 11:00:00',
+                    '3',
+                    '23-',
+                    'Wed',
+                    '4',
+                    '24-',
+                    'Thu',
+                    '5',
+                    '25-',
+                    'Fri',
+                    '6',
+                    '26-',
+                    'Sat',
+                    '7',
+                    '27-',
+                    'Sun',
+                    '1',
+                    '28-',
+                    'Mon'
+                )
+            );
+        $this->replaceByMock('model', 'core/date', $modelMock);
+
+        $modelMock = $this->getModelMock('sales/order_shipment', array('getShippingAddress', 'getData'));
+        $modelMock->expects($this->any())->method('getShippingAddress')->willReturnSelf();
+        $modelMock->expects($this->any())->method('getData')->willReturn($infoObject);
+
+        Mage::register('current_shipment', $modelMock);
+
+        $result = $serviceModel->getServices();
+        $this->assertNotFalse($result->getItem('preferredDay')->getOptions()['2015-12-27']['disabled']);
+
+        Mage::unregister('current_shipment');
     }
 }
