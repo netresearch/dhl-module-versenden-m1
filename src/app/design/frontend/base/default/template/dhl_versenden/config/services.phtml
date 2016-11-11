@@ -29,6 +29,7 @@
 $services = $this->getData('services');
 ?>
 <div class="dhl-services">
+    <span class="service-label"><?php echo $this->__('Your DHL Wunschpaket'); ?></span>
     <ul>
         <?php foreach ($services as $key => $value): ?>
             <?php if ($value === null): ?>
