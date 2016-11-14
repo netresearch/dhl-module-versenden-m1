@@ -122,6 +122,14 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     public function getServiceHint($serviceCode)
     {
         switch ($serviceCode) {
+            case Service\PreferredDay::CODE:
+                $msg = 'Choose one of the displayed days as your preferred day for your parcel delivery.'
+                    . ' Other days are not possible due to delivery processes.';
+                break;
+            case Service\PreferredTime::CODE:
+                $msg = 'Indicate a preferred time, which suits you best for your parcel delivery by'
+                    . ' choosing one of the displayed time windows.';
+                break;
             case Service\PreferredLocation::CODE:
                 $msg = 'Choose a weather-protected and non-visible place on your property,'
                     . ' where we can deposit the parcel in your absence.';
