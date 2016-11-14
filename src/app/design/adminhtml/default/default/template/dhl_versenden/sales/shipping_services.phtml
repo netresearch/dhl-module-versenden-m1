@@ -39,7 +39,9 @@
                 <dd class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $renderer->getValueHtml(); ?>
                     <?php if ($service::CODE == 'preferredTime'): ?>
-                        <?php echo $this->__('* Marketing Text'); ?>
+                        <div class="notePreferredTime">
+                            <?php echo $this->__('* With the preferred time service, DHL offers a nationwide evening delivery between 6-8 pm and 7-9 pm. Preferred time during the day is currently only available in major urban centers in four time windows between 10 am – 6 pm. Via the DHL shipping logistics system, you will receive information about the time windows, that will be available to your customers.'); ?>
+                        </div>
                     <?php endif; ?>
                 </dd>
             <?php endforeach; ?>
