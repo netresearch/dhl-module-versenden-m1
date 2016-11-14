@@ -92,6 +92,15 @@
     margin-right: .6666666%;
 }
 
+#packaging-dhlversenden-services dd.preferredTime > div.notePreferredTime {
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    font-size: 10px;
+    background: none;
+    margin: 5px 0 0;
+}
+
 #packaging-dhlversenden-services dd.preferredDay > div label,
 #packaging-dhlversenden-services dd.preferredTime > div label {
     display: block;
