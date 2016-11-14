@@ -129,6 +129,8 @@
 "Parcel Shop Number","Nummer des Paketshops"
 "Determine a person in your immediate neighborhood whom we can hand out your parcel. This person should live in the same building, directly opposite or next door.","Bestimmen Sie eine Person in Ihrer unmittelbaren Nachbarschaft, bei der wir Ihr Paket abgeben dürfen. Diese sollte im gleichen Haus, direkt gegenüber oder nebenan wohnen."
 "Choose a weather-protected and non-visible place on your property, where we can deposit the parcel in your absence.","Bestimmen Sie einen wettergeschützten und nicht einsehbaren Platz auf Ihrem Grundstück, an dem wir das Paket während Ihrer Abwesenheit hinterlegen dürfen."
+"Choose one of the displayed days as your preferred day for your parcel delivery. Other days are not possible due to delivery processes.","Sie haben die Möglichkeit einen der angezeigten Tage als Wunschtag für die Lieferung Ihrer Waren auszuwählen. Andere Tage sind aufgrund der Lieferprozesse aktuell nicht möglich."
+"Indicate a preferred time, which suits you best for your parcel delivery by choosing one of the displayed time windows.","Damit Sie besser planen können, haben Sie die Möglichkeit eine Wunschzeit für die Lieferung auszuwählen. Sie können eine der dargestellten Zeiten für die Lieferung auswählen."
 "Mon","Mo"
 "Tue","Di"
 "Wed","Mi"
