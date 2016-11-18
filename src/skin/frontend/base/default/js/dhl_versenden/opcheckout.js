@@ -136,5 +136,5 @@ DhlServiceContainer.prototype = {
                 });
             });
         }
-    }
+    },
 };
