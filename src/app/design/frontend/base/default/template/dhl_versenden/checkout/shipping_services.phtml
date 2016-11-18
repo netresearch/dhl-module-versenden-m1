@@ -64,9 +64,7 @@
         </dl>
         <?php if (!$this->isShippingAddressDHLLocation()): ?>
             <span>
-                <a
-                    href="javascript:void(0)"
-                    onclick="checkout.gotoSection('shipping'); document.getElementById('opc-shipping').scrollIntoView();">
+                <a  id="locationfinder-link" href="javascript:void(0)" '>
                     <?php echo $this->__('Or as an alternative choose a shipment to Packstation or Filiale.'); ?>
                 </a>
             </span>
@@ -98,6 +96,20 @@
                     return !(the_field_value != '' && $('shipment_service_preferredNeighbourDetails').value != '');
                 }
             );
+
+            $('locationfinder-link').observe('click', function () {
+                checkout.gotoSection('shipping');
+                document.getElementById('opc-shipping').scrollIntoView();
+                $$('#shipping-address-select option[value=""]').first().selected = true;
+                $('shipping-new-address-form').show();
+
+                var locationFinderCheckbox = $('shipping:useLocationFinder');
+                if (locationFinderCheckbox) {
+                    locationFinderCheckbox.checked = true;
+                    locationFinder.showLocationData(locationFinderCheckbox.checked);
+                }
+            });
+
             //]]>
         </script>
     </div>
