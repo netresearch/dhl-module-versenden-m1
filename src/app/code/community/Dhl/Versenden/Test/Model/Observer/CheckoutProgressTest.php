@@ -58,7 +58,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $this->replaceByMock('model', 'checkout/session', $modelMock);
 
         $observer  = new Varien_Event_Observer();
-        $blockHtml = '<dd>foo</dd>';
+        $blockHtml = '<dd>Preferred Day</dd>';
         /** @var Mage_Checkout_Block_Onepage_Progress $block */
         $block = new Mage_Checkout_Block_Onepage_Progress();
         $block->setLayout(Mage::app()->getLayout());

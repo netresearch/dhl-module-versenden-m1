@@ -137,8 +137,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         }
 
         $options = $options + array(
-                '18002000' => '18 - 20',
-                '19002100' => '19 - 21',
+                '18002000' => Mage::helper('dhl_versenden/data')->__('18 - 20'),
+                '19002100' => Mage::helper('dhl_versenden/data')->__('19 - 21'),
             );
 
         return new Service\PreferredTime($name, $isAvailable, $isSelected, $options);
@@ -165,7 +165,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredNeighbour($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Neighbour");
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Neighbor");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER, $store);

@@ -35,7 +35,7 @@
         <span><?php echo $this->__('Your DHL Wunschpaket'); ?></span>
         <p>
             <?php echo $this->__(
-                'Thanks to the flexible recipient services of DHL Wunschpaket, you decide when and where you want to receive your parcels.<br/> You may now choose, where DHL shall deposit your shipment when you are not at home.'
+                'Thanks to the flexible recipient services of DHL Wunschpaket, you decide when and where you want to receive your parcels.'
             ); ?>
         </p>
         <dl>
@@ -93,7 +93,7 @@
 
             Validation.add(
                 'validate-with-neighbour',
-                '<?php echo $this->__('You cannot use preferred neighbour with this service.'); ?>',
+                '<?php echo $this->__('You cannot use preferred neighbor with this service.'); ?>',
                 function (the_field_value) {
                     return !(the_field_value != '' && $('shipment_service_preferredNeighbourDetails').value != '');
                 }
