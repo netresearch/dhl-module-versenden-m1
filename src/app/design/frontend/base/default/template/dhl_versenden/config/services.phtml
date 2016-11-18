@@ -28,28 +28,30 @@
 /** @var Dhl_Versenden_Block_Config_Service $this */
 $services = $this->getData('services');
 ?>
-<div class="dhl-services">
-    <span class="service-label"><?php echo $this->__('Your DHL Wunschpaket'); ?></span>
-    <ul>
-        <?php foreach ($services as $key => $value): ?>
-            <?php if ($value === null): ?>
-                <?php continue; ?>
-            <?php endif; ?>
-            <?php if ($key == 'preferredDay'): ?>
-                <li><?php echo $this->__($this->renderName($key)) . ': ' . $this->renderDate($value) ?></li>
-            <?php elseif ($key == 'preferredTime'): ?>
-                <li><?php echo $this->__($this->renderName($key)) . ': ' . $this->renderTime($value) ?></li>
-            <?php elseif ($key == 'parcelAnnouncement'): ?>
-                <?php if ($value): ?>
-                    <li><?php echo $this->__($this->renderName($key)) ?></li>
+<?php if ($this->isServiceSelected()): ?>
+    <div class="dhl-services">
+        <span class="service-label"><?php echo $this->__('Your DHL Wunschpaket'); ?></span>
+        <ul>
+            <?php foreach ($services as $key => $value): ?>
+                <?php if ($value === null): ?>
+                    <?php continue; ?>
                 <?php endif; ?>
-            <?php elseif ($key == 'preferredNeighbour'): ?>
-                <li><?php echo $this->__($this->renderName($key)) . ': ' . $value ?></li>
-            <?php elseif ($key == 'preferredLocation'): ?>
-                <li><?php echo $this->__($this->renderName($key)) . ': ' . $value ?></li>
-            <?php else: ?>
-                <?php continue; ?>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </ul>
-</div>
+                <?php if ($key == 'preferredDay'): ?>
+                    <li><?php echo $this->__($this->renderName($key)) . ': ' . $this->renderDate($value) ?></li>
+                <?php elseif ($key == 'preferredTime'): ?>
+                    <li><?php echo $this->__($this->renderName($key)) . ': ' . $this->renderTime($value) ?></li>
+                <?php elseif ($key == 'parcelAnnouncement'): ?>
+                    <?php if ($value): ?>
+                        <li><?php echo $this->__($this->renderName($key)) ?></li>
+                    <?php endif; ?>
+                <?php elseif ($key == 'preferredNeighbour'): ?>
+                    <li><?php echo $this->__($this->renderName($key)) . ': ' . $value ?></li>
+                <?php elseif ($key == 'preferredLocation'): ?>
+                    <li><?php echo $this->__($this->renderName($key)) . ': ' . $value ?></li>
+                <?php else: ?>
+                    <?php continue; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>

@@ -71,4 +71,18 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
 
         return Mage::helper('dhl_versenden/data')->__($result);
     }
+
+    /**
+     * check if there are services selected 
+     *
+     * @return bool
+     */
+    public function isServiceSelected()
+    {
+        $services          = $this->getData('services');
+        $servicesArray     = $services->toArray();
+        $filteredServices  = array_filter($servicesArray);
+
+        return count($filteredServices) > 0 ? true : false;
+    }
 }
