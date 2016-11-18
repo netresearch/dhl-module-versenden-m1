@@ -39,7 +39,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         'preferredDay'       => 'Preferred Day',
         'preferredTime'      => 'Preferred Time',
         'preferredLocation'  => 'Preferred location',
-        'preferredNeighbour' => 'Preferred Neighbour',
+        'preferredNeighbour' => 'Preferred Neighbor',
         'parcelAnnouncement' => 'Parcel Announcement',
     );
 
@@ -53,7 +53,12 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         /** @var Mage_Core_Model_Date $dateModel */
         $dateModel = Mage::getSingleton('core/date');
 
-        return $dateModel->date("d. m. Y", $value);
+        $formatedDate = $dateModel->date("d.m.Y", $value);
+        if (Mage::app()->getLocale()->getLocaleCode() != 'DE') {
+            $formatedDate = $dateModel->date("d/m/Y", $value);
+        }
+
+        return $formatedDate;
     }
 
     public function renderTime($value)
@@ -64,6 +69,6 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $timeValues = str_split($value, 2);
         $result     = $timeValues[0] . ' - ' . $timeValues[2];
 
-        return $result;
+        return Mage::helper('dhl_versenden/data')->__($result);
     }
 }
