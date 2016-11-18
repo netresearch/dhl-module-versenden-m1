@@ -129,10 +129,10 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $options     = array();
         if (Mage::app()->getStore()->isAdmin() || Mage::getDesign()->getArea() == 'adminhtml') {
             $options = $options + array(
-                    '10001200' => '10 - 12*',
-                    '12001400' => '12 - 14*',
-                    '14001600' => '14 - 16*',
-                    '16001800' => '16 - 18*',
+                    '10001200' => Mage::helper('dhl_versenden/data')->__('10 - 12*'),
+                    '12001400' => Mage::helper('dhl_versenden/data')->__('12 - 14*'),
+                    '14001600' => Mage::helper('dhl_versenden/data')->__('14 - 16*'),
+                    '16001800' => Mage::helper('dhl_versenden/data')->__('16 - 18*'),
                 );
         }
 
