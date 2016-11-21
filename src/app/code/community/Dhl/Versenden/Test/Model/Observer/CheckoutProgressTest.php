@@ -62,7 +62,6 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         /** @var Mage_Checkout_Block_Onepage_Progress $block */
         $block = new Mage_Checkout_Block_Onepage_Progress();
         $block->setLayout(Mage::app()->getLayout());
-        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_method');
 
         $transport = new Varien_Object();
         $transport->setData('html', $blockHtml);
@@ -71,8 +70,16 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $observer->setData('transport', $transport);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer();
-        $dhlObserver->appendServicesToShippingMethod($observer);
 
+        // Case: wrong block
+        $dhlObserver->appendServicesToShippingMethod($observer);
+        $this->assertEquals($blockHtml, $transport->getData('html'));
+
+        // Case: correct block
+        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_method');
+        $observer->setData('block', $block);
+        
+        $dhlObserver->appendServicesToShippingMethod($observer);
         $this->assertContains('Preferred Day', $transport->getData('html'));
         $this->assertContains('12 - 14', $transport->getData('html'));
     }
