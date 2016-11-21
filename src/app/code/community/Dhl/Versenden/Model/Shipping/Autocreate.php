@@ -102,7 +102,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         $result = $gateway->createShipmentOrder($shipmentRequests);
 
         $carrier     = Mage::getModel('dhl_versenden/shipping_carrier_versenden');
-        $pdfLib      = new \Dhl\Versenden\Pdf\Adapter\Zend();
+        $pdfLib      = new \Netresearch\Dhl\Versenden\Pdf\Adapter\Zend();
         $transaction = Mage::getModel('core/resource_transaction');
 
         /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */

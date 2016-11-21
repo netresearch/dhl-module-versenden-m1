@@ -39,7 +39,7 @@ if (isset($_SERVER['ECOMDEV_PHPUNIT_CUSTOM_BOOTSTRAP'])) {
 
 if (!defined('ECOMDEV_PHPUNIT_NO_AUTOLOADER')) {
     spl_autoload_register(function($className) {
-        if ($className == "Dhl\Bcs\Api\GVAPI_2_0_de") {
+        if ($className == "Netresearch\Dhl\Bcs\Api\GVAPI_2_0_de") {
             $filePath = strtr(
                 ltrim($className, '\\'),
                 array(

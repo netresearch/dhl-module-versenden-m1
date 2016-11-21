@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Info\Receiver\PostalFacility;
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
+use \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility;
+use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 /**
  * Dhl_Versenden_Model_Info_Builder
  *
@@ -40,13 +40,13 @@ class Dhl_Versenden_Model_Info_Builder
      * @param Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $shippingAddress
      * @param mixed[] $serviceInfo
      * @param mixed $store
-     * @return \Dhl\Versenden\Info
+     * @return \Netresearch\Dhl\Versenden\Info
      */
     public function infoFromSales(Mage_Customer_Model_Address_Abstract $shippingAddress,
                                   array $serviceInfo,
                                   $store = null)
     {
-        $versendenInfo = new \Dhl\Versenden\Info();
+        $versendenInfo = new \Netresearch\Dhl\Versenden\Info();
         $serviceConfig  = Mage::getModel('dhl_versenden/config_service');
 
         $selectedServices = $serviceInfo['shipment_service'];
@@ -63,7 +63,7 @@ class Dhl_Versenden_Model_Info_Builder
             $store
         );
 
-        /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $availableService */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic $availableService */
         foreach ($availableServices as $availableService) {
             $code = $availableService->getCode();
             if (isset($selectedServices[$code])) {
@@ -148,11 +148,11 @@ class Dhl_Versenden_Model_Info_Builder
 
     /**
      * @param ShipmentOrder $shipmentOrder
-     * @return \Dhl\Versenden\Info
+     * @return \Netresearch\Dhl\Versenden\Info
      */
     public function infoFromRequestData(ShipmentOrder $shipmentOrder)
     {
-        $versendenInfo = new \Dhl\Versenden\Info();
+        $versendenInfo = new \Netresearch\Dhl\Versenden\Info();
 
         $packstationInfo = array();
         if ($shipmentOrder->getReceiver()->getPackstation()) {

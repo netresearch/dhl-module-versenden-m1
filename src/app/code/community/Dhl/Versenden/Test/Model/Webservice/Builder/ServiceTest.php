@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Shipment\Service;
+use \Netresearch\Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Test_Model_Webservice_Builder_ServiceTest
  *
@@ -123,7 +123,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ServiceTest
 
         $selection = $builder->getServiceSelection($order, $serviceInfo);
         $this->assertInstanceOf(
-            \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection::class,
+            \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\ServiceSelection::class,
             $selection
         );
 

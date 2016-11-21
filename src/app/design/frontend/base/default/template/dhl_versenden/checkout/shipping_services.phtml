@@ -39,7 +39,7 @@
             ); ?>
         </p>
         <dl>
-            <?php /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
+            <?php /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic $service */ ?>
             <?php foreach ($this->getServices() as $service): ?>
                 <dt class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $service->getSelectorHtml() ?>

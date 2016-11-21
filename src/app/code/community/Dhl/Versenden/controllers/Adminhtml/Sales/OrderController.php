@@ -44,9 +44,9 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
      */
     protected function _addVersendenData(Mage_Sales_Model_Order_Address $address, array $data)
     {
-        /** @var \Dhl\Versenden\Info $origInfo */
+        /** @var \Netresearch\Dhl\Versenden\Info $origInfo */
         $origInfo = $address->getData('dhl_versenden_info');
-        if (!$origInfo instanceof Dhl\Versenden\Info) {
+        if (!$origInfo instanceof Netresearch\Dhl\Versenden\Info) {
             return;
         }
 
@@ -161,7 +161,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
     protected function _dispatchVersendenData(Mage_Sales_Model_Order_Address $address)
     {
         $versendenInfo = $address->getData('dhl_versenden_info');
-        if (!$versendenInfo instanceof \Dhl\Versenden\Info) {
+        if (!$versendenInfo instanceof \Netresearch\Dhl\Versenden\Info) {
             return;
         }
 
@@ -170,7 +170,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $packstation = $versendenInfo->getReceiver()->getPackstation();
             $facility->setData(
                 array(
-                    'shop_type'   => \Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_PACKSTATION,
+                    'shop_type'   => \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_PACKSTATION,
                     'shop_number' => $packstation->packstationNumber,
                     'post_number' => $packstation->postNumber,
                 )
@@ -181,7 +181,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $postfiliale = $versendenInfo->getReceiver()->getPostfiliale();
             $facility->setData(
                 array(
-                    'shop_type'   => \Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
+                    'shop_type'   => \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => $postfiliale->postfilialNumber,
                     'post_number' => $postfiliale->postNumber,
                 )
@@ -192,7 +192,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $parcelShop = $versendenInfo->getReceiver()->getParcelShop();
             $facility->setData(
                 array(
-                    'shop_type'   => \Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
+                    'shop_type'   => \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => $parcelShop->parcelShopNumber,
                 )
             );

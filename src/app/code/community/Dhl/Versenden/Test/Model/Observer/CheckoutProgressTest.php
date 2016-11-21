@@ -36,6 +36,95 @@
 class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
     extends EcomDev_PHPUnit_Test_Case
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->setCurrentStore('store_two');
+
+        $quote = Mage::getModel('sales/quote', array(
+            'dhl_versenden_info' => '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Max Mustermann","name2":null,"name3":null,"streetName":"Musterstrasse","streetNumber":"15a","addressAddition":"","dispatchingInformation":null,"zip":"49084","city":"Mustertown","country":"Deutschland","countryISOCode":"DE","state":null,"phone":"3324242","email":"test@tester.de","contactPerson":null},"services":{"preferredDay":"2016-11-12","preferredTime":"12001400","preferredLocation":"testt","preferredNeighbour":null,"parcelAnnouncement":null,"visualCheckOfAge":null,"returnShipment":null,"insurance":null,"bulkyGoods":null,"cod":null,"printOnlyIfCodeable":null}}'
+        ));
+        $shippingAddress = Mage::getModel('sales/quote_address');
+        $quote->addShippingAddress($shippingAddress);
+
+        $sessionMock = $this->getModelMock(
+            'checkout/session',
+            array('init', 'getQuote', 'getShippingAddress', 'getData')
+        );
+        $sessionMock
+            ->expects($this->any())
+            ->method('getQuote')
+            ->willReturn($quote);
+//        $sessionMock
+//            ->expects($this->any())
+//            ->method('getShippingAddress')
+//            ->willReturnSelf();
+//        $sessionMock
+//            ->expects($this->any())
+//            ->method('getData')
+//            ->willReturn(
+//                '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Max Mustermann","name2":null,"name3":null,"streetName":"Musterstrasse","streetNumber":"15a","addressAddition":"","dispatchingInformation":null,"zip":"49084","city":"Mustertown","country":"Deutschland","countryISOCode":"DE","state":null,"phone":"3324242","email":"test@tester.de","contactPerson":null},"services":{"preferredDay":"2016-11-12","preferredTime":"12001400","preferredLocation":"testt","preferredNeighbour":null,"parcelAnnouncement":null,"visualCheckOfAge":null,"returnShipment":null,"insurance":null,"bulkyGoods":null,"cod":null,"printOnlyIfCodeable":null}}'
+//            );
+
+        $this->replaceByMock('model', 'checkout/session', $sessionMock);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function displayServicesYes()
+    {
+        $observer  = new Varien_Event_Observer();
+        $blockHtml = '<dd>Preferred Day</dd>';
+        /** @var Mage_Checkout_Block_Onepage_Progress $block */
+        $block = new Mage_Checkout_Block_Onepage_Progress();
+        $block->setLayout(Mage::app()->getLayout());
+
+        $transport = new Varien_Object();
+        $transport->setData('html', $blockHtml);
+
+        $observer->setData('block', $block);
+        $observer->setData('transport', $transport);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+
+        // Case: correct block
+        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_method');
+        $observer->setData('block', $block);
+
+        $dhlObserver->appendServicesToShippingMethod($observer);
+        $this->assertContains('Preferred Day', $transport->getData('html'));
+        $this->assertContains('12 - 14', $transport->getData('html'));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function displayServicesNo()
+    {
+        $observer  = new Varien_Event_Observer();
+        $blockHtml = '<dd>Preferred Day</dd>';
+        /** @var Mage_Checkout_Block_Onepage_Progress $block */
+        $block = new Mage_Checkout_Block_Onepage_Progress();
+        $block->setLayout(Mage::app()->getLayout());
+
+        $transport = new Varien_Object();
+        $transport->setData('html', $blockHtml);
+
+        $observer->setData('block', $block);
+        $observer->setData('transport', $transport);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+
+        // Case: wrong block
+        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_address');
+        $dhlObserver->appendServicesToShippingMethod($observer);
+        $this->assertEquals($blockHtml, $transport->getData('html'));
+    }
+
     /**
      * @test
      * @loadFixture Model_ConfigTest
@@ -72,13 +161,14 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
 
         // Case: wrong block
-        $dhlObserver->appendServicesToShippingMethod($observer);
-        $this->assertEquals($blockHtml, $transport->getData('html'));
+//        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_address');
+//        $dhlObserver->appendServicesToShippingMethod($observer);
+//        $this->assertEquals($blockHtml, $transport->getData('html'));
 
         // Case: correct block
         $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_method');
         $observer->setData('block', $block);
-        
+
         $dhlObserver->appendServicesToShippingMethod($observer);
         $this->assertContains('Preferred Day', $transport->getData('html'));
         $this->assertContains('12 - 14', $transport->getData('html'));

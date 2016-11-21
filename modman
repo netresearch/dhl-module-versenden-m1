@@ -7,8 +7,8 @@ src/app/etc/modules/Dhl_Versenden.xml app/etc/modules/Dhl_Versenden.xml
 src/app/locale/de_DE/Dhl_Versenden.csv app/locale/de_DE/Dhl_Versenden.csv
 src/app/locale/en_US/Dhl_Versenden.csv app/locale/en_US/Dhl_Versenden.csv
 
-src/lib/Dhl/Versenden/ lib/Dhl/Versenden/
-src/lib/Dhl/Bcs/ lib/Dhl/Bcs/
+src/lib/Netresearch/Dhl/Versenden/ lib/Netresearch/Dhl/Versenden/
+src/lib/Netresearch/Dhl/Bcs/ lib/Netresearch/Dhl/Bcs/
 src/lib/Netresearch/Psr/ lib/Netresearch/Psr/
 src/lib/Mal/ lib/Mal/
 
