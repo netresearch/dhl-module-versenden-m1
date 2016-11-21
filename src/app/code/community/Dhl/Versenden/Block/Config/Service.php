@@ -54,7 +54,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $dateModel = Mage::getSingleton('core/date');
 
         $formatedDate = $dateModel->date("d.m.Y", $value);
-        if (Mage::app()->getLocale()->getLocaleCode() != 'DE') {
+        if (strpos(Mage::app()->getLocale()->getLocaleCode(), 'de_') === false) {
             $formatedDate = $dateModel->date("d/m/Y", $value);
         }
 
