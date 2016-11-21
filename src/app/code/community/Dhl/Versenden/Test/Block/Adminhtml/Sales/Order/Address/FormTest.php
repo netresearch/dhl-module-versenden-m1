@@ -69,7 +69,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Address_FormTest
      */
     public function getForm()
     {
-        $info = new \Dhl\Versenden\Info();
+        $info = new \Netresearch\Dhl\Versenden\Info();
 
         $stationId = '808';
         $postNumber = '12345678';

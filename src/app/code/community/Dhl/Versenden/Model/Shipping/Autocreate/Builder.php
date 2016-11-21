@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Shipment\Service;
+use \Netresearch\Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Model_Shipping_Autocreate_Builder
  *
@@ -96,7 +96,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setShipper(Mage_Shipping_Model_Shipment_Request $request)
     {
-        /** @var \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Contact $contact */
+        /** @var \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Contact $contact */
         $contact = $this->shipperConfig->getContact($this->order->getStoreId());
         $request->setShipperContactPersonName($contact->getName1());
         $request->setShipperContactCompanyName($contact->getName2());
@@ -200,10 +200,10 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $recipientCountry = $shippingAddress->getCountryId();
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 
-        $shippingProducts = \Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $shippingProducts = \Netresearch\Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
         $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
-        $serviceFilter = new \Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
+        $serviceFilter = new \Netresearch\Dhl\Versenden\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
         $filteredServiceCollection = $serviceFilter->filterServiceCollection($services);
 
         $serviceData = array(
@@ -211,7 +211,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             'service_setting'  => array(),
         );
 
-        /** @var \Dhl\Versenden\Shipment\Service\Type\Generic $service */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic $service */
         foreach ($filteredServiceCollection as $service) {
             $serviceData['shipment_service'][$service->getCode()] = $service->isEnabled();
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
@@ -230,9 +230,9 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 
 
         // set customer services from checkout (includes parcelAnnouncement if configured as "optional")
-        /** @var \Dhl\Versenden\Info $versendenInfo */
+        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
         $versendenInfo = $this->order->getShippingAddress()->getData('dhl_versenden_info');
-        if ($versendenInfo instanceof \Dhl\Versenden\Info) {
+        if ($versendenInfo instanceof \Netresearch\Dhl\Versenden\Info) {
             $customerServices = $this->serviceConfig->getAvailableServices(
                 $shipperCountry,
                 $recipientCountry,

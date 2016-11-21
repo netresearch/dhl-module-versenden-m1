@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Shipment\Service as Service;
+use \Netresearch\Dhl\Versenden\Shipment\Service as Service;
 
 /**
  * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
@@ -83,7 +83,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
-     * @param \Dhl\Versenden\Info $versendenInfo
+     * @param \Netresearch\Dhl\Versenden\Info $versendenInfo
      *
      * @return boolean
      */

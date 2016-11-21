@@ -133,7 +133,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
     {
         $preferredLocation = 'Garage';
 
-        $info = new \Dhl\Versenden\Info();
+        $info = new \Netresearch\Dhl\Versenden\Info();
         $info->getServices()->bulkyGoods = true;
         $info->getServices()->preferredLocation = $preferredLocation;
 
@@ -142,17 +142,17 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
         $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
 
-        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
-        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
 
         // bulkyGoods disabled via config
-        $code = \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
+        $code = \Netresearch\Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
         $this->assertTrue($services->getItem($code)->isEnabled());
 
         // preferredLocation enabled via config and preselected via dhl_versenden_info
-        $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
+        $code = \Netresearch\Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
         $this->assertEquals('Garage', $services->getItem($code)->getValue());
     }
 
@@ -165,14 +165,14 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
 
-        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
-        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
 
-        /** @var Dhl\Versenden\Shipment\Service\Type\Generic $service */
+        /** @var Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic $service */
         foreach ($services as $service) {
-            if ($service->getCode() === \Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE) {
+            if ($service->getCode() === \Netresearch\Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE) {
                 // PrintOnlyIfCodeable is enabled via config
                 $this->assertTrue($service->isSelected());
             } else {
@@ -189,7 +189,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
     {
         $preferredLocation = 'Garage';
 
-        $info = new \Dhl\Versenden\Info();
+        $info = new \Netresearch\Dhl\Versenden\Info();
         $info->getServices()->bulkyGoods = true;
         $info->getServices()->preferredLocation = $preferredLocation;
 
@@ -198,17 +198,17 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
         $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
 
-        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
-        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
 
         // bulkyGoods disabled via config but preselected via dhl_versenden_info
-        $code = \Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
+        $code = \Netresearch\Dhl\Versenden\Shipment\Service\BulkyGoods::CODE;
         $this->assertTrue($services->getItem($code)->getValue());
 
         // preferredLocation enabled via config and preselected via dhl_versenden_info
-        $code = \Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
+        $code = \Netresearch\Dhl\Versenden\Shipment\Service\PreferredLocation::CODE;
         $this->assertEquals('Garage', $services->getItem($code)->getValue());
     }
 
@@ -222,14 +222,14 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $block = Mage::app()->getLayout()->createBlock(self::VIEW_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
 
-        /** @var \Dhl\Versenden\Shipment\Service\Collection $services */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf(\Dhl\Versenden\Shipment\Service\Collection::class, $services);
-        $this->assertContainsOnly(\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
+        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Shipment\Service\Collection::class, $services);
+        $this->assertContainsOnly(\Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic::class, $services);
 
-        /** @var Dhl\Versenden\Shipment\Service\Type\Generic $service */
+        /** @var Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic $service */
         foreach ($services as $service) {
-            if ($service->getCode() === \Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE) {
+            if ($service->getCode() === \Netresearch\Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable::CODE) {
                 // PrintOnlyIfCodeable is enabled via config
                 $this->assertTrue($service->isSelected());
             } else {
@@ -246,7 +246,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service_edit');
 
         $location = 'Melmac';
-        $service = new \Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
+        $service = new \Netresearch\Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
         $service->setValue($location);
 
         $renderer = $block->getRenderer($service);
@@ -261,7 +261,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service_view');
 
         $location = 'Melmac';
-        $service = new \Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
+        $service = new \Netresearch\Dhl\Versenden\Shipment\Service\PreferredLocation('', true, true, '');
         $service->setValue($location);
 
         $renderer = $block->getRenderer($service);

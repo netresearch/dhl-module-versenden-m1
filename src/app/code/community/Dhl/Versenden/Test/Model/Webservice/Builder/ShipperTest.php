@@ -68,7 +68,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ShipperTest
         ));
         $shipper = $builder->getShipper(2);
 
-        $this->assertInstanceOf(\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper::class, $shipper);
+        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper::class, $shipper);
         $this->assertEquals("Bar Name", $shipper->getContact()->getName1());
     }
 }

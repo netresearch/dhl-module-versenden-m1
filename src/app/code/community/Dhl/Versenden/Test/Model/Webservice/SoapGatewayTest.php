@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice;
+use \Netresearch\Dhl\Versenden\Webservice;
 /**
  * Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
  *
@@ -97,7 +97,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $incrementId    = '808';
         $shipmentDate   = '2016-12-24';
 
-        $productCode    = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
+        $productCode    = \Netresearch\Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
         $packageWeight  = 1.2;
 
         $receiver         = $shipmentOrder->getReceiver();
@@ -205,13 +205,13 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
      */
     public function shipmentToShipmentOrderWithJson($jsonInfo)
     {
-        $info = \Dhl\Versenden\Info\Serializer::unserialize($jsonInfo);
+        $info = \Netresearch\Dhl\Versenden\Info\Serializer::unserialize($jsonInfo);
 
         $sequenceNumber = '303';
         $incrementId    = '808';
         $shipmentDate   = '2016-12-24';
 
-        $productCode    = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
+        $productCode    = \Netresearch\Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
         $packageWeight  = 1200;
 
         $helperMock = $this->getHelperMock(
@@ -483,7 +483,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
 
         $sequenceNumber = 'foo';
         $serviceInfo = array(
-            'shipment_service' => array(\Dhl\Versenden\Shipment\Service\Insurance::CODE),
+            'shipment_service' => array(\Netresearch\Dhl\Versenden\Shipment\Service\Insurance::CODE),
         );
 
         $request = new Mage_Shipping_Model_Shipment_Request();

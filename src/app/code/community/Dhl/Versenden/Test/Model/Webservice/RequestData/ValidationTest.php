@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
+use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
 /**
  * Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
  *
@@ -38,7 +38,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
 {
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\RequestData\ValidationException
+     * @expectedException \Netresearch\Dhl\Versenden\Webservice\RequestData\ValidationException
      */
     public function requiredValue()
     {
@@ -72,7 +72,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\RequestData\ValidationException
+     * @expectedException \Netresearch\Dhl\Versenden\Webservice\RequestData\ValidationException
      */
     public function tooShort()
     {
@@ -106,7 +106,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Webservice\RequestData\ValidationException
+     * @expectedException \Netresearch\Dhl\Versenden\Webservice\RequestData\ValidationException
      */
     public function tooLong()
     {
