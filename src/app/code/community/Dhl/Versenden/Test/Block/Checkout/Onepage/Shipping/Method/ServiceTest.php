@@ -115,6 +115,8 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
+        $this->assertNotEmpty($block->getServiceHint(Service\PreferredDay::CODE));
+        $this->assertNotEmpty($block->getServiceHint(Service\PreferredTime::CODE));
         $this->assertNotEmpty($block->getServiceHint(Service\PreferredLocation::CODE));
         $this->assertNotEmpty($block->getServiceHint(Service\PreferredNeighbour::CODE));
         $this->assertEmpty($block->getServiceHint(Service\ParcelAnnouncement::CODE));
