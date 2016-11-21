@@ -100,8 +100,13 @@
             $('locationfinder-link').observe('click', function () {
                 checkout.gotoSection('shipping');
                 document.getElementById('opc-shipping').scrollIntoView();
-                $$('#shipping-address-select option[value=""]').first().selected = true;
-                $('shipping-new-address-form').show();
+
+                // Case: customer with saved addresses
+                var addressSelection = $$('#shipping-address-select option[value=""]').first();
+                if (addressSelection) {
+                    addressSelection.selected = true;
+                    $('shipping-new-address-form').show();
+                }
 
                 var locationFinderCheckbox = $('shipping:useLocationFinder');
                 if (locationFinderCheckbox) {
