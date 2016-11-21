@@ -45,7 +45,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_VersionTest
         $minor = '808';
         $build = '909';
 
-        $version = new \Dhl\Versenden\Webservice\RequestData\Version($major, $minor, $build);
+        $version = new \Netresearch\Dhl\Versenden\Webservice\RequestData\Version($major, $minor, $build);
         $this->assertEquals($major, $version->getMajorRelease());
         $this->assertEquals($minor, $version->getMinorRelease());
         $this->assertEquals($build, $version->getBuild());
@@ -59,7 +59,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_VersionTest
         $major = '303';
         $minor = '808';
 
-        $version = new \Dhl\Versenden\Webservice\RequestData\Version($major, $minor);
+        $version = new \Netresearch\Dhl\Versenden\Webservice\RequestData\Version($major, $minor);
         $this->assertEquals($major, $version->getMajorRelease());
         $this->assertEquals($minor, $version->getMinorRelease());
         $this->assertNull($version->getBuild());

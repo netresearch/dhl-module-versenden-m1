@@ -71,8 +71,8 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
      */
     public function getProductsGermanShipper()
     {
-        $paketNational = \Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
-        $paketInternational = \Dhl\Versenden\Product::CODE_WELTPAKET;
+        $paketNational = \Netresearch\Dhl\Versenden\Product::CODE_PAKET_NATIONAL;
+        $paketInternational = \Netresearch\Dhl\Versenden\Product::CODE_WELTPAKET;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $shipperCountry = 'DE';
@@ -82,7 +82,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertInternalType('array', $products);
         $this->assertArrayHasKey($paketNational, $products);
         $this->assertArrayNotHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketNational));
+        $this->assertNotEmpty(\Netresearch\Dhl\Versenden\Product::getProcedure($paketNational));
 
         // eu receiver
         $receiverCountry = 'AT';
@@ -97,16 +97,16 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertInternalType('array', $products);
         $this->assertArrayNotHasKey($paketNational, $products);
         $this->assertArrayHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketInternational));
+        $this->assertNotEmpty(\Netresearch\Dhl\Versenden\Product::getProcedure($paketInternational));
     }
     /**
      * @test
      */
     public function getProductsAustrianShipper()
     {
-        $paketNational = \Dhl\Versenden\Product::CODE_PAKET_AUSTRIA;
-        $paketEu = \Dhl\Versenden\Product::CODE_PAKET_CONNECT;
-        $paketInternational = \Dhl\Versenden\Product::CODE_PAKET_INTERNATIONAL;
+        $paketNational = \Netresearch\Dhl\Versenden\Product::CODE_PAKET_AUSTRIA;
+        $paketEu = \Netresearch\Dhl\Versenden\Product::CODE_PAKET_CONNECT;
+        $paketInternational = \Netresearch\Dhl\Versenden\Product::CODE_PAKET_INTERNATIONAL;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
         $shipperCountry = 'AT';
@@ -118,7 +118,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayHasKey($paketNational, $products);
         $this->assertArrayNotHasKey($paketEu, $products);
         $this->assertArrayNotHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketNational));
+        $this->assertNotEmpty(\Netresearch\Dhl\Versenden\Product::getProcedure($paketNational));
 
         // eu receiver
         $receiverCountry = 'DE';
@@ -127,7 +127,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayNotHasKey($paketNational, $products);
         $this->assertArrayHasKey($paketEu, $products);
         $this->assertArrayNotHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketEu));
+        $this->assertNotEmpty(\Netresearch\Dhl\Versenden\Product::getProcedure($paketEu));
 
         // row receiver
         $receiverCountry = 'NZ';
@@ -136,7 +136,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertArrayNotHasKey($paketNational, $products);
         $this->assertArrayNotHasKey($paketEu, $products);
         $this->assertArrayHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Product::getProcedure($paketInternational));
+        $this->assertNotEmpty(\Netresearch\Dhl\Versenden\Product::getProcedure($paketInternational));
     }
 
     /**
@@ -164,7 +164,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $products = $carrier->getProducts($shipperCountry, $receiverCountry);
         $this->assertInternalType('array', $products);
         $this->assertCount(0, $products);
-        $this->assertEmpty(\Dhl\Versenden\Product::getProcedure('V77FOO'));
+        $this->assertEmpty(\Netresearch\Dhl\Versenden\Product::getProcedure('V77FOO'));
     }
 
     /**
@@ -224,7 +224,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->equalTo('getStatus'),
                 $this->anything()
             )
-            ->willReturn(new Dhl\Versenden\Webservice\ResponseData\Status\Response(0, 'ok', 'ok'));
+            ->willReturn(new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response(0, 'ok', 'ok'));
         $label
             ->expects($this->any())
             ->method('getAllLabels')
@@ -295,7 +295,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->anything()
             )
             ->willReturn(new Varien_Object(array(
-                'status' => new Dhl\Versenden\Webservice\ResponseData\Status\Response(1010, 'nok', 'nok'),
+                'status' => new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response(1010, 'nok', 'nok'),
             )));
 
         $result = new Varien_Object(array(

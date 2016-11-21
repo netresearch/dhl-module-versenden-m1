@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\ResponseData;
+use \Netresearch\Dhl\Versenden\Webservice\ResponseData;
 /**
  * Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
  *
@@ -82,7 +82,7 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
             $this->assertEquals($shipmentNumber, $idx);
             $this->assertSame($defaultLabelData, $item->getLabel());
             $this->assertSame($returnLabelData, $item->getReturnLabel());
-            $allLabels = $item->getAllLabels(new \Dhl\Versenden\Pdf\Adapter\Zend());
+            $allLabels = $item->getAllLabels(new \Netresearch\Dhl\Versenden\Pdf\Adapter\Zend());
             $allLabelsPdf = Zend_Pdf::parse($allLabels);
             $this->assertCount(2, $allLabelsPdf->pages);
         }

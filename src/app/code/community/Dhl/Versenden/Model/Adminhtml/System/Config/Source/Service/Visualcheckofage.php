@@ -49,12 +49,12 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Service_Visualcheckofag
             'label' => Mage::helper('dhl_versenden/data')->__('No')
             ),
             array(
-                'value' => \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A16,
-                'label' => \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A16,
+                'value' => \Netresearch\Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A16,
+                'label' => \Netresearch\Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A16,
             ),
             array(
-                'value' => \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A18,
-                'label' => \Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A18,
+                'value' => \Netresearch\Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A18,
+                'label' => \Netresearch\Dhl\Versenden\Shipment\Service\VisualCheckOfAge::A18,
             )
         );
 

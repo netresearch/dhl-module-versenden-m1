@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Shipment\Service;
+use \Netresearch\Dhl\Versenden\Shipment\Service;
 /**
  * Dhl_Versenden_Test_Model_Config_ServiceTest
  *
@@ -50,7 +50,7 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         $defaultServices = $defaultServiceCollection->getItems();
         $this->assertInternalType('array', $defaultServices);
 
-        /** @var \Dhl\Versenden\Shipment\Service\ParcelAnnouncement[] $paServices */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\ParcelAnnouncement[] $paServices */
         $paServices = array_filter($defaultServices, function ($service) {
             return ($service instanceof Service\ParcelAnnouncement);
         });
@@ -70,7 +70,7 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         $storeServices = $storeServiceCollection->getItems();
         $this->assertInternalType('array', $storeServices);
 
-        /** @var \Dhl\Versenden\Shipment\Service\ParcelAnnouncement[] $paServices */
+        /** @var \Netresearch\Dhl\Versenden\Shipment\Service\ParcelAnnouncement[] $paServices */
         $paServices = array_filter($storeServices, function ($service) {
             return ($service instanceof Service\ParcelAnnouncement);
         });

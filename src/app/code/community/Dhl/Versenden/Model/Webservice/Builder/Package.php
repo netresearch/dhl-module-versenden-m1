@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
+use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder;
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Package
  *

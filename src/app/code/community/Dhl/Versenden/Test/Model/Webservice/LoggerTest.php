@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
+use \Netresearch\Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
 
 /**
  * Dhl_Versenden_Test_Model_Webservice_LoggerTest
