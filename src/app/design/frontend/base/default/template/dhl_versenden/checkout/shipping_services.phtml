@@ -64,8 +64,8 @@
         </dl>
         <?php if (!$this->isShippingAddressDHLLocation()): ?>
             <span>
-                <a  id="locationfinder-link" href="javascript:void(0)" '>
-                    <?php echo $this->__('Or as an alternative choose a shipment to Packstation or Filiale.'); ?>
+                <a id="locationfinder-link" href="javascript:void(0)" '>
+                <?php echo $this->__('Or as an alternative choose a shipment to Packstation or Filiale.'); ?>
                 </a>
             </span>
         <?php endif; ?>
@@ -97,23 +97,26 @@
                 }
             );
 
-            $('locationfinder-link').observe('click', function () {
-                checkout.gotoSection('shipping');
-                document.getElementById('opc-shipping').scrollIntoView();
+            var locationLink = $('locationfinder-link');
+            if (locationLink) {
+                locationLink.observe('click', function () {
+                    checkout.gotoSection('shipping');
+                    document.getElementById('opc-shipping').scrollIntoView();
 
-                // Case: customer with saved addresses
-                var addressSelection = $$('#shipping-address-select option[value=""]').first();
-                if (addressSelection) {
-                    addressSelection.selected = true;
-                    $('shipping-new-address-form').show();
-                }
+                    // Case: customer with saved addresses
+                    var addressSelection = $$('#shipping-address-select option[value=""]').first();
+                    if (addressSelection) {
+                        addressSelection.selected = true;
+                        $('shipping-new-address-form').show();
+                    }
 
-                var locationFinderCheckbox = $('shipping:useLocationFinder');
-                if (locationFinderCheckbox) {
-                    locationFinderCheckbox.checked = true;
-                    locationFinder.showLocationData(locationFinderCheckbox.checked);
-                }
-            });
+                    var locationFinderCheckbox = $('shipping:useLocationFinder');
+                    if (locationFinderCheckbox) {
+                        locationFinderCheckbox.checked = true;
+                        locationFinder.showLocationData(locationFinderCheckbox.checked);
+                    }
+                });
+            }
 
             //]]>
         </script>
