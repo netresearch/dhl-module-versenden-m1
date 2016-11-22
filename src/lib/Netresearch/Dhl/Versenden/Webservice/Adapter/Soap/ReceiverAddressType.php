@@ -58,7 +58,7 @@ class ReceiverAddressType implements RequestType
             $countryType
         );
 
-        $requestType->setAddressAddition($requestData->getAddressAddition());
+        $requestType->setAddressAddition(array($requestData->getAddressAddition()));
 
         return $requestType;
     }

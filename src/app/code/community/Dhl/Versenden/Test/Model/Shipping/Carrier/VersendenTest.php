@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+use Netresearch\Dhl\Versenden\Webservice\ResponseData;
 
 /**
  * Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
@@ -224,7 +225,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->equalTo('getStatus'),
                 $this->anything()
             )
-            ->willReturn(new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response(0, 'ok', 'ok'));
+            ->willReturn(new ResponseData\Status\Response(0, 'ok', array('ok')));
         $label
             ->expects($this->any())
             ->method('getAllLabels')
@@ -295,7 +296,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
                 $this->anything()
             )
             ->willReturn(new Varien_Object(array(
-                'status' => new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response(1010, 'nok', 'nok'),
+                'status' => new ResponseData\Status\Response(1010, 'nok', array('nok')),
             )));
 
         $result = new Varien_Object(array(
