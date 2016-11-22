@@ -41,31 +41,29 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         parent::setUp();
 
         $this->setCurrentStore('store_two');
+        Mage::app()->getLayout()->getUpdate()->resetHandles();
 
-        $quote = Mage::getModel('sales/quote', array(
-            'dhl_versenden_info' => '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Max Mustermann","name2":null,"name3":null,"streetName":"Musterstrasse","streetNumber":"15a","addressAddition":"","dispatchingInformation":null,"zip":"49084","city":"Mustertown","country":"Deutschland","countryISOCode":"DE","state":null,"phone":"3324242","email":"test@tester.de","contactPerson":null},"services":{"preferredDay":"2016-11-12","preferredTime":"12001400","preferredLocation":"testt","preferredNeighbour":null,"parcelAnnouncement":null,"visualCheckOfAge":null,"returnShipment":null,"insurance":null,"bulkyGoods":null,"cod":null,"printOnlyIfCodeable":null}}'
-        ));
+        $quote = Mage::getModel('sales/quote');
         $shippingAddress = Mage::getModel('sales/quote_address');
+        $shippingAddress->setData(
+            'dhl_versenden_info',
+            '{
+                "schemaVersion":"1.0",
+                "services":{
+                    "preferredDay":"2016-11-12",
+                    "preferredTime":"12001400",
+                    "preferredLocation":"testt",
+                    "preferredNeighbour":null
+                }
+            }'
+        );
         $quote->addShippingAddress($shippingAddress);
 
-        $sessionMock = $this->getModelMock(
-            'checkout/session',
-            array('init', 'getQuote', 'getShippingAddress', 'getData')
-        );
+        $sessionMock = $this->getModelMock('checkout/session', array('init', 'getQuote'));
         $sessionMock
             ->expects($this->any())
             ->method('getQuote')
             ->willReturn($quote);
-//        $sessionMock
-//            ->expects($this->any())
-//            ->method('getShippingAddress')
-//            ->willReturnSelf();
-//        $sessionMock
-//            ->expects($this->any())
-//            ->method('getData')
-//            ->willReturn(
-//                '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Max Mustermann","name2":null,"name3":null,"streetName":"Musterstrasse","streetNumber":"15a","addressAddition":"","dispatchingInformation":null,"zip":"49084","city":"Mustertown","country":"Deutschland","countryISOCode":"DE","state":null,"phone":"3324242","email":"test@tester.de","contactPerson":null},"services":{"preferredDay":"2016-11-12","preferredTime":"12001400","preferredLocation":"testt","preferredNeighbour":null,"parcelAnnouncement":null,"visualCheckOfAge":null,"returnShipment":null,"insurance":null,"bulkyGoods":null,"cod":null,"printOnlyIfCodeable":null}}'
-//            );
 
         $this->replaceByMock('model', 'checkout/session', $sessionMock);
     }
@@ -78,9 +76,9 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
     {
         $observer  = new Varien_Event_Observer();
         $blockHtml = '<dd>Preferred Day</dd>';
+
         /** @var Mage_Checkout_Block_Onepage_Progress $block */
-        $block = new Mage_Checkout_Block_Onepage_Progress();
-        $block->setLayout(Mage::app()->getLayout());
+        $block = Mage::app()->getLayout()->createBlock('checkout/onepage_progress');
 
         $transport = new Varien_Object();
         $transport->setData('html', $blockHtml);
@@ -107,9 +105,9 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
     {
         $observer  = new Varien_Event_Observer();
         $blockHtml = '<dd>Preferred Day</dd>';
+
         /** @var Mage_Checkout_Block_Onepage_Progress $block */
-        $block = new Mage_Checkout_Block_Onepage_Progress();
-        $block->setLayout(Mage::app()->getLayout());
+        $block = Mage::app()->getLayout()->createBlock('checkout/onepage_progress');
 
         $transport = new Varien_Object();
         $transport->setData('html', $blockHtml);
@@ -123,54 +121,5 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_address');
         $dhlObserver->appendServicesToShippingMethod($observer);
         $this->assertEquals($blockHtml, $transport->getData('html'));
-    }
-
-    /**
-     * @test
-     * @loadFixture Model_ConfigTest
-     */
-    public function appendServicesToShippingMethod()
-    {
-        $this->setCurrentStore('store_two');
-
-        $modelMock =
-            $this->getModelMock('checkout/session', array('init', 'getQuote', 'getShippingAddress', 'getData'));
-        $modelMock->expects($this->any())->method('getQuote')->willReturnSelf();
-        $modelMock->expects($this->any())->method('getShippingAddress')->willReturnSelf();
-        $modelMock
-            ->expects($this->any())
-            ->method('getData')
-            ->willReturn(
-                '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Max Mustermann","name2":null,"name3":null,"streetName":"Musterstrasse","streetNumber":"15a","addressAddition":"","dispatchingInformation":null,"zip":"49084","city":"Mustertown","country":"Deutschland","countryISOCode":"DE","state":null,"phone":"3324242","email":"test@tester.de","contactPerson":null},"services":{"preferredDay":"2016-11-12","preferredTime":"12001400","preferredLocation":"testt","preferredNeighbour":null,"parcelAnnouncement":null,"visualCheckOfAge":null,"returnShipment":null,"insurance":null,"bulkyGoods":null,"cod":null,"printOnlyIfCodeable":null}}'
-            );
-
-        $this->replaceByMock('model', 'checkout/session', $modelMock);
-
-        $observer  = new Varien_Event_Observer();
-        $blockHtml = '<dd>Preferred Day</dd>';
-        /** @var Mage_Checkout_Block_Onepage_Progress $block */
-        $block = new Mage_Checkout_Block_Onepage_Progress();
-        $block->setLayout(Mage::app()->getLayout());
-
-        $transport = new Varien_Object();
-        $transport->setData('html', $blockHtml);
-
-        $observer->setData('block', $block);
-        $observer->setData('transport', $transport);
-
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
-
-        // Case: wrong block
-//        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_address');
-//        $dhlObserver->appendServicesToShippingMethod($observer);
-//        $this->assertEquals($blockHtml, $transport->getData('html'));
-
-        // Case: correct block
-        $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_method');
-        $observer->setData('block', $block);
-
-        $dhlObserver->appendServicesToShippingMethod($observer);
-        $this->assertContains('Preferred Day', $transport->getData('html'));
-        $this->assertContains('12 - 14', $transport->getData('html'));
     }
 }
