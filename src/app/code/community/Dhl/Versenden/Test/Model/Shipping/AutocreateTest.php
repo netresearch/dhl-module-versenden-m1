@@ -70,7 +70,7 @@ class Dhl_Versenden_Test_Model_Shipping_AutocreateTest extends EcomDev_PHPUnit_T
         $statusText = 'ok';
         $statusMessage = 'No errors.';
 
-        $status          = new ResponseData\Status\Item('0', '0', $statusText, $statusMessage);
+        $status          = new ResponseData\Status\Item('0', '0', $statusText, array($statusMessage));
         $labelCollection = new ResponseData\CreateShipment\LabelCollection();
         $labelArgs       = array($status, '10', '123123');
 

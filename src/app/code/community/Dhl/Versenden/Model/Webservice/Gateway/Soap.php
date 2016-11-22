@@ -110,10 +110,11 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
      * @param SoapAdapter $adapter
      * @param ResponseData\Status\Response $responseStatus
      */
-    protected function logResult(Dhl_Versenden_Model_Webservice_Logger_Soap $logger,
-                                 Webservice\Adapter\Soap $adapter,
-                                 ResponseData\Status\Response $responseStatus)
-    {
+    protected function logResult(
+        Dhl_Versenden_Model_Webservice_Logger_Soap $logger,
+        Webservice\Adapter\Soap $adapter,
+        ResponseData\Status\Response $responseStatus
+    ) {
         if ($responseStatus->isError()) {
             $logger->warning($adapter);
         } else {

@@ -1,5 +1,5 @@
 {
-    "name": "dhl/versenden-m1",
+    "name": "dhl/module-versenden-m1",
     "license": "OSL-3.0",
     "type": "magento-module",
     "description": "DHL business customer shipping extension for Magento",

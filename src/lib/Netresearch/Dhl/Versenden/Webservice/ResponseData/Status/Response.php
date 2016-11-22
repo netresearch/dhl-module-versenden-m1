@@ -39,16 +39,16 @@ class Response
     protected $statusCode;
     /** @var string */
     protected $statusText;
-    /** @var string */
+    /** @var string[] */
     protected $statusMessage;
 
     /**
      * Status constructor.
      * @param string $statusCode
      * @param string $statusText
-     * @param string $statusMessage
+     * @param string[] $statusMessage
      */
-    public function __construct($statusCode, $statusText, $statusMessage)
+    public function __construct($statusCode, $statusText, array $statusMessage)
     {
         $this->statusCode = $statusCode;
         $this->statusText = $statusText;
@@ -76,11 +76,7 @@ class Response
      */
     public function getStatusMessage()
     {
-        $statusMessage = $this->statusMessage;
-        if (is_array($this->statusMessage)) {
-            $statusMessage = implode(' ', $statusMessage);
-        }
-        return $statusMessage;
+        return implode(' ', $this->statusMessage);
     }
 
     /**

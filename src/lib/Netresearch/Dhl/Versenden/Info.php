@@ -85,6 +85,7 @@ class Info extends Info\AbstractInfo
         if (isset($object->receiver)) {
             $info->receiver = Info\Receiver::fromObject($object->receiver);
         }
+
         if (isset($object->services)) {
             $info->services = Info\Services::fromObject($object->services);
         }
@@ -94,6 +95,6 @@ class Info extends Info\AbstractInfo
 
     public function __toString()
     {
-        return \DHL\Versenden\Info\Serializer::serialize($this);
+        return Info\Serializer::serialize($this);
     }
 }

@@ -89,7 +89,7 @@ class Dhl_Versenden_Test_Model_Observer_DeleteTrackTest
         $status = new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response(
             '2000',
             'Unknown shipment number.',
-            'Multiple shipments found for cancelation'
+            array('Multiple shipments found for cancellation')
         );
         $response->setData('status', $status);
 
@@ -119,7 +119,7 @@ class Dhl_Versenden_Test_Model_Observer_DeleteTrackTest
     public function deleteShippingLabelOk()
     {
         $response = new Varien_Object();
-        $status = new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response('0', 'ok', '');
+        $status = new Netresearch\Dhl\Versenden\Webservice\ResponseData\Status\Response('0', 'ok', array(''));
         $response->setData('status', $status);
 
         $gatewayMock = $this->getModelMock('dhl_versenden/webservice_gateway_soap', array('deleteShipmentOrder'));
