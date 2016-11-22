@@ -46,9 +46,9 @@ class Item extends Response
      * @param string $identifier
      * @param string $statusCode
      * @param string $statusText
-     * @param string $statusMessage
+     * @param string[] $statusMessage
      */
-    public function __construct($identifier, $statusCode, $statusText, $statusMessage)
+    public function __construct($identifier, $statusCode, $statusText, array $statusMessage)
     {
         $this->identifier = $identifier;
         parent::__construct($statusCode, $statusText, $statusMessage);

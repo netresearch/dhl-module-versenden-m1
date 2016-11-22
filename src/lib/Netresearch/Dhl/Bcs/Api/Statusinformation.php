@@ -16,16 +16,16 @@ class Statusinformation
     protected $statusText = null;
 
     /**
-     * @var string $statusMessage
+     * @var string[] $statusMessage
      */
     protected $statusMessage = null;
 
     /**
      * @param int $statusCode
      * @param string $statusText
-     * @param string $statusMessage
+     * @param string[] $statusMessage
      */
-    public function __construct($statusCode, $statusText, $statusMessage)
+    public function __construct($statusCode, $statusText, array $statusMessage)
     {
       $this->statusCode = $statusCode;
       $this->statusText = $statusText;
@@ -69,7 +69,7 @@ class Statusinformation
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getStatusMessage()
     {
@@ -77,10 +77,10 @@ class Statusinformation
     }
 
     /**
-     * @param string $statusMessage
+     * @param string[] $statusMessage
      * @return \Netresearch\Dhl\Bcs\Api\Statusinformation
      */
-    public function setStatusMessage($statusMessage)
+    public function setStatusMessage(array $statusMessage)
     {
       $this->statusMessage = $statusMessage;
       return $this;

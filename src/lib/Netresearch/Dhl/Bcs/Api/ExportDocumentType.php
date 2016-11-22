@@ -51,7 +51,7 @@ class ExportDocumentType
     protected $WithElectronicExportNtfctn = null;
 
     /**
-     * @var ExportDocPosition $ExportDocPosition
+     * @var ExportDocPosition[] $ExportDocPosition
      */
     protected $ExportDocPosition = null;
 
@@ -230,7 +230,7 @@ class ExportDocumentType
     }
 
     /**
-     * @return ExportDocPosition
+     * @return ExportDocPosition[]
      */
     public function getExportDocPosition()
     {
@@ -238,10 +238,10 @@ class ExportDocumentType
     }
 
     /**
-     * @param ExportDocPosition $ExportDocPosition
+     * @param ExportDocPosition[] $ExportDocPosition
      * @return \Netresearch\Dhl\Bcs\Api\ExportDocumentType
      */
-    public function setExportDocPosition($ExportDocPosition)
+    public function setExportDocPosition(array $ExportDocPosition = null)
     {
       $this->ExportDocPosition = $ExportDocPosition;
       return $this;

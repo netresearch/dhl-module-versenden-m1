@@ -9,50 +9,50 @@ class GVAPI_2_0_de extends \SoapClient
      * @var array $classmap The defined classes
      */
     private static $classmap = array (
-      'CreateShipmentOrderRequest' => 'Dhl\\Bcs\\Api\\CreateShipmentOrderRequest',
-      'CreateShipmentOrderResponse' => 'Dhl\\Bcs\\Api\\CreateShipmentOrderResponse',
-      'Version' => 'Dhl\\Bcs\\Api\\Version',
-      'ShipmentOrderType' => 'Dhl\\Bcs\\Api\\ShipmentOrderType',
-      'Shipment' => 'Dhl\\Bcs\\Api\\Shipment',
-      'ShipmentDetailsTypeType' => 'Dhl\\Bcs\\Api\\ShipmentDetailsTypeType',
-      'ShipmentDetailsType' => 'Dhl\\Bcs\\Api\\ShipmentDetailsType',
-      'ShipmentItemType' => 'Dhl\\Bcs\\Api\\ShipmentItemType',
-      'ShipmentService' => 'Dhl\\Bcs\\Api\\ShipmentService',
-      'ServiceconfigurationDateOfDelivery' => 'Dhl\\Bcs\\Api\\ServiceconfigurationDateOfDelivery',
-      'ServiceconfigurationDeliveryTimeframe' => 'Dhl\\Bcs\\Api\\ServiceconfigurationDeliveryTimeframe',
-      'ServiceconfigurationISR' => 'Dhl\\Bcs\\Api\\ServiceconfigurationISR',
-      'Serviceconfiguration' => 'Dhl\\Bcs\\Api\\Serviceconfiguration',
-      'ServiceconfigurationShipmentHandling' => 'Dhl\\Bcs\\Api\\ServiceconfigurationShipmentHandling',
-      'ServiceconfigurationEndorsement' => 'Dhl\\Bcs\\Api\\ServiceconfigurationEndorsement',
-      'ServiceconfigurationVisualAgeCheck' => 'Dhl\\Bcs\\Api\\ServiceconfigurationVisualAgeCheck',
-      'ServiceconfigurationDetails' => 'Dhl\\Bcs\\Api\\ServiceconfigurationDetails',
-      'ServiceconfigurationCashOnDelivery' => 'Dhl\\Bcs\\Api\\ServiceconfigurationCashOnDelivery',
-      'ServiceconfigurationAdditionalInsurance' => 'Dhl\\Bcs\\Api\\ServiceconfigurationAdditionalInsurance',
-      'ServiceconfigurationIC' => 'Dhl\\Bcs\\Api\\ServiceconfigurationIC',
-      'Ident' => 'Dhl\\Bcs\\Api\\Ident',
-      'ShipmentNotificationType' => 'Dhl\\Bcs\\Api\\ShipmentNotificationType',
-      'BankType' => 'Dhl\\Bcs\\Api\\BankType',
-      'ShipperType' => 'Dhl\\Bcs\\Api\\ShipperType',
-      'ShipperTypeType' => 'Dhl\\Bcs\\Api\\ShipperTypeType',
-      'NameType' => 'Dhl\\Bcs\\Api\\NameType',
-      'NativeAddressType' => 'Dhl\\Bcs\\Api\\NativeAddressType',
-      'CountryType' => 'Dhl\\Bcs\\Api\\CountryType',
-      'CommunicationType' => 'Dhl\\Bcs\\Api\\CommunicationType',
-      'ReceiverType' => 'Dhl\\Bcs\\Api\\ReceiverType',
-      'ReceiverTypeType' => 'Dhl\\Bcs\\Api\\ReceiverTypeType',
-      'ReceiverNativeAddressType' => 'Dhl\\Bcs\\Api\\ReceiverNativeAddressType',
-      'cis:PackStationType' => 'Dhl\\Bcs\\Api\\PackStationType',
-      'cis:PostfilialeType' => 'Dhl\\Bcs\\Api\\PostfilialeType',
-      'cis:ParcelShopType' => 'Dhl\\Bcs\\Api\\ParcelShopType',
-      'ExportDocumentType' => 'Dhl\\Bcs\\Api\\ExportDocumentType',
-      'ExportDocPosition' => 'Dhl\\Bcs\\Api\\ExportDocPosition',
-      'Statusinformation' => 'Dhl\\Bcs\\Api\\Statusinformation',
-      'CreationState' => 'Dhl\\Bcs\\Api\\CreationState',
-      'LabelData' => 'Dhl\\Bcs\\Api\\LabelData',
-      'DeleteShipmentOrderRequest' => 'Dhl\\Bcs\\Api\\DeleteShipmentOrderRequest',
-      'DeleteShipmentOrderResponse' => 'Dhl\\Bcs\\Api\\DeleteShipmentOrderResponse',
-      'DeletionState' => 'Dhl\\Bcs\\Api\\DeletionState',
-      'GetVersionResponse' => 'Dhl\\Bcs\\Api\\GetVersionResponse',
+      'Version' => 'Netresearch\\Dhl\\Bcs\\Api\\Version',
+      'GetVersionResponse' => 'Netresearch\\Dhl\\Bcs\\Api\\GetVersionResponse',
+      'CreateShipmentOrderRequest' => 'Netresearch\\Dhl\\Bcs\\Api\\CreateShipmentOrderRequest',
+      'CreateShipmentOrderResponse' => 'Netresearch\\Dhl\\Bcs\\Api\\CreateShipmentOrderResponse',
+      'ShipmentOrderType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipmentOrderType',
+      'Shipment' => 'Netresearch\\Dhl\\Bcs\\Api\\Shipment',
+      'ShipmentDetailsTypeType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipmentDetailsTypeType',
+      'ShipmentDetailsType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipmentDetailsType',
+      'ShipmentItemType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipmentItemType',
+      'ShipmentService' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipmentService',
+      'ServiceconfigurationDateOfDelivery' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationDateOfDelivery',
+      'ServiceconfigurationDeliveryTimeframe' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationDeliveryTimeframe',
+      'ServiceconfigurationISR' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationISR',
+      'Serviceconfiguration' => 'Netresearch\\Dhl\\Bcs\\Api\\Serviceconfiguration',
+      'ServiceconfigurationShipmentHandling' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationShipmentHandling',
+      'ServiceconfigurationEndorsement' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationEndorsement',
+      'ServiceconfigurationVisualAgeCheck' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationVisualAgeCheck',
+      'ServiceconfigurationDetails' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationDetails',
+      'ServiceconfigurationCashOnDelivery' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationCashOnDelivery',
+      'ServiceconfigurationAdditionalInsurance' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationAdditionalInsurance',
+      'ServiceconfigurationIC' => 'Netresearch\\Dhl\\Bcs\\Api\\ServiceconfigurationIC',
+      'Ident' => 'Netresearch\\Dhl\\Bcs\\Api\\Ident',
+      'ShipmentNotificationType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipmentNotificationType',
+      'BankType' => 'Netresearch\\Dhl\\Bcs\\Api\\BankType',
+      'ShipperType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipperType',
+      'ShipperTypeType' => 'Netresearch\\Dhl\\Bcs\\Api\\ShipperTypeType',
+      'NameType' => 'Netresearch\\Dhl\\Bcs\\Api\\NameType',
+      'NativeAddressType' => 'Netresearch\\Dhl\\Bcs\\Api\\NativeAddressType',
+      'CountryType' => 'Netresearch\\Dhl\\Bcs\\Api\\CountryType',
+      'CommunicationType' => 'Netresearch\\Dhl\\Bcs\\Api\\CommunicationType',
+      'ReceiverType' => 'Netresearch\\Dhl\\Bcs\\Api\\ReceiverType',
+      'ReceiverTypeType' => 'Netresearch\\Dhl\\Bcs\\Api\\ReceiverTypeType',
+      'ReceiverNativeAddressType' => 'Netresearch\\Dhl\\Bcs\\Api\\ReceiverNativeAddressType',
+      'cis:PackStationType' => 'Netresearch\\Dhl\\Bcs\\Api\\PackStationType',
+      'cis:PostfilialeType' => 'Netresearch\\Dhl\\Bcs\\Api\\PostfilialeType',
+      'cis:ParcelShopType' => 'Netresearch\\Dhl\\Bcs\\Api\\ParcelShopType',
+      'ExportDocumentType' => 'Netresearch\\Dhl\\Bcs\\Api\\ExportDocumentType',
+      'ExportDocPosition' => 'Netresearch\\Dhl\\Bcs\\Api\\ExportDocPosition',
+      'Statusinformation' => 'Netresearch\\Dhl\\Bcs\\Api\\Statusinformation',
+      'CreationState' => 'Netresearch\\Dhl\\Bcs\\Api\\CreationState',
+      'LabelData' => 'Netresearch\\Dhl\\Bcs\\Api\\LabelData',
+      'DeleteShipmentOrderRequest' => 'Netresearch\\Dhl\\Bcs\\Api\\DeleteShipmentOrderRequest',
+      'DeleteShipmentOrderResponse' => 'Netresearch\\Dhl\\Bcs\\Api\\DeleteShipmentOrderResponse',
+      'DeletionState' => 'Netresearch\\Dhl\\Bcs\\Api\\DeletionState',
     );
 
     /**
@@ -76,6 +76,18 @@ class GVAPI_2_0_de extends \SoapClient
     }
 
     /**
+     * Returns the actual version of the implementation of the whole ISService
+     *         webservice.
+     *
+     * @param Version $part1
+     * @return GetVersionResponse
+     */
+    public function getVersion(Version $part1)
+    {
+      return $this->__soapCall('getVersion', array($part1));
+    }
+
+    /**
      * Creates shipments.
      *
      * @param CreateShipmentOrderRequest $part1
@@ -95,18 +107,6 @@ class GVAPI_2_0_de extends \SoapClient
     public function deleteShipmentOrder(DeleteShipmentOrderRequest $part1)
     {
       return $this->__soapCall('deleteShipmentOrder', array($part1));
-    }
-
-    /**
-     * Returns the actual version of the implementation of the whole ISService
-     *         webservice.
-     *
-     * @param Version $part1
-     * @return GetVersionResponse
-     */
-    public function getVersion(Version $part1)
-    {
-      return $this->__soapCall('getVersion', array($part1));
     }
 
 }

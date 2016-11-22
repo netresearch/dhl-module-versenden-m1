@@ -48,7 +48,7 @@ class Dhl_Versenden_Test_Model_Webservice_ResponseData_CreateShipmentTest
         $sequenceNumber = '1000';
         $shipmentNumber = '0001';
 
-        $status = new ResponseData\Status\Item($shipmentNumber, $statusCode, $statusText, $statusMessage);
+        $status = new ResponseData\Status\Item($shipmentNumber, $statusCode, $statusText, array($statusMessage));
 
         $defaultLabel = new Zend_Pdf();
         $defaultLabel->pages[]= new Zend_Pdf_Page(Zend_Pdf_Page::SIZE_A4);

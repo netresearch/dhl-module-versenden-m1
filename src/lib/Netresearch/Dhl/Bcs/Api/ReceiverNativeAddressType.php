@@ -26,7 +26,7 @@ class ReceiverNativeAddressType
     protected $streetNumber = null;
 
     /**
-     * @var addressAddition $addressAddition
+     * @var addressAddition[] $addressAddition
      */
     protected $addressAddition = null;
 
@@ -143,7 +143,7 @@ class ReceiverNativeAddressType
     }
 
     /**
-     * @return addressAddition
+     * @return addressAddition[]
      */
     public function getAddressAddition()
     {
@@ -151,10 +151,10 @@ class ReceiverNativeAddressType
     }
 
     /**
-     * @param addressAddition $addressAddition
+     * @param addressAddition[] $addressAddition
      * @return \Netresearch\Dhl\Bcs\Api\ReceiverNativeAddressType
      */
-    public function setAddressAddition($addressAddition)
+    public function setAddressAddition(array $addressAddition = null)
     {
       $this->addressAddition = $addressAddition;
       return $this;

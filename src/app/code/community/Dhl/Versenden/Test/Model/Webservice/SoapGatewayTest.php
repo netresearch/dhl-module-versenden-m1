@@ -285,7 +285,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentNumber = 'bar';
 
         $wsResponse = new Webservice\ResponseData\CreateShipment(
-            new Webservice\ResponseData\Status\Response(0, 'ok', 'ok'),
+            new Webservice\ResponseData\Status\Response(0, 'ok', array('ok')),
             new Webservice\ResponseData\CreateShipment\LabelCollection(),
             array($sequenceNumber => $shipmentNumber)
         );
@@ -360,7 +360,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentNumber = 'bar';
 
         $wsResponse = new Webservice\ResponseData\CreateShipment(
-            new Webservice\ResponseData\Status\Response(23, 'ok', 'ok'),
+            new Webservice\ResponseData\Status\Response(23, 'ok', array('ok')),
             new Webservice\ResponseData\CreateShipment\LabelCollection(),
             array($sequenceNumber => $shipmentNumber)
         );
@@ -580,7 +580,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentNumbers = array('123', '456');
 
         $wsResponse = new Webservice\ResponseData\DeleteShipment(
-            new Webservice\ResponseData\Status\Response(0, 'ok', ''),
+            new Webservice\ResponseData\Status\Response(0, 'ok', array('')),
             new Webservice\ResponseData\DeleteShipment\StatusCollection()
         );
 
@@ -635,7 +635,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
         $shipmentNumbers = array('123', '456');
 
         $wsResponse = new Webservice\ResponseData\DeleteShipment(
-            new Webservice\ResponseData\Status\Response(12, 'ok', ''),
+            new Webservice\ResponseData\Status\Response(12, 'ok', array('')),
             new Webservice\ResponseData\DeleteShipment\StatusCollection()
         );
 
