@@ -39,7 +39,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     protected $unitOfMeasure;
 
     /** @var float */
-    protected $minWeight;
+    protected $minWeightInKG;
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Package constructor.
@@ -64,11 +64,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
         if (!is_numeric($args[$argName])) {
             throw new Mage_Core_Exception("invalid argument: $argName");
         }
-        $this->minWeight = $args[$argName];
-
-        if ($this->unitOfMeasure == 'G') {
-            $this->minWeight *= 1000;
-        }
+        $this->minWeightInKG = $args[$argName];
     }
 
     /**
@@ -80,45 +76,34 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
         $packageCollection = new ShipmentOrder\PackageCollection();
 
         foreach ($packageInfo as $id => $packageDetails) {
-            $lenghtInCM = null;
+            $lengthInCM = null;
             if (isset($packageDetails['params']['length']) && $packageDetails['params']['length']) {
-                $lenghtInCM = $packageDetails['params']['length'];
+                $lengthInCM = $packageDetails['params']['length'];
             }
+
             $widthInCM = null;
             if (isset($packageDetails['params']['width']) && $packageDetails['params']['width']) {
                 $widthInCM = $packageDetails['params']['width'];
             }
+
             $heightInCM = null;
             if (isset($packageDetails['params']['height']) && $packageDetails['params']['height']) {
                 $heightInCM = $packageDetails['params']['height'];
             }
 
-            $packageWeightUnit = $packageDetails['params']['weight_units'];
-
-            if ($this->unitOfMeasure == 'G') {
-                if ($packageWeightUnit == 'G') {
-                    $weightInKG = max($packageDetails['params']['weight'], $this->minWeight);
-                    $weightInKG = bcmul($weightInKG, '0.001', 3);
-                } else {
-                    $weightInKG = max(bcmul($packageDetails['params']['weight'], '1000', 3), $this->minWeight);
-                    $weightInKG = bcmul($weightInKG, '0.001', 3);
-                }
-            } else {
-                if ($packageWeightUnit == 'G') {
-                    $weightInKG = max(bcmul($packageDetails['params']['weight'], '0.001', 3), $this->minWeight);
-                } else {
-                    $weightInKG = max($packageDetails['params']['weight'], $this->minWeight);
-                }
+            $weightUnit = $this->unitOfMeasure;
+            if (isset($packageDetails['params']['weight_units']) && $packageDetails['params']['weight_units']) {
+                $weightUnit = $packageDetails['params']['weight_units'];
             }
 
-            $package    = new ShipmentOrder\Package(
-                $id,
-                $weightInKG,
-                $lenghtInCM,
-                $widthInCM,
-                $heightInCM
-            );
+            $weightInKG = $packageDetails['params']['weight'];
+            if ($weightUnit == 'G') {
+                $weightInKG *= 0.001;
+            }
 
+            $weightInKG = max($weightInKG, $this->minWeightInKG);
+
+            $package = new ShipmentOrder\Package($id, $weightInKG, $lengthInCM, $widthInCM, $heightInCM);
             $packageCollection->addItem($package);
         }
 

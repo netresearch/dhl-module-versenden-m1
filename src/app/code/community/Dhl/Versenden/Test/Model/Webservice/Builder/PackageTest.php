@@ -37,7 +37,7 @@ use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Package;
 class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
     extends EcomDev_PHPUnit_Test_Case
 {
-    protected $minWeight = 0.01;
+    protected $minWeightInKG = 0.01;
 
     /**
      * @test
@@ -46,7 +46,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
     public function constructorArgUnitOfMeasureMissing()
     {
         $args = array(
-            'min_weight' => $this->minWeight,
+            'min_weight' => $this->minWeightInKG,
         );
         Mage::getModel('dhl_versenden/webservice_builder_package', $args);
     }
@@ -59,7 +59,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
     {
         $args = array(
             'unit_of_measure' => new stdClass(),
-            'min_weight'      => $this->minWeight,
+            'min_weight'      => $this->minWeightInKG,
         );
         Mage::getModel('dhl_versenden/webservice_builder_package', $args);
     }
@@ -90,18 +90,20 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
     }
 
     /**
+     * Min weight calculation with default unit KG
+     *
      * @test
      */
-    public function getPackages()
+    public function getPackagesCalcMinWeight()
     {
         $sequenceNumberOne = '303';
-        $weightInKGOne = $this->minWeight + 0.05;
+        $weightInKGOne = $this->minWeightInKG + 0.05;
         $lengthInCMOne = '30';
         $widthInCMOne = '40';
         $heightInCMOne = '50';
 
         $sequenceNumberTwo = '808';
-        $weightInKGTwo = $this->minWeight - 0.05;
+        $weightInKGTwo = $this->minWeightInKG - 0.05;
 
         $packageOne = array(
             'params' => array(
@@ -125,7 +127,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
         /** @var Dhl_Versenden_Model_Webservice_Builder_Package $builder */
         $args = array(
             'unit_of_measure' => 'KG',
-            'min_weight'      => $this->minWeight,
+            'min_weight'      => $this->minWeightInKG,
         );
         $builder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
@@ -142,39 +144,78 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
 
         $this->assertInstanceOf(Package::class, $packageCollection->getItem($sequenceNumberTwo));
         $this->assertEquals($sequenceNumberTwo, $packageCollection->getItem($sequenceNumberTwo)->getPackageId());
-        $this->assertEquals($this->minWeight, $packageCollection->getItem($sequenceNumberTwo)->getWeightInKG());
+        $this->assertEquals($this->minWeightInKG, $packageCollection->getItem($sequenceNumberTwo)->getWeightInKG());
         $this->assertNull($packageCollection->getItem($sequenceNumberTwo)->getLengthInCM());
         $this->assertNull($packageCollection->getItem($sequenceNumberTwo)->getWidthInCM());
         $this->assertNull($packageCollection->getItem($sequenceNumberTwo)->getHeightInCM());
     }
 
     /**
+     * Global weight is configured as KG. May or may not be overridden on packaging level.
+     *
      * @test
      */
-    public function getPackagesGram()
+    public function getPackagesWithWeightUnitKG()
     {
-        $sequenceNumber = '808';
-        $weightInKG = 450;
+        $args = array('unit_of_measure' => 'KG', 'min_weight' => $this->minWeightInKG);
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
-        // Case default unit is G and package uses G as unit
+        $sequenceNumber = '808';
+
+
+        // (1) No override on packaging level
+        $weightInKG = 0.450;
+        $package = array(
+            'params' => array(
+                'weight' => $weightInKG,
+                'weight_units' => 'KG',
+            ),
+        );
+        $packageInfo = array($sequenceNumber => $package);
+        $packageCollection = $builder->getPackages($packageInfo);
+
+        $this->assertEquals($weightInKG, $packageCollection->getItem($sequenceNumber)->getWeightInKG());
+
+
+        // (2) With override on packaging level
+        $weightInKG = 450;
         $package = array(
             'params' => array(
                 'weight' => $weightInKG,
                 'weight_units' => 'G',
             ),
         );
-        $packageInfo = array(
-            $sequenceNumber => $package,
-        );
+        $packageInfo = array($sequenceNumber => $package);
+        $packageCollection = $builder->getPackages($packageInfo);
 
+        $this->assertEquals('0.450', $packageCollection->getItem($sequenceNumber)->getWeightInKG());
+    }
+
+    /**
+     * Global weight is configured as G. May or may not be overridden on packaging level.
+     *
+     * @test
+     */
+    public function getPackagesWithWeightUnitG()
+    {
         /** @var Dhl_Versenden_Model_Webservice_Builder_Package $builder */
-        $args = array(
-            'unit_of_measure' => 'G',
-            'min_weight'      => $this->minWeight,
-        );
+        $args = array('unit_of_measure' => 'G', 'min_weight' => $this->minWeightInKG);
         $builder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
+        $sequenceNumber = '808';
+
+
+        // (1) No override on packaging level
+        $weightInG = 450.000;
+        $package = array(
+            'params' => array(
+                'weight' => $weightInG,
+                'weight_units' => 'G',
+            ),
+        );
+        $packageInfo = array($sequenceNumber => $package);
         $packageCollection = $builder->getPackages($packageInfo);
+
         $this->assertInstanceOf(PackageCollection::class, $packageCollection);
         $this->assertCount(count($packageInfo), $packageCollection);
 
@@ -185,55 +226,18 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_PackageTest
         $this->assertNull($packageCollection->getItem($sequenceNumber)->getWidthInCM());
         $this->assertNull($packageCollection->getItem($sequenceNumber)->getHeightInCM());
 
-        // Case default unit is G and package uses KG as unit
-        $weightInKG = 4.50;
+
+        // (2) With override on packaging level
+        $weightInKG = 0.450;
         $package = array(
             'params' => array(
                 'weight' => $weightInKG,
                 'weight_units' => 'KG',
             ),
         );
-        $packageInfo = array(
-            $sequenceNumber => $package,
-        );
-
+        $packageInfo = array($sequenceNumber => $package);
         $packageCollection = $builder->getPackages($packageInfo);
+
         $this->assertEquals($weightInKG, $packageCollection->getItem($sequenceNumber)->getWeightInKG());
-
-        // Case default unit is KG and package uses KG as unit
-        $weightInKG = 4.50;
-        $package = array(
-            'params' => array(
-                'weight' => $weightInKG,
-                'weight_units' => 'KG',
-            ),
-        );
-        $packageInfo = array(
-            $sequenceNumber => $package,
-        );
-
-        $args = array(
-            'unit_of_measure' => 'KG',
-            'min_weight'      => $this->minWeight,
-        );
-        $builder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
-
-        $packageCollection = $builder->getPackages($packageInfo);
-        $this->assertEquals($weightInKG, $packageCollection->getItem($sequenceNumber)->getWeightInKG());
-
-        // Case default unit is KG and package uses G as unit
-        $weightInKG = 450;
-        $package = array(
-            'params' => array(
-                'weight' => $weightInKG,
-                'weight_units' => 'G',
-            ),
-        );
-        $packageInfo = array(
-            $sequenceNumber => $package,
-        );
-
-        $packageCollection = $builder->getPackages($packageInfo);
-        $this->assertEquals('0.450', $packageCollection->getItem($sequenceNumber)->getWeightInKG());
     }
 }
