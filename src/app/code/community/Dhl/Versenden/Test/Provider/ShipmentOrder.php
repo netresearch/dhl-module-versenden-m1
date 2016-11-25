@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\RequestData;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData;
 /**
  * Dhl_Versenden_Test_Provider_ShipmentOrder
  *
@@ -41,14 +41,14 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $shipperAccountSignature = 'ABCDEF1234567890=';
         $shipperAccountEkp = '1234567890';
         $shipperAccountParticipation = array(
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_PAKET_NATIONAL => '01',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_WELTPAKET => '01',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_PAKET_AUSTRIA => '02',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_PAKET_CONNECT => '02',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_PAKET_INTERNATIONAL => '01',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_RETURNSHIPMENT_NATIONAL => '01',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_RETURNSHIPMENT_AUSTRIA => '02',
-            \Netresearch\Dhl\Versenden\Product::PROCEDURE_RETURNSHIPMENT_CONNECT => '02',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_PAKET_NATIONAL => '01',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_WELTPAKET => '01',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_PAKET_AUSTRIA => '02',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_PAKET_CONNECT => '02',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_PAKET_INTERNATIONAL => '01',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_RETURNSHIPMENT_NATIONAL => '01',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_RETURNSHIPMENT_AUSTRIA => '02',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_RETURNSHIPMENT_CONNECT => '02',
         );
 
         $shipperBankDataAccountOwner = 'Shipper BankData Account Owner';
@@ -118,7 +118,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $shipmentSettingsDate = '2012-12-12';
         $shipmentSettingsReference = 'Foo Ref';
         $shipmentSettingsWeight = 2.4;
-        $shipmentSettingsProduct = \Netresearch\Dhl\Versenden\Product::CODE_WELTPAKET;
+        $shipmentSettingsProduct = \Dhl\Versenden\Bcs\Api\Product::CODE_WELTPAKET;
 
         $exportInvoiceNumber = '103000002';
         $exportType = Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_DOCUMENT;

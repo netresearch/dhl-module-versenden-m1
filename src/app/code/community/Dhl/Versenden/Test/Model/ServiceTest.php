@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Shipment\Service\Collection as ServiceCollection;
-use \Netresearch\Dhl\Versenden\Shipment\Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection as ServiceCollection;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service;
 
 /**
  * Dhl_Versenden_Test_Model_ServiceTest
@@ -363,7 +363,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filter()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Netresearch\Dhl\Versenden\Product::CODE_PAKET_AUSTRIA);
+        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_AUSTRIA);
         $isPostalFacility     = false;
         $onlyCustomerServices = false;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
@@ -392,7 +392,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filterPostalFacility()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Netresearch\Dhl\Versenden\Product::CODE_PAKET_NATIONAL);
+        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_NATIONAL);
         $isPostalFacility     = true;
         $onlyCustomerServices = false;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
@@ -421,7 +421,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filterCustomerServices()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Netresearch\Dhl\Versenden\Product::CODE_KURIER_WUNSCHZEIT);
+        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_KURIER_WUNSCHZEIT);
         $isPostalFacility     = false;
         $onlyCustomerServices = true;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
@@ -461,7 +461,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         Mage::getConfig()
             ->saveConfig('carriers/dhlversenden/service_preferredlocation_placeholder', '15,00,00', 'default', 0);
 
-        $infoObject                              = new \Netresearch\Dhl\Versenden\Info();
+        $infoObject                              = new \Dhl\Versenden\Bcs\Api\Info();
         $infoObject->getServices()->preferredDay = '2015-12-10';
 
         $modelMock = $this->getModelMock('core/date', array('gmtDate'));

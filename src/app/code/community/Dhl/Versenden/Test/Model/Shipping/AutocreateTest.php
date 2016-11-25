@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\ResponseData;
+use \Dhl\Versenden\Bcs\Api\Webservice\ResponseData;
 /**
  * Dhl_Versenden_Test_Model_Shipping_AutocreateTest
  *

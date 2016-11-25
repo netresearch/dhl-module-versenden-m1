@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice;
-use \Netresearch\Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
-use \Netresearch\Dhl\Versenden\Webservice\Parser\Soap as SoapParser;
-use \Netresearch\Dhl\Versenden\Webservice\RequestData;
-use \Netresearch\Dhl\Versenden\Webservice\ResponseData;
+use \Dhl\Versenden\Bcs\Api\Webservice;
+use \Dhl\Versenden\Bcs\Api\Webservice\Adapter\Soap as SoapAdapter;
+use \Dhl\Versenden\Bcs\Api\Webservice\Parser\Soap as SoapParser;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData;
+use \Dhl\Versenden\Bcs\Api\Webservice\ResponseData;
 /**
  * Dhl_Versenden_Model_Webservice_Gateway_Soap
  *
@@ -55,7 +55,7 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
             'password' => $config->getWebserviceAuthPassword(),
             'trace' => 1
         );
-        $client = new \Netresearch\Dhl\Bcs\Api\GVAPI_2_0_de($options);
+        $client = new \Dhl\Versenden\Bcs\Soap\GVAPI_2_0_de($options);
 
         $authHeader = new \SoapHeader(
             'http://dhl.de/webservice/cisbase',

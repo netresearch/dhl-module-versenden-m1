@@ -23,10 +23,10 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\RequestData;
-use \Netresearch\Dhl\Versenden\Webservice\ResponseData;
-use \Netresearch\Dhl\Versenden\Webservice\Adapter\Soap as SoapAdapter;
-use \Netresearch\Dhl\Versenden\Webservice\Parser\Soap as SoapParser;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData;
+use \Dhl\Versenden\Bcs\Api\Webservice\ResponseData;
+use \Dhl\Versenden\Bcs\Api\Webservice\Adapter\Soap as SoapAdapter;
+use \Dhl\Versenden\Bcs\Api\Webservice\Parser\Soap as SoapParser;
 /**
  * Dhl_Versenden_Test_Model_Webservice_AdapterTest
  *
@@ -171,7 +171,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Netresearch\Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\Adapter\NotImplementedException
      */
     public function getLabel()
     {
@@ -190,7 +190,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Netresearch\Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\Adapter\NotImplementedException
      */
     public function getExportDoc()
     {
@@ -209,7 +209,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Netresearch\Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\Adapter\NotImplementedException
      */
     public function doManifest()
     {
@@ -228,7 +228,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Netresearch\Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\Adapter\NotImplementedException
      */
     public function getManifest()
     {
@@ -247,7 +247,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Netresearch\Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\Adapter\NotImplementedException
      */
     public function updateShipmentOrder()
     {
@@ -266,7 +266,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
 
     /**
      * @test
-     * @expectedException \Netresearch\Dhl\Versenden\Webservice\Adapter\NotImplementedException
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\Adapter\NotImplementedException
      */
     public function validateShipment()
     {
@@ -308,7 +308,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         );
 
         $postalFacility = SoapAdapter\PostalFacilityType::prepare($packStation);
-        $this->assertInstanceOf(\Netresearch\Dhl\Bcs\Api\PackStationType::class, $postalFacility);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Soap\PackStationType::class, $postalFacility);
         $this->assertEquals($zip, $postalFacility->getZip());
         $this->assertEquals($city, $postalFacility->getCity());
         $this->assertEquals($packstationNumber, $postalFacility->getPackstationNumber());
@@ -340,7 +340,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         );
 
         $postalFacility = SoapAdapter\PostalFacilityType::prepare($postfiliale);
-        $this->assertInstanceOf(\Netresearch\Dhl\Bcs\Api\PostfilialeType::class, $postalFacility);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Soap\PostfilialeType::class, $postalFacility);
         $this->assertEquals($zip, $postalFacility->getZip());
         $this->assertEquals($city, $postalFacility->getCity());
         $this->assertEquals($postfilialNumber, $postalFacility->getPostfilialNumber());
@@ -374,7 +374,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         );
 
         $postalFacility = SoapAdapter\PostalFacilityType::prepare($parcelShop);
-        $this->assertInstanceOf(\Netresearch\Dhl\Bcs\Api\ParcelShopType::class, $postalFacility);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Soap\ParcelShopType::class, $postalFacility);
         $this->assertEquals($zip, $postalFacility->getZip());
         $this->assertEquals($city, $postalFacility->getCity());
         $this->assertEquals($parcelShopNumber, $postalFacility->getParcelShopNumber());
@@ -415,7 +415,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         );
         $shipmentServices = SoapAdapter\ServiceType::prepare($requestData);
 
-        $this->assertInstanceOf(\Netresearch\Dhl\Bcs\Api\ShipmentService::class, $shipmentServices);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Soap\ShipmentService::class, $shipmentServices);
 
         $this->assertEquals($preferredDay, $shipmentServices->getPreferredDay()->getDetails());
         $this->assertEquals($preferredTime, $shipmentServices->getPreferredTime()->getType());

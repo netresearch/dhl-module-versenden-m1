@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Shipment\Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service;
 /**
  * Dhl_Versenden_Test_Model_Observer_CheckoutTest
  *
@@ -146,9 +146,9 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->saveShippingSettings($observerMock);
 
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $quote->getShippingAddress()->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $versendenInfo);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
         $this->assertTrue($versendenInfo->getServices()->parcelAnnouncement);
         $this->assertNull($versendenInfo->getServices()->preferredNeighbour);
         $this->assertEquals($addressCompany, $versendenInfo->getReceiver()->name2);

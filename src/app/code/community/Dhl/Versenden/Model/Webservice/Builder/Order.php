@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\RequestData;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData;
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Order
  *
@@ -119,7 +119,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $versendenInfo = $shipment->getShippingAddress()->getData('dhl_versenden_info');
 
-        if (!$versendenInfo instanceof \Netresearch\Dhl\Versenden\Info) {
+        if (!$versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
             // build receiver from shipping address
             $receiver = $this->receiverBuilder->getReceiver($shipment->getShippingAddress());
         } else {

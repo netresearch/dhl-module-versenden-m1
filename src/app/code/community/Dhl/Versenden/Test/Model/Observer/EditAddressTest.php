@@ -47,14 +47,14 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
     }
 
     /**
-     * @return \Netresearch\Dhl\Versenden\Info
+     * @return \Dhl\Versenden\Bcs\Api\Info
      */
     protected function prepareVersendenInfo()
     {
         $streetName = 'Street Name';
         $streetNumber = '127';
 
-        $versendenInfo = new \Netresearch\Dhl\Versenden\Info();
+        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
         $versendenInfo->getReceiver()->streetName = $streetName;
         $versendenInfo->getReceiver()->streetNumber = $streetNumber;
 
