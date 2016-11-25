@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Shipment\Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service;
 /**
  * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
  *
@@ -73,9 +73,9 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
         }
 
         // set/override service values from pre-selection
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $shippingAddress->getData('dhl_versenden_info');
-        if (!$versendenInfo instanceof \Netresearch\Dhl\Versenden\Info) {
+        if (!$versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
             return $availableServices;
         }
 

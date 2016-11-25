@@ -181,9 +181,9 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $versendenInfo);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
         $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
         $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
         $this->assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
@@ -229,9 +229,9 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $versendenInfo);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
         $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
         $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
         $this->assertEquals($packStationNumber, $versendenInfo->getReceiver()->packstation->packstationNumber);
@@ -278,9 +278,9 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $versendenInfo);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
         $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
         $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
         $this->assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
@@ -327,9 +327,9 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $versendenInfo);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
         $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
         $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
         $this->assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);

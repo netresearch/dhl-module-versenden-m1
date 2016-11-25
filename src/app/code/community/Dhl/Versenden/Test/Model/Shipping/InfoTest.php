@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Shipment\Service;
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
 
 /**
  * Dhl_Versenden_Test_Model_Shipping_InfoTest
@@ -45,17 +45,17 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
      */
     public function loadDhlVersendenInfo($jsonInfo)
     {
-        $shippingInfo = \Netresearch\Dhl\Versenden\Info\Serializer::unserialize($jsonInfo);
+        $shippingInfo = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($jsonInfo);
         $this->assertInstanceOf(
-            \Netresearch\Dhl\Versenden\Info::class,
+            \Dhl\Versenden\Bcs\Api\Info::class,
             $shippingInfo
         );
         $this->assertInstanceOf(
-            \Netresearch\Dhl\Versenden\Info\Services::class,
+            \Dhl\Versenden\Bcs\Api\Info\Services::class,
             $shippingInfo->getServices()
         );
         $this->assertInstanceOf(
-            \Netresearch\Dhl\Versenden\Info\Receiver::class,
+            \Dhl\Versenden\Bcs\Api\Info\Receiver::class,
             $shippingInfo->getReceiver()
         );
     }
@@ -82,7 +82,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
 
 
         // create and serialize shipping info
-        $shippingInfo = new \Netresearch\Dhl\Versenden\Info();
+        $shippingInfo = new \Dhl\Versenden\Bcs\Api\Info();
         $shippingInfo->getServices()->preferredLocation = $preferredLocation;
 
         $shippingInfo->getReceiver()->streetName = $streetName;
@@ -102,11 +102,11 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $shippingInfo->getReceiver()->getParcelShop()->streetNumber = $streetNumber;
         $shippingInfo->getReceiver()->getParcelShop()->countryISOCode = $countryCode;
 
-        $json = \Netresearch\Dhl\Versenden\Info\Serializer::serialize($shippingInfo);
+        $json = \Dhl\Versenden\Bcs\Api\Info\Serializer::serialize($shippingInfo);
 
 
         // create shipping info from serialized string
-        $unserialized = \Netresearch\Dhl\Versenden\Info\Serializer::unserialize($json);
+        $unserialized = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($json);
 
         $this->assertEquals($preferredLocation, $unserialized->getServices()->preferredLocation);
         $this->assertNull($unserialized->getServices()->preferredNeighbour);
@@ -136,7 +136,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
     {
         // set service #1
         $preferredLocation = 'Foo';
-        $versendenInfo = new \Netresearch\Dhl\Versenden\Info();
+        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
         $versendenInfo->getServices()->preferredLocation = $preferredLocation;
 
         // check if service is included
@@ -183,15 +183,15 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
      */
     public function wrongSchemaVersion()
     {
-        $versendenInfo = new \Netresearch\Dhl\Versenden\Info();
+        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
         $schemaVersion = 'Foo';
         $preferredLocation = 'Bar';
 
         $versendenInfo->schemaVersion = $schemaVersion;
         $versendenInfo->getServices()->preferredLocation = $preferredLocation;
 
-        $json = \Netresearch\Dhl\Versenden\Info\Serializer::serialize($versendenInfo);
-        $unserialized = \Netresearch\Dhl\Versenden\Info\Serializer::unserialize($json);
+        $json = \Dhl\Versenden\Bcs\Api\Info\Serializer::serialize($versendenInfo);
+        $unserialized = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($json);
         $this->assertNull($unserialized);
     }
 
@@ -308,7 +308,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
      * @loadFixture Model_ConfigTest
      * @loadFixture Model_ShipperConfigTest
      *
-     * @param \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder $shipmentOrder
+     * @param \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder $shipmentOrder
      * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
      */
     public function buildFromRequestData($shipmentOrder, $expectation)

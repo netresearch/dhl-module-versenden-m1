@@ -23,11 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper;
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Account as ShipperAccount;
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\BankData as ShipperBankData;
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\Contact as ShipperContact;
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Shipper\ReturnReceiver;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper\Account as ShipperAccount;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper\BankData as ShipperBankData;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper\Contact as ShipperContact;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper\ReturnReceiver;
 /**
  * Dhl_Versenden_Test_Model_Config_ShipperTest
  *

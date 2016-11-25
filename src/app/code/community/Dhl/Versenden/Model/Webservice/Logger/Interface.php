@@ -24,7 +24,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\Adapter;
+use \Dhl\Versenden\Bcs\Api\Webservice\Adapter;
 
 /**
  * Dhl_Versenden_Model_Webservice_Logger_Interface

@@ -166,7 +166,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
         $fieldset->addType('separator', 'Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator');
 
         $address = $this->_getAddress();
-        /** @var \Netresearch\Dhl\Versenden\Info $versendenInfo */
+        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
         $receiverData = $versendenInfo->getReceiver()->toArray();
         $this->_prepareAddressFields($fieldset, $receiverData);

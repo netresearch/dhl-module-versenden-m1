@@ -36,14 +36,14 @@
 class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * @return \Netresearch\Dhl\Versenden\Info
+     * @return \Dhl\Versenden\Bcs\Api\Info
      */
     protected function prepareVersendenInfo()
     {
         $streetName = 'Street Name';
         $streetNumber = '127';
 
-        $versendenInfo = new \Netresearch\Dhl\Versenden\Info();
+        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
         $versendenInfo->getReceiver()->streetName = $streetName;
         $versendenInfo->getReceiver()->streetNumber = $streetNumber;
 
@@ -65,7 +65,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
 
         $this->assertSame($versendenInfo, $address->getData('dhl_versenden_info'));
         $address->save();
-        $this->assertInstanceOf(Netresearch\Dhl\Versenden\Info::class, $address->getData('dhl_versenden_info'));
+        $this->assertInstanceOf(Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
         $this->assertNotSame($versendenInfo, $address->getData('dhl_versenden_info'));
         $this->assertEquals(
             $versendenInfo->getReceiver()->streetName,
@@ -143,7 +143,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $address->setData('dhl_versenden_info', $versendenInfo);
         $observer->setData('object', $address);
 
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $address->getData('dhl_versenden_info'));
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->serializeVersendenInfo($observer);
         $this->assertJson($address->getData('dhl_versenden_info'));
@@ -219,6 +219,6 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer->setData('order_address_collection', $collection);
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->unserializeVersendenInfoItems($observer);
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Info::class, $address->getData('dhl_versenden_info'));
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
     }
 }

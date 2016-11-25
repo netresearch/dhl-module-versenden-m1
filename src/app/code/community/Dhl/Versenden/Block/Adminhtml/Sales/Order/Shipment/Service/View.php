@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Shipment\Service\Type as Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service\Type as Service;
 /**
  * Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
  *
@@ -39,7 +39,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
     /**
      * Obtain the services that were chosen during shipment creation.
      *
-     * @return \Netresearch\Dhl\Versenden\Shipment\Service\Type\Generic[]
+     * @return \Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic[]
      */
     public function getServices()
     {
@@ -50,7 +50,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
         $availableServices = $serviceConfig->getServices($storeId);
 
         $versendenInfo = $shippingAddress->getData('dhl_versenden_info');
-        if (!$versendenInfo instanceof \Netresearch\Dhl\Versenden\Info) {
+        if (!$versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
             return $availableServices;
         }
 
@@ -65,7 +65,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View
             }
         }
 
-        return new Netresearch\Dhl\Versenden\Shipment\Service\Collection($selectedServices);
+        return new Dhl\Versenden\Bcs\Api\Shipment\Service\Collection($selectedServices);
     }
 
     /**
