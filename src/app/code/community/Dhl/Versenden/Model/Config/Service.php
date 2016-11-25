@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Shipment\Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service;
 
 /**
  * Dhl_Versenden_Model_Config_Service
@@ -252,7 +252,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             $store
         );
 
-        return new Netresearch\Dhl\Versenden\Shipment\Service\PrintOnlyIfCodeable($name, $isAvailable, $isSelected);
+        return new Dhl\Versenden\Bcs\Api\Shipment\Service\PrintOnlyIfCodeable($name, $isAvailable, $isSelected);
     }
 
     /**
@@ -389,9 +389,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $services = $this->getEnabledServices($store);
 
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
-        $shippingProducts = \Netresearch\Dhl\Versenden\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
 
-        $filter = new \Netresearch\Dhl\Versenden\Shipment\Service\Filter(
+        $filter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter(
             $shippingProducts,
             $isPostalFacility,
             $onlyCustomerServices

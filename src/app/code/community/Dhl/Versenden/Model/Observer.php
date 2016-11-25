@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility;
+use Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility;
 
 /**
  * Dhl_Versenden_Model_Observer
@@ -49,11 +49,11 @@ class Dhl_Versenden_Model_Observer
         $autoloader = Mage::helper('dhl_versenden/autoloader');
         $autoloader->addNamespace(
             "Psr\\", // prefix
-            sprintf('%s/Netresearch/Psr/', Mage::getBaseDir('lib'))
+            sprintf('%s/Dhl/Versenden/Psr/', Mage::getBaseDir('lib'))
         );
         $autoloader->addNamespace(
-            "Netresearch\\", // prefix
-            sprintf('%s/Netresearch/', Mage::getBaseDir('lib'))
+            "Dhl\\Versenden\\Bcs\\", // prefix
+            sprintf('%s/Dhl/Versenden/Bcs/', Mage::getBaseDir('lib'))
         );
 
         $autoloader->register();
@@ -107,7 +107,7 @@ class Dhl_Versenden_Model_Observer
                              ->getData('dhl_versenden_info');
 
         if ($versendenInfo) {
-            $serializer    = new \Netresearch\Dhl\Versenden\Info\Serializer();
+            $serializer    = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
             $versendenInfo = $serializer->unserialize($versendenInfo);
             $transport     = $observer->getData('transport');
             $transportHtml = trim($transport->getHtml());
@@ -289,14 +289,14 @@ class Dhl_Versenden_Model_Observer
             Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $quote->getStoreId());
         $euCountries      = explode(',', $euCountries);
 
-        $availableProducts = \Netresearch\Dhl\Versenden\Product::getCodesByCountry(
+        $availableProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
             $shipperCountry,
             $recipientCountry,
             $euCountries
         );
 
-        $filter     = new \Netresearch\Dhl\Versenden\Shipment\Service\Filter($availableProducts, false, false);
-        $codService = $filter->filterService(new \Netresearch\Dhl\Versenden\Shipment\Service\Cod('cod', true, true));
+        $filter     = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter($availableProducts, false, false);
+        $codService = $filter->filterService(new \Dhl\Versenden\Bcs\Api\Shipment\Service\Cod('cod', true, true));
         if ($codService === null) {
             $checkResult->isAvailable = false;
         }
@@ -350,11 +350,11 @@ class Dhl_Versenden_Model_Observer
         }
 
         $info = $address->getData('dhl_versenden_info');
-        if (!$info || !$info instanceof \Netresearch\Dhl\Versenden\Info) {
+        if (!$info || !$info instanceof \Dhl\Versenden\Bcs\Api\Info) {
             return;
         }
 
-        $serializer = new \Netresearch\Dhl\Versenden\Info\Serializer();
+        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
         $address->setData('dhl_versenden_info', $serializer->serialize($info));
     }
 
@@ -377,7 +377,7 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        $serializer = new \Netresearch\Dhl\Versenden\Info\Serializer();
+        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
         $address->setData('dhl_versenden_info', $serializer->unserialize($info));
     }
 
@@ -402,7 +402,7 @@ class Dhl_Versenden_Model_Observer
                 return;
             }
 
-            $serializer = new \Netresearch\Dhl\Versenden\Info\Serializer();
+            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
             $address->setData('dhl_versenden_info', $serializer->unserialize($info));
         };
 
@@ -434,7 +434,7 @@ class Dhl_Versenden_Model_Observer
         }
 
         $info = $address->getData('dhl_versenden_info');
-        if (!$info instanceof \Netresearch\Dhl\Versenden\Info) {
+        if (!$info instanceof \Dhl\Versenden\Bcs\Api\Info) {
             return;
         }
 

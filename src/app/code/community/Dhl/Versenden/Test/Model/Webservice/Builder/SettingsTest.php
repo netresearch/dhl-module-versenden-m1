@@ -68,7 +68,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_SettingsTest
         ));
         $settings = $builder->getSettings(2);
 
-        $this->assertInstanceOf(\Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\GlobalSettings::class, $settings);
+        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\GlobalSettings::class, $settings);
         $this->assertEquals("G", $settings->getUnitOfMeasure());
     }
 }

@@ -23,8 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice;
-use \Netresearch\Dhl\Versenden\Product;
+use \Dhl\Versenden\Bcs\Api\Webservice;
+use \Dhl\Versenden\Bcs\Api\Product;
 /**
  * Dhl_Versenden_Model_Shipping_Carrier_Versenden
  *
@@ -201,7 +201,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
                 throw new Webservice\ResponseData\Status\Exception($shipmentStatus);
             }
 
-            $pdfLib = new \Netresearch\Dhl\Versenden\Pdf\Adapter\Zend();
+            $pdfLib = new \Dhl\Versenden\Bcs\Api\Pdf\Adapter\Zend();
             $responseData = array(
                 'info' => array(array(
                     'tracking_number' => $result->getShipmentNumber($sequenceNumber),

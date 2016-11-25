@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Netresearch\Dhl\Versenden\Webservice\RequestData\ShipmentOrder\Receiver;
+use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Receiver
  *
@@ -97,7 +97,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         );
 
         $packStation = null;
-        if ($facility->getData('shop_type') === \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_PACKSTATION) {
+        if ($facility->getData('shop_type') === \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_PACKSTATION) {
             $packStation = new Receiver\Packstation(
                 $address->getPostcode(),
                 $address->getCity(),
@@ -110,7 +110,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         }
 
         $postFiliale = null;
-        if ($facility->getData('shop_type') === \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_POSTFILIALE) {
+        if ($facility->getData('shop_type') === \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_POSTFILIALE) {
             $postFiliale = new Receiver\Postfiliale(
                 $address->getPostcode(),
                 $address->getCity(),
@@ -123,7 +123,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         }
 
         $parcelShop = null;
-        if ($facility->getData('shop_type') === \Netresearch\Dhl\Versenden\Info\Receiver\PostalFacility::TYPE_PAKETSHOP) {
+        if ($facility->getData('shop_type') === \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_PAKETSHOP) {
             $parcelShop = new Receiver\ParcelShop(
                 $address->getPostcode(),
                 $address->getCity(),
