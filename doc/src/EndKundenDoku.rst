@@ -283,6 +283,15 @@ Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen deaktiviert
 falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung
 steht.
 
+Zusätzlich gibt es die Möglichkeit auf den unteren Link "Oder wählen Sie die Lieferung an einen Paketshop oder eine Postfiliale" zu klicken.
+Dadurch wird der Kunde zum zweiten Step, der Lieferadresse, zurück geleitet und kann nun einen DHL Abholort wählen,
+für Fälle in denen der Kunde nicht wusste, dass so eine Möglichkeit besteht oder vergessen hat. Außerdem, falls das
+Modul "Dhl Locationfinder" installiert ist, wird bereits vorausgewählt, dass der Parcelshop Finder verwendet werden soll.
+
+.. raw:: pdf
+
+   PageBreak
+
 Admin Order
 ~~~~~~~~~~~
 
@@ -290,9 +299,6 @@ Bei der Erzeugung von Bestellungen im Admin Panel stehen keine Zusatzleistungen
 zur Verfügung. Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls
 der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 
-.. raw:: pdf
-
-   PageBreak
 
 DHL Lieferadressen (Packstationen, Postfilialen, Paket-Shops)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
