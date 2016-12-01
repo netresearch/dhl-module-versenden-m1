@@ -62,7 +62,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredDay($store = null)
     {
-        $name              = Mage::helper('dhl_versenden/data')->__("Preferred Day") .
+        $name              = Mage::helper('dhl_versenden/data')->__("Preferred day") .
             Mage::helper('dhl_versenden/data')->__(": Delivery at your preferred day");
         $isAvailable       = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
         $cutOffTime        = $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
@@ -128,7 +128,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredTime($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Time") .
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred time") .
             Mage::helper('dhl_versenden/data')->__(": Delivery during your preferred time slot");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDTIME, $store);
         $isSelected  = false;
@@ -172,7 +172,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredNeighbour($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Neighbor") .
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred neighbor") .
             Mage::helper('dhl_versenden/data')->__(": Delivery to a neighbor of your choice");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR, $store);
         $isSelected  = false;
@@ -188,7 +188,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initParcelAnnouncement($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Parcel Announcement");
+        $name        = Mage::helper('dhl_versenden/data')->__("Parcel announcement");
         $isAvailable = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARCELANNOUNCEMENT, $store);
         $isSelected  = false;
 

@@ -238,7 +238,7 @@
                             <show_in_store>1</show_in_store>
                         </service_preferredlocation_enabled>
                         <service_preferredneighbour_enabled>
-                            <label>Enable Preferred Neighbor</label>
+                            <label>Enable Preferred neighbor</label>
                             <tooltip>Allow customers to declare a preferred neighbour during checkout.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -248,7 +248,7 @@
                             <show_in_store>1</show_in_store>
                         </service_preferredneighbour_enabled>
                         <service_parcelannouncement_enabled>
-                            <label>Enable Parcel Announcement</label>
+                            <label>Enable Parcel announcement</label>
                             <tooltip><![CDATA[Let DHL send shipment status updates to the customer. Choosing <em>Optional</em> will let the customer decide during checkout.]]></tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>dhl_versenden/adminhtml_system_config_source_yesoptno</source_model>
@@ -258,7 +258,7 @@
                             <show_in_store>1</show_in_store>
                         </service_parcelannouncement_enabled>
                         <service_preferredday_enabled>
-                            <label>Enable Preferred Day</label>
+                            <label>Enable Preferred day</label>
                             <tooltip>Allow customers to select a preferred day of delivery.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
@@ -279,7 +279,7 @@
                             <depends><service_preferredday_enabled>1</service_preferredday_enabled></depends>
                         </service_cutoff_time>
                         <service_preferredtime_enabled>
-                            <label>Enable Preferred Time</label>
+                            <label>Enable Preferred time</label>
                             <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>

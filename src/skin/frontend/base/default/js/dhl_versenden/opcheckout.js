@@ -102,7 +102,7 @@ DhlServiceContainer.prototype = {
     },
 
     /**
-     * Perform action when user checked preferred Day or preferred Time.
+     * Perform action when user checked preferred day or preferred time.
      */
     registerCalendarChange: function () {
         var currentClass = this;
