@@ -111,7 +111,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
 
         $fieldset->addField("versenden_info_postfilial_number", 'text', array(
             'name'  => "versenden_info[postfiliale][postfilial_number]",
-            'label' => $this->__('Postfilial Number'),
+            'label' => $this->__('Post Office Number'),
             'value' => isset($receiverData['postfilial_number']) ? $receiverData['postfilial_number'] : '',
             'class' => 'validate-number-range number-range-101-999',
         ));
@@ -132,12 +132,12 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form extends Mage_Adminh
         $fieldset->addField(
             'versenden_info_parcel_shop',
             'separator',
-            array('value' => '<img src="' . $src . '" alt="DHL Parcel Shop"/>')
+            array('value' => '<img src="' . $src . '" alt="DHL Parcelstation"/>')
         );
 
         $fieldset->addField("versenden_info_parcel_shop_number", 'text', array(
             'name'  => "versenden_info[parcel_shop][parcel_shop_number]",
-            'label' => $this->__('Parcel Shop Number'),
+            'label' => $this->__('Parcelstation Number'),
             'value' => isset($receiverData['parcel_shop_number']) ? $receiverData['parcel_shop_number'] : '',
         ));
         $fieldset->addField('versenden_info_parcel_shop_street_name', 'text', array(

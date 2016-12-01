@@ -36,11 +36,11 @@
 class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
 {
     protected $_nameArray = array(
-        'preferredDay'       => 'Preferred Day',
-        'preferredTime'      => 'Preferred Time',
+        'preferredDay'       => 'Preferred day',
+        'preferredTime'      => 'Preferred time',
         'preferredLocation'  => 'Preferred location',
-        'preferredNeighbour' => 'Preferred Neighbor',
-        'parcelAnnouncement' => 'Parcel Announcement',
+        'preferredNeighbour' => 'Preferred neighbor',
+        'parcelAnnouncement' => 'Parcel announcement',
     );
 
     public function renderName($nameKey)
