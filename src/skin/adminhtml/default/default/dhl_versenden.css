@@ -25,8 +25,7 @@
     width: 100%;
 }
 
-#packaging-dhlversenden-services dt,
-#packaging-dhlversenden-services dd {
+#packaging-dhlversenden-services dt {
     min-height: 20px;
 }
 
@@ -35,13 +34,16 @@
     clear: left;
     min-width: 150px;
     padding-left: 20px;
-    text-align: right;
+    text-align: left;
     display: block;
     position: relative;
 }
 
 #packaging-dhlversenden-services dt label {
     font-weight: bold;
+    padding-left: 20px;
+    top: -3px;
+    position: relative;
 }
 
 #packaging-dhlversenden-services dt input[type=checkbox] {
@@ -131,4 +133,11 @@
 #packaging-dhlversenden-services dd.preferredTime > div input:checked + label {
     font-weight: bold;
     background-color: #fc0;
+}
+
+#packaging-dhlversenden-services dt.preferredDay,
+#packaging-dhlversenden-services dt.preferredTime,
+#packaging-dhlversenden-services dt.preferredLocation,
+#packaging-dhlversenden-services dt.preferredNeighbour {
+    float: none;
 }

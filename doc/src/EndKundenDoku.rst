@@ -217,6 +217,14 @@ angeboten werden.
   * *Optional*: Der Kunde bestimmt im Checkout, ob er den Service in Anspruch nehmen möchte.
   * *Nein*: Der Service wird nicht hinzugebucht.
 
+.. admonition:: Hinweis
+
+   Bitte beachten Sie, dass die DHL Services Wunschtag und Wunschzeit für Sie als Händler
+   mit Aufpreisen in der Abrechnung Ihrer Sendungen gegenüber der DHL Paket GmbH verbunden sind.
+   Sollten Sie diese Kosten teilweise oder ganz an Ihre Kunden weiterreichen wollen, müssen Sie diese
+   bitte in die von Ihnen individuell genutzten Versandkostendefinition unter
+   System > Konfiguration > Versandarten einkalkulieren.
+
 Automatische Sendungserstellung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -247,6 +255,9 @@ Retourenbeileger
 Im Konfigurationsbereich *Retourenbeileger* legen Sie fest, welche Empfängeradresse
 auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 
+.. raw:: pdf
+
+   PageBreak
 
 Ablaufbeschreibung und Features
 ===============================

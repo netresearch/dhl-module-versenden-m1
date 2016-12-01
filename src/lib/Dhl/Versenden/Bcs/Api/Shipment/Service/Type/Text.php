@@ -93,7 +93,7 @@ abstract class Text extends Generic
      */
     public function getValue()
     {
-        return $this->value;
+        return htmlentities($this->value);
     }
 
     /**
