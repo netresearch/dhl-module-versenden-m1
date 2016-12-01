@@ -49,6 +49,7 @@
 #packaging-dhlversenden-services dt input[type=checkbox] {
     position: absolute;
     left: 0;
+    z-index: 100;
 }
 
 #packaging-dhlversenden-services dd {
