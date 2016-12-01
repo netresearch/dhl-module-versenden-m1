@@ -62,11 +62,12 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredDay($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Day");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
-        $cutOffTime  = $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
-        $isSelected  = false;
-        $options     = array();
+        $name              = Mage::helper('dhl_versenden/data')->__("Preferred Day") .
+            Mage::helper('dhl_versenden/data')->__(": Delivery at your preferred day");
+        $isAvailable       = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
+        $cutOffTime        = $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
+        $isSelected        = false;
+        $options           = array();
         $gmtSaveTimeFormat = "Y-m-d 12:00:00";
 
         $holidayCheck = new Mal_Holidays();
@@ -102,15 +103,19 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
                                       ->getData('dhl_versenden_info')
                                       ->getServices()->{Service\PreferredDay::CODE};
             if ($selectedValue && !array_key_exists($selectedValue, $options)) {
-                $tmpDate                 = new DateTime($selectedValue);
-                $tmpDate                 = $dateModel
-                    ->gmtDate($gmtSaveTimeFormat, $tmpDate->format($gmtSaveTimeFormat));
-                $options[$selectedValue] =
-                    array(
-                        'value'    => $dateModel->gmtDate("d-", $tmpDate) .
-                            Mage::helper('dhl_versenden/data')->__($dateModel->gmtDate("D", $tmpDate)),
-                        'disabled' => false
-                    );
+                // Sanity check for invalid time formats
+                try {
+                    $tmpDate                 = new DateTime($selectedValue);
+                    $tmpDate                 = $dateModel
+                        ->gmtDate($gmtSaveTimeFormat, $tmpDate->format($gmtSaveTimeFormat));
+                    $options[$selectedValue] =
+                        array(
+                            'value'    => $dateModel->gmtDate("d-", $tmpDate) .
+                                Mage::helper('dhl_versenden/data')->__($dateModel->gmtDate("D", $tmpDate)),
+                            'disabled' => false
+                        );
+                } catch (Exception $e) {
+                }
             }
         }
 
@@ -123,7 +128,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredTime($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Time");
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Time") .
+            Mage::helper('dhl_versenden/data')->__(": Delivery during your preferred time slot");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDTIME, $store);
         $isSelected  = false;
         $options     = array();
@@ -150,7 +156,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredLocation($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred location");
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred location") .
+            Mage::helper('dhl_versenden/data')->__(": Delivery to your preferred drop-off location");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDLOCATION, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER, $store);
@@ -165,7 +172,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredNeighbour($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Neighbor");
+        $name        = Mage::helper('dhl_versenden/data')->__("Preferred Neighbor") .
+            Mage::helper('dhl_versenden/data')->__(": Delivery to a neighbor of your choice");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER, $store);
@@ -384,18 +392,22 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      * @return Service\Collection
      */
     public function getAvailableServices($shipperCountry, $recipientCountry, $isPostalFacility,
-                                         $onlyCustomerServices = false, $store = null)
+        $onlyCustomerServices = false, $store = null
+    )
     {
         $services = $this->getEnabledServices($store);
 
-        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
-        $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $euCountries      =
+            explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
+        $shippingProducts =
+            \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
 
         $filter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter(
             $shippingProducts,
             $isPostalFacility,
             $onlyCustomerServices
         );
+
         return $filter->filterServiceCollection($services);
     }
 }
