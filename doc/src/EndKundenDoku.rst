@@ -290,6 +290,10 @@ Bei der Erzeugung von Bestellungen im Admin Panel stehen keine Zusatzleistungen
 zur Verfügung. Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls
 der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 
+.. raw:: pdf
+
+   PageBreak
+
 DHL Lieferadressen (Packstationen, Postfilialen, Paket-Shops)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -357,10 +361,6 @@ sowie den Inhaltstyp der Sendung an.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 
-.. raw:: pdf
-
-   PageBreak
-
 Service-Auswahl
 ~~~~~~~~~~~~~~~
 
@@ -375,6 +375,10 @@ werden im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet.
 Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, ebenso
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
+
+.. raw:: pdf
+
+   PageBreak
 
 Drucken eines Paketaufklebers
 -----------------------------
@@ -418,7 +422,7 @@ automatisch erzeugten Versandaufträge hinzugebucht werden sollen.
    ::
 
       # m h dom mon dow user command
-      */5 * * * * /bin/sh /absolute/path/to/magento/cron.sh
+      */15 * * * * /bin/sh /absolute/path/to/magento/cron.sh
 
 Im Abstand von 15 Minuten wird die Extension *DHL Versenden* alle gemäß der
 getroffenen Einstellungen versandbereiten Bestellungen sammeln, Lieferscheine
@@ -479,7 +483,7 @@ Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
 
 
 .. image:: images/de/edit_address_form.png
-   :scale: 75 %
+   :scale: 175 %
 
 Speichern Sie anschließend die Adresse. Wurde die Fehlerursache behoben, so kann
 das manuelle `Erstellen eines Versandauftrags`_ erneut durchgeführt werden.
