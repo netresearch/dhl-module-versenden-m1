@@ -12,26 +12,26 @@
          verbose="false"
          bootstrap="bootstrap.php">
     <listeners>
-        <listener file="/var/www/html/app/code/community/EcomDev/PHPUnit/Test/Listener.php" class="EcomDev_PHPUnit_Test_Listener" />
+        <listener file="/var/www/mageone.nrdev.de/html/app/code/community/EcomDev/PHPUnit/Test/Listener.php" class="EcomDev_PHPUnit_Test_Listener" />
     </listeners>
     <testsuites>
         <testsuite name="Magento Test Suite">
-            <file>/var/www/html/app/code/community/EcomDev/PHPUnit/Test/Suite.php</file>
+            <file>/var/www/mageone.nrdev.de/html/app/code/community/EcomDev/PHPUnit/Test/Suite.php</file>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">/var/www/html/app/code/community/Dhl/Versenden</directory>
-            <directory suffix=".php">/var/www/html/lib/Dhl/Versenden</directory>
+            <directory suffix=".php">/var/www/mageone.nrdev.de/html/app/code/community/Dhl/Versenden</directory>
+            <directory suffix=".php">/var/www/mageone.nrdev.de/html/lib/Dhl/Versenden</directory>
             <exclude>
-                <directory suffix=".php">/var/www/html/app/code/community/Dhl/Versenden/Test</directory>
-                <directory>/var/www/html/app/code/community/Dhl/*/data</directory>
-                <directory>/var/www/html/app/code/community/Dhl/*/sql</directory>
+                <directory suffix=".php">/var/www/mageone.nrdev.de/html/app/code/community/Dhl/Versenden/Test</directory>
+                <directory>/var/www/mageone.nrdev.de/html/app/code/community/Dhl/*/data</directory>
+                <directory>/var/www/mageone.nrdev.de/html/app/code/community/Dhl/*/sql</directory>
             </exclude>
         </whitelist>
     </filter>
     <php>
-        <server name="MAGENTO_DIRECTORY" value="/var/www/html"/>
+        <server name="MAGENTO_DIRECTORY" value="/var/www/mageone.nrdev.de/html"/>
     </php>
     <logging>
         <!-- Uncomment this line if you want to have coverage report generated every test run
@@ -40,6 +40,6 @@
               lowUpperBound="35" highLowerBound="70"/>
         <log type="coverage-clover" target="var/phpunit/coverage.xml"/>
         -->
-        <log type="junit" target="/var/www/vendor/dhl/versenden-m1/reports/phpunit/junit.xml" logIncompleteSkipped="false"/>
+        <log type="junit" target="/var/www/vendor/dhl/module-versenden-m1/reports/phpunit/junit.xml" logIncompleteSkipped="false"/>
     </logging>
 </phpunit>

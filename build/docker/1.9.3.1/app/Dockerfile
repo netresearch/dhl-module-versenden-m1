@@ -1,4 +1,4 @@
-FROM registry.netresearch.de/magento-ci/base:1.7.0.2
+FROM registry.netresearch.de/magento-ci/base:1.9.3.1
 MAINTAINER Christoph Aßmann <christoph.assmann@netresearch.de>
 
 VOLUME ["/var/www/mageone.nrdev.de/html", "/var/www/mageone.nrdev.de/vendor"]
