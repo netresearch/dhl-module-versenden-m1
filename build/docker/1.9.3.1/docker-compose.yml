@@ -26,6 +26,9 @@ services:
       PACKAGE_NAME: "${PACKAGE_NAME}"
     volumes:
       - ${PACKAGE_HOST_PATH}:${PACKAGE_PATH}
+    depends_on:
+      - db
+      - testdb
 
   env:
     image: "registry.netresearch.de/magento-ci/php-apache:${PHP_VERSION}"
