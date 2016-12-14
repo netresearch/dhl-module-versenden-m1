@@ -396,7 +396,7 @@ class Dhl_Versenden_Model_Observer
             return;
         }
 
-        $unserializeInfo = function(Mage_Customer_Model_Address_Abstract $address) {
+        $unserializeInfo = function (Mage_Customer_Model_Address_Abstract $address) {
             $info = $address->getData('dhl_versenden_info');
             if (!$info || !is_string($info)) {
                 return;
