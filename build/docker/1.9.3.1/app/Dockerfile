@@ -9,3 +9,5 @@ RUN chmod u+rwx /run.sh
 WORKDIR /var/www/mageone.nrdev.de
 CMD ["/run.sh"]
 
+HEALTHCHECK --interval=10s --timeout=10s --retries=1 \
+    CMD ["/healthcheck.sh"]
