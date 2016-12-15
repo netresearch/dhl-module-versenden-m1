@@ -9,4 +9,5 @@ retry -w 30 -s "mysql -e 'SELECT 1' --user=root --host=$DATABASE_HOST --port=$DA
 
 composer config -g repositories.pkgundertest path ${PACKAGE_PATH}
 composer require --ignore-platform-reqs --prefer-source ${PACKAGE_NAME} @dev
-touch /ready.flag
+
+echo "Startup finished!"

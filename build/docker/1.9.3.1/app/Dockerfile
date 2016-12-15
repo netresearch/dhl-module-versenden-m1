@@ -11,8 +11,5 @@ RUN chmod u+rwx /run.sh
 
 WORKDIR /var/www/mageone.nrdev.de
 
-HEALTHCHECK --interval=10s --timeout=10s --retries=1 \
-    CMD test ! -e /ready.flag || exit 1
-
 CMD ["mysql","3307","MagEC1"]
 ENTRYPOINT ["/run.sh"]
