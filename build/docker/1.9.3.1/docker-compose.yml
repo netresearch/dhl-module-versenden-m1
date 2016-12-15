@@ -21,6 +21,8 @@ services:
   app:
     build: ./app
     container_name: magento_app
+    links:
+      - db:mysql
     environment:
       PACKAGE_PATH: "${PACKAGE_PATH}"
       PACKAGE_NAME: "${PACKAGE_NAME}"
