@@ -338,8 +338,8 @@ Nationale Sendungen
 ~~~~~~~~~~~~~~~~~~~
 
 Öffnen Sie im Admin Panel eine Bestellung, deren Versandart mit dem DHL
-Geschäftskundenversand verknüpft ist. Betätigen Sie dann den Button *Versand*
-im oberen Bereich der Seite.
+Geschäftskundenversand verknüpft ist (siehe Modulkonfiguration_, Abschnitt *Versandarten 
+für DHL Versenden*. Betätigen Sie dann den Button *Versand* im oberen Bereich der Seite.
 
 .. image:: images/de/button_ship.png
 
