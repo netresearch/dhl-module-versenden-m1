@@ -23,9 +23,9 @@ DHL Versenden: Shipping for DHL Business Customers
 ==================================================
 
 The module *DHL Versenden* (Ship) for Magento® enables merchants with a DHL Business 
-Account to create shipments via the DHL Business Customer API and retrieve shipping 
-labels. The extension also allows booking additional services and creating the customs 
-declaration for international shipping.
+Account to create shipments via the DHL Business Customer API (webservice) and 
+retrieve shipping labels. The extension also allows booking additional services 
+and creating the customs declaration for international shipping.
 
 .. raw:: pdf
 
@@ -60,8 +60,8 @@ These PHP versions are supported:
 - PHP 5.6
 - PHP 5.5
 
-To connect to the API, the PHP SOAP extension must be installed and enabled 
-on the web server.
+To connect to the API (webservice), the PHP SOAP extension must be installed 
+and enabled on the web server.
 
 Hints for using the module
 ==========================
@@ -69,9 +69,9 @@ Hints for using the module
 Shipping origin and currency
 ----------------------------
 
-This extension is intended for merchants who are located in Germany or Austria. 
-Make sure that the shipment origin address is correct in the three configuration 
-sections mentioned in `Module configuration`_
+This extension is intended for merchants located in Germany or Austria. 
+Make sure the shipment origin address (your shop address) is correct in the 
+three configuration sections mentioned in `Module configuration`_.
 
 The base currency of the installation is assumed to be Euro. There is no conversion 
 from other currencies.
@@ -79,8 +79,8 @@ from other currencies.
 Language support
 ----------------
 
-The module support the locales ``en_US`` and ``de_DE``. The translations are stored 
-in the CSV translation files and can therefore be modified by third-party modules.
+The module supports the locales ``en_US`` and ``de_DE``. The translations are stored 
+in CSV translation files and can therefore be modified by third-party modules.
 
 .. raw:: pdf
 
@@ -89,7 +89,7 @@ in the CSV translation files and can therefore be modified by third-party module
 Installation and configuration
 ==============================
 
-This explains how to install and configure the module.
+This section explains how to install and configure the module.
 
 Installation
 ------------
@@ -97,12 +97,12 @@ Installation
 Install the module's files according to your preferred setup / deployment strategy. 
 Refresh the configuration cache to apply the changes.
 
-When the module is first executed, these new address attributes are created in 
+When the module is first executed, this new address attribute is created in 
 your system:
 
 - ``dhl_versenden_info``
 
-The attributes are added in the following tables:
+The attribute is added in the following tables:
 
 - ``sales_flat_quote_address``
 - ``sales_flat_order_address``
@@ -110,7 +110,7 @@ The attributes are added in the following tables:
 Module configuration
 --------------------
 
-There are three relevant configuration sections for creating shipments:
+There are three configuration sections which are relevant for creating shipments:
 
 ::
 
@@ -118,8 +118,8 @@ There are three relevant configuration sections for creating shipments:
     System → Configuration → Sales → Shipping Settings → Origin
     System → Configuration → Sales → Shipping Methods → DHL Versenden
 
-Make sure that the required fields in the sections Store Information and Origin 
-are filled in:
+Make sure that the following required fields in the sections *Store Information* 
+and *Origin* are filled in completely:
 
 * Store Information
 
@@ -133,30 +133,29 @@ are filled in:
   * City
   * Street Address
 
-Next, the configuration for the DHL module is explained.
+Next, the configuration sections for the DHL module are explained.
 
 .. admonition:: Note
 
    The sections *Shipping Methods → DHL* and *Shipping Methods → DHL (deprecated)*
-   are core parts of Magento® which connect to the webservice of DHL USA, but not 
-   the DHL Versenden Business Shipping in Germany or Austria.
-
+   are core parts of Magento® which connect to the webservice of DHL USA only. 
+   They are not relevant for DHL Business Shipping (Versenden) in Germany or Austria.
 
 General Settings
 ~~~~~~~~~~~~~~~~
 
-In the configuration section *General Settings* you can select if you want to run 
+In the configuration section *General Settings* you can choose if you want to run 
 the module in *Sandbox Mode* to test the integration, or in production mode.
 
-You can also configure the logging. If the logging is enabled in the DHL module and 
-also in *System → Configuration → Advanced → Developer → Log Settings*, the DHL 
+You can also configure the logging. If the logging is enabled here and 
+in *System → Configuration → Advanced → Developer → Log Settings*, the DHL 
 webservice messages will be recorded in the file ``var/log/dhl_versenden.log``. 
 You can choose between three log levels:
 
-* ``Error`` records communication errors between the shop and the DHL webservice,
+* ``Error`` records communication errors between the shop and the DHL webservice.
 * ``Warning`` records communication errors and also errors related to the message 
-  content (e.g. address validation, invalid services selected), and
-* ``Debug`` records all messages.
+  content (e.g. address validation failed, invalid services selected).
+* ``Debug`` records all errors, messages, and transferred content.
 
 .. admonition:: Note
 
@@ -166,8 +165,8 @@ Account Data
 ~~~~~~~~~~~~
 
 The section *Account Data* holds your access credentials for the DHL webservice 
-which are required for production mode. Customers with a DHL contract get these 
-data from DHL directly.
+which are required for production mode. Customers with a DHL contract will get 
+this information directly from the DHL team (Vertrieb DHL Paket).
 
 Shipment Orders
 ~~~~~~~~~~~~~~~
@@ -175,29 +174,33 @@ Shipment Orders
 In the section *Shipment Orders*, the configuration for creating shipments via 
 the DHL webservice is made.
 
-* *Print only if codeable*: If this is enabled, only shipments with valid addresses 
-  will be accepted. Otherwise, DHL will attempt to correct an invalid address
-  automatically, which results in an additional charge (Nachcodierungsentgelt).
+* *Print only if codeable*: If this is enabled, only shipments with perfectly 
+  valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment 
+  and issue an error message. If this option is disabled, DHL will attempt to 
+  correct an invalid address automatically, which results in an additional charge 
+  (Nachcodierungsentgelt). If the address cannot be corrected, DHL will still 
+  reject the shipment.
 * *Weight Unit*: Select if the product weights in your catalog are stored in 
-  gramms or kilogramms. If necessary, the weight will be converted to kilogramm 
+  gram or kilogram. If necessary, the weight will be converted to kilogram 
   during transmission to DHL.
 * *Shipping Methods for DHL Versenden*: Select which shipping methods should be
-  used for calculating shipping costs in the checkout. All shipping methods that are
-  selected here will be handled via DHL Business Customer Shipping when creating
-  shipments.
+  used for calculating shipping costs in the checkout. Only shipping methods that are
+  selected here will be handled via DHL Versenden (Business Customer Shipping) 
+  when creating shipments.
 * *Cash On Delivery payment methods for DHL Versenden*: Select which payment methods
   should be treated as Cash On Delivery (COD) payment methods. This is necessary 
-  to transmit the additional charge for Cash On Delivery to the DHL webservice.
+  to transmit the additional charge for Cash On Delivery to the DHL webservice 
+  and create Cash On Delivery labels.
 
 Additional Services In Checkout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In the configuration section *Additional Services In Checkout* you can choose which 
-additional DHL services you want to offer to the customer.
+additional DHL services you want to offer to your customers.
 
 * *Enable Preferred Day*: The customer chooses a specific day on which the shipment
   should arrive.
-* *Enable Preferred Time*: The customer chooses a timeframe within which the 
+* *Enable Preferred Time*: The customer chooses a time frame within which the 
   shipment should arrive.
 * *Enable Preferred Location*: The customer selects an alternative location where 
   the shipment can be placed in case they are not at home.
@@ -207,16 +210,15 @@ additional DHL services you want to offer to the customer.
   of the shipment. Select one of the following options:
 
   * *Yes*: The service will be booked.
-  * *Optional*: The customer can decide in the checkout if the service should be 
-  booked.
+  * *Optional*: The customer decides in the checkout if the service should be booked.
   * *No*: The service will not be booked.
 
 .. admonition:: Note
 
-   Please note that the services Preferred Day and Preferred Time will result in 
+   Please note that the services *Preferred Day* and *Preferred Time* will result in 
    additional charges from DHL Paket GmbH to you during invoicing of the shipments.
-   If you want to forward the additional cost to your customers, you need to do so 
-   in the configuration of your shipping costs in System → Configuration → Shipping Methods.
+   If you want to forward these costs to your customers, you need to do so via the 
+   configuration of your individual shipping costs in System → Configuration → Shipping Methods.
 
 Automatic Shipment Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -225,9 +227,10 @@ The section *Automatic Shipment Creation* lets you choose if shipments should be
 created and package labels retrieved automatically.
 
 You can also configure which order status an order must have to be processed 
+automatically. You can use this to exclude specific orders from being processed 
 automatically.
 
-Also, the services which should be booked by default can be choosen here.
+Also, the services which should be booked by default can be chosen here.
 
 Contact Data
 ~~~~~~~~~~~~
@@ -275,11 +278,10 @@ In the checkout step *Payment information* the Cash On Delivery payment methods
 will be disabled if Cash On Delivery is not available for the selected delivery 
 address.
 
-The customer can also click on the link "Or as an alternative choose a shipment 
-to a Parcelstation or a Post Office". This will lead the customer back to the 
-second checkout step (shipping address) to select a DHL location, in case the 
-customer didn't know this possibility existed. If the module "DHL Locationfinder" 
-is installed, the checkbox for using the Location Finder will be activated.
+The customer can click on the link "Or as an alternative choose a shipment to 
+a Parcelstation or a Post Office". This will lead the customer back to the checkout 
+step *Shipping address* to select a DHL location. If the module "DHL Locationfinder" 
+is installed, the checkbox for using the Location Finder will be activated by default.
 
 .. raw:: pdf
 
@@ -288,9 +290,9 @@ is installed, the checkbox for using the Location Finder will be activated.
 Admin Order
 ~~~~~~~~~~~
 
-When creating orders via the Admin Panel, no additional services can be booked. 
+When creating orders via the Admin Panel, no additional DHL services can be booked. 
 The Cash On Delivery payment methods will be disabled if Cash On Delivery is not 
-available for the delivery address (same as in the checkout).
+available for the delivery address (same behaviour as in the checkout).
 
 
 DHL Locationfinder (Packing Stations, Post Offices, Parcel Stations)
@@ -322,8 +324,9 @@ to retrieve the shipping label.
 National shipments
 ~~~~~~~~~~~~~~~~~~
 
-In the Admin Panel, select an order whose shipping method is linked to DHL. 
-Then click the button *Ship* on the top of the page.
+In the Admin Panel, select an order whose shipping method is linked to DHL (see 
+`Module configuration`_, section *Shipping Methods for DHL Versenden*). Then 
+click the button *Ship* on the top of the page.
 
 .. image:: images/en/button_ship.png
 
@@ -333,7 +336,7 @@ You will get to the page *New shipment for order*. Activate the checkbox
 .. image:: images/en/button_submit_shipment.png
    :scale: 75 %
 
-Now a popup window for selecting the articles in this package will open. Click 
+Now a popup window for selecting the articles in the package will be opened. Click 
 the button *Add products*, select the products, and confirm by clicking 
 *Add selected product(s) to package*. The package dimensions are optional.
 
@@ -369,9 +372,9 @@ are shown in the popup window for selecting the shipment articles.
 .. image:: images/en/merchant_services.png
    :scale: 175 %
 
-The services selected by the customer in the checkout will already be pre-selected 
+The services selected by the customer in the checkout will already be selected 
 here. Also, the service *Address validation* (Print only if codeable) will be 
-pre-selected if enabled in the general `Module configuration`_.
+selected if enabled in the general `Module configuration`_.
 
 .. raw:: pdf
 
@@ -387,10 +390,10 @@ of the Admin Panel:
 * Sales → Shipments → Mass action *Print shipping labels*
 * Detail page of a shipment → Button *Print shipping label*
 
-Cancelling a shipment
----------------------
+Canceling a shipment
+--------------------
 
-As long as a shipment has not been manifested, it can be cancelled via the 
+As long as a shipment has not been manifested, it can be canceled via the 
 DHL webservice. In the Admin Panel, open the detail page of a shipment and click 
 the link *Delete* in the box *Shipping and tracking information* next to the 
 tracking number.
@@ -398,7 +401,7 @@ tracking number.
 .. image:: images/en/shipping_and_tracking.png
    :scale: 75 %
 
-If the shipment could be cancelled successfully, the tracking number and the 
+If the shipment was canceled successfully, the tracking number and the 
 shipping label will be deleted from the system.
 
 Automatic shipment creation
@@ -421,12 +424,12 @@ by the customer in the checkout).
       */15 * * * * /bin/sh /absolute/path/to/magento/cron.sh
 
 Every 15 minutes the DHL extension will collect all orders which are ready for 
-shipping (according to the configuration), create shipments and transmit them 
+shipping (according to the configuration), create shipments, and transmit them 
 to DHL. The automatic mode will not include shipments that require customs 
 declarations.
 
 If you want to change the timing for the automatic shipment creation, or you need 
-a better monitoring of the execution, you can installl the extension `Aoe_Scheduler`_.
+a better monitoring of the execution, you can install the extension `Aoe_Scheduler`_.
 
 .. _Aoe_Scheduler:  https://github.com/AOEpeople/Aoe_Scheduler
 
@@ -439,7 +442,7 @@ caused by an invalid address or an invalid combination of additional services.
 When creating shipments manually, the error message will be directly visible. 
 Errors that occur during automatic shipment creation will be logged as order 
 comments. If the logging is enabled in the module configuration, you can also 
-check the shipments in the log file.
+check the shipments in the module's log file.
 
 .. admonition:: Note
 
@@ -475,11 +478,11 @@ Erroneous shipment requests can be corrected as follows:
 Afterwards, save the address. If the error has been corrected, you can retry 
 `Creating a shipment`_.
 
-If a shipment has already been trasmitted successfully via the webservice, but 
+If a shipment has already been transmitted successfully via the webservice, but 
 you want to make changes afterwards, please cancel the shipment first as described 
-in the section `Cancelling a shipment`_. Then click *Create shipping label...* 
+in the section `Canceling a shipment`_. Then click *Create shipping label...* 
 inside the same box *Shipping and tracking information*. From here on, the 
-process is now the same as described in `Creating a shipment`_.
+process is the same as described in `Creating a shipment`_.
 
 .. raw:: pdf
 
