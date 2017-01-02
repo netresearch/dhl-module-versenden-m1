@@ -527,7 +527,6 @@ Gehen Sie wie folgt vor, um das Modul zu *deinstallieren*:
 Das Modul wird *deaktiviert*, wenn der Knoten ``active`` in der Datei
 ``app/etc/modules/Dhl_Versenden.xml`` von **true** auf **false** abgeändert wird.
 
-
 Technischer Support
 ===================
 
