@@ -141,6 +141,10 @@ Next, the configuration sections for the DHL module are explained.
    are core parts of Magento® which connect to the webservice of DHL USA only. 
    They are not relevant for DHL Business Shipping (Versenden) in Germany or Austria.
 
+.. raw:: pdf
+
+   PageBreak
+
 General Settings
 ~~~~~~~~~~~~~~~~
 
@@ -272,7 +276,7 @@ shipments and labels should be created. If the customer now selects one of those
 shipping methods in the checkout, the configured additional services are offered.
 
 .. image:: images/en/checkout_services.png
-   :scale: 180 %
+   :scale: 45 %
 
 In the checkout step *Payment information* the Cash On Delivery payment methods 
 will be disabled if Cash On Delivery is not available for the selected delivery 
