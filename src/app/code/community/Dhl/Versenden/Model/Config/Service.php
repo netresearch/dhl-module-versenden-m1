@@ -36,24 +36,24 @@ use \Dhl\Versenden\Bcs\Api\Shipment\Service;
  */
 class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 {
-    const CONFIG_XML_FIELD_PREFERREDDAY = 'service_preferredday_enabled';
-    const CONFIG_XML_FIELD_PREFERREDTIME = 'service_preferredtime_enabled';
-    const CONFIG_XML_FIELD_CUTOFFTIME = 'service_cutoff_time';
-    const CONFIG_XML_FIELD_PREFERREDLOCATION = 'service_preferredlocation_enabled';
-    const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'service_preferredlocation_placeholder';
-    const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR = 'service_preferredneighbour_enabled';
+    const CONFIG_XML_FIELD_PREFERREDDAY                   = 'service_preferredday_enabled';
+    const CONFIG_XML_FIELD_PREFERREDTIME                  = 'service_preferredtime_enabled';
+    const CONFIG_XML_FIELD_CUTOFFTIME                     = 'service_cutoff_time';
+    const CONFIG_XML_FIELD_PREFERREDLOCATION              = 'service_preferredlocation_enabled';
+    const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER  = 'service_preferredlocation_placeholder';
+    const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR             = 'service_preferredneighbour_enabled';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'service_preferredneighbour_placeholder';
-    const CONFIG_XML_FIELD_PACKSTATION = 'service_packstation_enabled';
-    const CONFIG_XML_FIELD_PARCELANNOUNCEMENT = 'service_parcelannouncement_enabled';
-    const CONFIG_XML_FIELD_VISUALCHECKOFAGE = 'service_visualcheckofage_enabled';
-    const CONFIG_XML_FIELD_RETURNSHIPMENT = 'service_returnshipment_enabled';
-    const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
-    const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
+    const CONFIG_XML_FIELD_PACKSTATION                    = 'service_packstation_enabled';
+    const CONFIG_XML_FIELD_PARCELANNOUNCEMENT             = 'service_parcelannouncement_enabled';
+    const CONFIG_XML_FIELD_VISUALCHECKOFAGE               = 'service_visualcheckofage_enabled';
+    const CONFIG_XML_FIELD_RETURNSHIPMENT                 = 'service_returnshipment_enabled';
+    const CONFIG_XML_FIELD_INSURANCE                      = 'service_insurance_enabled';
+    const CONFIG_XML_FIELD_BULKYGOODS                     = 'service_bulkygoods_enabled';
 
     const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
-    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
-    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE = 'shipment_autocreate_service_insurance';
-    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS = 'shipment_autocreate_service_bulkygoods';
+    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT   = 'shipment_autocreate_service_returnshipment';
+    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE        = 'shipment_autocreate_service_insurance';
+    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS       = 'shipment_autocreate_service_bulkygoods';
 
     /**
      * @param mixed $store
@@ -97,14 +97,17 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         }
 
         $shipment = Mage::registry('current_shipment');
-        // Only for Backend rendering with selected day
+        // Only for Backend rendering with selected da
         if ($shipment && $shipment->getShippingAddress()) {
-            $selectedValue = $shipment->getShippingAddress()
-                                      ->getData('dhl_versenden_info')
-                                      ->getServices()->{Service\PreferredDay::CODE};
-            if ($selectedValue && !array_key_exists($selectedValue, $options)) {
+            /** @var Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+            $versendenInfo = $shipment->getShippingAddress()
+                                      ->getData('dhl_versenden_info');
+            if ($versendenInfo && $versendenInfo->getServices()->{Service\PreferredDay::CODE}
+                && !array_key_exists($versendenInfo, $options)
+            ) {
                 // Sanity check for invalid time formats
                 try {
+                    $selectedValue           = $versendenInfo->getServices()->{Service\PreferredDay::CODE};
                     $tmpDate                 = new DateTime($selectedValue);
                     $tmpDate                 = $dateModel
                         ->gmtDate($gmtSaveTimeFormat, $tmpDate->format($gmtSaveTimeFormat));
@@ -124,6 +127,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     *
      * @return Service\PreferredTime
      */
     protected function initPreferredTime($store = null)
@@ -152,6 +156,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     *
      * @return Service\PreferredLocation
      */
     protected function initPreferredLocation($store = null)
@@ -168,6 +173,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     *
      * @return Service\PreferredNeighbour
      */
     protected function initPreferredNeighbour($store = null)
@@ -184,6 +190,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     *
      * @return Service\ParcelAnnouncement
      */
     protected function initParcelAnnouncement($store = null)
@@ -249,11 +256,12 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     *
      * @return Service\PrintOnlyIfCodeable
      */
     protected function initPrintOnlyIfCodeable($store = null)
     {
-        $name = Mage::helper('dhl_versenden/data')->__("Address Validation");
+        $name        = Mage::helper('dhl_versenden/data')->__("Address Validation");
         $isAvailable = true;
         $isSelected  = $this->getStoreConfigFlag(
             Dhl_Versenden_Model_Config_Shipment::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE,
@@ -267,6 +275,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      * Load all DHL additional service models.
      *
      * @param mixed $store
+     *
      * @return Service\Collection
      */
     public function getServices($store = null)
@@ -313,6 +322,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      * Obtain the service objects that are enabled via module configuration.
      *
      * @param mixed $store
+     *
      * @return Service\Collection
      */
     public function getEnabledServices($store = null)
@@ -321,7 +331,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
         $items = array_filter(
             $services,
-            function (Service\Type\Generic $service) {
+            function(Service\Type\Generic $service) {
                 return (bool)$service->isEnabled();
             }
         );
@@ -335,25 +345,26 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      * - selected for autocreate labels.
      *
      * @param mixed $store
+     *
      * @return Service\Collection
      */
     public function getAutoCreateServices($store = null)
     {
         // read autocreate service values from config
-        $ageCheckValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
+        $ageCheckValue       = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
         $returnShipmentValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT, $store);
-        $insuranceValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
-        $bulkyGoodsValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS, $store);
-        $validationValue = $this->getStoreConfigFlag(
+        $insuranceValue      = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
+        $bulkyGoodsValue     = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS, $store);
+        $validationValue     = $this->getStoreConfigFlag(
             Dhl_Versenden_Model_Config_Shipment::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE,
             $store
         );
 
         $autoCreateValues = array(
-            Service\VisualCheckOfAge::CODE => $ageCheckValue,
-            Service\ReturnShipment::CODE => $returnShipmentValue,
-            Service\Insurance::CODE => $insuranceValue,
-            Service\BulkyGoods::CODE => $bulkyGoodsValue,
+            Service\VisualCheckOfAge::CODE    => $ageCheckValue,
+            Service\ReturnShipment::CODE      => $returnShipmentValue,
+            Service\Insurance::CODE           => $insuranceValue,
+            Service\BulkyGoods::CODE          => $bulkyGoodsValue,
             Service\PrintOnlyIfCodeable::CODE => $validationValue,
         );
 
@@ -363,7 +374,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         // skip services disabled for auto creation
         $items = array_filter(
             $services,
-            function (Service\Type\Generic $service) use ($autoCreateValues) {
+            function(Service\Type\Generic $service) use ($autoCreateValues) {
                 return (isset($autoCreateValues[$service->getCode()]) && $autoCreateValues[$service->getCode()]);
             }
         );
@@ -377,6 +388,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         }
 
         $collection = new Service\Collection($items);
+
         return $collection;
     }
 
@@ -386,9 +398,10 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      *
      * @param string $shipperCountry
      * @param string $recipientCountry
-     * @param bool $isPostalFacility
-     * @param bool $onlyCustomerServices
-     * @param mixed $store
+     * @param bool   $isPostalFacility
+     * @param bool   $onlyCustomerServices
+     * @param mixed  $store
+     *
      * @return Service\Collection
      */
     public function getAvailableServices($shipperCountry, $recipientCountry, $isPostalFacility,
