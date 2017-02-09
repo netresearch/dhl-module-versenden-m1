@@ -112,8 +112,8 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
                     $shipmentRequest->getData('gk_api_product')
                 );
 
-                $canShipPartially = ($shipmentOrder->getServiceSelection()->getCod() === null)
-                    && ($shipmentOrder->getServiceSelection()->getInsurance() === null);
+                $canShipPartially = empty($shipmentOrder->getServiceSelection()->getCod())
+                    && empty($shipmentOrder->getServiceSelection()->getInsurance());
                 $isPartial = ($orderShipment->getOrder()->getTotalQtyOrdered() != $orderShipment->getTotalQty());
                 if (!$canShipPartially && $isPartial) {
                     $message = 'Cannot do partial shipment with COD or Additional Insurance.';
