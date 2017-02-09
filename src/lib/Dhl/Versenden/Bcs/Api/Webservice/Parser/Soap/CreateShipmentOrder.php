@@ -45,6 +45,11 @@ class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
     public function parse($response)
     {
         $status = $this->parseResponseStatus($response->getStatus());
+        
+        if ($status->getStatusCode() === 1001) {
+            // login failed
+            throw new Webservice\ResponseData\Status\Exception($status);
+        }
 
         // with the SoapClient SOAP_SINGLE_ELEMENT_ARRAYS feature enabled, $creationStates is always an array
         $creationStates = $response->getCreationState();
