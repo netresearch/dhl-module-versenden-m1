@@ -106,6 +106,36 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      *
      * @param string $serializedResponse
      * @param string $serializedRequestData
+     *
+     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\Status\Exception
+     */
+    public function createShipmentOrderLoginFailed($serializedResponse, $serializedRequestData)
+    {
+        $requestData = unserialize($serializedRequestData);
+        $response    = unserialize($serializedResponse);
+
+        $soapClient = $this->getMockBuilder(\SoapClient::class)
+            ->setMethods(array('createShipmentOrder'))
+            ->disableOriginalConstructor()
+            ->getMock();
+        $soapClient
+            ->expects($this->once())
+            ->method('createShipmentOrder')
+            ->willReturn($response);
+
+        $adapter = new SoapAdapter($soapClient);
+        $parser  = new SoapParser\CreateShipmentOrder();
+
+        $response = $adapter->createShipmentOrder($requestData, $parser);
+    }
+
+    /**
+     * @test
+     * @dataProvider dataProvider
+     *
+     * @param string $serializedResponse
+     * @param string $serializedRequestData
+     *
      */
     public function deleteShipmentOrderStatusError($serializedResponse, $serializedRequestData)
     {
