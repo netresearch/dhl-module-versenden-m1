@@ -103,7 +103,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             $versendenInfo = $shipment->getShippingAddress()
                                       ->getData('dhl_versenden_info');
             if ($versendenInfo && $versendenInfo->getServices()->{Service\PreferredDay::CODE}
-                && !array_key_exists($versendenInfo, $options)
+                && !array_key_exists($versendenInfo->getServices()->{Service\PreferredDay::CODE}, $options)
             ) {
                 // Sanity check for invalid time formats
                 try {
