@@ -59,7 +59,10 @@ DhlServiceContainer.prototype = {
             var inputs = this.serviceContainer.up('form').select("input:checked[name=shipping_method]");
             if (inputs.length) {
                 var selectedMethod = inputs[0].value;
-                var canDisplayServices = (this.dhlMethods.indexOf(selectedMethod) != -1);
+                var canDisplayServices = (this.dhlMethods.filter(
+                    function (element) {
+                      return selectedMethod.indexOf(element) != -1;
+                    }).length > 0);
                 if (canDisplayServices) {
                     this.serviceContainer.show();
                 } else {
