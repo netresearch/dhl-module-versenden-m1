@@ -28,6 +28,8 @@ tables:
      store_id:  1
    - entity_id: 200
      store_id:  2
+   - entity_id: 210
+     store_id:  2
 
   sales/quote_address:
    - address_id: 100
@@ -79,6 +81,37 @@ tables:
      shipping_method: "flatrate_flatrate"
    - address_id: 201
      quote_id: 200
+     region_id: 95
+     region: "Wien"
+     postcode: "1000"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Praterstern 5"
+     city: "Wien"
+     email: "magento.customer@internetmarke.deutschepost.de"
+     telephone: "0043 1"
+     country_id: "AT"
+     address_type: "billing"
+     prefix: "Mrs."
+     company: "Magento Customer"
+   - address_id: 210
+     quote_id: 210
+     region_id: 95
+     region: "Wien"
+     postcode: "1000"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Praterstern 5"
+     city: "Wien"
+     email: ""
+     telephone: "0043 1"
+     country_id: "AT"
+     address_type: "shipping"
+     prefix: "Mrs."
+     company: "Magento Customer"
+     shipping_method: "flatrate_flatrate"
+   - address_id: 211
+     quote_id: 210
      region_id: 95
      region: "Wien"
      postcode: "1000"

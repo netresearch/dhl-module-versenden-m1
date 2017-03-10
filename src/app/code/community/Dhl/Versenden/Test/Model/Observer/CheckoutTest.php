@@ -139,7 +139,8 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         // ADDRESS DEFINITION
         $addressCompany = 'Dhl Foo Company';
 
-        $quote = Mage::getModel('sales/quote')->load(200);
+        // use guest quote where shipping address has no email
+        $quote = Mage::getModel('sales/quote')->load(210);
         $quote->getShippingAddress()->setCompany($addressCompany);
         $observerMock->setQuote($quote);
 
@@ -152,6 +153,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $this->assertTrue($versendenInfo->getServices()->parcelAnnouncement);
         $this->assertNull($versendenInfo->getServices()->preferredNeighbour);
         $this->assertEquals($addressCompany, $versendenInfo->getReceiver()->name2);
+        $this->assertNotEmpty($versendenInfo->getReceiver()->email);
     }
 
     /**
