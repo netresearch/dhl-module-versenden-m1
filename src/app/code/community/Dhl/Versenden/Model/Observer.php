@@ -154,6 +154,12 @@ class Dhl_Versenden_Model_Observer
             'shipment_service' => $request->getPost('shipment_service', array()),
             'service_setting'  => $request->getPost('service_setting', array()),
         );
+
+        // Set the billing address mail address as fallback if the shipping address has none
+        if (!$shippingAddress->getData('email')) {
+            $shippingAddress->setData('email', $quote->getBillingAddress()->getData('email'));
+        }
+
         $versendenInfo = $infoBuilder->infoFromSales($shippingAddress, $serviceInfo, $quote->getStoreId());
 
         $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
