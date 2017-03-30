@@ -131,6 +131,25 @@
                     </unserialize_versenden_infos>
                 </observers>
             </sales_order_address_collection_load_after>
+            <sales_quote_collect_totals_before>
+                <observers>
+                    <your_module>
+                        <type>singleton</type>
+                        <class>dhl_versenden/observer</class>
+                        <method>salesQuoteCollectTotalsBefore</method>
+                    </your_module>
+                </observers>
+            </sales_quote_collect_totals_before>
+            <!--<checkout_controller_onepage_save_shipping_method>-->
+                <!--<observers>-->
+                    <!--<your_module>-->
+                        <!--<type>singleton</type>-->
+                        <!--<class>dhl_versenden/observer</class>-->
+                        <!--<method>updateHandling</method>-->
+                    <!--</your_module>-->
+                <!--</observers>-->
+            <!--</checkout_controller_onepage_save_shipping_method>-->
+
         </events>
         <fieldsets>
             <sales_convert_quote_address>
