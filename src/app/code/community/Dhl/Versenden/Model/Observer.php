@@ -453,4 +453,37 @@ class Dhl_Versenden_Model_Observer
         $dhlAddressForm->setDisplayVatValidationButton($origAddressForm->getDisplayVatValidationButton());
         $container->setChild('form', $dhlAddressForm);
     }
+
+    /**
+     * Add Service fee fo shipping costs.
+     *
+     * @param Varien_Event_Observer $observer
+     * @return $this
+     */
+    public function salesQuoteCollectTotalsBefore(Varien_Event_Observer $observer)
+    {
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote            = $observer->getQuote();
+        $shippingAddress  = Mage::getModel('sales/quote_address')->load($quote->getShippingAddress()->getId());
+        /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
+        $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
+
+        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info )  {
+            return $this;
+        }
+
+        $services =  $dhlVersendenInfo->getServices();
+        if ($services->preferredTime || $services->preferredDay) {
+            $newHandlingFee = 2; // read fee data from config
+            $store = Mage::app()->getStore($quote->getStoreId());
+            $shippingMethod =  $shippingAddress->getShippingMethod();
+            list($carrierCode, $method) = explode('_', $shippingMethod, 2);
+
+            $store->setConfig("carriers/{$carrierCode}/handling_type", 'F'); #F - Fixed, P - Percentage
+            $store->setConfig("carriers/{$carrierCode}/handling_fee", $newHandlingFee);
+
+            // needed to re collect shipping incl. fee in all steps
+            $quote->getShippingAddress()->setCollectShippingRates(true);
+        }
+    }
 }
