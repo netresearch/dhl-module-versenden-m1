@@ -249,4 +249,20 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
             return $codes[$type][$code];
         }
     }
+
+    /**
+     * @param string $tracking
+     * @return false|Mage_Core_Model_Abstract
+     */
+    public function getTrackingInfo($tracking)
+    {
+        $trackData = array(
+            'carrier' => $this->_code,
+            'carrier_title' => $this->getConfigData('title'),
+            'tracking' => $tracking,
+            'url' => 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=' . $tracking
+        );
+
+        return Mage::getModel('shipping/tracking_result_status', $trackData);
+    }
 }
