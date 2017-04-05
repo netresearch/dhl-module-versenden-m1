@@ -365,4 +365,22 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $this->assertFalse($carrier->getCode('unit_of_measure', 'LBS'));
         $this->assertStringStartsWith('Gram', $carrier->getCode('unit_of_measure', 'G'));
     }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getTrackingInfo()
+    {
+        $trackingCode = 'trackfoo';
+
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
+        $trackingStatus = $carrier->getTrackingInfo($trackingCode);
+
+        $this->assertInstanceOf(Mage_Shipping_Model_Tracking_Result_Status::class, $trackingStatus);
+        $this->assertEquals('foo', $trackingStatus->getData('carrier_title'));
+        $this->assertEquals(Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE, $trackingStatus->getData('carrier'));
+        $this->assertEquals($trackingCode, $trackingStatus->getData('tracking'));
+        $this->assertStringEndsWith($trackingCode, $trackingStatus->getData('url'));
+    }
 }
