@@ -196,6 +196,10 @@ the DHL webservice is made.
   to transmit the additional charge for Cash On Delivery to the DHL webservice 
   and create Cash On Delivery labels.
 
+.. raw:: pdf
+
+   PageBreak
+
 Additional Services In Checkout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -210,6 +214,9 @@ additional DHL services you want to offer to your customers.
   the shipment can be placed in case they are not at home.
 * *Enable Preferred Neighbor*: The customer selects an alternative address in the 
   neighborhood for the shipment in case they are not at home.
+* *Cut off time*: This sets the time up to which new orders will be dispatched on the
+  same day. Orders placed *after* the cut off time will not be dispatched on the same
+  day. The earliest possible preferred day will then be postponed by one day.
 * *Enable Parcel announcement*: The customer gets notified by email about the status 
   of the shipment. Select one of the following options:
 
@@ -217,12 +224,23 @@ additional DHL services you want to offer to your customers.
   * *Optional*: The customer decides in the checkout if the service should be booked.
   * *No*: The service will not be booked.
 
-.. admonition:: Note
+.. admonition:: Additional cost for Preferred Day / Preferred Time
 
    Please note that the services *Preferred Day* and *Preferred Time* will result in 
    additional charges from DHL Paket GmbH to you during invoicing of the shipments.
    If you want to forward these costs to your customers, you need to do so via the 
    configuration of your individual shipping costs in System → Configuration → Shipping Methods.
+
+.. admonition:: Cut off time
+
+   For this feature the server time of your system is important. To make sure the time
+   threshold works as expected, the server time needs to be set correctly. Check if there
+   are any offsets due to daylight saving time or differing time zones. Adjust the cut
+   off time setting to compensate this, if needed.
+
+.. raw:: pdf
+
+   PageBreak
 
 Automatic Shipment Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
