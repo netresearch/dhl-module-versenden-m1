@@ -199,6 +199,10 @@ für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich s
   bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende 
   Nachnahme-Label zu erzeugen.
 
+.. raw:: pdf
+
+   PageBreak
+
 DHL Zusatzleistungen im Checkout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -214,6 +218,10 @@ angeboten werden.
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
   für die Abgabe der Sendung, falls er nicht angetroffen wird.
+* *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
+  noch am selben Tag abgeschickt werden. Bestellungen, die *nach* Annahmeschluss
+  eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Wunschtag
+  verschiebt sich dann um einen Tag.
 * *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner 
   Sendung informiert. Wählen Sie hier aus folgenden Optionen:
 
@@ -221,13 +229,24 @@ angeboten werden.
   * *Optional*: Der Kunde bestimmt im Checkout, ob er den Service wünscht.
   * *Nein*: Der Service wird nicht hinzugebucht.
 
-.. admonition:: Hinweis
+.. admonition:: Zusatzkosten für Wunschtag / Wunschzeit
 
    Bitte beachten Sie, dass die DHL Services *Wunschtag* und *Wunschzeit* für Sie als Händler
    mit Aufpreisen in der Abrechnung Ihrer Sendungen gegenüber der DHL Paket GmbH verbunden sind.
    Sollten Sie diese Kosten an Ihre Kunden weiterreichen wollen, müssen Sie diese 
    in Ihre eigenen Versandkostendefinition unter System → Konfiguration → 
    Versandarten einkalkulieren.
+   
+.. admonition:: Hinweis zu Annahmeschluss
+
+   Für dieses Feature ist die Serverzeit Ihres Systems wichtig. Damit die Zeitschwelle
+   korrekt funktioniert, muss die Serverzeit richtig gesetzt sein. Achten Sie auf eventuelle
+   Verschiebungen durch Sommer- bzw. Winterzeit oder abweichende Zeitzonen. Setzen Sie
+   wenn nötig eine andere Annahmeschluss-Zeit, um dies auszugleichen.
+
+.. raw:: pdf
+
+   PageBreak
 
 Automatische Sendungserstellung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
