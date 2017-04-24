@@ -152,3 +152,8 @@
 "16 - 18*","4 - 6 pm*"
 "18 - 20","6 - 8 pm"
 "19 - 21","7 - 9 pm"
+"Preferred day handling fee","Preferred day handling fee"
+"Preferred time handling fee","Preferred time handling fee"
+"Insert gross value for surcharge. Insert 0 to set surcharge for free.","Insert gross value for surcharge. Insert 0 to set surcharge for free."
+"Selection of this service subject to a modest surcharge in the amount of $1.","Selection of this service subject to a modest surcharge in the amount of $1."
+"Use $1 to insert value and currency in string.","Use $1 to insert value and currency in string."

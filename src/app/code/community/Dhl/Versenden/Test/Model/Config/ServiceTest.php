@@ -76,4 +76,55 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         });
         $this->assertNotEmpty($paServices);
     }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getPrefDayFee($store = null)
+    {
+        $config = new Dhl_Versenden_Model_Config_Service();
+        $this->assertEquals(5, $config->getPrefDayFee());
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getPrefTimeFee($store = null)
+    {
+        $config = new Dhl_Versenden_Model_Config_Service();
+        $this->assertEquals(7, $config->getPrefTimeFee());
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getPrefDayHandlingFeeText($store = null)
+    {
+        $coreSessionMock = $this
+            ->getMockBuilder('Mage_Core_Model_Session')
+            ->setMethods(array('start'))
+            ->getMock();
+        $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
+
+        $config = new Dhl_Versenden_Model_Config_Service();
+        $this->assertEquals('This will cost $7.00', $config->getPrefTimeHandlingFeeText());
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getPrefTimeHandlingFeeText($store = null)
+    {
+        $coreSessionMock = $this
+            ->getMockBuilder('Mage_Core_Model_Session')
+            ->setMethods(array('start'))
+            ->getMock();
+        $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
+        $config = new Dhl_Versenden_Model_Config_Service();
+        $this->assertEquals('This will cost $7.00', $config->getPrefTimeHandlingFeeText());
+    }
 }
