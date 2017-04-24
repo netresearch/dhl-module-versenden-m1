@@ -26,10 +26,14 @@ tables:
   sales/quote:
    - entity_id: 100
      store_id:  1
+
    - entity_id: 200
      store_id:  2
    - entity_id: 210
      store_id:  2
+
+   - entity_id: 300
+     store_id:  1
 
   sales/quote_address:
    - address_id: 100
@@ -48,6 +52,7 @@ tables:
      prefix: "Mrs."
      company: "Magento Customer"
      shipping_method: "freeshipping_freeshipping"
+
    - address_id: 101
      quote_id: 100
      region_id: 88
@@ -63,6 +68,7 @@ tables:
      address_type: "billing"
      prefix: "Mrs."
      company: "Magento Customer"
+
    - address_id: 200
      quote_id: 200
      region_id: 95
@@ -79,6 +85,7 @@ tables:
      prefix: "Mrs."
      company: "Magento Customer"
      shipping_method: "flatrate_flatrate"
+
    - address_id: 201
      quote_id: 200
      region_id: 95
@@ -125,6 +132,23 @@ tables:
      address_type: "billing"
      prefix: "Mrs."
      company: "Magento Customer"
+
+   - address_id: 300
+     quote_id: 300
+     region_id: 95
+     region: "Wien"
+     postcode: "1000"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Praterstern 5"
+     city: "Wien"
+     email: "magento.customer@internetmarke.deutschepost.de"
+     telephone: "0043 1"
+     country_id: "AT"
+     address_type: "billing"
+     prefix: "Mrs."
+     company: "Magento Customer"
+     dhl_versenden_info: '{"schemaVersion":"1.0","receiver":{"packstation":{"packstationNumber":"142","postNumber":"1234820","zip":"04229","city":"Leipzig","country":"Deutschland","countryISOCode":"DE","state":null},"postfiliale":{"postfilialNumber":null,"postNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"parcelShop":{"parcelShopNumber":null,"streetName":null,"streetNumber":null,"zip":null,"city":null,"country":null,"countryISOCode":null,"state":null},"name1":"Herr Christoph A\u00dfmann","name2":"Netresearch GmbH & Co. KG","name3":null,"streetName":"Zschochersche Str.","streetNumber":"42","addressAddition":"","dispatchingInformation":null,"zip":"04229","city":"Leipzig","country":"Deutschland","countryISOCode":"DE","state":"Sachsen","phone":"0341","email":"christoph.assmann@netresearch.de","contactPerson":null},"services":{"dayOfDelivery":false,"deliveryTimeFrame":false,"preferredLocation":false,"preferredNeighbour":false,"parcelAnnouncement":true,"visualCheckOfAge":false,"returnShipment":false,"insurance":false,"bulkyGoods":false,"cod":false,"printOnlyIfCodeable":true}}'
 
   sales/order:
    - entity_id: 10

@@ -153,4 +153,17 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         $isAddressLocation = $block->isShippingAddressDHLLocation();
         $this->assertEquals(true, $isAddressLocation);
     }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceFeeText()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        $this->assertNotEmpty($block->getServiceFeeText(Service\PreferredDay::CODE));
+        $this->assertNotEmpty($block->getServiceHint(Service\PreferredTime::CODE));
+    }
 }

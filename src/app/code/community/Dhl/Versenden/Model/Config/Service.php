@@ -36,19 +36,23 @@ use \Dhl\Versenden\Bcs\Api\Shipment\Service;
  */
 class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 {
-    const CONFIG_XML_FIELD_PREFERREDDAY                   = 'service_preferredday_enabled';
-    const CONFIG_XML_FIELD_PREFERREDTIME                  = 'service_preferredtime_enabled';
-    const CONFIG_XML_FIELD_CUTOFFTIME                     = 'service_cutoff_time';
-    const CONFIG_XML_FIELD_PREFERREDLOCATION              = 'service_preferredlocation_enabled';
-    const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER  = 'service_preferredlocation_placeholder';
-    const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR             = 'service_preferredneighbour_enabled';
+    const CONFIG_XML_FIELD_PREFERREDDAY = 'service_preferredday_enabled';
+    const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE = 'service_preferredday_handling_fee';
+    const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT = 'service_preferredday_handling_fee_text';
+    const CONFIG_XML_FIELD_PREFERREDTIME = 'service_preferredtime_enabled';
+    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE = 'service_preferredtime_handling_fee';
+    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT = 'service_preferredtime_handling_fee_text';
+    const CONFIG_XML_FIELD_CUTOFFTIME = 'service_cutoff_time';
+    const CONFIG_XML_FIELD_PREFERREDLOCATION = 'service_preferredlocation_enabled';
+    const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'service_preferredlocation_placeholder';
+    const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR = 'service_preferredneighbour_enabled';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'service_preferredneighbour_placeholder';
-    const CONFIG_XML_FIELD_PACKSTATION                    = 'service_packstation_enabled';
-    const CONFIG_XML_FIELD_PARCELANNOUNCEMENT             = 'service_parcelannouncement_enabled';
-    const CONFIG_XML_FIELD_VISUALCHECKOFAGE               = 'service_visualcheckofage_enabled';
-    const CONFIG_XML_FIELD_RETURNSHIPMENT                 = 'service_returnshipment_enabled';
-    const CONFIG_XML_FIELD_INSURANCE                      = 'service_insurance_enabled';
-    const CONFIG_XML_FIELD_BULKYGOODS                     = 'service_bulkygoods_enabled';
+    const CONFIG_XML_FIELD_PACKSTATION = 'service_packstation_enabled';
+    const CONFIG_XML_FIELD_PARCELANNOUNCEMENT = 'service_parcelannouncement_enabled';
+    const CONFIG_XML_FIELD_VISUALCHECKOFAGE = 'service_visualcheckofage_enabled';
+    const CONFIG_XML_FIELD_RETURNSHIPMENT = 'service_returnshipment_enabled';
+    const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
+    const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
 
     const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
     const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT   = 'shipment_autocreate_service_returnshipment';
@@ -422,5 +426,71 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         );
 
         return $filter->filterServiceCollection($services);
+    }
+
+    /**
+     * Obtain preferred day handling fee from config.
+     *
+     * @param null $store
+     * @return int
+     */
+    public function getPrefDayFee($store = null)
+    {
+        return (float) $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE, $store);
+    }
+
+    /**
+     * Obtain prefered time handling fees from config.
+     *
+     * @param null $store
+     * @return int
+     */
+    public function getPrefTimeFee($store = null)
+    {
+        return (float) $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE, $store);
+    }
+
+    /**
+     * Obtain pref day handling fee text from config.
+     *
+     * @param null $store
+     * @return string
+     */
+    public function getPrefDayHandlingFeeText($store = null)
+    {
+        $text = '';
+        $fee  = $this->getPrefDayFee($store);
+        if ($fee > 0) {
+            $formatedFee = Mage::helper('core')->currency($fee, true, false);
+            $text = str_replace(
+                '$1',
+                $formatedFee,
+                $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT, $store)
+            );
+        }
+
+        return $text;
+    }
+
+    /**
+     * Obtain pref time handling fee text from config.
+     *
+     * @param null $store
+     * @return string
+     */
+    public function getPrefTimeHandlingFeeText($store = null)
+    {
+        $text = '';
+        $fee  = $this->getPrefTimeFee($store);
+        if ($fee > 0) {
+            $formatedFee = Mage::helper('core')->currency($this->getPrefTimeFee($store), true, false);
+            $text = str_replace(
+                '$1',
+                $formatedFee,
+                $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT, $store)
+            );
+        }
+
+        return $text;
     }
 }
