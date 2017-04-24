@@ -144,4 +144,27 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
 
         return $msg ? $this->__($msg) : '';
     }
+
+    /**
+     * /**
+     * Obtain Frontend Service Fee hint based on service code.
+     *
+     * @param $serviceCode
+     * @return string
+     */
+    public function getServiceFeeText($serviceCode)
+    {
+        switch ($serviceCode) {
+            case Service\PreferredDay::CODE:
+                $msg = Mage::getModel('dhl_versenden/config_service')->getPrefDayHandlingFeeText($this->getQuote()->getStoreId());
+                break;
+            case Service\PreferredTime::CODE:
+                $msg = Mage::getModel('dhl_versenden/config_service')->getPrefTimeHandlingFeeText($this->getQuote()->getStoreId());
+                break;
+            default:
+                $msg = '';
+        }
+
+        return $msg ? $this->__($msg) : '';
+    }
 }
