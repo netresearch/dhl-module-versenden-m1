@@ -269,10 +269,11 @@
                         </service_preferredday_enabled>
                         <service_preferredday_handling_fee>
                             <label>Preferred day handling fee</label>
-                            <tooltip>Insert gross value for surcharge. Insert 0 to set surcharge for free.</tooltip>
+                            <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
+                            <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
                             <validate>validate-not-negative-number</validate>
-                            <sort_order>460</sort_order>
+                            <sort_order>461</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
@@ -282,8 +283,8 @@
                         </service_preferredday_handling_fee>
                         <service_preferredday_handling_fee_text>
                             <label>Preferred day handling fee text</label>
-                            <tooltip>Use $1 to insert value and currency in string.</tooltip>
-                            <frontend_type>text</frontend_type>
+                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
+                            <frontend_type>textarea</frontend_type>
                             <sort_order>462</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -301,7 +302,9 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
-                            <depends><service_preferredday_enabled>1</service_preferredday_enabled></depends>
+                            <depends>
+                                <service_preferredday_enabled>1</service_preferredday_enabled>
+                            </depends>
                         </service_cutoff_time>
                         <service_preferredtime_enabled>
                             <label>Enable Preferred time</label>
@@ -315,7 +318,8 @@
                         </service_preferredtime_enabled>
                         <service_preferredtime_handling_fee>
                             <label>Preferred time handling fee</label>
-                            <tooltip>Insert gross value for surcharge. Insert 0 to set surcharge for free.</tooltip>
+                            <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
+                            <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
                             <validate>validate-not-negative-number</validate>
                             <sort_order>471</sort_order>
@@ -328,8 +332,8 @@
                         </service_preferredtime_handling_fee>
                         <service_preferredtime_handling_fee_text>
                             <label>Preferred time handling fee text</label>
-                            <tooltip>Use $1 to insert value and currency in string.</tooltip>
-                            <frontend_type>text</frontend_type>
+                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
+                            <frontend_type>textarea</frontend_type>
                             <sort_order>472</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>

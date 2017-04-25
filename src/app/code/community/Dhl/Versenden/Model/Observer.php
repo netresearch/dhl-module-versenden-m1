@@ -458,6 +458,7 @@ class Dhl_Versenden_Model_Observer
      * Add Service fee fo shipping costs.
      *
      * @param Varien_Event_Observer $observer
+     * @return $this
      * - event: sales_quote_collect_totals_before
      */
     public function addServiceFee(Varien_Event_Observer $observer)
@@ -502,6 +503,7 @@ class Dhl_Versenden_Model_Observer
      * - event: controller_action_predispatch_checkout_onepage_saveShipping
      * - event: controller_action_predispatch_checkout_onepage_saveBilling
      * @param Varien_Event_Observer $observer
+     * @return $this
      */
     public function resetVersendenInfo(Varien_Event_Observer $observer)
     {
@@ -509,5 +511,6 @@ class Dhl_Versenden_Model_Observer
         $shippingAddress  = $quote->getShippingAddress();
         $shippingAddress->setData('dhl_versenden_info', null);
         $shippingAddress->save();
+        return $this;
     }
 }
