@@ -458,15 +458,15 @@ class Dhl_Versenden_Model_Observer
      * Add Service fee fo shipping costs.
      *
      * @param Varien_Event_Observer $observer
+     *
      * @return $this
      * - event: sales_quote_collect_totals_before
      */
     public function addServiceFee(Varien_Event_Observer $observer)
     {
-
         /** @var Mage_Sales_Model_Quote $quote */
-        $quote            = $observer->getQuote();
-        $shippingAddress  = $quote->getShippingAddress();
+        $quote = $observer->getQuote();
+        $shippingAddress = $quote->getShippingAddress();
         /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
         $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
         if ($dhlVersendenInfo == null) {
@@ -478,14 +478,15 @@ class Dhl_Versenden_Model_Observer
             $dhlVersendenInfo = $serializer->unserialize($dhlVersendenInfo);
         }
 
-        $services =  $dhlVersendenInfo->getServices();
+        $services = $dhlVersendenInfo->getServices();
         if ($services->preferredTime || $services->preferredDay) {
-            $store  = Mage::app()->getStore($quote->getStoreId());
+            $store = Mage::app()->getStore($quote->getStoreId());
+            /** @var Dhl_Versenden_Model_Config_Service $config */
             $config = Mage::getModel('dhl_versenden/config_service');
             $prefTimeHandlingFee = $services->preferredTime ? $config->getPrefTimeFee($store->getId()) : 0;
-            $prefDayHandlingFee  = $services->preferredDay ? $config->getPrefDayFee($store->getId()) : 0;
+            $prefDayHandlingFee = $services->preferredDay ? $config->getPrefDayFee($store->getId()) : 0;
             $handlingFee = $prefDayHandlingFee + $prefTimeHandlingFee;
-            $shippingMethod =  $shippingAddress->getShippingMethod();
+            $shippingMethod = $shippingAddress->getShippingMethod();
             list($carrierCode, $method) = explode('_', $shippingMethod, 2);
 
             /**
@@ -502,15 +503,18 @@ class Dhl_Versenden_Model_Observer
      * Reset the dhl versenden info when jumping back in checkout steps.
      * - event: controller_action_predispatch_checkout_onepage_saveShipping
      * - event: controller_action_predispatch_checkout_onepage_saveBilling
+     *
      * @param Varien_Event_Observer $observer
+     *
      * @return $this
      */
     public function resetVersendenInfo(Varien_Event_Observer $observer)
     {
         $quote = Mage::getModel('checkout/session')->getQuote();
-        $shippingAddress  = $quote->getShippingAddress();
+        $shippingAddress = $quote->getShippingAddress();
         $shippingAddress->setData('dhl_versenden_info', null);
         $shippingAddress->save();
+
         return $this;
     }
 }
