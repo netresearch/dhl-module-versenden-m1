@@ -57,7 +57,7 @@
                     ?>
                     <?php echo $serviceLabel; ?>
                 </dt>
-                <p><?php echo $this->getServiceFeeText($service->getCode())?></p>
+                <dd><p><?php echo $this->getServiceFeeText($service->getCode())?></p></dd>
                 <dd class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $service->getValueHtml(); ?>
                 </dd>
