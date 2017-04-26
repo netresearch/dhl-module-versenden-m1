@@ -214,6 +214,15 @@ angeboten werden.
   an welchem die Lieferung ankommen soll.
 * *Wunschzeit*: Der Kunde wählt ein Zeitfenster für seine Sendung,
   in welchem die Lieferung ankommen soll.
+* *Wunschtag / Wunschzeit Service Aufschlag*: Dieser Betrag wird zu den Versandkosten
+  hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
+  als Dezimaltrennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Wenn Sie dem Kunden keine Zusatzkosten in Rechnung stellen wollen, tragen Sie hier
+  ``0`` ein.
+* *Wunschtag / Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+  im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
+  Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
+  und die Währung ersetzt wird.
 * *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
@@ -231,12 +240,14 @@ angeboten werden.
 
 .. admonition:: Zusatzkosten für Wunschtag / Wunschzeit
 
-   Bitte beachten Sie, dass die DHL Services *Wunschtag* und *Wunschzeit* für Sie als Händler
-   mit Aufpreisen in der Abrechnung Ihrer Sendungen gegenüber der DHL Paket GmbH verbunden sind.
-   Sollten Sie diese Kosten an Ihre Kunden weiterreichen wollen, müssen Sie diese 
-   in Ihre eigenen Versandkostendefinition unter System → Konfiguration → 
-   Versandarten einkalkulieren.
-   
+   Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
+   Zusatzkosten generell außer Kraft gesetzt!
+
+Wenn die Versandart *Table Rates / Tabellenbasierte Versandkosten* genutzt wird und eine
+Grenze für kostenlosen Versand festgelegt werden soll, empfehlen wir dazu eine
+Warenkorbpreisregel einzurichten. Durch Nutzung dieser Versandart bleiben die Aufpreise
+für Zusatzservices erhalten.
+
 .. admonition:: Hinweis zu Annahmeschluss
 
    Für dieses Feature ist die Serverzeit Ihres Systems wichtig. Damit die Zeitschwelle
