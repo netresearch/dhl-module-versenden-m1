@@ -28,6 +28,10 @@
     font-size: 13px;
 }
 
+#checkout-dhlversenden-services dd > p {
+    font-size: 13px;
+}
+
 #checkout-dhlversenden-services dt label {
     padding: 0;
     margin-bottom: 5px;
@@ -74,10 +78,10 @@
     font-size: 13px;
 }
 
-#checkout-dhlversenden-services dt,
-#checkout-dhlversenden-services dd {
-    padding: 5px 0;
-}
+/*#checkout-dhlversenden-services dt,*/
+/*#checkout-dhlversenden-services dd {*/
+    /*padding: 5px 0;*/
+/*}*/
 
 #checkout-dhlversenden-services dd.service-radio input,
 #checkout-dhlversenden-services input#shipment_service_preferredDay,
