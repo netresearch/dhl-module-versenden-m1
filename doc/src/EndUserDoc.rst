@@ -210,6 +210,12 @@ additional DHL services you want to offer to your customers.
   should arrive.
 * *Enable Preferred Time*: The customer chooses a time frame within which the 
   shipment should arrive.
+* *Preferred day / time handling fee*: This amount will be added to the shipping cost
+  if the service is used. Use a decimal point, not comma. The gross amount must be
+  entered here (incl. VAT). If you want to offer the service for free, enter a ``0`` here.
+* *Preferred day / time handling fee text*: This text will be displayed to the customer
+  in the checkout if the service has been selected. You can use the placeholder ``$1``
+  in the text which will show the additional handling fee and currency in the checkout.
 * *Enable Preferred Location*: The customer selects an alternative location where 
   the shipment can be placed in case they are not at home.
 * *Enable Preferred Neighbor*: The customer selects an alternative address in the 
@@ -226,10 +232,12 @@ additional DHL services you want to offer to your customers.
 
 .. admonition:: Additional cost for Preferred Day / Preferred Time
 
-   Please note that the services *Preferred Day* and *Preferred Time* will result in 
-   additional charges from DHL Paket GmbH to you during invoicing of the shipments.
-   If you want to forward these costs to your customers, you need to do so via the 
-   configuration of your individual shipping costs in System → Configuration → Shipping Methods.
+   When using the shipping method *Free Shipping* the additional handling fees will
+   always be ignored!
+
+If you want to use the shipping method *Table Rates* and set a threshold for free shipping,
+we recommend setting up a Shopping Cart Price Rule for this. By using this shipping method
+the additional fees for DHL services will be included.
 
 .. admonition:: Cut off time
 
