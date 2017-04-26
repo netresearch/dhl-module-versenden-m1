@@ -272,7 +272,7 @@
                             <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                             <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
-                            <validate>validate-not-negative-number</validate>
+                            <validate>validate-not-negative-number required-entry</validate>
                             <sort_order>461</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -321,7 +321,7 @@
                             <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                             <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
-                            <validate>validate-not-negative-number</validate>
+                            <validate>validate-not-negative-number required-entry</validate>
                             <sort_order>471</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
