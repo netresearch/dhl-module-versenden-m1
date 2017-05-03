@@ -464,7 +464,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             $formatedFee = Mage::helper('core')->currency($fee, true, false);
             $text = str_replace(
                 '$1',
-                $formatedFee,
+                '<b>' .$formatedFee . '</b>',
                 $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT, $store)
             );
         }
@@ -486,7 +486,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             $formatedFee = Mage::helper('core')->currency($this->getPrefTimeFee($store), true, false);
             $text = str_replace(
                 '$1',
-                $formatedFee,
+                '<b>' .$formatedFee . '</b>',
                 $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT, $store)
             );
         }
