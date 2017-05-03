@@ -268,7 +268,7 @@
                             <show_in_store>1</show_in_store>
                         </service_preferredday_enabled>
                         <service_preferredday_handling_fee>
-                            <label>Preferred day handling fee</label>
+                            <label>Additional charge for your preferred day</label>
                             <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                             <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
@@ -317,7 +317,7 @@
                             <show_in_store>1</show_in_store>
                         </service_preferredtime_enabled>
                         <service_preferredtime_handling_fee>
-                            <label>Preferred time handling fee</label>
+                            <label>Additional charge for your preferred time</label>
                             <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
                             <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
