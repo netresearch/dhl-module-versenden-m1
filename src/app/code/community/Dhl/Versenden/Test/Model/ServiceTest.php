@@ -459,7 +459,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         // Check different cases for preferred day
         $serviceModel = new Dhl_Versenden_Model_Config_Service();
         Mage::getConfig()
-            ->saveConfig('carriers/dhlversenden/service_preferredlocation_placeholder', '15,00,00', 'default', 0);
+            ->saveConfig('carriers/dhlversenden/service_cutoff_time', '15,00,00', 'default', 0);
 
         $infoObject                              = new \Dhl\Versenden\Bcs\Api\Info();
         $infoObject->getServices()->preferredDay = '2015-12-10';
