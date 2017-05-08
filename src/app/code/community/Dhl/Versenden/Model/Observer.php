@@ -489,15 +489,17 @@ class Dhl_Versenden_Model_Observer
             $shippingMethod = $shippingAddress->getShippingMethod();
             list($carrierCode, $method) = explode('_', $shippingMethod, 2);
 
-            $initialPrice   = $store->getConfig("carriers/{$carrierCode}/price");
+            $initialPrice = $store->getConfig("carriers/{$carrierCode}/price");
             $initialFeeType = $store->getConfig("carriers/{$carrierCode}/handling_type");
-            $initialFee     = $store->getConfig("carriers/{$carrierCode}/handling_fee");
+            $initialFee = $store->getConfig("carriers/{$carrierCode}/handling_fee");
 
             if ($initialFeeType === Mage_Shipping_Model_Carrier_Abstract::HANDLING_TYPE_FIXED) {
                 $handlingFee = $prefDayHandlingFee + $prefTimeHandlingFee + $initialFee ;
             } elseif ($initialFeeType === Mage_Shipping_Model_Carrier_Abstract::HANDLING_TYPE_PERCENT) {
                 $initialFixedFee = ($initialFee / 100) * $initialPrice;
                 $handlingFee =  $initialFixedFee + $prefDayHandlingFee + $prefTimeHandlingFee;
+            } else {
+                $handlingFee =  $prefDayHandlingFee + $prefTimeHandlingFee;
             }
 
             /**
