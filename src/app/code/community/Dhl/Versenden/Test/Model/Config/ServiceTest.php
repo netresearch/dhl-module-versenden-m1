@@ -110,7 +110,7 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
         $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
 
         $config = new Dhl_Versenden_Model_Config_Service();
-        $this->assertEquals('This will cost $7.00', $config->getPrefTimeHandlingFeeText());
+        $this->assertEquals('This will cost <b>$7.00</b>', $config->getPrefTimeHandlingFeeText());
     }
 
     /**
@@ -125,6 +125,6 @@ class Dhl_Versenden_Test_Model_Config_ServiceTest extends EcomDev_PHPUnit_Test_C
             ->getMock();
         $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
         $config = new Dhl_Versenden_Model_Config_Service();
-        $this->assertEquals('This will cost $7.00', $config->getPrefTimeHandlingFeeText());
+        $this->assertEquals('This will cost <b>$7.00</b>', $config->getPrefTimeHandlingFeeText());
     }
 }

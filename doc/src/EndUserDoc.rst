@@ -216,6 +216,10 @@ additional DHL services you want to offer to your customers.
 * *Preferred day / time handling fee text*: This text will be displayed to the customer
   in the checkout if the service has been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
+
+**Important:** The services *Preferred Day* and *Preferred Time* are **enabled by default!**
+Therefore the standard DHL handling fees will be added to the shipping cost.
+
 * *Enable Preferred Location*: The customer selects an alternative location where 
   the shipment can be placed in case they are not at home.
 * *Enable Preferred Neighbor*: The customer selects an alternative address in the 
