@@ -216,13 +216,18 @@ angeboten werden.
   in welchem die Lieferung ankommen soll.
 * *Wunschtag / Wunschzeit Service Aufschlag*: Dieser Betrag wird zu den Versandkosten
   hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
-  als Dezimaltrennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
-  Wenn Sie dem Kunden keine Zusatzkosten in Rechnung stellen wollen, tragen Sie hier
+  als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
   ``0`` ein.
 * *Wunschtag / Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
   im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
+
+**Achtung:** Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!**
+Dadurch werden die von DHL vorgegebenen Service-Aufschläge zu den Versandkosten
+hinzugefügt.
+
 * *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft

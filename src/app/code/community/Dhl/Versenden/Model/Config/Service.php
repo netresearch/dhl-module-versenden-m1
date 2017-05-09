@@ -92,6 +92,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
                 $endDate++;
                 $disabled = true;
             }
+
             $options[$tmpDate] =
                 array(
                     'value'    => $dateModel->gmtDate("d-", $checkDate) .
