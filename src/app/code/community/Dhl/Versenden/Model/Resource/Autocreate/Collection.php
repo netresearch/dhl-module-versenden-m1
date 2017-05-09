@@ -50,6 +50,9 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
      */
     protected $_eventObject    = 'autocreate_collection';
 
+    /**
+     * @return $this
+     */
     public function addShippingMethodFilter()
     {
         // only consider orders with DHL Versenden carrier
@@ -61,11 +64,14 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addShipmentFilter()
     {
         // only consider orders that have no shipments yet
         $this->getSelect()->joinLeft(
-            array('shipment' => 'sales_flat_shipment'),
+            array('shipment' => $this->getTable('sales/shipment')),
             'main_table.entity_id = shipment.order_id',
             array('shipment.order_id')
         );
