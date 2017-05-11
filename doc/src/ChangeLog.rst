@@ -38,8 +38,8 @@ ChangeLog
      - Features:
 
        * possibility to add service fee's for preffered Day & Time
-
-     - Bugfixes:
+       *
+       Bugfixes:
 
        * missing array key for preferred day
        * fix authentication errors not be shown
