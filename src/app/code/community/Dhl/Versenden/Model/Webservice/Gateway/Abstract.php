@@ -235,7 +235,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         );
         $packageBuilder = Mage::getModel('dhl_versenden/webservice_builder_package', $args);
 
-        $customsBuilder = Mage::getModel('dhl_versenden/webservice_builder_customs');
+        $customsBuilder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
 
         $args = array('config' => $shipmentConfig);
         $settingsBuilder = Mage::getModel('dhl_versenden/webservice_builder_settings', $args);
