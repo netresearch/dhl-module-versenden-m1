@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Export;
+
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Customs
  *
@@ -35,6 +36,39 @@ use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Export;
  */
 class Dhl_Versenden_Model_Webservice_Builder_Customs
 {
+
+    /** @var string */
+    protected $unitOfMeasure;
+
+    /** @var float */
+    protected $minWeightInKG;
+
+    /**
+     * Dhl_Versenden_Model_Webservice_Builder_Package constructor.
+     * @param mixed[] $args
+     * @throws Mage_Core_Exception
+     */
+    public function __construct($args)
+    {
+        $argName = 'unit_of_measure';
+        if (!isset($args[$argName])) {
+            throw new Mage_Core_Exception("required argument missing: $argName");
+        }
+        if (!is_string($args[$argName])) {
+            throw new Mage_Core_Exception("invalid argument: $argName");
+        }
+        $this->unitOfMeasure = $args[$argName];
+
+        $argName = 'min_weight';
+        if (!isset($args[$argName])) {
+            throw new Mage_Core_Exception("required argument missing: $argName");
+        }
+        if (!is_numeric($args[$argName])) {
+            throw new Mage_Core_Exception("invalid argument: $argName");
+        }
+        $this->minWeightInKG = $args[$argName];
+    }
+
     /**
      * @param string $invoiceNumber
      * @param string[] $customsInfo
@@ -50,15 +84,27 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
         }
 
         foreach ($packageInfo as $packageId => $package) {
+            $weightUnit = $this->unitOfMeasure;
+            if (isset($package['params']['weight_units']) && $package['params']['weight_units']) {
+                $weightUnit = $package['params']['weight_units'];
+            }
+
             $exportPositions = new Export\PositionCollection();
+
             foreach ($package['items'] as $itemId => $item) {
+                $weightInKG = $item['weight'];
+                if ($weightUnit == 'G') {
+                    $weightInKG *= 0.001;
+                }
+
+                $weightInKG = max($weightInKG, $this->minWeightInKG);
                 $position = new Export\Position(
                     $itemId,
                     $item['customs']['description'],
                     $item['customs']['country_of_origin'],
                     $item['customs']['tariff_number'],
                     $item['qty'],
-                    $item['weight'],
+                    $weightInKG,
                     $item['customs_value']
                 );
                 $exportPositions->addItem($position);

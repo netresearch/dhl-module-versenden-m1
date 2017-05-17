@@ -36,11 +36,67 @@ use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Export;
 class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
     extends EcomDev_PHPUnit_Test_Case
 {
+
+    protected $minWeightInKG = 0.01;
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgUnitOfMeasureMissing()
+    {
+        $args = array(
+            'min_weight' => $this->minWeightInKG,
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+    }
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgUnitOfMeasureWrongType()
+    {
+        $args = array(
+            'unit_of_measure' => new stdClass(),
+            'min_weight'      => $this->minWeightInKG,
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+    }
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgMinWeightMissing()
+    {
+        $args = array(
+            'unit_of_measure' => 'G',
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+    }
+
+    /**
+     * @test
+     * @expectedException Mage_Core_Exception
+     */
+    public function constructorArgMinWeightWrongType()
+    {
+        $args = array(
+            'unit_of_measure' => 'G',
+            'min_weight'      => new stdClass(),
+        );
+        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+    }
+
+
     /**
      * @test
      */
     public function getExportDocuments()
     {
+        $args = array('unit_of_measure' => 'KG', 'min_weight' => $this->minWeightInKG);
+
         // prepare data
         $invoiceNumber = '103000002';
 
@@ -93,7 +149,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         $packageInfo = array($packageSequenceNumber => $package);
 
         // transform prepared data to structured request data
-        $builder = Mage::getModel('dhl_versenden/webservice_builder_customs');
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
         $documents = $builder->getExportDocuments($invoiceNumber, $customsInfo, $packageInfo);
 
         // assert item was added and type check
