@@ -36,8 +36,34 @@ use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Export;
 class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
     extends EcomDev_PHPUnit_Test_Case
 {
-
     protected $minWeightInKG = 0.01;
+
+    /**
+     * @return string[]
+     */
+    public function getWeightDataProvider()
+    {
+        return [
+            'weight_in_kg' => [
+                'weightUnit' => 'KG',
+                'totalWeightInUnit' => 2.0000,
+                'totalWeightInKg' => 2.0000,
+                'itemOneWeightInUnit' => 0.4000,
+                'itemOneWeightInKg' => 0.4000,
+                'itemTwoWeightInUnit' => 1.2000,
+                'itemTwoWeightInKg' => 1.2000,
+            ],
+            'weight_in_g' => [
+                'weightUnit' => 'G',
+                'totalWeightInUnit' => 2000.0000,
+                'totalWeightInKg' => 2.0000,
+                'itemOneWeightInUnit' => 400.0000,
+                'itemOneWeightInKg' => 0.4000,
+                'itemTwoWeightInUnit' => 1200.0000,
+                'itemTwoWeightInKg' => 1.2000,
+            ],
+        ];
+    }
 
     /**
      * @test
@@ -48,7 +74,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         $args = array(
             'min_weight' => $this->minWeightInKG,
         );
-        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+        Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
     }
 
     /**
@@ -61,7 +87,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
             'unit_of_measure' => new stdClass(),
             'min_weight'      => $this->minWeightInKG,
         );
-        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+        Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
     }
 
     /**
@@ -73,7 +99,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         $args = array(
             'unit_of_measure' => 'G',
         );
-        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+        Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
     }
 
     /**
@@ -86,16 +112,52 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
             'unit_of_measure' => 'G',
             'min_weight'      => new stdClass(),
         );
-        Mage::getModel('dhl_versenden/webservice_builder_package', $args);
+        Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
     }
 
+    /**
+     * Assert that customs builder returns an empty export doc collection.
+     *
+     * @test
+     */
+    public function noCustomsInfoAvailable()
+    {
+        $args = array(
+            'unit_of_measure' => 'KG',
+            'min_weight' => $this->minWeightInKG
+        );
+        $invoiceNumber = '103000002';
+
+        $customsInfo = array();
+        $packageInfo = array();
+
+        // transform prepared data to structured request data
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
+        $documents = $builder->getExportDocuments($invoiceNumber, $customsInfo, $packageInfo);
+
+        $this->assertInstanceOf(Export\DocumentCollection::class, $documents);
+        $this->assertEmpty($documents);
+    }
 
     /**
      * @test
+     * @dataProvider getWeightDataProvider
+     *
+     * @param string $weightUnit
+     * @param float $totalWeight
+     * @param float $itemOneWeight
+     * @param float $itemTwoWeight
      */
-    public function getExportDocuments()
-    {
-        $args = array('unit_of_measure' => 'KG', 'min_weight' => $this->minWeightInKG);
+    public function getExportDocuments(
+        $weightUnit,
+        $totalWeightInUnit,
+        $totalWeightInKg,
+        $itemOneWeightInUnit,
+        $itemOneWeightInKg,
+        $itemTwoWeightInUnit,
+        $itemTwoWeightInKg
+    ) {
+        $args = array('unit_of_measure' => $weightUnit, 'min_weight' => $this->minWeightInKG);
 
         // prepare data
         $invoiceNumber = '103000002';
@@ -103,11 +165,10 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         $packageSequenceNumber = '303';
         $itemSequenceNumberOne = '808';
         $itemSequenceNumberTwo = '909';
-        $packageWeight = 2.0000;
 
         $packageItemOne = array(
             'qty' => 2,
-            'weight' => 0.4000,
+            'weight' => $itemOneWeightInUnit,
             'customs_value' => 9.95,
             'customs' => array(
                 'description' => 'one',
@@ -117,7 +178,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
         );
         $packageItemTwo = array(
             'qty' => 1,
-            'weight' => 1.2000,
+            'weight' => $itemTwoWeightInUnit,
             'customs_value' => 19.95,
             'customs' => array(
                 'description' => 'two',
@@ -128,7 +189,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
 
         $package = array(
             'params' => array(
-                'weight' => $packageWeight,
+                'weight' => $totalWeightInUnit,
                 'content_type' => Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_OTHER,
                 'content_type_other' => 'Foo'
             ),
@@ -201,7 +262,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
             $position->getTariffNumber()
         );
         $this->assertEquals($package['items'][$itemSequenceNumberOne]['qty'], $position->getAmount());
-        $this->assertEquals($package['items'][$itemSequenceNumberOne]['weight'], $position->getNetWeightInKG());
+        $this->assertEquals($itemOneWeightInKg, $position->getNetWeightInKG());
         $this->assertEquals($package['items'][$itemSequenceNumberOne]['customs_value'], $position->getValue());
 
         $position = $positions->getItem($itemSequenceNumberTwo);
@@ -219,7 +280,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest
             $position->getTariffNumber()
         );
         $this->assertEquals($package['items'][$itemSequenceNumberTwo]['qty'], $position->getAmount());
-        $this->assertEquals($package['items'][$itemSequenceNumberTwo]['weight'], $position->getNetWeightInKG());
+        $this->assertEquals($itemTwoWeightInKg, $position->getNetWeightInKG());
         $this->assertEquals($package['items'][$itemSequenceNumberTwo]['customs_value'], $position->getValue());
 
         // add another item
