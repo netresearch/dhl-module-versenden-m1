@@ -84,16 +84,11 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
         }
 
         foreach ($packageInfo as $packageId => $package) {
-            $weightUnit = $this->unitOfMeasure;
-            if (isset($package['params']['weight_units']) && $package['params']['weight_units']) {
-                $weightUnit = $package['params']['weight_units'];
-            }
-
             $exportPositions = new Export\PositionCollection();
 
             foreach ($package['items'] as $itemId => $item) {
                 $weightInKG = $item['weight'];
-                if ($weightUnit == 'G') {
+                if ($this->unitOfMeasure == 'G') {
                     $weightInKG *= 0.001;
                 }
 
