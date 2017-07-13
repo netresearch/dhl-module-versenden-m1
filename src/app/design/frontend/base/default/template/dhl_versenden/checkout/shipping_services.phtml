@@ -82,22 +82,6 @@
             serviceContainer.registerServiceDetailsChange();
             serviceContainer.registerCalendarChange();
 
-            Validation.add(
-                'validate-with-location',
-                '<?php echo $this->__('You cannot use preferred location with this service.'); ?>',
-                function (the_field_value) {
-                    return !(the_field_value != '' && $('shipment_service_preferredLocationDetails').value != '');
-                }
-            );
-
-            Validation.add(
-                'validate-with-neighbour',
-                '<?php echo $this->__('You cannot use preferred neighbor with this service.'); ?>',
-                function (the_field_value) {
-                    return !(the_field_value != '' && $('shipment_service_preferredNeighbourDetails').value != '');
-                }
-            );
-
             var locationLink = $('locationfinder-link');
             if (locationLink) {
                 locationLink.observe('click', function () {
