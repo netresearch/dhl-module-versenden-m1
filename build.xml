@@ -120,7 +120,7 @@
         <antcall target="phpunit"><param name="vendor" value="Dhl"/></antcall>
         <antcall target="install_magento"><param name="version" value="ee1424"/></antcall>
         <antcall target="phpunit"><param name="vendor" value="Dhl"/></antcall>
-        <antcall target="install_magento"><param name="version" value="ce1924"/></antcall>
+        <antcall target="install_magento"><param name="version" value="ce1933"/></antcall>
         <antcall target="phpunit-report"><param name="vendor" value="Dhl"/></antcall>
     </target>
 
