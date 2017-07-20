@@ -164,7 +164,7 @@
             <adminhtml>
                 <args>
                     <modules>
-                        <Dhl_Versenden_Adminhtml before="Mage_Adminhtml">Dhl_Versenden_Adminhtml</Dhl_Versenden_Adminhtml>
+                        <Dhl_Versenden before="Mage_Adminhtml">Dhl_Versenden_Adminhtml</Dhl_Versenden>
                     </modules>
                 </args>
             </adminhtml>
