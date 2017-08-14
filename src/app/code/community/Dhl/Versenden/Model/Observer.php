@@ -37,132 +37,15 @@ use Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility;
 class Dhl_Versenden_Model_Observer
 {
     /**
-     * Register autoloader in order to locate the extension libraries.
-     */
-    public function registerAutoload()
-    {
-        if (!Mage::getModel('dhl_versenden/config')->isAutoloadEnabled()) {
-            return;
-        }
-
-        /** @var Dhl_Versenden_Helper_Autoloader $autoloader */
-        $autoloader = Mage::helper('dhl_versenden/autoloader');
-        $autoloader->addNamespace(
-            "Psr\\", // prefix
-            sprintf('%s/Dhl/Versenden/Psr/', Mage::getBaseDir('lib'))
-        );
-        $autoloader->addNamespace(
-            "Dhl\\Versenden\\Bcs\\", // prefix
-            sprintf('%s/Dhl/Versenden/Bcs/', Mage::getBaseDir('lib'))
-        );
-
-        $autoloader->register();
-    }
-
-    /**
-     * Append the service selection form elements to the opc shipping method form.
-     * - event: core_block_abstract_to_html_after
+     * Dhl_Versenden_Model_Observer constructor.
      *
-     * @param Varien_Event_Observer $observer
+     * Initialize registerAutoload for events not going through controller_front_init_before event
      */
-    public function appendServices(Varien_Event_Observer $observer)
+    public function __construct()
     {
-        $block = $observer->getData('block');
-        if (!$block instanceof Mage_Checkout_Block_Onepage_Shipping_Method_Available) {
-            return;
-        }
-
-        $serviceBlock = Mage::app()->getLayout()->createBlock(
-            'dhl_versenden/checkout_onepage_shipping_method_service',
-            'dhl_versenden_service',
-            array(
-                'template'    => 'dhl_versenden/checkout/shipping_services.phtml',
-                'module_name' => 'Dhl_Versenden',
-            )
-        );
-
-        $transport = $observer->getTransport();
-        $html      = $transport->getHtml() . $serviceBlock->toHtml();
-        $transport->setHtml($html);
-    }
-
-    /**
-     * Append the service selection to the opc shipping method form in the progress side bar.
-     * - event: core_block_abstract_to_html_after
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function appendServicesToShippingMethod(Varien_Event_Observer $observer)
-    {
-        $block = $observer->getData('block');
-        if (!$block instanceof Mage_Checkout_Block_Onepage_Progress
-            || $block->getLayout()->getUpdate()->getHandles()[0] != 'checkout_onepage_progress_shipping_method'
-        ) {
-            return;
-        }
-
-        $versendenInfo = Mage::getSingleton('checkout/session')
-                             ->getQuote()
-                             ->getShippingAddress()
-                             ->getData('dhl_versenden_info');
-
-        if ($versendenInfo) {
-            $serializer    = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
-            $versendenInfo = $serializer->unserialize($versendenInfo);
-            $transport     = $observer->getData('transport');
-            $transportHtml = trim($transport->getHtml());
-
-            $block = Mage::app()
-                         ->getLayout()
-                         ->createBlock(
-                             'dhl_versenden/config_service',
-                             'dhl_services',
-                             array('template' => 'dhl_versenden/config/services.phtml')
-                         );
-            $block->setData('services', $versendenInfo->getServices());
-
-            $html = str_replace('</dd>', $block->toHtml() . '</dd>', $transportHtml);
-            $transport->setHtml($html);
-        }
-    }
-
-    /**
-     * When the customer submits shipping method in OPC, then
-     * - persist service settings
-     * - process shipping address
-     * Event:
-     * - checkout_controller_onepage_save_shipping_method
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function saveShippingSettings(Varien_Event_Observer $observer)
-    {
-        /** @var Mage_Sales_Model_Quote $quote */
-        $quote           = $observer->getQuote();
-        $shippingAddress = $quote->getShippingAddress();
-
-        $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
-        if (!$shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
-            // customer selected a shipping method not to be processed via DHL Versenden
-            return;
-        }
-
-        /** @var Mage_Core_Controller_Request_Http $request */
-        $request       = $observer->getRequest();
-        $infoBuilder   = Mage::getModel('dhl_versenden/info_builder');
-        $serviceInfo   = array(
-            'shipment_service' => $request->getPost('shipment_service', array()),
-            'service_setting'  => $request->getPost('service_setting', array()),
-        );
-
-        // Set the billing address mail address as fallback if the shipping address has none
-        if (!$shippingAddress->getData('email')) {
-            $shippingAddress->setData('email', $quote->getBillingAddress()->getData('email'));
-        }
-
-        $versendenInfo = $infoBuilder->infoFromSales($shippingAddress, $serviceInfo, $quote->getStoreId());
-
-        $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
+        /** @var Dhl_Versenden_Model_Observer_Autoloader $autoloader */
+        $autoloader = Mage::getModel("dhl_versenden/observer_autoloader");
+        $autoloader->registerAutoload();
     }
 
     /**
@@ -342,78 +225,7 @@ class Dhl_Versenden_Model_Observer
         $track->getShipment()->save();
     }
 
-    /**
-     * Convert Info object to serialized representation.
-     * - event: model_save_before
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function serializeVersendenInfo(Varien_Event_Observer $observer)
-    {
-        $address = $observer->getData('object');
-        if (!$address instanceof Mage_Customer_Model_Address_Abstract) {
-            return;
-        }
 
-        $info = $address->getData('dhl_versenden_info');
-        if (!$info || !$info instanceof \Dhl\Versenden\Bcs\Api\Info) {
-            return;
-        }
-
-        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
-        $address->setData('dhl_versenden_info', $serializer->serialize($info));
-    }
-
-    /**
-     * Convert serialized info to Info object.
-     * - event: model_load_after
-     * - event: model_save_after
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function unserializeVersendenInfo(Varien_Event_Observer $observer)
-    {
-        $address = $observer->getData('object');
-        if (!$address instanceof Mage_Customer_Model_Address_Abstract) {
-            return;
-        }
-
-        $info = $address->getData('dhl_versenden_info');
-        if (!$info || !is_string($info)) {
-            return;
-        }
-
-        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
-        $address->setData('dhl_versenden_info', $serializer->unserialize($info));
-    }
-
-    /**
-     * Convert serialized info to Info object.
-     * - event: sales_order_address_collection_load_after
-     *
-     * @param Varien_Event_Observer $observer
-     */
-    public function unserializeVersendenInfoItems(Varien_Event_Observer $observer)
-    {
-        $collection = $observer->getData('order_address_collection');
-        if (!$collection instanceof Mage_Sales_Model_Resource_Order_Address_Collection
-            && !$collection instanceof Mage_Sales_Model_Resource_Quote_Address_Collection
-        ) {
-            return;
-        }
-
-        $unserializeInfo = function (Mage_Customer_Model_Address_Abstract $address) {
-            $info = $address->getData('dhl_versenden_info');
-            if (!$info || !is_string($info)) {
-                return;
-            }
-
-            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
-            $address->setData('dhl_versenden_info', $serializer->unserialize($info));
-        };
-
-        $collection->walk($unserializeInfo);
-    }
 
     /**
      * Override form block as defined via container properties when additional
