@@ -62,7 +62,7 @@
             <controller_front_init_before>
                 <observers>
                     <register_autoload>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_autoloader</class>
                         <method>registerAutoload</method>
                         <type>singleton</type>
                     </register_autoload>
@@ -98,7 +98,7 @@
             <model_save_before>
                 <observers>
                     <serialize_versenden_info>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_serialize</class>
                         <method>serializeVersendenInfo</method>
                         <type>singleton</type>
                     </serialize_versenden_info>
@@ -107,7 +107,7 @@
             <model_load_after>
                 <observers>
                     <unserialize_versenden_info>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_serialize</class>
                         <method>unserializeVersendenInfo</method>
                         <type>singleton</type>
                     </unserialize_versenden_info>
@@ -116,7 +116,7 @@
             <model_save_after>
                 <observers>
                     <unserialize_versenden_info>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_serialize</class>
                         <method>unserializeVersendenInfo</method>
                         <type>singleton</type>
                     </unserialize_versenden_info>
@@ -125,7 +125,7 @@
             <sales_order_address_collection_load_after>
                 <observers>
                     <unserialize_versenden_infos>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_serialize</class>
                         <method>unserializeVersendenInfoItems</method>
                         <type>singleton</type>
                     </unserialize_versenden_infos>
@@ -219,12 +219,12 @@
             <core_block_abstract_to_html_after>
                 <observers>
                     <append_shipment_method_services>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_services</class>
                         <method>appendServices</method>
                         <type>singleton</type>
                     </append_shipment_method_services>
                     <append_services_to_shipping_method>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_services</class>
                         <method>appendServicesToShippingMethod</method>
                         <type>singleton</type>
                     </append_services_to_shipping_method>
@@ -233,7 +233,7 @@
             <checkout_controller_onepage_save_shipping_method>
                 <observers>
                     <save_service_settings>
-                        <class>dhl_versenden/observer</class>
+                        <class>dhl_versenden/observer_services</class>
                         <method>saveShippingSettings</method>
                         <type>singleton</type>
                     </save_service_settings>
