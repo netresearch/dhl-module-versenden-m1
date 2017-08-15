@@ -35,5 +35,8 @@
  */
 class Dhl_Versenden_Model_Observer_Autoloader
 {
-    use Dhl_Versenden_Model_Trait_Autoloader;
+    public function registerAutoload()
+    {
+        Dhl_Versenden_Model_Autoloader::register();
+    }
 }
