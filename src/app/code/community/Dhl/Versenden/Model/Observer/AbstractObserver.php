@@ -14,26 +14,29 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * PHP version 5
- *
  * @category  Dhl
  * @package   Dhl_Versenden
- * @author    Max Melzer <max.melzer@netresearch.de>
- * @copyright 2016 Netresearch GmbH & Co. KG
+ * @author    Paul Siedler <paul.siedler@netresearch.de>
+ * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 
 /**
- * Dhl_Versenden_Model_Observer_Autoloader
- *
- * @category Dhl
- * @package  Dhl_Versenden
- * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
- * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link     http://www.netresearch.de/
+ * Class AbstractObserver
+ * Encapsulates autoloader registration in constructor for arbitrary observers
  */
-class Dhl_Versenden_Model_Observer_Autoloader
+abstract class Dhl_Versenden_Model_Observer_AbstractObserver
 {
     use Dhl_Versenden_Model_Trait_Autoloader;
+
+    /**
+     * Dhl_Versenden_Model_Observer_AbstractObserver constructor.
+     *
+     * Initialize registerAutoload for events not going through controller_front_init_before event
+     */
+    public function __construct()
+    {
+        $this->registerAutoload();
+    }
 }
