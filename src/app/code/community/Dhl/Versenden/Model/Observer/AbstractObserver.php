@@ -28,8 +28,6 @@
  */
 abstract class Dhl_Versenden_Model_Observer_AbstractObserver
 {
-    use Dhl_Versenden_Model_Trait_Autoloader;
-
     /**
      * Dhl_Versenden_Model_Observer_AbstractObserver constructor.
      *
@@ -37,6 +35,6 @@ abstract class Dhl_Versenden_Model_Observer_AbstractObserver
      */
     public function __construct()
     {
-        $this->registerAutoload();
+        Dhl_Versenden_Model_Autoloader::register();
     }
 }

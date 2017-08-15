@@ -22,16 +22,12 @@
  * @link      http://www.netresearch.de/
  */
 
-/**
- * Trait Dhl_Versenden_Model_Trait_Autoloader
- * Provide function to initialize autoloader for Dhl Versenden libraries
- */
-trait Dhl_Versenden_Model_Trait_Autoloader
+class Dhl_Versenden_Model_Autoloader
 {
     /**
      * Register autoloader in order to locate the extension libraries.
      */
-    public function registerAutoload()
+    public static function register()
     {
         if (!Mage::getModel('dhl_versenden/config')->isAutoloadEnabled()) {
             return;
