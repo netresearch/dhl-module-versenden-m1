@@ -33,20 +33,8 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Model_Observer_Serialize
+class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observer_AbstractObserver
 {
-    /**
-     * Dhl_Versenden_Model_Observer_Serialize constructor.
-     *
-     * Initialize registerAutoload for events not going through controller_front_init_before event
-     */
-    public function __construct()
-    {
-        /** @var Dhl_Versenden_Model_Observer_Autoloader $autoloader */
-        $autoloader = Mage::getModel("dhl_versenden/observer_autoloader");
-        $autoloader->registerAutoload();
-    }
-
     /**
      * Convert Info object to serialized representation.
      * - event: model_save_before
