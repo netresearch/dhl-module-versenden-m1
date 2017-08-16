@@ -143,7 +143,8 @@ Im Folgenden werden die Konfigurationsabschnitte für *DHL Versenden* beschriebe
    Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
    sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
    Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden) 
-   in Deutschland bzw. Österreich.
+   in Deutschland bzw. Österreich. Aktivieren Sie diese Abschnitte nicht, wenn Sie
+   *DHL Versenden* nutzen!
 
 
 Allgemeine Einstellungen

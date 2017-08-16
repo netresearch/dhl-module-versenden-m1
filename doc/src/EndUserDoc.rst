@@ -140,6 +140,7 @@ Next, the configuration sections for the DHL module are explained.
    The sections *Shipping Methods → DHL* and *Shipping Methods → DHL (deprecated)*
    are core parts of Magento® which connect to the webservice of DHL USA only. 
    They are not relevant for DHL Business Shipping (Versenden) in Germany or Austria.
+   Do not enable those sections if you are using *DHL Versenden*!
 
 .. raw:: pdf
 
