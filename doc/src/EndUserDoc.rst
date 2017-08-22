@@ -280,6 +280,10 @@ In the section *Bank Data* you configure the bank account to be used for Cash On
 Delivery (COD) shipments with DHL. The Cash On Delivery amount from the customer 
 will be transferred to this bank account.
 
+Please note that you might also have to store the bank data in your DHL account.
+Usually, this can be done through the DHL Business Customer Portal
+(Geschäftskundenportal).
+
 Return Shipment
 ~~~~~~~~~~~~~~~
 
