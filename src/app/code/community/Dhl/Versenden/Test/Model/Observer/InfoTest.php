@@ -98,7 +98,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
             ->with($this->equalTo('dhl_versenden_info'), $this->anything());
         $observer->setData('object', $address);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->serializeVersendenInfo($observer);
     }
 
@@ -126,7 +126,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $address = Mage::getModel('sales/quote_address');
         $observer->setData('object', $address);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->serializeVersendenInfo($observer);
     }
 
@@ -144,7 +144,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer->setData('object', $address);
 
         $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->serializeVersendenInfo($observer);
         $this->assertJson($address->getData('dhl_versenden_info'));
     }
@@ -165,7 +165,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
             ->method('walk');
         $observer->setData('object', $addressCollection);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->unserializeVersendenInfoItems($observer);
     }
 
@@ -189,7 +189,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         /** @var Mage_Sales_Model_Resource_Quote_Address_Collection $addressCollection */
         $addressCollection->addItem($address);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->unserializeVersendenInfoItems($observer);
     }
 
@@ -217,7 +217,7 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $collection->addItem($address);
 
         $observer->setData('order_address_collection', $collection);
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->unserializeVersendenInfoItems($observer);
         $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
     }

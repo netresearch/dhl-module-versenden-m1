@@ -86,7 +86,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $observer->setData('block', $block);
         $observer->setData('transport', $transport);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
 
         // Case: correct block
         $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_method');
@@ -115,7 +115,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $observer->setData('block', $block);
         $observer->setData('transport', $transport);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
 
         // Case: wrong block
         $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_address');
