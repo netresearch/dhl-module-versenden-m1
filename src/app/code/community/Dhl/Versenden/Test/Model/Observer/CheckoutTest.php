@@ -67,7 +67,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $observer->setBlock($block);
         $observer->setTransport($transport);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observer);
 
         $this->assertStringStartsWith($blockHtml, $transport->getHtml());
@@ -84,6 +84,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
     {
         $this->setCurrentStore('store_two');
 
+        /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
         $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
             ->setMethods(array('getTransport'))
             ->getMock();
@@ -94,7 +95,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $block = new Mage_Core_Block_Text();
         $observerMock->setBlock($block);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observerMock);
     }
 
@@ -128,6 +129,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
                 )
             );
 
+        /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
         $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
             ->setMethods(array('getRequest'))
             ->getMock();
@@ -144,7 +146,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $quote->getShippingAddress()->setCompany($addressCompany);
         $observerMock->setQuote($quote);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->saveShippingSettings($observerMock);
 
         /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
@@ -167,6 +169,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $this->setCurrentStore('store_one');
         $quote = Mage::getModel('sales/quote')->load(100);
 
+        /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
         $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
             ->setMethods(array('getRequest'))
             ->getMock();
@@ -175,7 +178,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
             ->method('getRequest');
         $observerMock->setQuote($quote);
 
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->saveShippingSettings($observerMock);
     }
 
