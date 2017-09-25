@@ -38,6 +38,7 @@ class Dhl_Versenden_Test_Model_Observer_AutoloaderTest
 {
     /**
      * @test
+     * @singleton dhl_versenden/autoloader
      */
     public function registerAutoload()
     {
@@ -54,12 +55,13 @@ class Dhl_Versenden_Test_Model_Observer_AutoloaderTest
             ->method('register');
         $this->replaceByMock('helper', 'dhl_versenden/autoloader', $autoloaderMock);
 
-        $observer = new Dhl_Versenden_Model_Observer();
+        $observer = new Dhl_Versenden_Model_Observer_Autoload();
         $observer->registerAutoload();
     }
 
     /**
      * @test
+     * @singleton dhl_versenden/autoloader
      */
     public function registerAutoloadOff()
     {
@@ -76,7 +78,7 @@ class Dhl_Versenden_Test_Model_Observer_AutoloaderTest
             ->method('register');
         $this->replaceByMock('helper', 'dhl_versenden/autoloader', $autoloaderMock);
 
-        $observer = new Dhl_Versenden_Model_Observer();
+        $observer = new Dhl_Versenden_Model_Observer_Autoload();
         $observer->registerAutoload();
     }
 }
