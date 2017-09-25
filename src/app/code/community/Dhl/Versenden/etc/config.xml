@@ -62,7 +62,7 @@
             <controller_front_init_before>
                 <observers>
                     <register_autoload>
-                        <class>dhl_versenden/observer_autoloader</class>
+                        <class>dhl_versenden/observer_autoload</class>
                         <method>registerAutoload</method>
                         <type>singleton</type>
                     </register_autoload>

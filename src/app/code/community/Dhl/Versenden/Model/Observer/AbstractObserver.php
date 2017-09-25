@@ -24,17 +24,18 @@
 
 /**
  * Class AbstractObserver
- * Encapsulates autoloader registration in constructor for arbitrary observers
  */
 abstract class Dhl_Versenden_Model_Observer_AbstractObserver
 {
     /**
      * Dhl_Versenden_Model_Observer_AbstractObserver constructor.
      *
-     * Initialize registerAutoload for events not going through controller_front_init_before event
+     * Observer methods may get triggered through 3rd party cron tasks. To make
+     * sure the library classes are loaded in those cases, we need to register
+     * the autoloader before the observer method is invoked.
      */
     public function __construct()
     {
-        Dhl_Versenden_Model_Autoloader::register();
+        Mage::getSingleton('dhl_versenden/autoloader')->registerAutoload();
     }
 }
