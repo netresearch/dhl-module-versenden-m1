@@ -45,12 +45,15 @@ class Dhl_Versenden_Model_Cron
     protected $logger;
 
     /**
-     * Manually load DHL libraries for CLI scripts such as Aoe_Scheduler and init logger.
+     * Dhl_Versenden_Model_Cron constructor.
+     *
+     * Prepare dependencies:
+     * - autoloader
+     * - logger
      */
     public function __construct()
     {
-        $observer = new Dhl_Versenden_Model_Observer();
-        $observer->registerAutoload();
+        Mage::getSingleton('dhl_versenden/autoloader')->registerAutoload();
 
         $writer = Mage::getSingleton('dhl_versenden/logger_writer');
         $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
