@@ -68,6 +68,8 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
      */
     public function shipmentAutoCreateSuccess()
     {
+        $this->markTestIncomplete('Test must create a shipment in order to be recognized as success.');
+
         $numVersendenOrders = 1;
         $numSuccess = 1;
 
