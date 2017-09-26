@@ -40,6 +40,7 @@
 class Dhl_Versenden_Model_Cron
 {
     const CRON_MESSAGE_LABELS_RETRIEVED = '%d labels were retrieved for %d orders.';
+    const CRON_MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
 
     /** @var Dhl_Versenden_Model_Log */
     protected $logger;
@@ -94,8 +95,31 @@ class Dhl_Versenden_Model_Cron
             $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $this->logger));
             $num = $autocreate->autoCreate($collection);
 
-            $schedule->setMessages(sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize()));
-            $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
+            $scheduleMessage = sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize());
+
+            /** @var Mage_Sales_Model_Order[] $failedOrders */
+            $failedOrders = array_filter(
+                $collection->getItems(),
+                function (Mage_Sales_Model_Order $order) {
+                    return !$order->hasShipments();
+                }
+            );
+
+            if (!empty($failedOrders)) {
+                $failedIncrements = array_map(
+                    function (Mage_Sales_Model_Order $order) {
+                        return $order->getIncrementId();
+                    },
+                    $failedOrders
+                );
+
+                $errorMessage = sprintf(self::CRON_MESSAGE_LABELS_FAILED, implode(', ', $failedIncrements));
+                $schedule->setMessages($scheduleMessage . ' ' . $errorMessage);
+                $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
+            } else {
+                $schedule->setMessages($scheduleMessage);
+                $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
+            }
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), array('exception' => $e));
             $schedule->setMessages($e->getMessage());

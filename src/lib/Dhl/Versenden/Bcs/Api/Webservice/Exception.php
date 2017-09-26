@@ -1,6 +1,6 @@
 <?php
 /**
- * ${VENDOR_NAME} ${MODULE_NAME}
+ * Dhl Versenden
  *
  * NOTICE OF LICENSE
  *
@@ -16,24 +16,24 @@
  *
  * PHP version 5
  *
- * @category  ${VENDOR_NAME}
- * @package   ${VENDOR_NAME}_${MODULE_NAME}
- * @author    christoph <${USER_EMAIL}>
+ * @category  Dhl
+ * @package   Dhl\Versenden\Bcs\Api\Webservice\RequestData
+ * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
  * @copyright 2016 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Bcs\Api\Webservice;
+
 /**
- * ${NAME}
+ * Webservice Exception
  *
- * @category ${VENDOR_NAME}
- * @package  ${VENDOR_NAME}_${MODULE_NAME}
- * @author   christoph <${USER_EMAIL}>
+ * @category Dhl
+ * @package  Dhl\Versenden\Bcs\Api\Webservice
+ * @author   Christoph Aßmann <christoph.assmann@netresearch.de>
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
 class Exception extends \Exception
 {
-
 }

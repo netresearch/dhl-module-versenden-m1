@@ -196,11 +196,30 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
             $result = Mage::getModel('dhl_versenden/webservice_gateway_soap')
                 ->createShipmentOrder($shipmentRequests);
 
+            // collect validation errors (occurred before api request)
+            $shipmentOrderErrors = array();
+            foreach ($shipmentRequests as $shipmentRequest) {
+                if ($shipmentRequest->hasData('request_data_exception')) {
+                    $shipmentOrderErrors[]= sprintf(
+                        '#%s: %s',
+                        $shipmentRequest->getOrderShipment()->getOrder()->getIncrementId(),
+                        $shipmentRequest->getData('request_data_exception')
+                    );
+                }
+            }
+
+            if (!empty($shipmentOrderErrors) || empty($result)) {
+                $msg = sprintf('%s %s', 'The shipment request(s) had errors.', implode("\n", $shipmentOrderErrors));
+                throw new Webservice\RequestData\ValidationException($msg);
+            }
+
+            // collect response errors (occurred during api request)
             $shipmentStatus = $result->getCreatedItems()->getItem($sequenceNumber)->getStatus();
             if ($shipmentStatus->isError()) {
                 throw new Webservice\ResponseData\Status\Exception($shipmentStatus);
             }
 
+            // if no request or response exceptions occurred, read label data
             $pdfLib = new \Dhl\Versenden\Bcs\Api\Pdf\Adapter\Zend();
             $responseData = array(
                 'info' => array(array(

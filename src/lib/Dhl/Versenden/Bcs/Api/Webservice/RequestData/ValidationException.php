@@ -24,9 +24,11 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Bcs\Api\Webservice\RequestData;
+
 use \Dhl\Versenden\Bcs\Api\Webservice\Exception;
+
 /**
- * ValidationException
+ * Webservice Request Validation Exception
  *
  * @category Dhl
  * @package  Dhl\Versenden\Bcs\Api\Webservice\RequestData

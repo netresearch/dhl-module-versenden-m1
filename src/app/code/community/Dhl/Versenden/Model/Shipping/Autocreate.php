@@ -108,28 +108,39 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
         foreach ($shipmentRequests as $orderId => $shipmentRequest) {
             $shipment = $shipmentRequest->getOrderShipment();
-            $shipmentStatus = $result->getCreatedItems()->getItem($orderId)->getStatus();
 
+            // handle request validation errors, no label request was sent
+            if ($shipmentRequest->hasData('request_data_exception')) {
+                Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
+                    $shipment->getOrder(),
+                    $shipmentRequest->getData('request_data_exception')
+                );
+                continue;
+            }
+
+            // handle webservice errors, label response includes item status
+            $shipmentStatus = $result->getCreatedItems()->getItem($orderId)->getStatus();
             if ($shipmentStatus->isError()) {
                 Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
                     $shipmentRequest->getOrderShipment()->getOrder(),
                     sprintf('%s %s', $shipmentStatus->getStatusText(), $shipmentStatus->getStatusMessage())
                 );
-            } else {
-                $labels = $result->getCreatedItems()->getItem($orderId)->getAllLabels($pdfLib);
-                $shipment->setShippingLabel($labels);
-                $track = Mage::getModel('sales/order_shipment_track')
-                    ->setNumber($result->getShipmentNumber($orderId))
-                    ->setCarrierCode($carrier->getCarrierCode())
-                    ->setTitle($carrier->getConfigData('title'));
-                $shipment->addTrack($track);
-                $shipment->getOrder()->setIsInProcess(true);
-                $transaction
-                    ->addObject($shipment)
-                    ->addObject($shipment->getOrder());
-
-                $ordersShipped++;
+                continue;
             }
+
+            $labels = $result->getCreatedItems()->getItem($orderId)->getAllLabels($pdfLib);
+            $shipment->setShippingLabel($labels);
+            $track = Mage::getModel('sales/order_shipment_track')
+                ->setNumber($result->getShipmentNumber($orderId))
+                ->setCarrierCode($carrier->getCarrierCode())
+                ->setTitle($carrier->getConfigData('title'));
+            $shipment->addTrack($track);
+            $shipment->getOrder()->setIsInProcess(true);
+            $transaction
+                ->addObject($shipment)
+                ->addObject($shipment->getOrder());
+
+            $ordersShipped++;
         }
 
         $transaction->save();
