@@ -25,13 +25,14 @@
  */
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
-<?php if (count($this->getServices())): ?>
+<?php if (!$this->isShippingAddressDHLLocation()): ?>
     <div id="checkout-dhlversenden-services" style="display: none;">
         <img
             src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
             alt="<?php echo $this->__('DHL Additional Services') ?>"
             title="<?php echo $this->__('DHL Additional Services') ?>"
         />
+        <?php if (count($this->getServices())): ?>
         <span><?php echo $this->__('Your recipient services'); ?></span>
         <p>
             <?php echo $this->__(
@@ -63,13 +64,14 @@
                 </dd>
             <?php endforeach; ?>
         </dl>
-        <?php if (!$this->isShippingAddressDHLLocation()): ?>
+        <?php endif; ?>
+
             <span>
                 <a id="locationfinder-link" href="javascript:void(0)" '>
                 <?php echo $this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.'); ?>
                 </a>
             </span>
-        <?php endif; ?>
+
         <script type="text/javascript">
             //<![CDATA[
             var serviceContainer = new DhlServiceContainer(
@@ -106,4 +108,5 @@
             //]]>
         </script>
     </div>
+
 <?php endif; ?>
