@@ -53,6 +53,9 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
      */
     public function shipmentAutoCreateFailure()
     {
+        $historyMock = $this->getResourceModelMock('sales/order_status_history', array('save'));
+        $this->replaceByMock('resource_model', 'sales/order_status_history', $historyMock);
+
         $schedule = Mage::getModel('cron/schedule');
         /** @var Dhl_Versenden_Model_Cron $cron */
         $cron = Mage::getModel('dhl_versenden/cron');
