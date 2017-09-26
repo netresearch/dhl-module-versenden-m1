@@ -122,8 +122,10 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
                 $shipmentOrderCollection->addItem($shipmentOrder);
             } catch (RequestData\ValidationException $e) {
-                $message = Mage::helper('dhl_versenden/data')->__($e->getMessage());
-                $shipmentRequest->setData('request_data_exception', $message);
+                $shipmentRequest->setData(
+                    'request_data_exception',
+                    Mage::helper('dhl_versenden/data')->__($e->getMessage())
+                );
             }
         }
 
@@ -134,8 +136,7 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
      * Prepare request data and pass on to concrete gateway.
      *
      * @param Mage_Shipping_Model_Shipment_Request[] $shipmentRequests
-     * @return ResponseData\CreateShipment
-     * @throws RequestData\ValidationException
+     * @return ResponseData\CreateShipment|null
      */
     public function createShipmentOrder(array $shipmentRequests)
     {
@@ -144,21 +145,8 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
 
         $wsVersion = new RequestData\Version(self::WEBSERVICE_VERSION_MAJOR, self::WEBSERVICE_VERSION_MINOR);
         $shipmentOrders = $this->prepareShipmentOrders($shipmentRequests);
-
-        // collect validation errors in shipment request data
-        $shipmentOrderErrors = array();
-        foreach ($shipmentRequests as $shipmentRequest) {
-            if ($shipmentRequest->hasData('request_data_exception')) {
-                $shipmentOrderErrors[]= sprintf(
-                    '#%s: %s',
-                    $shipmentRequest->getOrderShipment()->getOrder()->getIncrementId(),
-                    $shipmentRequest->getData('request_data_exception')
-                );
-            }
-        }
-        if (!empty($shipmentOrderErrors)) {
-            $msg = sprintf('%s %s', 'The shipment request(s) had errors.', implode("\n", $shipmentOrderErrors));
-            throw new RequestData\ValidationException($msg);
+        if (empty($shipmentOrders->getItems())) {
+            return null;
         }
 
         /** @var RequestData\CreateShipment $requestData */

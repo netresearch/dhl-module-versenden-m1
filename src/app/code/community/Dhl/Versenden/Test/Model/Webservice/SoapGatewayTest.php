@@ -452,13 +452,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->method('shipmentToShipmentOrder')
             ->willThrowException(new Webservice\RequestData\ValidationException($validationError));
 
-
-        $this->setExpectedException(
-            Webservice\RequestData\ValidationException::class,
-            $frontendMessage
-        );
         /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
-        $gateway->createShipmentOrder($shipmentRequests);
+        $result = $gateway->createShipmentOrder($shipmentRequests);
+        $this->assertNull($result);
+        $this->assertTrue($request->hasData('request_data_exception'));
+        $this->assertSame($validationError, $request->getData('request_data_exception'));
     }
 
     /**
@@ -472,7 +470,6 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
     {
         $customerReference = '303';
         $validationError   = 'Cannot do partial shipment with COD or Additional Insurance.';
-        $frontendMessage   = "The shipment request(s) had errors. #$customerReference: $validationError";
 
         $order = new Mage_Sales_Model_Order();
         $order->setIncrementId($customerReference);
@@ -501,12 +498,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapGatewayTest
             ->method('shipmentToShipmentOrder')
             ->willReturn($shipmentOrder);
 
-        $this->setExpectedException(
-            Webservice\RequestData\ValidationException::class,
-            $frontendMessage
-        );
         /** @var Dhl_Versenden_Model_Webservice_Gateway_Soap $gateway */
-        $gateway->createShipmentOrder($shipmentRequests);
+        $result = $gateway->createShipmentOrder($shipmentRequests);
+        $this->assertNull($result);
+        $this->assertTrue($request->hasData('request_data_exception'));
+        $this->assertSame($validationError, $request->getData('request_data_exception'));
     }
 
     /**
