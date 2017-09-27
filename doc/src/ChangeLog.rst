@@ -33,20 +33,28 @@ ChangeLog
      - **Date**
      - **Description**
 
+   * - 1.1.1
+     - 27.09.2017
+     - Bugfixes:
+
+       * Improve autoloading of namespaced classes
+       * No longer terminate cron on shipment validation errors, continue processing
+       * Apply correct unit of measure for item weight in export declarations
+       * Display service validation errors in checkout that remained hidden under certain circumstances
+
    * - 1.1.0
      - 10.05.2017
      - Features:
 
-       * possibility to add service fee's for preffered Day & Time
-       *
+       * Demand fees for Preferred Day / Preferred Time checkout services
+
        Bugfixes:
 
-       * missing array key for preferred day
-       * fix authentication errors not be shown
-       * fix label creation for partial shipments
-       * make participation number required
-       * db prefix will now be recognized
-
+       * Missing array key for preferred day
+       * Fix authentication errors not being shown
+       * Fix label creation for partial shipments
+       * Make participation number required
+       * DB prefix will now be recognized
 
    * - 1.0.0
      - 17.10.2016

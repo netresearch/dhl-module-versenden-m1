@@ -6,12 +6,10 @@ shipping API into the order processing workflow.
 
 Facts
 -----
-- version: 1.0.0
+- version: 1.1.1
 - extension key: Dhl_Versenden
-- [extension on Magento Connect](http://www.magentocommerce.com/magento-connect/dhl-versenden-1234.html)
-- Magento Connect 2.0 extension key: http://connect20.magentocommerce.com/community/Dhl_Versenden
 - [extension on GitLab](https://git.netresearch.de/dhl/versenden-m1)
-- [direct download link](http://connect.magentocommerce.com/community/get/Dhl_Versenden-1.0.0.tgz)
+- [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.1.1/archive.tar.gz)
 
 Description
 -----------
@@ -75,4 +73,4 @@ Licence
 
 Copyright
 ---------
-(c) 2016 DHL Paket GmbH
+(c) 2017 DHL Paket GmbH
