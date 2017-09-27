@@ -25,7 +25,7 @@
  */
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
-<?php if (!$this->isShippingAddressDHLLocation()): ?>
+<?php if (!$this->isShippingAddressDHLLocation() || count($this->getServices())): ?>
     <div id="checkout-dhlversenden-services" style="display: none;">
         <img
             src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
@@ -66,11 +66,13 @@
         </dl>
         <?php endif; ?>
 
-            <span>
-                <a id="locationfinder-link" href="javascript:void(0)" '>
+        <?php if (!$this->isShippingAddressDHLLocation()): ?>
+        <span>
+            <a id="locationfinder-link" href="javascript:void(0)" '>
                 <?php echo $this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.'); ?>
-                </a>
-            </span>
+            </a>
+        </span>
+        <?php endif; ?>
 
         <script type="text/javascript">
             //<![CDATA[
