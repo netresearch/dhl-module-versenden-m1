@@ -88,7 +88,10 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
             $checkDate = $tmpDate->format($gmtSaveTimeFormat);
             $tmpDate   = $tmpDate->format("Y-m-d");
             $disabled  = false;
-            if (($dateModel->gmtDate('N', strtotime($checkDate)) == 7) || $holidayCheck::isHoliday($checkDate)) {
+            if (($dateModel->gmtDate('N', strtotime($checkDate)) == 7)
+                || $holidayCheck::isHoliday($checkDate)
+                || ($dateModel->gmtDate('N', strtotime($checkDate)) == 1 && $startDate == $i)
+            ) {
                 $endDate++;
                 $disabled = true;
             }
