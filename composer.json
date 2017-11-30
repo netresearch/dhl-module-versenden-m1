@@ -11,6 +11,12 @@
         "ext-soap": "*",
         "ext-calendar": "*"
     },
+    "support": {
+        "wiki": "http://dhl.support.netresearch.de/",
+        "issues": "http://dhl.support.netresearch.de/support/tickets/new",
+        "docs": "http://dhl.support.netresearch.de/support/solutions/articles/12000023174",
+        "email": "dhl.support@netresearch.de"
+    },
     "authors":[
         {
             "name":"Christoph Aßmann",
