@@ -43,7 +43,7 @@ class Dhl_Versenden_Model_Cron
     const CRON_MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
 
     /** @var Dhl_Versenden_Model_Log */
-    protected $logger;
+    protected $_logger;
 
     /**
      * Dhl_Versenden_Model_Cron constructor.
@@ -62,7 +62,7 @@ class Dhl_Versenden_Model_Cron
         $config = Mage::getModel('dhl_versenden/config');
         $dhlLogger = Mage::getSingleton('dhl_versenden/log', array('config' => $config));
         $dhlLogger->setLogger($psrLogger);
-        $this->logger = $dhlLogger;
+        $this->_logger = $dhlLogger;
     }
 
     /**
@@ -92,7 +92,7 @@ class Dhl_Versenden_Model_Cron
             $collection->addStoreFilter($stores);
 
             /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
-            $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $this->logger));
+            $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $this->_logger));
             $num = $autocreate->autoCreate($collection);
 
             $scheduleMessage = sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize());
@@ -121,7 +121,7 @@ class Dhl_Versenden_Model_Cron
                 $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
             }
         } catch (\Exception $e) {
-            $this->logger->error($e->getMessage(), array('exception' => $e));
+            $this->_logger->error($e->getMessage(), array('exception' => $e));
             $schedule->setMessages($e->getMessage());
             $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
         }

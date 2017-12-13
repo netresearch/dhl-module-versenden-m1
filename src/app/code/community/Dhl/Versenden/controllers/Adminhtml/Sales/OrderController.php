@@ -84,19 +84,22 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getPackstation()->zip = $versendenInfo->getReceiver()->zip;
             $versendenInfo->getReceiver()->getPackstation()->city = $versendenInfo->getReceiver()->city;
             $versendenInfo->getReceiver()->getPackstation()->country = $versendenInfo->getReceiver()->country;
-            $versendenInfo->getReceiver()->getPackstation()->countryISOCode = $versendenInfo->getReceiver()->countryISOCode;
+            $versendenInfo->getReceiver()->getPackstation()->countryISOCode =
+                $versendenInfo->getReceiver()->countryISOCode;
             $versendenInfo->getReceiver()->getPackstation()->packstationNumber = $packstationData['packstation_number'];
             $versendenInfo->getReceiver()->getPackstation()->postNumber = $packstationData['post_number'];
         } else {
             // otherwise clear
-            $versendenInfo->getReceiver()->getPackstation()->fromArray(array(
-                'zip' => null,
-                'city' => null,
-                'country' => null,
-                'country_iso_code' => null,
-                'packstation_number' => null,
-                'post_number' => null,
-            ));
+            $versendenInfo->getReceiver()->getPackstation()->fromArray(
+                array(
+                    'zip' => null,
+                    'city' => null,
+                    'country' => null,
+                    'country_iso_code' => null,
+                    'packstation_number' => null,
+                    'post_number' => null,
+                )
+            );
         }
 
         $postfilialeData = (isset($versendenData['postfiliale']) && $versendenData['postfiliale'])
@@ -108,19 +111,22 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getPostfiliale()->zip = $versendenInfo->getReceiver()->zip;
             $versendenInfo->getReceiver()->getPostfiliale()->city = $versendenInfo->getReceiver()->city;
             $versendenInfo->getReceiver()->getPostfiliale()->country = $versendenInfo->getReceiver()->country;
-            $versendenInfo->getReceiver()->getPostfiliale()->countryISOCode = $versendenInfo->getReceiver()->countryISOCode;
+            $versendenInfo->getReceiver()->getPostfiliale()->countryISOCode =
+                $versendenInfo->getReceiver()->countryISOCode;
             $versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber = $postfilialeData['postfilial_number'];
             $versendenInfo->getReceiver()->getPostfiliale()->postNumber = $postfilialeData['post_number'];
         } else {
             // otherwise clear
-            $versendenInfo->getReceiver()->getPostfiliale()->fromArray(array(
-                'zip' => null,
-                'city' => null,
-                'country' => null,
-                'country_iso_code' => null,
-                'postfilial_number' => null,
-                'post_number' => null,
-            ));
+            $versendenInfo->getReceiver()->getPostfiliale()->fromArray(
+                array(
+                    'zip' => null,
+                    'city' => null,
+                    'country' => null,
+                    'country_iso_code' => null,
+                    'postfilial_number' => null,
+                    'post_number' => null,
+                )
+            );
         }
 
         $parcelShopData = (isset($versendenData['parcel_shop']) && $versendenData['parcel_shop'])
@@ -133,21 +139,24 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             $versendenInfo->getReceiver()->getParcelShop()->zip = $versendenInfo->getReceiver()->zip;
             $versendenInfo->getReceiver()->getParcelShop()->city = $versendenInfo->getReceiver()->city;
             $versendenInfo->getReceiver()->getParcelShop()->country = $versendenInfo->getReceiver()->country;
-            $versendenInfo->getReceiver()->getParcelShop()->countryISOCode = $versendenInfo->getReceiver()->countryISOCode;
+            $versendenInfo->getReceiver()->getParcelShop()->countryISOCode =
+                $versendenInfo->getReceiver()->countryISOCode;
             $versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber = $parcelShopData['parcel_shop_number'];
             $versendenInfo->getReceiver()->getParcelShop()->streetName = $parcelShopData['street_name'];
             $versendenInfo->getReceiver()->getParcelShop()->streetNumber = $parcelShopData['street_number'];
         } else {
             // otherwise clear
-            $versendenInfo->getReceiver()->getParcelShop()->fromArray(array(
-                'zip' => null,
-                'city' => null,
-                'country' => null,
-                'country_iso_code' => null,
-                'parcel_shop_number' => null,
-                'street_name' => null,
-                'street_number' => null,
-            ));
+            $versendenInfo->getReceiver()->getParcelShop()->fromArray(
+                array(
+                    'zip' => null,
+                    'city' => null,
+                    'country' => null,
+                    'country_iso_code' => null,
+                    'parcel_shop_number' => null,
+                    'street_name' => null,
+                    'street_number' => null,
+                )
+            );
         }
 
         $address->setData('dhl_versenden_info', $versendenInfo);
@@ -232,9 +241,12 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
             } catch (Exception $e) {
                 $this->_getSession()->addException(
                     $e,
-                    Mage::helper('sales')->__('An error occurred while updating the order address. The address has not been changed.')
+                    Mage::helper('sales')->__(
+                        'An error occurred while updating the order address. The address has not been changed.'
+                    )
                 );
             }
+
             $this->_redirect('*/*/address', array('address_id'=>$address->getId()));
         } else {
             $this->_redirect('*/*/');

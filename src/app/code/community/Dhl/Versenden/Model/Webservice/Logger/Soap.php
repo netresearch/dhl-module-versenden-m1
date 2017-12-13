@@ -45,9 +45,9 @@ class Dhl_Versenden_Model_Webservice_Logger_Soap
      */
     public function debug(Adapter $adapter)
     {
-        $this->log->debug($adapter->getClient()->__getLastRequest());
-        $this->log->debug($adapter->getClient()->__getLastResponseHeaders());
-        $this->log->debug($adapter->getClient()->__getLastResponse());
+        $this->_log->debug($adapter->getClient()->__getLastRequest());
+        $this->_log->debug($adapter->getClient()->__getLastResponseHeaders());
+        $this->_log->debug($adapter->getClient()->__getLastResponse());
     }
 
     /**
@@ -55,9 +55,9 @@ class Dhl_Versenden_Model_Webservice_Logger_Soap
      */
     public function error(Adapter $adapter)
     {
-        $this->log->error($adapter->getClient()->__getLastRequest());
-        $this->log->error($adapter->getClient()->__getLastResponseHeaders());
-        $this->log->error($adapter->getClient()->__getLastResponse());
+        $this->_log->error($adapter->getClient()->__getLastRequest());
+        $this->_log->error($adapter->getClient()->__getLastResponseHeaders());
+        $this->_log->error($adapter->getClient()->__getLastResponse());
     }
 
 
@@ -66,8 +66,8 @@ class Dhl_Versenden_Model_Webservice_Logger_Soap
      */
     public function warning(Adapter $adapter)
     {
-        $this->log->warning($adapter->getClient()->__getLastRequest());
-        $this->log->warning($adapter->getClient()->__getLastResponseHeaders());
-        $this->log->warning($adapter->getClient()->__getLastResponse());
+        $this->_log->warning($adapter->getClient()->__getLastRequest());
+        $this->_log->warning($adapter->getClient()->__getLastResponseHeaders());
+        $this->_log->warning($adapter->getClient()->__getLastResponse());
     }
 }

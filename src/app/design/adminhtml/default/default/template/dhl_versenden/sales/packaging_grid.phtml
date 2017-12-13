@@ -31,47 +31,71 @@
             <table cellspacing="0" class="data">
                 <thead>
                 <tr class="headings">
-                    <th class="no-link"><span class="nobr"><?php echo $this->__('Customs Description') ?></span></th>
-                    <th class="no-link"><span class="nobr"><?php echo $this->__('Country of Origin') ?></span></th>
-                    <th class="no-link"><span class="nobr"><?php echo $this->__('Tariff Number') ?></span></th>
-                    <th class="no-link"><span class="nobr"><?php echo $this->__('Weight') ?></span></th>
-                    <th class="no-link" width="100"><span class="nobr"><?php echo $this->helper('sales')->__('Customs Value') ?></span></th>
+                    <th class="no-link">
+                        <span class="nobr"><?php echo $this->escapeHtml($this->__('Customs Description')) ?></span>
+                    </th>
+                    <th class="no-link">
+                        <span class="nobr"><?php echo $this->escapeHtml($this->__('Country of Origin')) ?></span>
+                    </th>
+                    <th class="no-link">
+                        <span class="nobr"><?php echo $this->escapeHtml($this->__('Tariff Number')) ?></span>
+                    </th>
+                    <th class="no-link">
+                        <span class="nobr"><?php echo $this->escapeHtml($this->__('Weight')) ?></span>
+                    </th>
+                    <th class="no-link" width="100">
+                        <span class="nobr">
+                            <?php echo $this->escapeHtml($this->helper('sales')->__('Customs Value')) ?>
+                        </span>
+                    </th>
                     <th class="a-center no-link" width="100">
                         <span class="nobr">
                             <input type="checkbox" name="" onclick="packaging.checkAllItems(this);"
-                                   class="checkbox" title="<?php echo $this->helper('sales')->__('Select All') ?>">
+                                   class="checkbox"
+                                   title="<?php echo $this->escapeHtml($this->helper('sales')->__('Select All')) ?>">
                         </span>
                     </th>
-                    <th class=" no-link" width="100"><span class="nobr"><?php echo $this->helper('sales')->__('Qty Ordered') ?></span></th>
-                    <th class="no-link last" width="100"><span class="nobr"><?php echo $this->helper('sales')->__('Qty') ?></span></th>
+                    <th class=" no-link" width="100">
+                        <span class="nobr">
+                            <?php echo $this->escapeHtml($this->helper('sales')->__('Qty Ordered')) ?>
+                        </span>
+                    </th>
+                    <th class="no-link last" width="100">
+                        <span class="nobr"><?php echo $this->escapeHtml($this->helper('sales')->__('Qty')) ?></span>
+                    </th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <?php /** @var Mage_Sales_Model_Order_Shipment_Item $item */ ?>
-                <?php /** @var Mage_Sales_Model_Order_Item $_orderItem */ ?>
+                <?php /** @var Mage_Sales_Model_Order_Item $orderItem */ ?>
                 <?php foreach($this->getCollection() as $item): ?>
-                    <?php $_order = $this->getShipment()->getOrder() ?>
-                    <?php $_orderItem = $_order->getItemById($item->getOrderItemId()); ?>
+                    <?php $order = $this->getShipment()->getOrder() ?>
+                    <?php $orderItem = $order->getItemById($item->getOrderItemId()); ?>
                     <?php if ($item->getIsVirtual()
-                              || ($_orderItem->isShipSeparately() && !($_orderItem->getParentItemId() || $_orderItem->getParentItem()))
-                              || (!$_orderItem->isShipSeparately() && ($_orderItem->getParentItemId() || $_orderItem->getParentItem()))): ?>
+                              || ($orderItem->isShipSeparately() && !($orderItem->getParentItemId() || $orderItem->getParentItem()))
+                              || (!$orderItem->isShipSeparately() && ($orderItem->getParentItemId() || $orderItem->getParentItem()))): ?>
                         <?php continue; ?>
                     <?php endif; ?>
                     <tr title="#" id="" class="">
                         <td class="name">
                             <input name="customs_description"
-                                   type="text" title="<?php echo $this->__('Customs Description') ?>"
+                                   type="text" title="<?php echo $this->escapeHtml($this->__('Customs Description')) ?>"
                                    class="input-text required-entry validate-length maximum-length-256" maxlength="256"
                                    value="<?php echo $this->escapeHtml($item->getName()); ?>" />
                         </td>
                         <td class="country-of-origin">
                             <select name="customs_origin"
-                                    title="<?php echo $this->__('Country of Origin') ?>">
-                                <?php $selectedCountry = $this->getCountryOfManufacture($_orderItem->getProductId()); ?>
+                                    title="<?php echo $this->escapeHtml($this->__('Country of Origin')) ?>">
+                                <?php $selectedCountry = $this->getCountryOfManufacture($orderItem->getProductId()); ?>
                                 <?php foreach ($this->getCountries() as $countryInfo): ?>
-                                    <option value="<?php echo $countryInfo['value'] ?>" <?php if ($countryInfo['value'] == $selectedCountry): echo 'selected="selected"'; endif; ?>>
-                                        <?php echo $countryInfo['label']; ?>
+                                    <option value="<?php echo $this->escapeHtml($countryInfo['value']) ?>"
+                                        <?php if ($countryInfo['value'] == $selectedCountry):
+                                            echo 'selected="selected"';
+                                        endif;
+                                        ?>
+                                    >
+                                        <?php echo $this->escapeHtml($countryInfo['label']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -79,27 +103,45 @@
                         <td class="tariff-number">
                             <input name="customs_tariff_number"
                                    type="text" class="input-text required-entry validate-length maximum-length-10"
-                                   title="<?php echo $this->__('Tariff Number') ?>" maxlength="10" />
+                                   title="<?php echo $this->escapeHtml($this->__('Tariff Number')) ?>" maxlength="10" />
                         </td>
                         <td class="a-center weight ">
-                            <?php echo $item->getWeight(); ?>
+                            <?php echo $this->escapeHtml($item->getWeight()); ?>
                         </td>
                         <td>
                             <input type="text" name="customs_value" class="input-text validate-zero-or-greater"
-                                   value="<?php echo $this->formatPrice($item->getPrice()); ?>" size="10"
+                                   value="<?php echo $this->escapeHtml($this->formatPrice($item->getPrice())); ?>"
+                                   size="10"
                                    onblur="packaging.recalcContainerWeightAndCustomsValue(this);">
                         </td>
                         <td class="a-center ">
-                            <input type="checkbox" name="" value="<?php echo $item->getId() ? $item->getId() : $item->getOrderItemId(); ?>" class="checkbox">
+                            <input type="checkbox"
+                                   name=""
+                                   value="<?php echo $item->getId() ? $item->getId() : $item->getOrderItemId(); ?>"
+                                   class="checkbox">
                         </td>
                         <td class="a-center ">
                             <?php echo $item->getOrderItem()->getQtyOrdered()*1; ?>
                         </td>
                         <td class="a-right last">
-                            <input type="hidden" name="price" value="<?php echo $item->getPrice(); ?>">
-                            <input type="text" name="qty" value="<?php echo $item->getQty()*1; ?>" class="input-text qty<?php if ($item->getOrderItem()->getIsQtyDecimal()): ?> qty-decimal<?php endif ?>">&nbsp;
-                            <button type="button" class="scalable delete icon-btn" onclick="packaging.deleteItem(this);" style="display:none;">
-                                <span><span><span><?php echo $this->helper('sales')->__('Delete') ?></span></span></span>
+                            <input type="hidden" name="price"
+                                   value="<?php echo $this->escapeHtml($item->getPrice()); ?>">
+                            <input type="text" name="qty" value="<?php echo $item->getQty()*1; ?>"
+                                   class="input-text qty
+                                    <?php if ($item->getOrderItem()->getIsQtyDecimal()): ?>
+                                    qty-decimal
+                                    <?php endif ?>">
+                            <button type="button"
+                                    class="scalable delete icon-btn"
+                                    onclick="packaging.deleteItem(this);"
+                                    style="display:none;">
+                                <span>
+                                    <span>
+                                        <span>
+                                            <?php echo $this->escapeHtml($this->helper('sales')->__('Delete')) ?>
+                                        </span>
+                                    </span>
+                                </span>
                             </button>
                         </td>
                     </tr>

@@ -36,7 +36,7 @@ use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\GlobalSettings;
 class Dhl_Versenden_Model_Webservice_Builder_Settings
 {
     /** @var Dhl_Versenden_Model_Config_Shipment */
-    protected $config;
+    protected $_config;
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Settings constructor.
@@ -47,12 +47,14 @@ class Dhl_Versenden_Model_Webservice_Builder_Settings
     {
         $argName = 'config';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
+
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipment) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
-        $this->config = $args[$argName];
+
+        $this->_config = $args[$argName];
     }
 
     /**
@@ -61,6 +63,6 @@ class Dhl_Versenden_Model_Webservice_Builder_Settings
      */
     public function getSettings($store)
     {
-        return $this->config->getSettings($store);
+        return $this->_config->getSettings($store);
     }
 }

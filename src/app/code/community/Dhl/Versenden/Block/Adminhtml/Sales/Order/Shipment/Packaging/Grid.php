@@ -39,7 +39,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
     /**
      * @var string[]
      */
-    protected $countriesOfManufacture = array();
+    protected $_countriesOfManufacture = array();
 
     /**
      * Update template if additional customs data needs to be collected.
@@ -81,16 +81,18 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
      */
     public function getCountryOfManufacture($productId)
     {
-        if (empty($this->countriesOfManufacture)) {
+        if (empty($this->_countriesOfManufacture)) {
             /** @var Mage_Sales_Model_Resource_Order_Shipment_Item_Collection|Mage_Sales_Model_Order_Shipment_Item[] $items */
             $items = $this->getCollection();
             if (!is_array($items)) {
                 $items = $items->getItems();
             }
 
-            $productIds = array_map(function (Mage_Sales_Model_Order_Shipment_Item $item) {
-                return $item->getProductId();
-            }, $items);
+            $productIds = array_map(
+                function (Mage_Sales_Model_Order_Shipment_Item $item) {
+                    return $item->getProductId();
+                }, $items
+            );
 
             $productCollection = Mage::getResourceModel('catalog/product_collection');
             $productCollection
@@ -100,15 +102,15 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
             ;
 
             while ($product = $productCollection->fetchItem()) {
-                $this->countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
+                $this->_countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');
             }
         }
 
-        if (!isset($this->countriesOfManufacture[$productId])) {
+        if (!isset($this->_countriesOfManufacture[$productId])) {
             // fallback to shipper country
             return Mage::getModel('dhl_versenden/config')->getShipperCountry($this->getShipment()->getStoreId());
         }
 
-        return $this->countriesOfManufacture[$productId];
+        return $this->_countriesOfManufacture[$productId];
     }
 }

@@ -37,13 +37,13 @@
  */
 class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
 {
-    protected $file = 'dhl_versenden.log';
+    protected $_file = 'dhl_versenden.log';
 
     /** @var \Psr\Log\LoggerInterface */
-    protected $psrLogger;
+    protected $_psrLogger;
 
     /** @var Dhl_Versenden_Model_Config */
-    protected $config;
+    protected $_config;
 
     /**
      * Dhl_Versenden_Model_Log constructor.
@@ -54,11 +54,11 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
     public function __construct($args)
     {
         if (!isset($args['config']) || !$args['config'] instanceof Dhl_Versenden_Model_Config) {
-            throw new Mage_Core_Exception('missing or invalid argument: config');
+            Mage::throwException('missing or invalid argument: config');
         }
 
-        $this->psrLogger = new \Psr\Log\NullLogger();
-        $this->config = $args['config'];
+        $this->_psrLogger = new \Psr\Log\NullLogger();
+        $this->_config = $args['config'];
     }
 
     /**
@@ -70,7 +70,7 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      */
     public function setLogger(\Psr\Log\LoggerInterface $logger)
     {
-        $this->psrLogger = $logger;
+        $this->_psrLogger = $logger;
     }
 
     /**
@@ -81,8 +81,8 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      */
     public function debug($message, array $context = array())
     {
-        if ($this->config->isLoggingEnabled(Zend_Log::DEBUG)) {
-            $this->psrLogger->debug($message, $context);
+        if ($this->_config->isLoggingEnabled(Zend_Log::DEBUG)) {
+            $this->_psrLogger->debug($message, $context);
         }
     }
 
@@ -94,8 +94,8 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      */
     public function error($message, array $context = array())
     {
-        if ($this->config->isLoggingEnabled(Zend_Log::ERR)) {
-            $this->psrLogger->error($message, $context);
+        if ($this->_config->isLoggingEnabled(Zend_Log::ERR)) {
+            $this->_psrLogger->error($message, $context);
         }
     }
 
@@ -107,8 +107,8 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      */
     public function warning($message, array $context = array())
     {
-        if ($this->config->isLoggingEnabled(Zend_Log::WARN)) {
-            $this->psrLogger->warning($message, $context);
+        if ($this->_config->isLoggingEnabled(Zend_Log::WARN)) {
+            $this->_psrLogger->warning($message, $context);
         }
     }
 }
