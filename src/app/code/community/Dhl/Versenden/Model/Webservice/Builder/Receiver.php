@@ -85,7 +85,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         $streetName      = $street['street_name'];
         $streetNumber    = $street['street_number'];
         $addressAddition = $street['supplement'];
-
+        $email = $address->getEmail() ? :  $address->getOrder()->getCustomerEmail();
 
         // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
@@ -150,7 +150,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
             $countryISOCode,
             $address->getRegion(),
             $address->getTelephone(),
-            $address->getEmail(),
+            $email,
             '',
             $packStation,
             $postFiliale,
