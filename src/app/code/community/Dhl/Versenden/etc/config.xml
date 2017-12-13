@@ -28,7 +28,7 @@
 <config>
     <modules>
         <Dhl_Versenden>
-            <version>1.1.1</version>
+            <version>1.1.3</version>
         </Dhl_Versenden>
     </modules>
     <global>
@@ -214,6 +214,22 @@
                     </add_autocreate_mass_action>
                 </observers>
             </adminhtml_block_html_before>
+            <core_layout_block_create_after>
+                <observers>
+                    <dhl_ordergrid_add_column>
+                        <class>Dhl_Versenden_Model_Observer</class>
+                        <method>addColumnToGrid</method>
+                    </dhl_ordergrid_add_column>
+                </observers>
+            </core_layout_block_create_after>
+            <sales_order_grid_collection_load_before>
+                <observers>
+                    <dhl_ordergrid_prepare_collection>
+                        <class>dhl_versenden/observer</class>
+                        <method>prepareOrderGridCollection</method>
+                    </dhl_ordergrid_prepare_collection>
+                </observers>
+            </sales_order_grid_collection_load_before>
         </events>
     </adminhtml>
     <frontend>
@@ -305,6 +321,7 @@
 
                 <title>DHL Versenden</title>
                 <active>1</active>
+                <secret_key backend_model="adminhtml/system_config_backend_encrypted"/>
                 <sandbox_mode>1</sandbox_mode>
                 <logging_enabled>1</logging_enabled>
                 <log_level>3</log_level>
