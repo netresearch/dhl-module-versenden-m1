@@ -26,9 +26,9 @@
 ?>
 <?php
 /** @var Dhl_Versenden_Block_Config_Service $this */
-$services = $this->getData('services');
+$services = $this->getServices();
 ?>
-<?php if ($this->isServiceSelected()): ?>
+<?php if (count($services) >=1 && $this->isServiceSelected()): ?>
     <div class="dhl-services">
         <span class="service-label"><?php echo $this->__('Your DHL Wunschpaket'); ?></span>
         <ul>
