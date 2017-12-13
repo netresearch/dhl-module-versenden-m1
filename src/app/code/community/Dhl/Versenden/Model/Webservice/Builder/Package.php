@@ -36,10 +36,10 @@ use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder;
 class Dhl_Versenden_Model_Webservice_Builder_Package
 {
     /** @var string */
-    protected $unitOfMeasure;
+    protected $_unitOfMeasure;
 
     /** @var float */
-    protected $minWeightInKG;
+    protected $_minWeightInKG;
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Package constructor.
@@ -50,21 +50,25 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
     {
         $argName = 'unit_of_measure';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
+
         if (!is_string($args[$argName])) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
-        $this->unitOfMeasure = $args[$argName];
+
+        $this->_unitOfMeasure = $args[$argName];
 
         $argName = 'min_weight';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
+
         if (!is_numeric($args[$argName])) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
-        $this->minWeightInKG = $args[$argName];
+
+        $this->_minWeightInKG = $args[$argName];
     }
 
     /**
@@ -91,7 +95,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
                 $heightInCM = $packageDetails['params']['height'];
             }
 
-            $weightUnit = $this->unitOfMeasure;
+            $weightUnit = $this->_unitOfMeasure;
             if (isset($packageDetails['params']['weight_units']) && $packageDetails['params']['weight_units']) {
                 $weightUnit = $packageDetails['params']['weight_units'];
             }
@@ -101,7 +105,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Package
                 $weightInKG *= 0.001;
             }
 
-            $weightInKG = max($weightInKG, $this->minWeightInKG);
+            $weightInKG = max($weightInKG, $this->_minWeightInKG);
 
             $package = new ShipmentOrder\Package($id, $weightInKG, $lengthInCM, $widthInCM, $heightInCM);
             $packageCollection->addItem($package);

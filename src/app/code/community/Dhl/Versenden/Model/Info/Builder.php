@@ -42,10 +42,11 @@ class Dhl_Versenden_Model_Info_Builder
      * @param mixed $store
      * @return \Dhl\Versenden\Bcs\Api\Info
      */
-    public function infoFromSales(Mage_Customer_Model_Address_Abstract $shippingAddress,
-                                  array $serviceInfo,
-                                  $store = null)
-    {
+    public function infoFromSales(
+        Mage_Customer_Model_Address_Abstract $shippingAddress,
+        array $serviceInfo,
+        $store = null
+    ) {
         $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
         $serviceConfig  = Mage::getModel('dhl_versenden/config_service');
 

@@ -71,9 +71,11 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     public function isShippingAddressDHLLocation()
     {
         $shippingAddress = $this->getQuote()->getShippingAddress();
+        $dhlStationType = $shippingAddress->getData('dhl_station_type');
+        $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
 
-        if (!empty($shippingAddress->getData('dhl_station_type'))
-            || (!empty($shippingAddress->getData('dhl_versenden_info'))
+        if (!empty($dhlStationType)
+            || (!empty($dhlVersendenInfo)
                 && $this->isReceiverLocationUsed($shippingAddress->getData('dhl_versenden_info')))
         ) {
             return true;
@@ -154,12 +156,14 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
      */
     public function getServiceFeeText($serviceCode)
     {
+        /** @var DHL_Versenden_Model_Config_Service $serviceConfig */
+        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
         switch ($serviceCode) {
             case Service\PreferredDay::CODE:
-                $msg = Mage::getModel('dhl_versenden/config_service')->getPrefDayHandlingFeeText($this->getQuote()->getStoreId());
+                $msg = $serviceConfig->getPrefDayHandlingFeeText($this->getQuote()->getStoreId());
                 break;
             case Service\PreferredTime::CODE:
-                $msg = Mage::getModel('dhl_versenden/config_service')->getPrefTimeHandlingFeeText($this->getQuote()->getStoreId());
+                $msg = $serviceConfig->getPrefTimeHandlingFeeText($this->getQuote()->getStoreId());
                 break;
             default:
                 $msg = '';

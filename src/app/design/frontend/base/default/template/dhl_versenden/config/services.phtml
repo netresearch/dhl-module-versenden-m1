@@ -30,7 +30,7 @@ $services = $this->getServices();
 ?>
 <?php if (count($services) >=1 && $this->isServiceSelected()): ?>
     <div class="dhl-services">
-        <span class="service-label"><?php echo $this->__('Your DHL Wunschpaket'); ?></span>
+        <span class="service-label"><?php echo $this->escapeHtml($this->__('Your DHL Wunschpaket')); ?></span>
         <ul>
             <?php foreach ($services as $key => $value): ?>
                 <?php if ($value === null): ?>

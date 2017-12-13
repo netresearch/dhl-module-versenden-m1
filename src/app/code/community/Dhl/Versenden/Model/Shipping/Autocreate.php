@@ -44,7 +44,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
     public function __construct($args = array())
     {
         if (!isset($args['logger']) || !$args['logger'] instanceof Dhl_Versenden_Model_Log) {
-            throw new Mage_Core_Exception('missing or invalid argument: logger');
+            Mage::throwException('missing or invalid argument: logger');
         }
 
         $this->logger = $args['logger'];

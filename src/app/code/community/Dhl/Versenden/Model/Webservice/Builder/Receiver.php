@@ -36,10 +36,10 @@ use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
 class Dhl_Versenden_Model_Webservice_Builder_Receiver
 {
     /** @var Mage_Directory_Model_Country */
-    protected $countryDirectory;
+    protected $_countryDirectory;
 
     /** @var Dhl_Versenden_Helper_Address */
-    protected $helper;
+    protected $_helper;
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Receiver constructor.
@@ -51,21 +51,25 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
     {
         $argName = 'country_directory';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
+
         if (!$args[$argName] instanceof Mage_Directory_Model_Country) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
-        $this->countryDirectory = $args[$argName];
+
+        $this->_countryDirectory = $args[$argName];
 
         $argName = 'helper';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
+
         if (!$args[$argName] instanceof Dhl_Versenden_Helper_Address) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
-        $this->helper = $args[$argName];
+
+        $this->_helper = $args[$argName];
     }
 
     /**
@@ -76,12 +80,12 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
      */
     public function getReceiver(Mage_Customer_Model_Address_Abstract $address)
     {
-        $this->countryDirectory->loadByCode($address->getCountryId());
-        $country        = $this->countryDirectory->getName();
-        $countryISOCode = $this->countryDirectory->getIso2Code();
+        $this->_countryDirectory->loadByCode($address->getCountryId());
+        $country        = $this->_countryDirectory->getName();
+        $countryISOCode = $this->_countryDirectory->getIso2Code();
         $state          = $address->getRegion();
 
-        $street = $this->helper->splitStreet($address->getStreetFull());
+        $street = $this->_helper->splitStreet($address->getStreetFull());
         $streetName      = $street['street_name'];
         $streetNumber    = $street['street_number'];
         $addressAddition = $street['supplement'];

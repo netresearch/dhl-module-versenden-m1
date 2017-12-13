@@ -38,13 +38,13 @@
 class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
 {
     /** @var Dhl_Versenden_Model_Logger_Writer */
-    protected $writer;
+    protected $_writer;
 
     /** @var string */
-    protected $file = 'dhl_versenden.log';
+    protected $_file = 'dhl_versenden.log';
 
     /** @var int[] */
-    protected $levelMapping = array(
+    protected $_levelMapping = array(
         \Psr\Log\LogLevel::EMERGENCY => Zend_Log::EMERG,
         \Psr\Log\LogLevel::ALERT     => Zend_Log::ALERT,
         \Psr\Log\LogLevel::CRITICAL  => Zend_Log::CRIT,
@@ -62,9 +62,9 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
      */
     public function __construct(Dhl_Versenden_Model_Logger_Writer $writer, $file = '')
     {
-        $this->writer = $writer;
+        $this->_writer = $writer;
         if ($file) {
-            $this->file = $file;
+            $this->_file = $file;
         }
     }
 
@@ -104,10 +104,10 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
     public function log($level, $message, array $context = array())
     {
         if (isset($context['exception'])) {
-            $this->writer->logException($context['exception']);
+            $this->_writer->logException($context['exception']);
         }
 
         $message = $this->interpolate($message, $context);
-        $this->writer->log($message, $this->levelMapping[$level], $this->file);
+        $this->_writer->log($message, $this->_levelMapping[$level], $this->_file);
     }
 }

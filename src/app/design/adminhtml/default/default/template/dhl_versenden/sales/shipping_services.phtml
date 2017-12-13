@@ -26,9 +26,9 @@
 ?>
 <?php /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service $this */ ?>
 <?php $services = $this->getServices() ?>
-<?php if (count($services)): ?>
+<?php if (!empty($services)): ?>
     <div id="packaging-dhlversenden-services">
-        <div><?php echo $this->__('Services') ?></div>
+        <div><?php echo $this->escapeHtml($this->__('Services')) ?></div>
         <dl>
             <?php foreach ($services as $service): ?>
                 <?php $renderer = $this->getRenderer($service) ?>
@@ -40,7 +40,7 @@
                     <?php echo $renderer->getValueHtml(); ?>
                     <?php if ($service::CODE == 'preferredTime'): ?>
                         <div class="notePreferredTime">
-                            <?php echo $this->__('* With the preferred time service, DHL offers a nationwide evening delivery between 6-8 pm and 7-9 pm. Preferred time during the day is currently only available in major urban centers in four time windows between 10 am – 6 pm. Via the DHL shipping logistics system, you will receive information about the time windows, that will be available to your customers.'); ?>
+                            <?php echo $this->escapeHtml($this->__('* With the preferred time service, DHL offers a nationwide evening delivery between 6-8 pm and 7-9 pm. Preferred time during the day is currently only available in major urban centers in four time windows between 10 am – 6 pm. Via the DHL shipping logistics system, you will receive information about the time windows, that will be available to your customers.')); ?>
                         </div>
                     <?php endif; ?>
                 </dd>

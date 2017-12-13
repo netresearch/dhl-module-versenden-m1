@@ -47,10 +47,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Shipper
     {
         $argName = 'config';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipper) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
         $this->config = $args[$argName];
     }

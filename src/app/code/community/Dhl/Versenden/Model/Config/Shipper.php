@@ -142,8 +142,8 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $bankName     = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_BANKNAME, $store);
         $iban         = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_IBAN, $store);
         $bic          = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_BIC, $store);
-        $note1        = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE1, $store);
-        $note2        = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE2, $store);
+        $noteOne      = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE1, $store);
+        $noteTWo      = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE2, $store);
         $accountRef   = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_ACCOUNTREF, $store);
 
         return new Shipper\BankData(
@@ -151,8 +151,8 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $bankName,
             $iban,
             $bic,
-            $note1,
-            $note2,
+            $noteOne,
+            $noteTWo,
             $accountRef
         );
     }
@@ -166,9 +166,9 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $countryId = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_COUNTRYID, $store);
         $countryDirectory = Mage::getSingleton('directory/country')->loadByCode($countryId);
 
-        $name1 = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_NAME1, $store);
-        $name2 = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_NAME2, $store);
-        $name3 = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_NAME3, $store);
+        $nameOne = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_NAME1, $store);
+        $nameTwo = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_NAME2, $store);
+        $nameThree = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_NAME3, $store);
         $streetName = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_STREETNAME, $store);
         $streetNumber = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_STREETNUMBER, $store);
         $addressAddition = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_ADDITION, $store);
@@ -184,9 +184,9 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $contactPerson = $this->getStoreConfig(self::CONFIG_XML_FIELD_CONTACT_PERSON, $store);
 
         return new Shipper\Contact(
-            $name1,
-            $name2,
-            $name3,
+            $nameOne,
+            $nameTwo,
+            $nameThree,
             $streetName,
             $streetNumber,
             $addressAddition,
@@ -215,9 +215,9 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $countryId = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_COUNTRYID, $store);
         $countryDirectory = Mage::getSingleton('directory/country')->loadByCode($countryId);
 
-        $name1 = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_NAME1, $store);
-        $name2 = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_NAME2, $store);
-        $name3 = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_NAME3, $store);
+        $nameOne = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_NAME1, $store);
+        $nameTwo = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_NAME2, $store);
+        $nameThree = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_NAME3, $store);
         $streetName = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_STREETNAME, $store);
         $streetNumber = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_STREETNUMBER, $store);
         $addressAddition = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_ADDITION, $store);
@@ -233,9 +233,9 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $contactPerson = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_PERSON, $store);
 
         return new Shipper\ReturnReceiver(
-            $name1,
-            $name2,
-            $name3,
+            $nameOne,
+            $nameTwo,
+            $nameThree,
             $streetName,
             $streetNumber,
             $addressAddition,

@@ -88,15 +88,19 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
      */
     protected function _prepareToRender()
     {
-        $this->addColumn('procedure', array(
+        $this->addColumn(
+            'procedure', array(
             'label' => $this->__('Procedure'),
             'renderer' => $this->_getTemplateRenderer()
-        ));
-        $this->addColumn('participation', array(
+            )
+        );
+        $this->addColumn(
+            'participation', array(
             'label' => $this->__('Participation'),
             'style' => 'width:80px',
             'class' => 'input-text required-entry'
-        ));
+            )
+        );
         // hide "Add after" button
         $this->_addAfter = false;
 
