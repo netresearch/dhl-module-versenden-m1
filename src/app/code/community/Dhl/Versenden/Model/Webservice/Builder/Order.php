@@ -59,13 +59,13 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
     public function __construct($args)
     {
         $argDef = array(
-            'shipper_builder'  => get_class($args['shipper_builder']),
-            'receiver_builder' => get_class($args['receiver_builder']),
-            'service_builder'  => get_class($args['service_builder']),
-            'package_builder'  => get_class($args['package_builder']),
-            'customs_builder'  => get_class($args['customs_builder']),
-            'settings_builder' => get_class($args['settings_builder']),
-            'info_builder'     => get_class($args['info_builder'])
+            'shipper_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Shipper',
+            'receiver_builder' => 'Dhl_Versenden_Model_Webservice_Builder_Receiver',
+            'service_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Service',
+            'package_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Package',
+            'customs_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Customs',
+            'settings_builder' => 'Dhl_Versenden_Model_Webservice_Builder_Settings',
+            'info_builder'     => 'Dhl_Versenden_Model_Info_Builder'
         );
 
         $missingArguments = array_diff_key($argDef, $args);

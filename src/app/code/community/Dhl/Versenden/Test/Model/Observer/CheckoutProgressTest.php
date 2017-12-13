@@ -57,6 +57,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
                 }
             }'
         );
+        $shippingAddress->setShippingMethod('flatrate_foo');
         $quote->addShippingAddress($shippingAddress);
 
         $sessionMock = $this->getModelMock('checkout/session', array('init', 'getQuote'));
