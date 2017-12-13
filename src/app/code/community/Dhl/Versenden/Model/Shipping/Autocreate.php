@@ -115,6 +115,11 @@ class Dhl_Versenden_Model_Shipping_Autocreate
                     $shipment->getOrder(),
                     $shipmentRequest->getData('request_data_exception')
                 );
+                $incId = $shipment->getOrder()->getIncrementId();
+                $message = __('Autocreation Error');
+                $message .= "\n";
+                $message .= ' # '. $incId . ' : ' . $shipmentRequest->getData('request_data_exception');
+                $this->logger->error($message);
                 continue;
             }
 
