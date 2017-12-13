@@ -205,6 +205,15 @@
                     </replace_address_form>
                 </observers>
             </adminhtml_widget_container_html_before>
+            <adminhtml_block_html_before>
+                <observers>
+                    <add_autocreate_mass_action>
+                        <type>singleton</type>
+                        <class>dhl_versenden/observer</class>
+                        <method>addAutocreateMassAction</method>
+                    </add_autocreate_mass_action>
+                </observers>
+            </adminhtml_block_html_before>
         </events>
     </adminhtml>
     <frontend>
