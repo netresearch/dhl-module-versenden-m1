@@ -259,7 +259,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
      *
      * @param Varien_Event_Observer $observer
      *
-     * @return $this
+     * @return void
      * - event: sales_quote_collect_totals_before
      */
     public function addServiceFee(Varien_Event_Observer $observer)
@@ -267,14 +267,24 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         /** @var Mage_Sales_Model_Quote $quote */
         $quote = $observer->getQuote();
         $shippingAddress = $quote->getShippingAddress();
+        $shippingMethod  = $shippingAddress->getShippingMethod();
+
         /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
         $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
-        if ($dhlVersendenInfo == null) {
-            return $this;
+
+        /** @var Dhl_Versenden_Model_Config_Shipment $config */
+        $config = Mage::getModel('dhl_versenden/config_shipment');
+        if (!$config->canProcessMethod($shippingMethod, $quote->getStoreId())) {
+            $dhlVersendenInfo = null;
+            $this->resetVersendenInfo($observer);
         }
 
-        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
+        if ($dhlVersendenInfo === null) {
+            return;
+        }
+
         if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
+            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
             $dhlVersendenInfo = $serializer->unserialize($dhlVersendenInfo);
         }
 
@@ -286,7 +296,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             $prefTimeHandlingFee = $services->preferredTime ? $config->getPrefTimeFee($store->getId()) : 0;
             $prefDayHandlingFee = $services->preferredDay ? $config->getPrefDayFee($store->getId()) : 0;
 
-            $shippingMethod = $shippingAddress->getShippingMethod();
+
             list($carrierCode, $method) = explode('_', $shippingMethod, 2);
 
             $initialPrice = $store->getConfig("carriers/{$carrierCode}/price");
@@ -307,9 +317,10 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
              */
             $store->setConfig("carriers/{$carrierCode}/handling_type", 'F');
             $store->setConfig("carriers/{$carrierCode}/handling_fee", $handlingFee);
-            // needed to re collect shipping incl. fee in all steps
-            $quote->getShippingAddress()->setCollectShippingRates(true);
         }
+
+        // needed to re collect shipping incl. fee in all steps
+        $quote->getShippingAddress()->setCollectShippingRates(true);
     }
 
     /**
@@ -323,9 +334,11 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
      */
     public function resetVersendenInfo(Varien_Event_Observer $observer)
     {
-        $quote = Mage::getModel('checkout/session')->getQuote();
+        /** @var Mage_Checkout_Model_Session $checkoutSession */
+        $checkoutSession = Mage::getModel('checkout/session');
+        $quote = $checkoutSession->getQuote();
         $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setData('dhl_versenden_info', null);
+        $shippingAddress->setData('dhl_versenden_info', '');
         $shippingAddress->save();
 
         return $this;
