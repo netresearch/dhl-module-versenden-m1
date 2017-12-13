@@ -107,7 +107,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     {
         if (!$this->isSandboxModeEnabled()) {
             $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER));
-            $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE);
+            $signature = Mage::helper('core')->decrypt($this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE));
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP);
 
             $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION);

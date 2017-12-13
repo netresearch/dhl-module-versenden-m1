@@ -135,7 +135,8 @@
                         <account_signature>
                             <label>Signature</label>
                             <tooltip>Password for the DHL Webservice (API). This can be created in the DHL Business Customer Portal.</tooltip>
-                            <frontend_type>password</frontend_type>
+                            <backend_model>adminhtml/system_config_backend_encrypted</backend_model>
+                            <frontend_type>obscure</frontend_type>
                             <validate>required-entry</validate>
                             <sort_order>220</sort_order>
                             <show_in_default>1</show_in_default>
