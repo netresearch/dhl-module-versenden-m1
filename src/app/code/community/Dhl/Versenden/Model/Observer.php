@@ -339,7 +339,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         $checkoutSession = Mage::getModel('checkout/session');
         $quote = $checkoutSession->getQuote();
         $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setData('dhl_versenden_info', '');
+        $shippingAddress->setData('dhl_versenden_info', null);
         $shippingAddress->save();
 
         return $this;
