@@ -77,6 +77,7 @@
                         -->
                         <sandbox_mode>
                             <label>Sandbox Mode</label>
+                            <tooltip>The Sandbox mode allows testing without entering a username, password, or DHL Customer Number.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>140</sort_order>
@@ -119,7 +120,8 @@
                         </dhlversenden_fields_account>
                         <account_user>
                             <label>User</label>
-                            <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                            <tooltip>Username for the DHL Webservice (API). This can be created in the DHL Business Customer Portal.</tooltip>
+                            <comment><![CDATA[Recommendation: Create a System User in the DHL Business Customer Portal.]]></comment>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry</validate>
                             <sort_order>210</sort_order>
@@ -132,7 +134,7 @@
                         </account_user>
                         <account_signature>
                             <label>Signature</label>
-                            <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                            <tooltip>Password for the DHL Webservice (API). This can be created in the DHL Business Customer Portal.</tooltip>
                             <frontend_type>password</frontend_type>
                             <validate>required-entry</validate>
                             <sort_order>220</sort_order>
@@ -145,7 +147,8 @@
                         </account_signature>
                         <account_ekp>
                             <label>EKP</label>
-                            <tooltip>DHL contract customers receive the access data to the DHL Business Customer Portal via DHL Paket sales.</tooltip>
+                            <tooltip>Your DHL Customer Number (Account Number / EKP) from the DHL Business Customer Portal.</tooltip>
+                            <comment><![CDATA[See the Knowledge Base tutorial on how to configure the EKP.]]></comment>
                             <frontend_type>text</frontend_type>
                             <validate>required-entry validate-length minimum-length-10 maximum-length-10</validate>
                             <sort_order>230</sort_order>
@@ -158,6 +161,7 @@
                         </account_ekp>
                         <account_participation>
                             <label>Participation Numbers</label>
+                            <comment><![CDATA[See the Knowledge Base tutorial on how to configure the Participation Numbers.]]></comment>
                             <frontend_model>dhl_versenden/adminhtml_form_field_participation</frontend_model>
                             <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
                             <sort_order>240</sort_order>
@@ -189,7 +193,7 @@
                         </shipment_printonlyifcodeable>
                         <shipment_unitofmeasure>
                             <label>Weight Unit</label>
-                            <tooltip>Configure the product weight unit that is used in the Catalog.</tooltip>
+                            <tooltip>Select the weight unit that is used in your Product Catalog.</tooltip>
                             <frontend_type>select</frontend_type>
                             <source_model>dhl_versenden/shipping_carrier_versenden_source_unitofmeasure</source_model>
                             <sort_order>320</sort_order>
@@ -209,8 +213,8 @@
                             <show_in_store>0</show_in_store>
                         </shipment_dhlmethods>
                         <shipment_dhlcodmethods>
-                            <label>Cash On Delivery Payment Methods for DHL Versenden</label>
-                            <tooltip>These payment methods will be treated as COD methods during shipping order requests.</tooltip>
+                            <label>Cash On Delivery (COD) Payment Methods for DHL Versenden</label>
+                            <tooltip>These payment methods will be treated as Cash On Delivery (COD) methods during shipping order requests.</tooltip>
                             <frontend_type>multiselect</frontend_type>
                             <source_model>adminhtml/system_config_source_payment_allmethods</source_model>
                             <sort_order>350</sort_order>
@@ -363,7 +367,7 @@
                         </shipment_autocreate_enabled>
                         <shipment_autocreate_order_status>
                             <label>Order Status</label>
-                            <tooltip>Create shipments for orders with the given status.</tooltip>
+                            <tooltip>Automatically create shipments for orders in the selected status.</tooltip>
                             <frontend_type>multiselect</frontend_type>
                             <source_model>adminhtml/system_config_source_order_status</source_model>
                             <sort_order>520</sort_order>
