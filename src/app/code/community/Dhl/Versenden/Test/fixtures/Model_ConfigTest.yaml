@@ -18,6 +18,9 @@ scope:
 config:
   default/dev/template/allow_symlink: 1
   default/dhl_versenden/dev/autoload_enabled: "0"
+  default/shipping/origin/country_id: "US"
+  stores/store_one/shipping/origin/country_id: "DE"
+  stores/store_two/shipping/origin/country_id: "AT"
 
   default/carriers/dhlversenden/title:          "foo"
   stores/store_one/carriers/dhlversenden/title: "bar"
@@ -42,6 +45,8 @@ config:
   default/carriers/dhlversenden/sandbox_auth_username: "uBar"
   default/carriers/dhlversenden/sandbox_auth_password: "pBar"
   default/carriers/dhlversenden/sandbox_endpoint: "sandbox endpoint"
+
+  default/carriers/dhlversenden/shipment_dhlmethods: "flatrate_foo"
 
   default/carriers/dhlversenden/service_preferredday_handling_fee: 5
   default/carriers/dhlversenden/service_preferredday_handling_fee_text: This will cost $1

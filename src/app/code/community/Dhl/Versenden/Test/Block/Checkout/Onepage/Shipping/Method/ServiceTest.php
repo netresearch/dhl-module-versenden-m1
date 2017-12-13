@@ -44,9 +44,7 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
     protected function setUp()
     {
         parent::setUp();
-
-        $this->setCurrentStore('store_two');
-
+        $this->setCurrentStore('store_one');
         $shippingAddress = Mage::getModel('sales/quote_address');
         $shippingAddress->setCountryId('DE');
 
@@ -69,7 +67,7 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
     public function getServices()
     {
         $serviceOne = new Service\BulkyGoods('', true, false);
-        $serviceTwo = new Service\PreferredLocation('', true, false, '');
+        $serviceTwo = new Service\PreferredNeighbour('', true, false, 'testneighbour');
         $services   = array($serviceOne, $serviceTwo);
         $collection = new Service\Collection($services);
 

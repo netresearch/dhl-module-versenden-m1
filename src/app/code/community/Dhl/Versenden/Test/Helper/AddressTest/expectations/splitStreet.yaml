@@ -120,8 +120,8 @@ r4_7:
   supplement: ""
 lieblgasse_2_41_7_21:
   street_name: "Lieblgasse"
-  street_number: "2/41/7/21"
-  supplement: ""
+  street_number: "2"
+  supplement: "41/7/21"
 1752_oto_iwatsukiku:
   street_name: "Oto"
   street_number: "1752"
@@ -184,8 +184,8 @@ mannerheimintie_13_A_2:
   supplement: ""
 neuhof_13_15:
   street_name: "Neuhof"
-  street_number: "13 / 15"
-  supplement: ""
+  street_number: "13"
+  supplement: "15"
 no_133_shangdong_st:
   street_name: "Shangdong St."
   street_number: "133"
