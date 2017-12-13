@@ -66,6 +66,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         if (!ctype_digit($value) || strlen($value) <> 8) {
             return $value;
         }
+
         $timeValues = str_split($value, 2);
         $result     = $timeValues[0] . ' - ' . $timeValues[2];
 
@@ -84,5 +85,31 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $filteredServices  = array_filter($servicesArray);
 
         return count($filteredServices) > 0 ? true : false;
+    }
+
+    /**
+     * @return array|\Dhl\Versenden\Bcs\Api\Info\Services
+     */
+    public function getServices()
+    {
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingMethod  = $shippingAddress->getShippingMethod();
+
+        /** @var Dhl_Versenden_Model_Config_Shipment $config */
+        $config = Mage::getModel('dhl_versenden/config_shipment');
+        if (!$config->canProcessMethod($shippingMethod, $quote->getStoreId())) {
+            return array();
+        }
+
+        /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
+        $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
+        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
+            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
+            $dhlVersendenInfo = $serializer->unserialize($dhlVersendenInfo);
+        }
+
+        return $dhlVersendenInfo->getServices();
     }
 }
