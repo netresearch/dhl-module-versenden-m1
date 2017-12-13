@@ -136,8 +136,8 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         /** @var Dhl_Versenden_Model_Webservice_Logger_Soap $logger */
         $logger = $this->getLogger(
             Mage::getModel('dhl_versenden/config'),
-            Mage::getModel('dhl_versenden/logger_writer'))
-        ;
+            Mage::getModel('dhl_versenden/logger_writer')
+        );
 
         try {
             /** @var ResponseData\CreateShipment $result */
@@ -165,8 +165,8 @@ class Dhl_Versenden_Model_Webservice_Gateway_Soap
         /** @var Dhl_Versenden_Model_Webservice_Logger_Soap $logger */
         $logger = $this->getLogger(
             Mage::getModel('dhl_versenden/config'),
-            Mage::getModel('dhl_versenden/logger_writer'))
-        ;
+            Mage::getModel('dhl_versenden/logger_writer')
+        );
 
         try {
             /** @var ResponseData\CreateShipment $result */

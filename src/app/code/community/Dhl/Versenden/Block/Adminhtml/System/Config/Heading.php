@@ -48,6 +48,7 @@ class Dhl_Versenden_Block_Adminhtml_System_Config_Heading
         if ($comment) {
             $comment = "<p>$comment</p>";
         }
+
         $html = sprintf('<td colspan="5"><h4>%s</h4>%s</td>', $element->getLabel(), $comment);
         return $this->_decorateRowHtml($element, $html);
     }

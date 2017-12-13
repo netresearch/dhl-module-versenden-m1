@@ -37,10 +37,10 @@ use \Dhl\Versenden\Bcs\Api\Shipment\Service;
 class Dhl_Versenden_Model_Webservice_Builder_Service
 {
     /** @var Dhl_Versenden_Model_Config_Shipper */
-    protected $shipperConfig;
+    protected $_shipperConfig;
 
     /** @var Dhl_Versenden_Model_Config_Shipment */
-    protected $shipmentConfig;
+    protected $_shipmentConfig;
 
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Service constructor.
@@ -51,21 +51,25 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
     {
         $argName = 'shipper_config';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+           Mage::throwException("required argument missing: $argName");
         }
+
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipper) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+            Mage::throwException("invalid argument: $argName");
         }
-        $this->shipperConfig = $args[$argName];
+
+        $this->_shipperConfig = $args[$argName];
 
         $argName = 'shipment_config';
         if (!isset($args[$argName])) {
-            throw new Mage_Core_Exception("required argument missing: $argName");
+            Mage::throwException("required argument missing: $argName");
         }
+
         if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Shipment) {
-            throw new Mage_Core_Exception("invalid argument: $argName");
+           Mage::throwException("invalid argument: $argName");
         }
-        $this->shipmentConfig = $args[$argName];
+
+        $this->_shipmentConfig = $args[$argName];
     }
 
     /**
@@ -115,7 +119,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             : false;
 
         $paymentMethod = $salesEntity->getPayment()->getMethod();
-        $cod = $this->shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId())
+        $cod = $this->_shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId())
             ? number_format($salesEntity->getBaseGrandTotal(), 2)
             : false;
 

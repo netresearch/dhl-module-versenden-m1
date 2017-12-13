@@ -126,6 +126,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
                             'disabled' => false
                         );
                 } catch (Exception $e) {
+                    $options[$selectedValue] = "";
                 }
             }
         }
@@ -339,7 +340,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
         $items = array_filter(
             $services,
-            function(Service\Type\Generic $service) {
+            function (Service\Type\Generic $service) {
                 return (bool)$service->isEnabled();
             }
         );
@@ -382,7 +383,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         // skip services disabled for auto creation
         $items = array_filter(
             $services,
-            function(Service\Type\Generic $service) use ($autoCreateValues) {
+            function (Service\Type\Generic $service) use ($autoCreateValues) {
                 return (isset($autoCreateValues[$service->getCode()]) && $autoCreateValues[$service->getCode()]);
             }
         );
@@ -412,10 +413,13 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      *
      * @return Service\Collection
      */
-    public function getAvailableServices($shipperCountry, $recipientCountry, $isPostalFacility,
-        $onlyCustomerServices = false, $store = null
-    )
-    {
+    public function getAvailableServices(
+        $shipperCountry,
+        $recipientCountry,
+        $isPostalFacility,
+        $onlyCustomerServices = false,
+        $store = null
+    ) {
         $services = $this->getEnabledServices($store);
 
         $euCountries      =

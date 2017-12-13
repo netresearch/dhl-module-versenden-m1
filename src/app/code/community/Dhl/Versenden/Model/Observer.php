@@ -132,6 +132,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         if (!$quote) {
             $quote = Mage::getSingleton('checkout/session')->getQuote();
         }
+
         if (!$quote) {
             // no quote, cannot check whether cod is allowed or not.
             return;
@@ -206,7 +207,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         $shipmentNumbers = array($track->getData('track_number'));
         $response        = $gateway->deleteShipmentOrder($shipmentNumbers);
         if ($response->getStatus()->isError()) {
-            throw new Mage_Core_Exception($response->getStatus()->getStatusText());
+            Mage::throwException($response->getStatus()->getStatusText());
         }
 
         $track->getShipment()->setShippingLabel(null);
@@ -348,9 +349,10 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
     {
         $block = $observer->getEvent()->getBlock();
 
-        if($block instanceof Mage_Adminhtml_Block_Widget_Grid_Massaction
-            && $block->getRequest()->getControllerName() == 'sales_order')
-        {
+        if ($block instanceof Mage_Adminhtml_Block_Widget_Grid_Massaction
+            && $block->getRequest()->getControllerName() == 'sales_order'
+        ) {
+
             $block->addItem('createshipinglabel', array(
                 'label' => __('Create Shipping Label'),
                 'url' => Mage::app()->getStore()->getUrl('adminhtml/sales_order_autocreate/massCreateShipmentLabel'),

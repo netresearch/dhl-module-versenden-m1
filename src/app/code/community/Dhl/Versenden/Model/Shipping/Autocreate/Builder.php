@@ -36,13 +36,13 @@ use \Dhl\Versenden\Bcs\Api\Shipment\Service;
 class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 {
     /** @var Mage_Sales_Model_Order */
-    protected $order;
+    protected $_order;
     /** @var Dhl_Versenden_Model_Config_Shipment */
-    protected $shipmentConfig;
+    protected $_shipmentConfig;
     /** @var Dhl_Versenden_Model_Config_Shipper */
-    protected $shipperConfig;
+    protected $_shipperConfig;
     /** @var Dhl_Versenden_Model_Config_Service */
-    protected $serviceConfig;
+    protected $_serviceConfig;
 
     /**
      * Dhl_Versenden_Model_Shipping_Autocreate_Builder constructor.
@@ -52,15 +52,16 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      * @param Dhl_Versenden_Model_Config_Shipper $shipperConfig
      * @param Dhl_Versenden_Model_Config_Service $serviceConfig
      */
-    public function __construct(Mage_Sales_Model_Order $order,
-                                Dhl_Versenden_Model_Config_Shipment $shipmentConfig,
-                                Dhl_Versenden_Model_Config_Shipper $shipperConfig,
-                                Dhl_Versenden_Model_Config_Service $serviceConfig)
-    {
-        $this->order = $order;
-        $this->shipmentConfig = $shipmentConfig;
-        $this->shipperConfig = $shipperConfig;
-        $this->serviceConfig = $serviceConfig;
+    public function __construct(
+        Mage_Sales_Model_Order $order,
+        Dhl_Versenden_Model_Config_Shipment $shipmentConfig,
+        Dhl_Versenden_Model_Config_Shipper $shipperConfig,
+        Dhl_Versenden_Model_Config_Service $serviceConfig
+    ) {
+        $this->_order = $order;
+        $this->_shipmentConfig = $shipmentConfig;
+        $this->_shipperConfig = $shipperConfig;
+        $this->_serviceConfig = $serviceConfig;
     }
 
     /**
@@ -74,8 +75,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $request = Mage::getModel('shipping/shipment_request');
 
         $request->setOrderShipment($shipment);
-        $request->setShippingMethod($this->order->getShippingMethod());
-        $request->setPackageWeight($this->order->getWeight());
+        $request->setShippingMethod($this->_order->getShippingMethod());
+        $request->setPackageWeight($this->_order->getWeight());
         $request->setBaseCurrencyCode(Mage::app()->getStore($shipment->getStoreId())->getBaseCurrencyCode());
         $request->setStoreId($shipment->getStoreId());
 
@@ -97,7 +98,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
     protected function setShipper(Mage_Shipping_Model_Shipment_Request $request)
     {
         /** @var \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper\Contact $contact */
-        $contact = $this->shipperConfig->getContact($this->order->getStoreId());
+        $contact = $this->_shipperConfig->getContact($this->_order->getStoreId());
         $request->setShipperContactPersonName($contact->getName1());
         $request->setShipperContactCompanyName($contact->getName2());
         $request->setShipperContactPhoneNumber($contact->getPhone());
@@ -117,7 +118,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setRecipient(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $address             = $this->order->getShippingAddress();
+        $address             = $this->_order->getShippingAddress();
         $recipientRegionCode = Mage::getModel('directory/region')->load($address->getRegionId())->getCode();
 
         $request->setRecipientContactPersonName(trim($address->getFirstname() . ' ' . $address->getLastname()));
@@ -148,7 +149,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $totalCustomsValue = 0;
 
         /** @var Mage_Sales_Model_Order_Item $item */
-        foreach ($this->order->getAllItems() as $item) {
+        foreach ($this->_order->getAllItems() as $item) {
             if (!$item->isDummy($request->getOrderShipment())) {
                 $packageItem = array();
                 $packageItem['qty'] = $item->getQtyShipped();
@@ -169,7 +170,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $packageParams = array(
             'weight' => $totalWeight,
             'customs_value' => $totalCustomsValue,
-            'weight_units' => $this->shipmentConfig->getSettings($this->order->getStoreId())->getUnitOfMeasure(),
+            'weight_units' => $this->_shipmentConfig->getSettings($this->_order->getStoreId())->getUnitOfMeasure(),
         );
 
         $packageData = array(
@@ -191,19 +192,23 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setServices(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $storeId = $this->order->getStoreId();
+        $storeId = $this->_order->getStoreId();
 
         // set merchant services from autocreate config
-        $services = $this->serviceConfig->getAutoCreateServices($storeId);
-        $shippingAddress = $this->order->getShippingAddress();
+        $services = $this->_serviceConfig->getAutoCreateServices($storeId);
+        $shippingAddress = $this->_order->getShippingAddress();
         $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
         $recipientCountry = $shippingAddress->getCountryId();
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 
-        $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
+            $shipperCountry, $recipientCountry, $euCountries
+        );
         $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
-        $serviceFilter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter($shippingProducts, $isPostalFacility, false);
+        $serviceFilter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter(
+            $shippingProducts, $isPostalFacility, false
+        );
         $filteredServiceCollection = $serviceFilter->filterServiceCollection($services);
 
         $serviceData = array(
@@ -220,9 +225,9 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 
         // add printOnlyIfCodeable flag from config
         $serviceData['shipment_service'][Service\PrintOnlyIfCodeable::CODE] =
-            $this->shipmentConfig->getSettings($storeId)->isPrintOnlyIfCodeable();
+            $this->_shipmentConfig->getSettings($storeId)->isPrintOnlyIfCodeable();
         // add parcelAnnouncement flag from config
-        $parcelAnnouncement = $this->serviceConfig->getEnabledServices($storeId)
+        $parcelAnnouncement = $this->_serviceConfig->getEnabledServices($storeId)
                 ->getItem(Service\ParcelAnnouncement::CODE);
         if (($parcelAnnouncement instanceof Service\ParcelAnnouncement) && !$parcelAnnouncement->isCustomerService()) {
             $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = true;
@@ -231,9 +236,9 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 
         // set customer services from checkout (includes parcelAnnouncement if configured as "optional")
         /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
-        $versendenInfo = $this->order->getShippingAddress()->getData('dhl_versenden_info');
+        $versendenInfo = $this->_order->getShippingAddress()->getData('dhl_versenden_info');
         if ($versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
-            $customerServices = $this->serviceConfig->getAvailableServices(
+            $customerServices = $this->_serviceConfig->getAvailableServices(
                 $shipperCountry,
                 $recipientCountry,
                 $isPostalFacility,
@@ -258,8 +263,8 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setGkApiProduct(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $shipperCountry = $this->shipperConfig->getContact($this->order->getStoreId())->getCountryISOCode();
-        $recipientCountry = $this->order->getShippingAddress()->getCountryId();
+        $shipperCountry = $this->_shipperConfig->getContact($this->_order->getStoreId())->getCountryISOCode();
+        $recipientCountry = $this->_order->getShippingAddress()->getCountryId();
 
         $products = Mage::getModel('dhl_versenden/shipping_carrier_versenden')
             ->getProducts($shipperCountry, $recipientCountry);

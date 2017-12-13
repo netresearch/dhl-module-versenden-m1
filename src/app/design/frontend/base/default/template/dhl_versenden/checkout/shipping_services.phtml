@@ -24,24 +24,27 @@
  * @link      http://www.netresearch.de/
  */
 ?>
-<?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */ ?>
-<?php if (!$this->isShippingAddressDHLLocation() || count($this->getServices())): ?>
+<?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */
+    $services = $this->getServices();
+?>
+
+<?php if (!$this->isShippingAddressDHLLocation() || !empty($services)): ?>
     <div id="checkout-dhlversenden-services" style="display: none;">
         <img
             src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
             alt="<?php echo $this->__('DHL Additional Services') ?>"
             title="<?php echo $this->__('DHL Additional Services') ?>"
         />
-        <?php if (count($this->getServices())): ?>
-        <span><?php echo $this->__('Your recipient services'); ?></span>
+        <?php if (!empty($services)): ?>
+        <span><?php echo $this->escapeHtml($this->__('Your recipient services')); ?></span>
         <p>
-            <?php echo $this->__(
+            <?php echo $this->escapeHtml($this->__(
                 'You decide when and where you want to receive your parcels with the recipient services of DHL.<br/>Please choose your preferred delivery option:'
-            ); ?>
+            )); ?>
         </p>
         <dl>
             <?php /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service */ ?>
-            <?php foreach ($this->getServices() as $service): ?>
+            <?php foreach ($services as $service): ?>
                 <dt class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
                     <?php echo $service->getSelectorHtml() ?>
                     <?php $serviceLabel = $service->getLabelHtml() ?>

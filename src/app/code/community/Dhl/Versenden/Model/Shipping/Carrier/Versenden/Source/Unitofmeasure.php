@@ -47,6 +47,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden_Source_Unitofmeasure
                 'label' => $val,
             );
         }
+
         return $returnArr;
     }
 }
