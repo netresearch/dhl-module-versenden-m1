@@ -330,4 +330,18 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
 
         return $this;
     }
+
+    public function addAutocreateMassAction(Varien_Event_Observer $observer)
+    {
+        $block = $observer->getEvent()->getBlock();
+
+        if($block instanceof Mage_Adminhtml_Block_Widget_Grid_Massaction
+            && $block->getRequest()->getControllerName() == 'sales_order')
+        {
+            $block->addItem('createshipinglabel', array(
+                'label' => __('Create Shipping Label'),
+                'url' => Mage::app()->getStore()->getUrl('adminhtml/sales_order_autocreate/massCreateShipmentLabel'),
+            ));
+        }
+    }
 }
