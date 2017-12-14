@@ -214,22 +214,6 @@
                     </add_autocreate_mass_action>
                 </observers>
             </adminhtml_block_html_before>
-            <core_layout_block_create_after>
-                <observers>
-                    <dhl_ordergrid_add_column>
-                        <class>Dhl_Versenden_Model_Observer</class>
-                        <method>addColumnToGrid</method>
-                    </dhl_ordergrid_add_column>
-                </observers>
-            </core_layout_block_create_after>
-            <sales_order_grid_collection_load_before>
-                <observers>
-                    <dhl_ordergrid_prepare_collection>
-                        <class>dhl_versenden/observer</class>
-                        <method>prepareOrderGridCollection</method>
-                    </dhl_ordergrid_prepare_collection>
-                </observers>
-            </sales_order_grid_collection_load_before>
         </events>
     </adminhtml>
     <frontend>
