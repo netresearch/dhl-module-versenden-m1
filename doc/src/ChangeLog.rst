@@ -33,6 +33,23 @@ ChangeLog
      - **Date**
      - **Description**
 
+   * - 1.2.0
+     - 15.12.2017
+     - Features:
+
+       * Create shipping labels via order grid mass action
+       * Encrypt API password in database
+       * Send shipment confirmation email during cron autocreate
+
+       Bugfixes:
+
+       * Remove receiver email address from request if parcel announcement service is disabled
+       * Fall back to order email address if it is not available at shipping address
+       * Improve address split for Austrian street numbers
+       * Re-calculate service fee on shipping method or service selection changes in checkout
+       * Consider Sundays in preferred day service options calculation
+       * Log webservice errors during cron autocreate
+
    * - 1.1.1
      - 27.09.2017
      - Bugfixes:
