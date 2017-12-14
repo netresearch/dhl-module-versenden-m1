@@ -206,6 +206,11 @@ class CreateShipmentRequestType implements RequestType
         $shipper        = static::prepareShipper($shipmentOrder->getShipper()->getContact());
         $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
 
+        // remove email adress from communication object if parcelanouncement is set to no
+        if (!$shipmentOrder->getServiceSelection()->getParcelAnnouncement()) {
+            $receiver->getCommunication()->setEmail(null);
+        }
+
         if ($shipmentOrder->getServiceSelection()->isReturnShipment()) {
             $returnReceiver = static::prepareReturnReceiver($shipmentOrder->getShipper()->getReturnReceiver());
         } else {
