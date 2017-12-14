@@ -20,7 +20,7 @@
  * @category  Dhl
  * @package   Dhl_Versenden
  * @author    Christoph Aßmann <christoph.assmann@netresearch.de>
- * @copyright 2016 Netresearch GmbH & Co. KG
+ * @copyright 2017 Netresearch GmbH & Co. KG
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
@@ -28,7 +28,7 @@
 <config>
     <modules>
         <Dhl_Versenden>
-            <version>1.1.3</version>
+            <version>1.2.0</version>
         </Dhl_Versenden>
     </modules>
     <global>
@@ -140,16 +140,6 @@
                     </your_module>
                 </observers>
             </sales_quote_collect_totals_before>
-            <!--<checkout_controller_onepage_save_shipping_method>-->
-                <!--<observers>-->
-                    <!--<your_module>-->
-                        <!--<type>singleton</type>-->
-                        <!--<class>dhl_versenden/observer</class>-->
-                        <!--<method>updateHandling</method>-->
-                    <!--</your_module>-->
-                <!--</observers>-->
-            <!--</checkout_controller_onepage_save_shipping_method>-->
-
         </events>
         <fieldsets>
             <sales_convert_quote_address>
