@@ -72,7 +72,7 @@ Versandursprung und Währung
 ---------------------------
 
 Die Extension *DHL Versenden* für Magento® wendet sich an Händler mit Sitz in
-Deutschland oder Österreich. Stellen Sie sicher, dass Ihre Absenderadressen in 
+Deutschland oder Österreich. Stellen Sie sicher, dass Ihre Absenderadressen in
 den drei im Abschnitt Modulkonfiguration_ genannten Bereichen korrekt ist.
 
 Die Basiswährung der Installation wird als Euro angenommen. Es findet keine
@@ -142,7 +142,7 @@ Im Folgenden werden die Konfigurationsabschnitte für *DHL Versenden* beschriebe
 
    Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
    sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
-   Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden) 
+   Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden)
    in Deutschland bzw. Österreich. Aktivieren Sie diese Abschnitte nicht, wenn Sie
    *DHL Versenden* nutzen!
 
@@ -155,9 +155,9 @@ Im Konfigurationsbereich *Allgemeine Einstellungen* wird festgelegt, ob der
 Extension produktiv betrieben werden soll.
 
 Außerdem kann hier die Protokollierung konfiguriert werden. Wenn die Protokollierung
-hier und unter *System → Konfiguration → Erweitert → Entwickleroptionen → Log 
-Einstellungen* aktiviert ist, werden Webservice-Nachrichten in der Datei 
-``var/log/dhl_versenden.log`` aufgezeichnet. Dabei haben Sie die Auswahl zwischen 
+hier und unter *System → Konfiguration → Erweitert → Entwickleroptionen → Log
+Einstellungen* aktiviert ist, werden Webservice-Nachrichten in der Datei
+``var/log/dhl_versenden.log`` aufgezeichnet. Dabei haben Sie die Auswahl zwischen
 drei Protokollstufen:
 
 * ``Error`` zeichnet Fehler in der Kommunikation zwischen Shop und DHL Webservice auf.
@@ -183,21 +183,21 @@ Im Konfigurationsbereich *Versandaufträge* werden Einstellungen vorgenommen, di
 für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich sind.
 
 * *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
-  wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten 
-  lehnt DHL die Sendung mit einer Fehlermeldung ab. Wenn diese Einstellung abgeschaltet 
-  ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen, 
-  wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht 
+  wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten
+  lehnt DHL die Sendung mit einer Fehlermeldung ab. Wenn diese Einstellung abgeschaltet
+  ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen,
+  wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht
   zugeordnet werden kann, wird die Sendung dennoch abgelehnt.
 * *Gewichtseinheit*: Legen Sie fest, ob die Gewichtsangaben in Ihrem Katalog in
   Gramm oder Kilogramm gepflegt sind. Bei Bedarf wird das Gewicht während der
   Übertragung an DHL auf Kilogramm umgerechnet.
 * *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten für die
   Versandkostenberechnung im Checkout verwendet werden sollen. Nur die hier ausgewählten
-  Versandarten werden bei der Lieferscheinerstellung über DHL Versenden 
+  Versandarten werden bei der Lieferscheinerstellung über DHL Versenden
   (Geschäftskundenversand) abgewickelt.
 * *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
   es sich um Nachnahme-Zahlarten handelt. Diese Information wird benötigt, um
-  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende 
+  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende
   Nachnahme-Label zu erzeugen.
 
 .. raw:: pdf
@@ -237,7 +237,7 @@ hinzugefügt.
   noch am selben Tag abgeschickt werden. Bestellungen, die *nach* Annahmeschluss
   eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Wunschtag
   verschiebt sich dann um einen Tag.
-* *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner 
+* *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
   Sendung informiert. Wählen Sie hier aus folgenden Optionen:
 
   * *Ja*: Der Service wird hinzugebucht.
@@ -271,9 +271,13 @@ Automatische Sendungserstellung
 Im Konfigurationsbereich *Automatische Sendungserstellung* legen Sie fest, ob
 automatisch Lieferscheine erzeugt und Paketaufkleber abgerufen werden sollen.
 
+Die Einstellung *Kundenbenachrichtigung* ermöglicht es, die Versandinformationen
+per E-Mail an den Kunden zu schicken, wenn ein Lieferschein erfolgreich erzeugt
+wurde.
+
 Darüber hinaus können Sie bestimmen, welchen Bestell-Status eine Bestellung haben
-muss, um während der automatischen Sendungserstellung berücksichtigt zu werden. Hierüber 
-können Sie steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen 
+muss, um während der automatischen Sendungserstellung berücksichtigt zu werden. Hierüber
+können Sie steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen
 werden sollen.
 
 Außerdem legen Sie hier diejenigen Services fest, die standardmäßig hinzugebucht
@@ -329,10 +333,10 @@ Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen deaktiviert
 falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung
 steht.
 
-Der Kunde kann auf den Link "Oder wählen Sie die Lieferung an einen Paketshop oder 
-eine Postfiliale" klicken. Dadurch wird er zum Schritt *Lieferadresse* zurück 
-geleitet und kann nun einen DHL Abholort wählen. Falls das Modul "Dhl Locationfinder" 
-installiert ist, wird zudem vorausgewählt, dass der Parcelshop Finder verwendet werden 
+Der Kunde kann auf den Link "Oder wählen Sie die Lieferung an einen Paketshop oder
+eine Postfiliale" klicken. Dadurch wird er zum Schritt *Lieferadresse* zurück
+geleitet und kann nun einen DHL Abholort wählen. Falls das Modul "Dhl Locationfinder"
+installiert ist, wird zudem vorausgewählt, dass der Parcelshop Finder verwendet werden
 soll.
 
 .. raw:: pdf
@@ -377,7 +381,7 @@ Nationale Sendungen
 ~~~~~~~~~~~~~~~~~~~
 
 Öffnen Sie im Admin Panel eine Bestellung, deren Versandart mit dem DHL
-Geschäftskundenversand verknüpft ist (siehe Modulkonfiguration_, Abschnitt *Versandarten 
+Geschäftskundenversand verknüpft ist (siehe Modulkonfiguration_, Abschnitt *Versandarten
 für DHL Versenden*. Betätigen Sie dann den Button *Versand* im oberen Bereich der Seite.
 
 .. image:: images/de/button_ship.png
@@ -429,9 +433,20 @@ Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, eben
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
 
-.. raw:: pdf
+Massenaktion
+~~~~~~~~~~~~
 
-   PageBreak
+Inländische Lieferscheine und Paketaufkleber können über die Massenaktion
+*Paketaufkleber abrufen* in der Bestellübersicht erzeugt werden:
+
+* Verkäufe → Bestellungen → Massenaktion *Paketaufkleber abrufen*
+
+Dies ermöglicht es, einfache Paketaufkleber ohne zusätzliche Eingaben zu erstellen
+
+* für alle in der Bestellung enthaltenen Artikel
+* mit den im Checkout gewählten Zusatzleistungen
+* mit den im Bereich *Automatische Sendungserstellung* der Modulkonfiguration_
+  gewählten Zusatzleistungen.
 
 Drucken eines Paketaufklebers
 -----------------------------
@@ -523,7 +538,7 @@ Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
   in der Box *Versandadresse*.
 
   .. image:: images/de/edit_address_link.png
-     :scale: 75 %
+     :scale: 60 %
 
   Im nun angezeigten Formular können Sie im oberen
   Bereich die Standard-Felder der Lieferadresse bearbeiten und im unteren Bereich
