@@ -6,10 +6,10 @@ shipping API into the order processing workflow.
 
 Facts
 -----
-- version: 1.1.1
+- version: 1.2.0
 - extension key: Dhl_Versenden
 - [extension on GitLab](https://git.netresearch.de/dhl/versenden-m1)
-- [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.1.1/archive.tar.gz)
+- [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.2.0/archive.tar.gz)
 
 Description
 -----------
@@ -24,7 +24,7 @@ Features:
 
 Requirements
 ------------
-- PHP >= 5.5.0
+- PHP >= 5.4.0
 
 Compatibility
 -------------
