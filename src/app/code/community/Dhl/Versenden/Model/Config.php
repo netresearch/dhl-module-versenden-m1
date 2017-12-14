@@ -55,6 +55,7 @@ class Dhl_Versenden_Model_Config
 
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
+    const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
 
     /**
      * Wrap store config access.
@@ -222,5 +223,16 @@ class Dhl_Versenden_Model_Config
     {
         $status = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS, $store);
         return explode(',', $status);
+    }
+
+    /**
+     * Check if Customer notification is enabled
+     *
+     * @param mixed $store
+     * @return bool
+     */
+    public function isAutoCreateNotifyCustomer($store = null)
+    {
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER, $store);
     }
 }

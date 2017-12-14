@@ -146,6 +146,11 @@ class Dhl_Versenden_Model_Shipping_Autocreate
                 ->addObject($shipment->getOrder());
 
             $ordersShipped++;
+            /** @var DHL_Versenden_Model_Config $config */
+            $config = Mage::getModel('dhl_versenden/config');
+            if ($config->isAutoCreateNotifyCustomer($shipment->getStoreId())) {
+                $shipment->sendEmail(true)->setEmailSent(true);
+            }
         }
 
         $transaction->save();
