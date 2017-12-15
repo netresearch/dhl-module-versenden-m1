@@ -31,38 +31,39 @@
 <?php if (!$this->isShippingAddressDHLLocation() || !empty($services)): ?>
     <div id="checkout-dhlversenden-services" style="display: none;">
         <img
-            src="<?php echo $this->getSkinUrl('images/dhl_versenden/logo.png') ?>"
-            alt="<?php echo $this->__('DHL Additional Services') ?>"
-            title="<?php echo $this->__('DHL Additional Services') ?>"
+            src="<?php echo $this->escapeUrl($this->getSkinUrl('images/dhl_versenden/logo.png')) ?>"
+            alt="<?php echo $this->escapeHtml($this->__('DHL Additional Services')) ?>"
+            title="<?php echo $this->escapeHtml($this->__('DHL Additional Services')) ?>"
         />
         <?php if (!empty($services)): ?>
-        <span><?php echo $this->escapeHtml($this->__('Your recipient services')); ?></span>
+        <span>
+            <?php echo $this->escapeHtml($this->__('Your shipping services')) ?><br/>
+            <?php echo $this->escapeHtml($this->__('Delivered as desired')) ?>
+        </span>
         <p>
-            <?php echo $this->escapeHtml($this->__(
-                'You decide when and where you want to receive your parcels with the recipient services of DHL.<br/>Please choose your preferred delivery option:'
-            )); ?>
+            <?php echo $this->escapeHtml($this->__('You decide when and where you want to receive your parcels with the recipient services of DHL.')) ?><br/>
+            <?php echo $this->escapeHtml($this->__('Please choose your preferred delivery option:')) ?>
         </p>
         <dl>
             <?php /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service */ ?>
             <?php foreach ($services as $service): ?>
-                <dt class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
+                <dt class="service-<?php echo $this->escapeHtml($service->getFrontendInputType() . ' ' . $service::CODE) ?>">
                     <?php echo $service->getSelectorHtml() ?>
-                    <?php $serviceLabel = $service->getLabelHtml() ?>
-                    <?php $tooltip = $this->getServiceHint($service->getCode()); ?>
-
-                    <?php if ($tooltip !== '') {
-                        $serviceLabel =
-                            str_replace(
+                    <?php
+                        $tooltip = $this->getServiceHint($service->getCode());
+                        $labelHtml = $service->getLabelHtml();
+                        if ($tooltip !== '') {
+                            $labelHtml = str_replace(
                                 '</label>',
                                 "<i class=\"tooltip-inner\" data-tooltip=\"$tooltip\">?</i></label>",
-                                $serviceLabel
+                                $labelHtml
                             );
-                    }
+                        }
                     ?>
-                    <?php echo $serviceLabel; ?>
+                    <?php /* @noEscape */ echo $labelHtml; ?>
                 </dt>
-                <dd><p><?php echo $this->getServiceFeeText($service->getCode())?></p></dd>
-                <dd class="service-<?php echo $service->getFrontendInputType() . ' ' . $service::CODE; ?>">
+                <dd><p><?php echo $this->getServiceFeeText($service->getCode()) ?></p></dd>
+                <dd class="service-<?php echo $this->escapeHtml($service->getFrontendInputType() . ' ' . $service::CODE) ?>">
                     <?php echo $service->getValueHtml(); ?>
                 </dd>
             <?php endforeach; ?>
@@ -71,8 +72,8 @@
 
         <?php if (!$this->isShippingAddressDHLLocation()): ?>
         <span>
-            <a id="locationfinder-link" href="javascript:void(0)" '>
-                <?php echo $this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.'); ?>
+            <a id="locationfinder-link" href="javascript:void(0)">
+                <?php echo $this->escapeHtml($this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.')) ?>
             </a>
         </span>
         <?php endif; ?>
@@ -81,7 +82,7 @@
             //<![CDATA[
             var serviceContainer = new DhlServiceContainer(
                 'checkout-dhlversenden-services',
-                '<?php echo $this->getDhlMethods(); ?>'
+                '<?php /* @noEscape */  echo $this->getDhlMethods(); ?>'
             );
             serviceContainer.toggleServiceContainer();
 
