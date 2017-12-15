@@ -148,8 +148,9 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
-     * /**
      * Obtain Frontend Service Fee hint based on service code.
+     *
+     * Note: text comes from module config, set translations there.
      *
      * @param $serviceCode
      * @return string
@@ -169,6 +170,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
                 $msg = '';
         }
 
-        return $msg ? $this->__($msg) : '';
+        return $msg;
     }
 }
