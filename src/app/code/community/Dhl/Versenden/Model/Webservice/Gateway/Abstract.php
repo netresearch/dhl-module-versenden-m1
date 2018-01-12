@@ -148,15 +148,18 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $wsVersion = new RequestData\Version(self::WEBSERVICE_VERSION_MAJOR, self::WEBSERVICE_VERSION_MINOR);
         $shipmentOrders = $this->prepareShipmentOrders($shipmentRequests);
         $items = $shipmentOrders->getItems();
-        if (empty($items)) {
-            return null;
+
+        if (!empty($items)) {
+            /** @var RequestData\CreateShipment $requestData */
+            $requestData = new RequestData\CreateShipment($wsVersion, $shipmentOrders);
+            $result = $this->doCreateShipmentOrder($requestData);
+        } else {
+            $result = null;
         }
 
-        /** @var RequestData\CreateShipment $requestData */
-        $requestData = new RequestData\CreateShipment($wsVersion, $shipmentOrders);
-        $result = $this->doCreateShipmentOrder($requestData);
-
-        $eventData = array('result' => $result);
+        $eventData = array();
+        $eventData['request_data'] = $shipmentRequests;
+        $eventData['result'] = $result;
         Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
 
         return $result;
@@ -175,7 +178,9 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
         $requestData = new RequestData\DeleteShipment($wsVersion, $shipmentNumbers);
         $result = $this->doDeleteShipmentOrder($requestData);
 
-        $eventData = array('result' => $result);
+        $eventData = array();
+        $eventData['request_data'] = $shipmentNumbers;
+        $eventData['result'] = $result;
         Mage::dispatchEvent('dhl_versenden_delete_shipment_order_after', $eventData);
 
         return $result;
