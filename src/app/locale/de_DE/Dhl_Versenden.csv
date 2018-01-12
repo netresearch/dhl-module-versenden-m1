@@ -170,3 +170,8 @@
 "Use . as decimal separator.","Nutzen Sie . als Dezimaltrennzeichen."
 "Notify Customer","Kundenbenachrichtigung"
 "Create Shipping Labels","Paketaufkleber abrufen"
+"Failed ","Fehlgeschlagen"
+"Pending","Ausstehend"
+"Processed","Label abgerufen"
+"Not Available","Status nicht verfügbar"
+"Status_Failed", "Fehlgeschlagen"

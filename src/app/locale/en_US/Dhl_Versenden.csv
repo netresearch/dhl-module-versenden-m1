@@ -170,3 +170,8 @@
 "Use . as decimal separator.", "Use . as decimal separator."
 "Notify Customer", "Notify Customer"
 "Create Shipping Labels","Create Shipping Labels"
+"Failed ","Failed"
+"Pending","Pending"
+"Processed","Processed"
+"Not Available","Not Available",
+"Status_Failed", "Failed"

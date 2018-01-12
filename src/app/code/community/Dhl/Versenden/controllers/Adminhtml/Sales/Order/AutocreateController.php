@@ -35,7 +35,7 @@
  */
 class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Adminhtml_Controller_Action
 {
-    const MESSAGE_NO_ORDER_ITEMS = 'Please check your selected orders';
+    const MESSAGE_NO_APPLICABLE_ORDERS = 'Orders could not be processed with DHL Versenden.';
     const MESSAGE_LABELS_CREATED = '%d labels were created for %d orders.';
     const MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
 
@@ -52,7 +52,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
         $collection->addShipmentFilter();
 
         if ($collection->getSize() < 1) {
-            $this->_getSession()->addError(self::MESSAGE_NO_ORDER_ITEMS);
+            $this->_getSession()->addError(self::MESSAGE_NO_APPLICABLE_ORDERS);
             $this->_redirect('adminhtml/sales_order');
             return;
         }
