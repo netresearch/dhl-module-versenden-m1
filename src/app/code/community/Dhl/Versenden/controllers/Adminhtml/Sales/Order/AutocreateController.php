@@ -92,4 +92,11 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
 
         $this->_redirect('adminhtml/sales_order');
     }
+
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('admin/sales_order_autocreate/massCreateShipmentLabel');
+    }
+
+
 }
