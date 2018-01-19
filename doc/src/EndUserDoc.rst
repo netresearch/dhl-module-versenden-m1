@@ -1,11 +1,11 @@
-.. |date| date:: %d/%m/%Y
+.. |date| date:: %Y-%m-%d
 .. |year| date:: %Y
 
 .. footer::
    .. class:: footertable
 
    +-------------------------+-------------------------+
-   | Stand: |date|           | .. class:: rightalign   |
+   | Last updated: |date|    | .. class:: rightalign   |
    |                         |                         |
    |                         | ###Page###/###Total###  |
    +-------------------------+-------------------------+
