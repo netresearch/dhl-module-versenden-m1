@@ -1,11 +1,11 @@
-.. |date| date:: %d/%m/%Y
+.. |date| date:: %Y-%m-%d
 .. |year| date:: %Y
 
 .. footer::
    .. class:: footertable
 
    +-------------------------+-------------------------+
-   | Stand: |date|           | .. class:: rightalign   |
+   | Last updated: |date|    | .. class:: rightalign   |
    |                         |                         |
    |                         | ###Page###/###Total###  |
    +-------------------------+-------------------------+
@@ -32,6 +32,16 @@ ChangeLog
    * - **Revision**
      - **Date**
      - **Description**
+
+   * - 1.3.0
+     - 19.01.2018
+     - Features:
+
+       * Display shipping label status in orders grid
+
+       Bugfixes:
+
+       * Code style improvements for Magento Marketplace
 
    * - 1.2.0
      - 15.12.2017
