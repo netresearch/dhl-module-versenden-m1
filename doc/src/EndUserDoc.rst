@@ -320,10 +320,12 @@ In the checkout step *Payment information* the Cash On Delivery payment methods
 will be disabled if Cash On Delivery is not available for the selected delivery
 address.
 
-The customer can click on the link "Or as an alternative choose a shipment to
-a Parcelstation or a Post Office". This will lead the customer back to the checkout
-step *Shipping address* to select a DHL location. If the module "DHL Locationfinder"
-is installed, the checkbox for using the Location Finder will be activated by default.
+The customer can click on the link "*Or as an alternative choose a shipment to
+a Parcelstation or a Post Office*". This will lead the customer back to the checkout
+step *Shipping address* to select a DHL location.
+
+If the module `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000023182>`_
+is installed, the customer can use it to easily find nearby DHL pickup locations.
 
 .. raw:: pdf
 
@@ -348,14 +350,12 @@ addresses in the checkout:
 * A numerical value in the field *Company* will be recognized as Post Number.
 
 A more comprehensive support for creating shipments to DHL addresses via the
-DHL webservice is offered by the separate extension `DHL Location Finder`_
-starting from version 1.0.2:
+DHL webservice is offered by the separate extension `DHL Location Finder
+<http://dhl.support.netresearch.de/support/solutions/articles/12000023182>`_:
 
 * Interactive map for selecting the DHL delivery address.
 * Validation of customer input.
 * Support for Parcel Stations (Paketshops).
-
-.. _DHL Location Finder: https://www.magentocommerce.com/magento-connect/dhl-location-finder-standortsuche.html
 
 Creating a shipment
 -------------------
@@ -418,19 +418,42 @@ The services selected by the customer in the checkout will already be selected
 here. Also, the service *Address validation* (Print only if codeable) will be
 selected if enabled in the general `Module configuration`_.
 
+.. raw:: pdf
+
+   PageBreak
+
 Mass action
 ~~~~~~~~~~~
 
 Domestic shipments and labels can also be created using a mass action in the
-orders grid:
+order grid:
 
 * Sales → Orders → Mass action *Create Shipping Labels*
 
-This allows to create basic shipping labels with no further user input
+This allows creating basic shipping labels with no further user interaction.
+The following things apply:
 
-* for all items contained in the order
-* with the services selected during checkout
-* with the services selected in the *Automatic Shipment Creation* `Module configuration`_.
+* All order items will be added to the shipment.
+* The DHL services selected during checkout will be booked.
+* Additional services which are selected in the *Automatic Shipment Creation* section
+  of the `Module configuration`_ will be added.
+
+Shipment overview
+-----------------
+
+For orders that are processed by DHL, the order list will show DHL icons which
+indicate the shipment status.
+
+* **Crossed-out icon**: error during label creation, see Troubleshooting_.
+* **Yellow icon**: transmission ok, label successfully created.
+* **Gray icon**: transmission to DHL not executed yet.
+
+.. image:: images/en/label_status.png
+   :scale: 100 %
+
+.. raw:: pdf
+
+   PageBreak
 
 Printing a shipping label
 -------------------------
