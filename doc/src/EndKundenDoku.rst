@@ -240,9 +240,9 @@ hinzugefügt.
 * *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
   Sendung informiert. Wählen Sie hier aus folgenden Optionen:
 
-  * *Ja*: Der Service wird hinzugebucht.
+  * *Ja*: Der Service wird immer hinzugebucht.
   * *Optional*: Der Kunde bestimmt im Checkout, ob er den Service wünscht.
-  * *Nein*: Der Service wird nicht hinzugebucht.
+  * *Nein*: Der Service wird nie hinzugebucht.
 
 .. admonition:: Zusatzkosten für Wunschtag / Wunschzeit
 
@@ -260,10 +260,6 @@ für Zusatzservices erhalten.
    korrekt funktioniert, muss die Serverzeit richtig gesetzt sein. Achten Sie auf eventuelle
    Verschiebungen durch Sommer- bzw. Winterzeit oder abweichende Zeitzonen. Setzen Sie
    wenn nötig eine andere Annahmeschluss-Zeit, um dies auszugleichen.
-
-.. raw:: pdf
-
-   PageBreak
 
 Automatische Sendungserstellung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -321,23 +317,26 @@ Bestellprozess integriert.
 Checkout
 ~~~~~~~~
 
-In der Modulkonfiguration_ wurden Versandarten für die rückwärtige Abwicklung
-der Versandaufträge / Erstellung der Paketaufkleber eingestellt. Wählt der Kunde
-im Checkout-Schritt *Versandart* eine dieser DHL-Versandarten, so werden ihm die
-in der Konfiguration aktivierten Zusatzleistungen zur Wahl gestellt.
+In der Modulkonfiguration_ wurden Versandarten gewählt, die über DHL abgewickelt
+werden sollen.
+
+Wählt der Kunde im Checkout-Schritt *Versandart* eine dieser Versandarten, werden
+die in der Konfiguration aktivierten DHL-Zusatzleistungen angeboten.
 
 .. image:: images/de/checkout_services.png
    :scale: 180 %
 
-Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlungen deaktiviert,
+Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlarten ausgeblendet,
 falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung
 steht.
 
-Der Kunde kann auf den Link "Oder wählen Sie die Lieferung an einen Paketshop oder
-eine Postfiliale" klicken. Dadurch wird er zum Schritt *Lieferadresse* zurück
-geleitet und kann nun einen DHL Abholort wählen. Falls das Modul "Dhl Locationfinder"
-installiert ist, wird zudem vorausgewählt, dass der Parcelshop Finder verwendet werden
-soll.
+Der Kunde kann auf den Link "*Oder wählen Sie die Lieferung an einen Paketshop oder
+eine Postfiliale*" klicken. Dadurch wird er zum Schritt *Lieferadresse* zurück
+geleitet und kann nun einen DHL-Abholort eingeben.
+
+Falls das Modul `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000016764>`_
+installiert ist, kann der Kunde diesen nutzen, um mit wenig Aufwand naheliegende
+DHL-Abholorte zu finden und zu übernehmen.
 
 .. raw:: pdf
 
@@ -363,13 +362,11 @@ von DHL Lieferadressen im Checkout:
 
 Eine umfassendere Unterstützung von DHL Lieferadressen im Zusammenspiel mit der
 Erteilung von Versandaufträgen über den DHL Webservice bietet die separate
-Extension `DHL Location Finder`_ ab der Version 1.0.2:
+Extension `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000016764>`_:
 
 * Interaktive Karte zur Auswahl der DHL Lieferadresse
 * Validierung der Kundeneingaben
 * Unterstützung von Paket-Shops
-
-.. _DHL Location Finder: https://www.magentocommerce.com/magento-connect/dhl-location-finder-standortsuche.html
 
 Erstellen eines Versandauftrags
 -------------------------------
@@ -433,6 +430,10 @@ Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, eben
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
 
+.. raw:: pdf
+
+   PageBreak
+
 Massenaktion
 ~~~~~~~~~~~~
 
@@ -441,12 +442,30 @@ Inländische Lieferscheine und Paketaufkleber können über die Massenaktion
 
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber abrufen*
 
-Dies ermöglicht es, einfache Paketaufkleber ohne zusätzliche Eingaben zu erstellen
+Dies ermöglicht es, einfache Paketaufkleber ohne manuelle Eingaben zu erstellen.
+Dabei gilt:
 
-* für alle in der Bestellung enthaltenen Artikel
-* mit den im Checkout gewählten Zusatzleistungen
-* mit den im Bereich *Automatische Sendungserstellung* der Modulkonfiguration_
-  gewählten Zusatzleistungen.
+* Es werden alle in der Bestellung enthaltenen Artikel übernommen.
+* Die im Checkout gewählten DHL-Zusatzleistungen werden übernommen.
+* Weitere Zusatzleistungen, die im Bereich *Automatische Sendungserstellung* in der
+  Modulkonfiguration_ eingestellt sind, werden hinzugebucht.
+
+Übersicht der Versandaufträge
+-----------------------------
+
+Bei Bestellungen, die über DHL abgewickelt werden, erscheinen in der Bestellübersicht
+DHL-Icons, die den Status der Versandaufträge zeigen.
+
+* **Durchgestrichenes Icon**: es gab Fehler bei der Label-Erstellung, siehe Fehlerbehandlung_.
+* **Gelbes Icon**: Übertragung ok, Label erfolgreich erstellt.
+* **Graues Icon**: Übertragung an DHL wurde noch nicht ausgeführt.
+
+.. image:: images/de/label_status.png
+   :scale: 100 %
+
+.. raw:: pdf
+
+   PageBreak
 
 Drucken eines Paketaufklebers
 -----------------------------
@@ -471,6 +490,10 @@ eines Lieferscheins und betätigen Sie den Link *Löschen* in der Box
 
 Wenn der Versandauftrag erfolgreich über den DHL Webservice storniert wurde,
 werden Sendungsnummer und Paketaufkleber aus dem System entfernt.
+
+.. raw:: pdf
+
+   PageBreak
 
 Automatische Sendungserstellung
 -------------------------------
@@ -503,6 +526,10 @@ die Ausführung besser überwachen wollen, installieren Sie die Extension
 `Aoe_Scheduler`_.
 
 .. _Aoe_Scheduler:  https://github.com/AOEpeople/Aoe_Scheduler
+
+.. raw:: pdf
+
+   PageBreak
 
 Fehlerbehandlung
 ----------------
@@ -570,16 +597,16 @@ wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
 Modul deinstallieren oder deaktivieren
 ======================================
 
-Gehen Sie wie folgt vor, um das Modul zu *deinstallieren*:
+Um das Modul zu **deinstallieren**:
 
 1. Löschen Sie alle Moduldateien aus dem Dateisystem.
 2. Entfernen Sie die im Abschnitt `Installation`_ genannten Adressattribute.
 3. Entfernen Sie den zum Modul gehörigen Eintrag ``dhl_versenden_setup`` aus der Tabelle ``core_resource``.
 4. Entfernen Sie die zum Modul gehörigen Einträge ``carriers/dhlversenden/*`` aus der Tabelle ``core_config_data``.
-5. Leeren Sie abschließend den Cache.
+5. Leeren Sie abschließend den Magento-Cache.
 
-Das Modul wird *deaktiviert*, wenn der Knoten ``active`` in der Datei
-``app/etc/modules/Dhl_Versenden.xml`` von **true** auf **false** abgeändert wird.
+Das Modul wird **deaktiviert**, wenn der Knoten ``active`` in der Datei
+``app/etc/modules/Dhl_Versenden.xml`` von ``true`` auf ``false`` abgeändert wird.
 
 
 Technischer Support
