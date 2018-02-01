@@ -51,7 +51,7 @@ class ServiceSelection extends RequestData
     private $visualCheckOfAge;
     /** @var bool false or true */
     private $returnShipment;
-    /** @var bool|float false or amount */
+    /** @var bool|string false or amount */
     private $insurance;
     /** @var bool false or true */
     private $bulkyGoods;
@@ -69,7 +69,7 @@ class ServiceSelection extends RequestData
      * @param bool $parcelAnnouncement
      * @param bool|string $visualCheckOfAge
      * @param bool $returnShipment
-     * @param bool|float $insurance
+     * @param bool|string $insurance
      * @param bool $bulkyGoods
      * @param bool|float $cod
      * @param bool $printOnlyIfCodeable
@@ -149,7 +149,7 @@ class ServiceSelection extends RequestData
     }
 
     /**
-     * @return bool|float
+     * @return bool|string
      */
     public function getInsurance()
     {
