@@ -111,7 +111,12 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             : false;
 
         $insurance = !empty($selectedServices[Service\Insurance::CODE])
-            ? number_format($salesEntity->getBaseGrandTotal(), 2)
+            ? number_format(
+                $salesEntity->getBaseGrandTotal(),
+                2,
+                '.',
+                ''
+            )
             : false;
 
         $bulkyGoods = !empty($selectedServices[Service\BulkyGoods::CODE])
