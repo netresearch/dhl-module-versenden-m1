@@ -150,6 +150,22 @@
                     </add_service_fee>
                 </observers>
             </sales_quote_collect_totals_before>
+            <dhl_versenden_create_shipment_order_after>
+                <observers>
+                    <set_label_status>
+                        <class>dhl_versenden/observer_labelstatus</class>
+                        <method>setLabelCreatedStatus</method>
+                    </set_label_status>
+                </observers>
+            </dhl_versenden_create_shipment_order_after>
+            <dhl_versenden_delete_shipment_order_after>
+                <observers>
+                    <set_label_status>
+                        <class>dhl_versenden/observer_labelstatus</class>
+                        <method>setLabelDeletedStatus</method>
+                    </set_label_status>
+                </observers>
+            </dhl_versenden_delete_shipment_order_after>
         </events>
         <fieldsets>
             <sales_convert_quote_address>
@@ -231,22 +247,6 @@
                     </dhl_versenden_extendedgrid>
                 </observers>
             </sales_order_grid_collection_load_before>
-            <dhl_versenden_create_shipment_order_after>
-                <observers>
-                    <set_label_status>
-                        <class>dhl_versenden/observer_labelstatus</class>
-                        <method>setLabelCreatedStatus</method>
-                    </set_label_status>
-                </observers>
-            </dhl_versenden_create_shipment_order_after>
-            <dhl_versenden_delete_shipment_order_after>
-                <observers>
-                    <set_label_status>
-                        <class>dhl_versenden/observer_labelstatus</class>
-                        <method>setLabelDeletedStatus</method>
-                    </set_label_status>
-                </observers>
-            </dhl_versenden_delete_shipment_order_after>
         </events>
     </adminhtml>
     <frontend>
