@@ -97,7 +97,7 @@ abstract class Person extends RequestData
         $this->validateLength('Name (2)', $name2, 0, 50);
         $this->validateLength('Name (3)', $name3, 0, 50);
         $this->validateLength('Street Name', $streetName, 1, 35);
-        $this->validateLength('Street Number', $streetNumber, 1, 5);
+        $this->validateLength('Street Number', $streetNumber, 1, 7);
         $this->validateLength('Address Addition', $addressAddition, 0, 35);
         $this->validateLength('Dispatching Information', $dispatchingInformation, 0, 35);
         $this->validateLength('Postal Code', $zip, 1, 10);
