@@ -125,7 +125,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
 
         $paymentMethod = $salesEntity->getPayment()->getMethod();
         $cod = $this->_shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId())
-            ? number_format($salesEntity->getBaseGrandTotal(), 2)
+            ? number_format($salesEntity->getBaseGrandTotal(),
+                2,
+                '.',
+                '')
             : false;
 
         $printOnlyIfCodeable = !empty($selectedServices[Service\PrintOnlyIfCodeable::CODE])
