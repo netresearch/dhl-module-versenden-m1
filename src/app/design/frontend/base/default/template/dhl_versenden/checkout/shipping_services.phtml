@@ -28,18 +28,19 @@
     $services = $this->getServices();
 ?>
 
-<?php if (!$this->isShippingAddressDHLLocation() || !empty($services)): ?>
+<?php if (!$this->isShippingAddressDHLLocation() || count($services) > 0): ?>
     <div id="checkout-dhlversenden-services" style="display: none;">
         <img
             src="<?php echo $this->escapeUrl($this->getSkinUrl('images/dhl_versenden/logo.png')) ?>"
             alt="<?php echo $this->escapeHtml($this->__('DHL Additional Services')) ?>"
             title="<?php echo $this->escapeHtml($this->__('DHL Additional Services')) ?>"
         />
-        <?php if (!empty($services)): ?>
+
         <span>
             <?php echo $this->escapeHtml($this->__('Your shipping services')) ?><br/>
             <?php echo $this->escapeHtml($this->__('Delivered as desired')) ?>
         </span>
+        <?php if (count($services) > 0): ?>
         <p>
             <?php echo $this->escapeHtml($this->__('You decide when and where you want to receive your parcels with the recipient services of DHL.')) ?><br/>
             <?php echo $this->escapeHtml($this->__('Please choose your preferred delivery option:')) ?>
