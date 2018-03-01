@@ -37,6 +37,7 @@ package-build:
   script:
     - make
     - magento-tar-to-connect build/scripts/packageconfig.php
+    - mv var/connect/*.tgz ${CI_PROJECT_DIR}
 
 
   artifacts:
