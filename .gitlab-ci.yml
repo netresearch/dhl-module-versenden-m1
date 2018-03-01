@@ -44,8 +44,8 @@ package-build:
   artifacts:
       when: on_success
       paths:
-      *.zip
-      *.tgz
+      - *.zip
+      - *.tgz
 
 
 package-validate:
