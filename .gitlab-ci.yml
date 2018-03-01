@@ -1,0 +1,60 @@
+image: registry.netresearch.de/magento-ci/ci-toolchain:latest
+
+stages:
+  - analyze
+  - build
+  - validate
+
+
+phpcs:
+  stage: analyze
+  only:
+  - CI-147
+  - develop
+  - master
+  script:
+  - phpcs --standard=MEQP1
+          --severity=10
+          --extensions=php,phtml
+          --ignore=*/Test/*,*/Tests/*,*/build/*,*/deployment/*
+          ${CI_PROJECT_DIR}
+
+#phpunit:5.6:
+#  stage: analyze
+#  only:
+#  - develop
+#  - master
+#  script:
+#  - php /phpunit-6.5.phar --version
+#  - php /phpunit-5.7.phar --version
+#  - php /phpunit-4.8.phar --version
+
+package-build:
+  stage: build
+  only:
+  - CI-147
+  - master
+  script:
+    - make
+
+    # Create tgz file with magento-tar-to-connect
+    - magento-tar-to-connect build/scripts/packageconfig.php
+
+
+  artifacts:
+      when: on_success
+      paths:
+      *.zip
+      *.tgz
+
+
+package-validate:
+  stage: validate
+  only:
+  - CI-147
+  - master
+  script:
+  # Not implemented yet. Should use "mage install-file ${MODULE_NAME}-${MODULE_VERSION}.tar"
+  - echo "Not implemented yet."
+  dependencies:
+  - package-build
