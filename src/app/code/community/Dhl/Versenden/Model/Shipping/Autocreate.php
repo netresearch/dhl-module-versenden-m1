@@ -96,6 +96,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         }
 
         $ordersShipped = 0;
+        $shipments = array();
 
         $shipmentRequests = $this->prepareShipmentRequests($collection);
         $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
@@ -146,14 +147,20 @@ class Dhl_Versenden_Model_Shipping_Autocreate
                 ->addObject($shipment->getOrder());
 
             $ordersShipped++;
-            /** @var DHL_Versenden_Model_Config $config */
-            $config = Mage::getModel('dhl_versenden/config');
-            if ($config->isAutoCreateNotifyCustomer($shipment->getStoreId())) {
-                $shipment->sendEmail(true)->setEmailSent(true);
-            }
+            $shipments[] = $shipment;
         }
 
         $transaction->save();
+
+        /** @var Mage_Sales_Model_Order_Shipment $shipment */
+        foreach ($shipments as $shipment) {
+            /** @var DHL_Versenden_Model_Config $config */
+            $config = Mage::getModel('dhl_versenden/config');
+            $notifyCustomer = $config->isAutoCreateNotifyCustomer($shipment->getStoreId());
+            if ($notifyCustomer && $shipment->getIncrementId()) {
+                $shipment->sendEmail(true)->setEmailSent(true);
+            }
+        }
 
         return $ordersShipped;
     }
