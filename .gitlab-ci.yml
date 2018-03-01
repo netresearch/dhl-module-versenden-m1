@@ -36,16 +36,14 @@ package-build:
   - master
   script:
     - make
-
-    # Create tgz file with magento-tar-to-connect
     - magento-tar-to-connect build/scripts/packageconfig.php
 
 
   artifacts:
       when: on_success
       paths:
-      - ./*.zip
-      - ./*.tgz
+      - ${CI_PROJECT_DIR}/*.zip
+      - ${CI_PROJECT_DIR}/*.tgz
 
 
 package-validate:
