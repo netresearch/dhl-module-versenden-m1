@@ -173,6 +173,9 @@ The section *Account Data* holds your access credentials for the DHL webservice
 which are required for production mode. Customers with a DHL contract will get
 this information directly from the DHL team (Vertrieb DHL Paket).
 
+A detailed tutorial for configuring the Participation Numbers (Teilnahmenummern) can
+be found in `this article in the Knowledge Base <http://dhl.support.netresearch.de/support/solutions/articles/12000024659>`_.
+
 Shipment Orders
 ~~~~~~~~~~~~~~~
 
@@ -189,13 +192,12 @@ the DHL webservice is made.
   gram or kilogram. If necessary, the weight will be converted to kilogram
   during transmission to DHL.
 * *Shipping Methods for DHL Versenden*: Select which shipping methods should be
-  used for calculating shipping costs in the checkout. Only shipping methods that are
-  selected here will be handled via DHL Versenden (Business Customer Shipping)
-  when creating shipments.
+  linked to DHL Versenden. For shipping methods that are selected here, the available
+  DHL services will be displayed in the checkout, and DHL labels will be created when
+  creating the Magento® shipment.
 * *Cash On Delivery payment methods for DHL Versenden*: Select which payment methods
-  should be treated as Cash On Delivery (COD) payment methods. This is necessary
-  to transmit the additional charge for Cash On Delivery to the DHL webservice
-  and create Cash On Delivery labels.
+  should be treated as Cash On Delivery (COD) payment methods. If one of these payment
+  methods is used, a Cash On Delivery label will be created.
 
 .. raw:: pdf
 
@@ -207,13 +209,25 @@ Additional Services In Checkout
 In the configuration section *Additional Services In Checkout* you can choose which
 additional DHL services you want to offer to your customers.
 
+* *Enable Preferred Location*: The customer selects an alternative location where
+  the shipment can be placed in case they are not at home.
+* *Enable Preferred Neighbor*: The customer selects an alternative address in the
+  neighborhood for the shipment in case they are not at home.
+* *Enable Parcel announcement*: The customer gets notified by email about the status
+  of the shipment. Select one of the following options:
+
+  * *Yes*: The service will be booked.
+  * *Optional*: The customer decides in the checkout if the service should be booked.
+  * *No*: The service will not be booked.
+
 * *Enable Preferred Day*: The customer chooses a specific day on which the shipment
   should arrive.
 * *Enable Preferred Time*: The customer chooses a time frame within which the
   shipment should arrive.
-* *Preferred day / time handling fee*: This amount will be added to the shipping cost
-  if the service is used. Use a decimal point, not comma. The gross amount must be
-  entered here (incl. VAT). If you want to offer the service for free, enter a ``0`` here.
+* *Preferred day / time handling additional charge (handling fee)*: This amount will
+  be added to the shipping cost if the service is used. Use a decimal point, not comma.
+  The gross amount must be entered here (incl. VAT). If you want to offer the service
+  for free, enter a ``0`` here.
 * *Preferred day / time handling fee text*: This text will be displayed to the customer
   in the checkout if the service has been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
@@ -221,19 +235,9 @@ additional DHL services you want to offer to your customers.
 **Important:** The services *Preferred Day* and *Preferred Time* are **enabled by default!**
 Therefore the standard DHL handling fees will be added to the shipping cost.
 
-* *Enable Preferred Location*: The customer selects an alternative location where
-  the shipment can be placed in case they are not at home.
-* *Enable Preferred Neighbor*: The customer selects an alternative address in the
-  neighborhood for the shipment in case they are not at home.
 * *Cut off time*: This sets the time up to which new orders will be dispatched on the
   same day. Orders placed *after* the cut off time will not be dispatched on the same
   day. The earliest possible preferred day will then be postponed by one day.
-* *Enable Parcel announcement*: The customer gets notified by email about the status
-  of the shipment. Select one of the following options:
-
-  * *Yes*: The service will be booked.
-  * *Optional*: The customer decides in the checkout if the service should be booked.
-  * *No*: The service will not be booked.
 
 .. admonition:: Additional cost for Preferred Day / Preferred Time
 
@@ -259,16 +263,16 @@ Automatic Shipment Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The section *Automatic Shipment Creation* lets you choose if shipments should be
-created and package labels retrieved automatically.
+created and package labels retrieved automatically (via Cronjob).
 
 The setting *Notify Customer* allows to have the shipment confirmation email
 sent to the customer if the shipment was created successfully.
 
-You can also configure which order status an order must have to be processed
+You can also configure which *order status* an order must have to be processed
 automatically. You can use this to exclude specific orders from being processed
 automatically.
 
-Also, the services which should be booked by default can be chosen here.
+Also, the *additional services* which should be booked automatically can be chosen here.
 
 Contact Data
 ~~~~~~~~~~~~
@@ -322,9 +326,9 @@ address.
 
 The customer can click on the link "*Or as an alternative choose a shipment to
 a Parcelstation or a Post Office*". This will lead the customer back to the checkout
-step *Shipping address* to select a DHL location.
+step *Shipping address* to select a DHL location as shipping address, if desired.
 
-If the module `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000023182>`_
+If the module `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000023181>`_
 is installed, the customer can use it to easily find nearby DHL pickup locations.
 
 .. raw:: pdf
@@ -334,7 +338,10 @@ is installed, the customer can use it to easily find nearby DHL pickup locations
 Admin Order
 ~~~~~~~~~~~
 
-When creating orders via the Admin Panel, no additional DHL services can be booked.
+When creating orders via the Admin Panel, no additional DHL services can be booked
+while placing the order. However, it is possible to select services later when
+creating the shipment.
+
 The Cash On Delivery payment methods will be disabled if Cash On Delivery is not
 available for the delivery address (same behaviour as in the checkout).
 
@@ -350,12 +357,13 @@ addresses in the checkout:
 * A numerical value in the field *Company* will be recognized as Post Number.
 
 A more comprehensive support for creating shipments to DHL addresses via the
-DHL webservice is offered by the separate extension `DHL Location Finder
-<http://dhl.support.netresearch.de/support/solutions/articles/12000023182>`_:
+DHL webservice is offered by the separate extension `DHL Locationfinder
+<http://dhl.support.netresearch.de/support/solutions/articles/12000023181>`_:
 
-* Interactive map for selecting the DHL delivery address.
-* Validation of customer input.
-* Support for Parcel Stations (Paketshops).
+* Interactive map for selecting the DHL delivery address
+* Separate fields for DHL data (e.g. post number)
+* Validation of customer input
+* Support for Parcel Stations (Paketshops)
 
 Creating a shipment
 -------------------
@@ -368,7 +376,7 @@ National shipments
 
 In the Admin Panel, select an order whose shipping method is linked to DHL (see
 `Module configuration`_, section *Shipping Methods for DHL Versenden*). Then
-click the button *Ship* on the top of the page.
+click the button *Ship* on the top right of the page.
 
 .. image:: images/en/button_ship.png
 
@@ -382,11 +390,11 @@ Now a popup window for selecting the articles in the package will be opened. Cli
 the button *Add products*, select the products, and confirm by clicking
 *Add selected product(s) to package*. The package dimensions are optional.
 
-.. admonition:: Note
+.. admonition:: Multipack shipments
 
    Splitting the products / items into multiple packages is currently not supported
    by the DHL webservice. As an alternative, you can create several shipments for
-   one order (partial shipment).
+   one order (partial shipment), see also `this tutorial <http://dhl.support.netresearch.de/support/solutions/articles/12000029044>`_.
 
 The button *OK* in the popup window is now enabled. When clicking it, the shipment
 will be transmitted to DHL and (if the transmission was successful) a shipping
@@ -425,7 +433,7 @@ selected if enabled in the general `Module configuration`_.
 Mass action
 ~~~~~~~~~~~
 
-Domestic shipments and labels can also be created using a mass action in the
+National and EU shipments and labels can be created using a mass action in the
 order grid:
 
 * Sales → Orders → Mass action *Create Shipping Labels*
@@ -464,6 +472,12 @@ of the Admin Panel:
 * Sales → Orders → Mass action *Print shipping labels*
 * Sales → Shipments → Mass action *Print shipping labels*
 * Detail page of a shipment → Button *Print shipping label*
+
+Please note that this will not transmit *new* shipments to DHL, but only show
+the DHL labels which are already stored in Magento®.
+
+To create *new* DHL shipments and labels, please follow the instructions in the
+section `Mass action`_.
 
 Canceling a shipment
 --------------------
