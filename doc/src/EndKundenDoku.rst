@@ -176,6 +176,9 @@ Im Konfigurationsbereich *Stammdaten* werden Ihre Zugangsdaten für den DHL Webs
 hinterlegt, die für den Produktivmodus erforderlich sind. Die Zugangsdaten erhalten
 DHL Vertragskunden über den Vertrieb DHL Paket.
 
+Eine detaillierte Anleitung zur Einrichtung der Teilnahmenummern finden Sie in `diesem Artikel
+in der Wissensdatenbank <http://dhl.support.netresearch.de/support/solutions/articles/12000024658>`_.
+
 Versandaufträge
 ~~~~~~~~~~~~~~~
 
@@ -191,14 +194,13 @@ für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich s
 * *Gewichtseinheit*: Legen Sie fest, ob die Gewichtsangaben in Ihrem Katalog in
   Gramm oder Kilogramm gepflegt sind. Bei Bedarf wird das Gewicht während der
   Übertragung an DHL auf Kilogramm umgerechnet.
-* *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten für die
-  Versandkostenberechnung im Checkout verwendet werden sollen. Nur die hier ausgewählten
-  Versandarten werden bei der Lieferscheinerstellung über DHL Versenden
-  (Geschäftskundenversand) abgewickelt.
-* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten
-  es sich um Nachnahme-Zahlarten handelt. Diese Information wird benötigt, um
-  bei Bedarf den Nachnahmebetrag an den DHL Webservice zu übertragen und passende
-  Nachnahme-Label zu erzeugen.
+* *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten mit DHL
+  verknüpft sein sollen. Für die hier ausgewählten Versandarten werden im Checkout die
+  verfügbaren DHL Zusatzleistungen angeboten und DHL-Label erzeugt, wenn der Lieferschein
+  in Magento® angelegt wird.
+* *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten es sich
+  um Nachnahme-Zahlarten handelt. Wenn eine dieser Zahlarten verwendet wird, wird ein
+  Nachnahme-Label erzeugt.
 
 .. raw:: pdf
 
@@ -211,11 +213,22 @@ Im Konfigurationsbereich *DHL Zusatzleistungen im Checkout* legen Sie fest,
 welche im Rahmen des DHL Geschäftskundenversand zubuchbaren Services Ihren Kunden
 angeboten werden.
 
+* *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
+  falls er nicht angetroffen wird.
+* *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
+  für die Abgabe der Sendung, falls er nicht angetroffen wird.
+* *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
+  Sendung informiert. Wählen Sie hier aus folgenden Optionen:
+
+  * *Ja*: Der Service wird immer hinzugebucht.
+  * *Optional*: Der Kunde bestimmt im Checkout, ob er den Service wünscht.
+  * *Nein*: Der Service wird nie hinzugebucht.
+
 * *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
   an welchem die Lieferung ankommen soll.
 * *Wunschzeit*: Der Kunde wählt ein Zeitfenster für seine Sendung,
   in welchem die Lieferung ankommen soll.
-* *Wunschtag / Wunschzeit Service Aufschlag*: Dieser Betrag wird zu den Versandkosten
+* *Wunschtag / Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
   hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
   als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
   Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
@@ -229,20 +242,10 @@ angeboten werden.
 Dadurch werden die von DHL vorgegebenen Service-Aufschläge zu den Versandkosten
 hinzugefügt.
 
-* *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
-  falls er nicht angetroffen wird.
-* *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
-  für die Abgabe der Sendung, falls er nicht angetroffen wird.
 * *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
   noch am selben Tag abgeschickt werden. Bestellungen, die *nach* Annahmeschluss
   eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Wunschtag
   verschiebt sich dann um einen Tag.
-* *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
-  Sendung informiert. Wählen Sie hier aus folgenden Optionen:
-
-  * *Ja*: Der Service wird immer hinzugebucht.
-  * *Optional*: Der Kunde bestimmt im Checkout, ob er den Service wünscht.
-  * *Nein*: Der Service wird nie hinzugebucht.
 
 .. admonition:: Zusatzkosten für Wunschtag / Wunschzeit
 
@@ -265,19 +268,16 @@ Automatische Sendungserstellung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Im Konfigurationsbereich *Automatische Sendungserstellung* legen Sie fest, ob
-automatisch Lieferscheine erzeugt und Paketaufkleber abgerufen werden sollen.
+automatisch Lieferscheine erzeugt und Paketaufkleber abgerufen werden sollen (per Cronjob).
 
-Die Einstellung *Kundenbenachrichtigung* ermöglicht es, die Versandinformationen
-per E-Mail an den Kunden zu schicken, wenn ein Lieferschein erfolgreich erzeugt
-wurde.
+Die Einstellung *Kundenbenachrichtigung* ermöglicht es, die Versandinformationen per E-Mail
+an den Kunden zu schicken, wenn Lieferschein und DHL-Auftrag erfolgreich erzeugt wurden.
 
-Darüber hinaus können Sie bestimmen, welchen Bestell-Status eine Bestellung haben
-muss, um während der automatischen Sendungserstellung berücksichtigt zu werden. Hierüber
-können Sie steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen
-werden sollen.
+Die Einstellung *Bestell-Status* legt fest, welchen Status eine Bestellung haben muss,
+um durch die automatische Sendungserstellung berücksichtigt zu werden. Hierüber können Sie
+steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen werden sollen.
 
-Außerdem legen Sie hier diejenigen Services fest, die standardmäßig hinzugebucht
-werden sollen.
+Außerdem legen Sie hier die *Zusatzservices* fest, die automatisch hinzugebucht werden sollen.
 
 Kontaktinformationen
 ~~~~~~~~~~~~~~~~~~~~
@@ -332,9 +332,10 @@ steht.
 
 Der Kunde kann auf den Link "*Oder wählen Sie die Lieferung an einen Paketshop oder
 eine Postfiliale*" klicken. Dadurch wird er zum Schritt *Lieferadresse* zurück
-geleitet und kann nun einen DHL-Abholort eingeben.
+geleitet und kann, wenn gewünscht, einen DHL-Abholort als abweichende Lieferadresse
+eingeben.
 
-Falls das Modul `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000016764>`_
+Falls das Modul `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000016724>`_
 installiert ist, kann der Kunde diesen nutzen, um mit wenig Aufwand naheliegende
 DHL-Abholorte zu finden und zu übernehmen.
 
@@ -346,7 +347,10 @@ Admin Order
 ~~~~~~~~~~~
 
 Bei der Erzeugung von Bestellungen im Admin Panel stehen keine Zusatzleistungen
-zur Verfügung. Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls
+zur Verfügung. Es ist aber möglich, Zusatzleistungen zu wählen, wenn später die
+Lieferung erstellt wird.
+
+Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls
 der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 
 
@@ -362,9 +366,10 @@ von DHL Lieferadressen im Checkout:
 
 Eine umfassendere Unterstützung von DHL Lieferadressen im Zusammenspiel mit der
 Erteilung von Versandaufträgen über den DHL Webservice bietet die separate
-Extension `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000016764>`_:
+Extension `DHL Locationfinder <http://dhl.support.netresearch.de/support/solutions/articles/12000016724>`_:
 
 * Interaktive Karte zur Auswahl der DHL Lieferadresse
+* Gesonderte Eingabefelder für DHL-Daten im Checkout (z.B. Postnummer)
 * Validierung der Kundeneingaben
 * Unterstützung von Paket-Shops
 
@@ -379,11 +384,11 @@ Nationale Sendungen
 
 Öffnen Sie im Admin Panel eine Bestellung, deren Versandart mit dem DHL
 Geschäftskundenversand verknüpft ist (siehe Modulkonfiguration_, Abschnitt *Versandarten
-für DHL Versenden*. Betätigen Sie dann den Button *Versand* im oberen Bereich der Seite.
+für DHL Versenden*). Betätigen Sie dann den Button *Versand* oben rechts.
 
 .. image:: images/de/button_ship.png
 
-Es öffnet sich die Seite *Neuer Versand für Bestellung*. Wählen Sie die Checkbox
+Es öffnet sich die Seite *Neuer Versand für Bestellung*. Aktivieren Sie die Checkbox
 *Paketaufkleber erstellen* an und betätigen Sie den Button *Lieferschein erstellen...*.
 
 .. image:: images/de/button_submit_shipment.png
@@ -394,11 +399,12 @@ Betätigen Sie den Button *Artikel hinzufügen*, markieren Sie die bestellten
 Produkte und bestätigen Sie Ihre Auswahl durch Klick auf
 *Gewählte Artikel zum Paket hinzufügen*. Die Angabe der Paketmaße ist optional.
 
-.. admonition:: Hinweis
+.. admonition:: Mehrpaket-Sendungen
 
    Die Aufteilung der Produkte in mehrere Pakete wird vom DHL Webservice
    derzeit nicht unterstützt. Erstellen Sie alternativ mehrere Lieferscheine
-   (Teillieferung / Partial Shipment) zu einer Bestellung.
+   (Teillieferung / Partial Shipment) zu einer Bestellung, siehe auch
+   `diese Anleitung <http://dhl.support.netresearch.de/support/solutions/articles/12000029043>`_.
 
 Der Button *OK* im Popup ist nun aktiviert. Bei Betätigung wird ein Versandauftrag
 an DHL übermittelt und im Erfolgsfall der resultierende Paketaufkleber abgerufen.
@@ -418,8 +424,8 @@ Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 Service-Auswahl
 ~~~~~~~~~~~~~~~
 
-Neben den im Checkout verfügbaren Zusatzleistungen, die sich an den Endverbraucher
-wenden, stehen für den DHL Geschäftskundenversand weitere, an den Händler gerichtete,
+Neben den im Checkout verfügbaren Zusatzleistungen, die sich an den Käufer richten,
+stehen für den DHL Geschäftskundenversand weitere, an den Händler gerichtete
 Services zur Verfügung. Die für die aktuelle Lieferadresse möglichen Zusatzleistungen
 werden im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet.
 
@@ -437,7 +443,7 @@ Modulkonfiguration_.
 Massenaktion
 ~~~~~~~~~~~~
 
-Inländische Lieferscheine und Paketaufkleber können über die Massenaktion
+Inländische und EU-Lieferscheine und Paketaufkleber können über die Massenaktion
 *Paketaufkleber abrufen* in der Bestellübersicht erzeugt werden:
 
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber abrufen*
@@ -470,12 +476,18 @@ DHL-Icons, die den Status der Versandaufträge zeigen.
 Drucken eines Paketaufklebers
 -----------------------------
 
-Erfolgreich abgerufene Paketaufkleber können standardmäßig an verschiedenen
+Bereits abgerufene Paketaufkleber können standardmäßig an verschiedenen
 Stellen im Admin Panel eingesehen werden:
 
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber drucken*
 * Verkäufe → Lieferscheine → Massenaktion *Paketaufkleber drucken*
 * Detail-Ansicht eines Lieferscheins → Button *Paketaufkleber drucken*
+
+Beachten Sie, dass hierüber keine *neuen* Aufträge an DHL übermittelt werden,
+sondern lediglich die bereits in Magento® gespeicherten DHL-Label abgerufen werden.
+
+Zur Erstellung von *neuen* DHL-Aufträgen und Labeln gehen Sie bitte wie unter
+Massenaktion_ beschrieben vor.
 
 Stornieren eines Versandauftrags
 --------------------------------
