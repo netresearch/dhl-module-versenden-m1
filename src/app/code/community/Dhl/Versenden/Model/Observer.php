@@ -335,9 +335,10 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
      */
     public function resetVersendenInfo(Varien_Event_Observer $observer)
     {
-        /** @var Mage_Checkout_Model_Session $checkoutSession */
-        $checkoutSession = Mage::getModel('checkout/session');
-        $quote = $checkoutSession->getQuote();
+        /** @var Mage_Checkout_Model_Session $session */
+        $session = Mage::getSingleton('checkout/session');
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = Mage::getModel('sales/quote')->load($session->getQuoteId());
         $shippingAddress = $quote->getShippingAddress();
         $shippingAddress->setData('dhl_versenden_info', null);
         $shippingAddress->save();
