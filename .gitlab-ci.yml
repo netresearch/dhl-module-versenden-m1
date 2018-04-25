@@ -5,13 +5,12 @@ stages:
   - build
   - validate
 
-
 phpcs:
   stage: analyze
   only:
-  - CI-147
   - develop
   - master
+  - /^(release|hotfix)-.*$/
   script:
   - phpcs --standard=MEQP1
           --severity=10
@@ -24,6 +23,7 @@ phpcs:
 #  only:
 #  - develop
 #  - master
+#  - /^(release|hotfix)-.*$/
 #  script:
 #  - php /phpunit-6.5.phar --version
 #  - php /phpunit-5.7.phar --version
@@ -32,8 +32,8 @@ phpcs:
 package-build:
   stage: build
   only:
-  - CI-147
   - master
+  - /^(release|hotfix)-.*$/
   script:
     - make
     - magento-tar-to-connect build/scripts/packageconfig.php
@@ -50,8 +50,8 @@ package-build:
 package-validate:
   stage: validate
   only:
-  - CI-147
   - master
+  - /^(release|hotfix)-.*$/
   script:
   # Not implemented yet. Should use "mage install-file ${MODULE_NAME}-${MODULE_VERSION}.tar"
   - echo "Not implemented yet."
