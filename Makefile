@@ -29,17 +29,13 @@ DOC_SOURCE_PATH:=$(DOCPATH)/src
 
 all: clean version doc zip tar
 
-doc: $(DOC_PUBLIC_PATH)/EndKundenDoku.pdf $(DOC_PUBLIC_PATH)/EndUserDoc.pdf $(DOC_PUBLIC_PATH)/ChangeLog.pdf
+doc: $(DOC_PUBLIC_PATH)/EndKundenDoku.pdf $(DOC_PUBLIC_PATH)/EndUserDoc.pdf
 
 $(DOC_PUBLIC_PATH)/EndUserDoc.pdf: $(DOC_SOURCE_PATH)/EndUserDoc.rst $(DOC_SOURCE_PATH)/dhl.style $(DOC_SOURCE_PATH)/images/*
 		rst2pdf -b 1 -o $(DOC_PUBLIC_PATH)/DHL_Business_Customer_Shipping.pdf -s $(DOC_SOURCE_PATH)/dhl.style $(DOC_SOURCE_PATH)/EndUserDoc.rst
 
 $(DOC_PUBLIC_PATH)/EndKundenDoku.pdf: $(DOC_SOURCE_PATH)/EndKundenDoku.rst $(DOC_SOURCE_PATH)/dhl.style $(DOC_SOURCE_PATH)/images/*
 		rst2pdf -b 1 -o $(DOC_PUBLIC_PATH)/DHL_Versenden.pdf -s $(DOC_SOURCE_PATH)/dhl.style $(DOC_SOURCE_PATH)/EndKundenDoku.rst
-
-$(DOC_PUBLIC_PATH)/ChangeLog.pdf: $(DOC_SOURCE_PATH)/ChangeLog.rst $(DOC_SOURCE_PATH)/dhl.style
-		rst2pdf -b 1 -o $(DOC_PUBLIC_PATH)/ChangeLog.pdf -s $(DOC_SOURCE_PATH)/dhl.style $(DOC_SOURCE_PATH)/ChangeLog.rst
-
 
 clean:
 		rm -f $(DOC_PUBLIC_PATH)/*.pdf
