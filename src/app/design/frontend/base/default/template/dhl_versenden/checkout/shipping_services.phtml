@@ -73,11 +73,19 @@
         <?php endif; ?>
 
         <?php if (!$this->isShippingAddressDHLLocation()): ?>
-        <span>
-            <a id="locationfinder-link" href="javascript:void(0)">
-                <?php echo $this->escapeHtml($this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.')) ?>
-            </a>
-        </span>
+
+            <span>
+                <?php
+                $locationHint = $this->escapeHtml(
+                        $this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.')
+                );
+                if($this->isOnePageCheckout()): ?>
+                    <a id="locationfinder-link" href="javascript:void(0)"><?php echo $locationHint; ?></a>
+                <?php else: ?>
+                    <span id="locationfinder-link"><?php echo $locationHint; ?></span>
+                <?php endif; ?>
+            </span>
+
         <?php endif; ?>
 
         <script type="text/javascript">
@@ -95,6 +103,10 @@
             var locationLink = $('locationfinder-link');
             if (locationLink) {
                 locationLink.observe('click', function () {
+                    if (typeof checkout === 'undefined') {
+                        return;
+                    }
+
                     checkout.gotoSection('shipping');
                     document.getElementById('opc-shipping').scrollIntoView();
 

@@ -172,4 +172,19 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
 
         return $msg;
     }
+
+    /**
+     * @return bool
+     */
+    public function isOnePageCheckout()
+    {
+        $layoutHandles = $this->getLayout()->getUpdate()->getHandles();
+        foreach ($layoutHandles as $layoutHandle) {
+            if (strpos($layoutHandle, 'checkout_onepage') !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
