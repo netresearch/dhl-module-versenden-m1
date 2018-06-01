@@ -233,7 +233,6 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             $serviceData['shipment_service'][Service\ParcelAnnouncement::CODE] = true;
         }
 
-
         // set customer services from checkout (includes parcelAnnouncement if configured as "optional")
         /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $this->_order->getShippingAddress()->getData('dhl_versenden_info');

@@ -4,7 +4,7 @@
         <Dhl_Versenden>
             <active>true</active>
             <codePool>community</codePool>
-            <depends></depends>
+            <depends/>
         </Dhl_Versenden>
     </modules>
 </config>
