@@ -46,4 +46,24 @@
             </action>
         </reference>
     </checkout_onepage_index>
+    <amazonpayments_checkout_index>
+        <reference name="head">
+            <action method="addItem" ifconfig="carriers/dhlversenden/active">
+                <type>skin_js</type>
+                <script>js/dhl_versenden/opcheckout.js</script>
+            </action>
+            <action method="addItem" ifconfig="carriers/dhlversenden/service_preferredlocation_enabled">
+                <type>skin_js</type>
+                <script>js/dhl_versenden/validationLocation.js</script>
+            </action>
+            <action method="addItem" ifconfig="carriers/dhlversenden/service_preferredneighbour_enabled">
+                <type>skin_js</type>
+                <script>js/dhl_versenden/validationNeightbour.js</script>
+            </action>
+            <action method="addItem" ifconfig="carriers/dhlversenden/active">
+                <type>skin_css</type>
+                <script>css/dhl_versenden/styles.css</script>
+            </action>
+        </reference>
+    </amazonpayments_checkout_index>
 </layout>

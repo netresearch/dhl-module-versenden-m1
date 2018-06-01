@@ -49,6 +49,12 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
             return;
         }
 
+        /** @var Dhl_Versenden_Model_Config $configModel */
+        $configModel = Mage::getModel('dhl_versenden/config');
+        if (!$configModel->isActive()) {
+            return;
+        }
+
         $serviceBlock = Mage::app()->getLayout()->createBlock(
             'dhl_versenden/checkout_onepage_shipping_method_service',
             'dhl_versenden_service',
