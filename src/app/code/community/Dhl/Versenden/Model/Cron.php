@@ -91,6 +91,9 @@ class Dhl_Versenden_Model_Cron
             $collection->addStatusFilter($orderStatus);
             $collection->addStoreFilter($stores);
 
+            // The DHL API only accepts up to 50 shipments per request, therefore we set this limit.
+            $collection->setPageSize(50);
+            
             /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
             $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $this->_logger));
             $num = $autocreate->autoCreate($collection);
