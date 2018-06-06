@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- Limit max number of shipments to 50 per request to prevent invalid XML error
+
 ### Deprecated
 
 ### Removed
