@@ -134,17 +134,24 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 
     /**
      * @param mixed $store
+     * @param array $bankRefMap
      * @return Shipper\BankData
      */
-    public function getBankData($store = null)
+    public function getBankData($store = null, $bankRefMap = array())
     {
         $accountOwner = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_OWNER, $store);
         $bankName     = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_BANKNAME, $store);
         $iban         = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_IBAN, $store);
         $bic          = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_BIC, $store);
         $noteOne      = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE1, $store);
-        $noteTWo      = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE2, $store);
+        $noteTwo      = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE2, $store);
         $accountRef   = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_ACCOUNTREF, $store);
+
+        foreach ($bankRefMap as $key => $replace){
+            $noteOne = str_replace($key, $replace, $noteOne);
+            $noteTwo = str_replace($key, $replace, $noteTwo);
+            $accountRef = str_replace($key, $replace, $accountRef);
+        }
 
         return new Shipper\BankData(
             $accountOwner,
@@ -152,7 +159,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $iban,
             $bic,
             $noteOne,
-            $noteTWo,
+            $noteTwo,
             $accountRef
         );
     }
