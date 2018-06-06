@@ -104,6 +104,7 @@
 "Reason for Payment","Verwendungszweck"
 "Reason for Payment (2)","Verwendungszweck (2)"
 "Account Reference to Customer Profile","Bankverbindungsreferenz"
+"Placeholders: %orderId%, %customerId%, %customerName%", "Platzhalter: %orderId%, %customerId%, %customerName%"
 "Return Shipment","Retourenbeileger"
 "Use Shipper as Receiver","Absenderdaten als Retourenempfänger nutzen"
 "Name of Receiver","Empfänger"
