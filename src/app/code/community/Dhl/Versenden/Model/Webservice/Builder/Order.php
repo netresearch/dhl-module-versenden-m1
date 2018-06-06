@@ -114,7 +114,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         array $customsInfo,
         $gkApiProduct
     ) {
-        $shipper = $this->_shipperBuilder->getShipper($shipment->getStoreId());
+        $shipper = $this->_shipperBuilder
+            ->setShipment($shipment)
+            ->getShipper($shipment->getStoreId());
 
         $versendenInfo = $shipment->getShippingAddress()->getData('dhl_versenden_info');
 
