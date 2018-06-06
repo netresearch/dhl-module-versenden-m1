@@ -606,6 +606,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Placeholders: %orderId%, %customerId%, %customerName%]]></comment>
                         </bankdata_note1>
                         <bankdata_note2>
                             <label>Reason for Payment (2)</label>
@@ -615,6 +616,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Placeholders: %orderId%, %customerId%, %customerName%]]></comment>
                         </bankdata_note2>
                         <bankdata_accountreference>
                             <label>Account Reference to Customer Profile</label>
@@ -624,6 +626,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <comment><![CDATA[Placeholders: %orderId%, %customerId%, %customerName%]]></comment>
                         </bankdata_accountreference>
 
                         <dhlversenden_fields_returnshipment>
