@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Allow using placeholders in bank reference fields for Cash On Delivery
+
 ### Changed
 
 - Limit max number of shipments to 50 per request to prevent invalid XML error
