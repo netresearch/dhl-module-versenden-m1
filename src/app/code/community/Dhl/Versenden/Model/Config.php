@@ -53,6 +53,8 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'sandbox_auth_username';
     const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'sandbox_auth_password';
 
+    const CONFIG_XML_PATH_SENDRECEIVERPHONE     = 'shipment_sendreceiverphone';
+
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
     const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
@@ -234,5 +236,16 @@ class Dhl_Versenden_Model_Config
     public function isAutoCreateNotifyCustomer($store = null)
     {
         return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER, $store);
+    }
+
+    /**
+     * Check if receiver's phone number should be sent to DHL
+     *
+     * @param mixed $store
+     * @return bool
+     */
+    public function isSendReceiverPhone($store = null)
+    {
+        return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SENDRECEIVERPHONE, $store);
     }
 }

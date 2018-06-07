@@ -24,6 +24,8 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
+use \Dhl\Versenden\Model\Config;
+
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Receiver
  *
@@ -89,8 +91,15 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         $streetName      = $street['street_name'];
         $streetNumber    = $street['street_number'];
         $addressAddition = $street['supplement'];
-        $email = $address->getEmail() ? :  $address->getOrder()->getCustomerEmail();
+        $email           = $address->getEmail() ? :  $address->getOrder()->getCustomerEmail();
+        $phone           = '';
+        
+        $config = Mage::getModel('dhl_versenden/config');
 
+        if ($config->isSendReceiverPhone($address->getOrder()->getStoreId())) {
+            $phone = $address->getTelephone();
+        }
+        
         // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
         Mage::dispatchEvent(
@@ -153,7 +162,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
             $country,
             $countryISOCode,
             $address->getRegion(),
-            $address->getTelephone(),
+            $phone,
             $email,
             '',
             $packStation,

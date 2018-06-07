@@ -344,6 +344,7 @@
                 <log_level>3</log_level>
                 <account_participation backend_model="adminhtml/system_config_backend_serialized_array"><![CDATA[a:8:{s:18:"_1474470283335_335";a:2:{s:9:"procedure";s:2:"01";s:13:"participation";s:2:"01";}s:18:"_1474470313676_676";a:2:{s:9:"procedure";s:2:"53";s:13:"participation";s:2:"01";}s:18:"_1474470331582_582";a:2:{s:9:"procedure";s:2:"86";s:13:"participation";s:2:"02";}s:18:"_1474470336494_494";a:2:{s:9:"procedure";s:2:"87";s:13:"participation";s:2:"02";}s:18:"_1474470342334_334";a:2:{s:9:"procedure";s:2:"82";s:13:"participation";s:2:"02";}s:18:"_1474470366806_806";a:2:{s:9:"procedure";s:2:"07";s:13:"participation";s:2:"01";}s:18:"_1474470375822_822";a:2:{s:9:"procedure";s:2:"83";s:13:"participation";s:2:"02";}s:18:"_1474470376509_509";a:2:{s:9:"procedure";s:2:"85";s:13:"participation";s:2:"02";}}]]></account_participation>
                 <shipment_printonlyifcodeable>1</shipment_printonlyifcodeable>
+                <shipment_sendreceiverphone>0</shipment_sendreceiverphone>
                 <shipment_unitofmeasure>KG</shipment_unitofmeasure>
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
                 <service_preferredday_enabled>0</service_preferredday_enabled>
