@@ -188,6 +188,8 @@ the DHL webservice is made.
   correct an invalid address automatically, which results in an additional charge
   (Nachcodierungsentgelt). If the address cannot be corrected, DHL will still
   reject the shipment.
+* *Send receiver phone number*: This controls if the buyer's phone number should be
+  transmitted to DHL when creating the shipment.
 * *Weight Unit*: Select if the product weights in your catalog are stored in
   gram or kilogram. If necessary, the weight will be converted to kilogram
   during transmission to DHL.
