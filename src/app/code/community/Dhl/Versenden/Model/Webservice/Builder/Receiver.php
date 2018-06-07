@@ -24,7 +24,6 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
-use \Dhl\Versenden\Model\Config;
 
 /**
  * Dhl_Versenden_Model_Webservice_Builder_Receiver
