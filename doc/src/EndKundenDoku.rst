@@ -191,6 +191,8 @@ für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich s
   ist, wird DHL versuchen, fehlerhafte Lieferadressen automatisch korrekt zuzuordnen,
   wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht
   zugeordnet werden kann, wird die Sendung dennoch abgelehnt.
+* *Empfänger-Telefonnummer übertragen*: Hiermit kann gesteuert werden, ob die Telefonnummer
+  des Käufers bei der Sendungserstellung an DHL übermittelt werden soll.
 * *Gewichtseinheit*: Legen Sie fest, ob die Gewichtsangaben in Ihrem Katalog in
   Gramm oder Kilogramm gepflegt sind. Bei Bedarf wird das Gewicht während der
   Übertragung an DHL auf Kilogramm umgerechnet.
