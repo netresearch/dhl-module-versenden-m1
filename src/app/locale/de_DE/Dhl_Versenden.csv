@@ -33,6 +33,8 @@
 "Shipment Orders","Versandaufträge"
 "Print Only If Codeable","Nur leitkodierbare Versandaufträge erteilen"
 "If set to <em>Yes</em>, shipping order requests will only return a label if the DHL delivery address verification succeeds.","Ist diese Option auf <em>Ja</em> gestellt, so wird nur dann ein kostenpflichtiges Label erstellt, wenn die DHL-Adressprüfung erfolgreich ist."
+"Send receiver phone number", "Empfänger-Telefonnummer übertragen"
+"If set to <em>Yes</em>, the buyer's phone number will be transmitted to DHL.", "Ist diese Option auf <em>Ja</em> gestellt, wird die Telefonnumer des Käufers an DHL übermittelt."
 "Address Validation","Adressprüfung"
 "OK","OK"
 "Cancel","Abbrechen"
