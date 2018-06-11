@@ -104,7 +104,7 @@
 "Reason for Payment","Reason for Payment"
 "Reason for Payment (2)","Reason for Payment (2)"
 "Account Referece to Customer Profile","Account Referece to Customer Profile"
-"Placeholders: %orderId%, %customerId%, %customerName%", "Placeholders: %orderId%, %customerId%, %customerName%"
+"Placeholders: %orderId%, %customerId%", "Placeholders: %orderId%, %customerId%"
 "Return Shipment","Return Shipment"
 "Use Shipper as Receiver","Use Shipper as Receiver"
 "Name of Receiver","Name of Receiver"
