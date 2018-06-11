@@ -120,6 +120,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
 
         $versendenInfo = $shipment->getShippingAddress()->getData('dhl_versenden_info');
 
+        /** @var Dhl_Versenden_Model_Config $config */
+        $config = Mage::getModel('dhl_versenden/config');
+
         if (!$versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
             // build receiver from shipping address
             $receiver = $this->_receiverBuilder->getReceiver($shipment->getShippingAddress());
@@ -160,7 +163,6 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
                     $versendenReceiver->getParcelShop()->streetNumber
                 )
                 : null;
-
             $receiver = new RequestData\ShipmentOrder\Receiver(
                 $versendenReceiver->name1,
                 $versendenReceiver->name2,
@@ -174,7 +176,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
                 $versendenReceiver->country,
                 $versendenReceiver->countryISOCode,
                 $versendenReceiver->state,
-                $versendenReceiver->phone,
+                $config->isSendReceiverPhone($shipment->getStoreId())
+                    ? $versendenReceiver->phone
+                    : '',
                 $versendenReceiver->email,
                 $versendenReceiver->contactPerson,
                 $packstation,
