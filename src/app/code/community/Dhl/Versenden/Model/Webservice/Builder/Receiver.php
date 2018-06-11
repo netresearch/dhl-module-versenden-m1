@@ -92,7 +92,8 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         $addressAddition = $street['supplement'];
         $email           = $address->getEmail() ? :  $address->getOrder()->getCustomerEmail();
         $phone           = '';
-        
+
+        /** @var Dhl_Versenden_Model_Config $config */
         $config = Mage::getModel('dhl_versenden/config');
 
         if ($config->isSendReceiverPhone($address->getOrder()->getStoreId())) {
