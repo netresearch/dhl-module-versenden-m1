@@ -96,7 +96,6 @@ class Dhl_Versenden_Model_Webservice_Builder_Shipper
         // Available placeholders for the bank data configuration
         return array(
             '%orderId%'      => $this->shipment->getOrder()->getIncrementId(),
-            '%customerName%' => $this->shipment->getOrder()->getCustomerName(),
             '%customerId%'   => $this->shipment->getOrder()->getCustomerId()
         );
     }
