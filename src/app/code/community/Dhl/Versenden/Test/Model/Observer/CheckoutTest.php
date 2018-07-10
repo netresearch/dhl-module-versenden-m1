@@ -75,6 +75,44 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
     }
 
     /**
+     * Assert early return, if module is disabled
+     *
+     * @test
+     * @loadFixture Model_ConfigTest
+     * @loadFixture Model_DisableTest
+     */
+    public function appendServicesDisabled()
+    {
+        $this->setCurrentStore('store_two');
+        $serviceBlockHtml = 'checkout-dhlversenden-services';
+
+        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+        $blockMock = $this->getBlockMock(
+            $blockType,
+            array('renderView'),
+            false,
+            array(array('template' => 'dhl_versenden/checkout/shipping_services.phtml'))
+        );
+        $blockMock
+            ->expects($this->any())
+            ->method('renderView')
+            ->willReturn($serviceBlockHtml);
+        $this->replaceByMock('block', $blockType, $blockMock);
+
+        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+                             ->setMethods(array('getTransport'))
+                             ->getMock();
+        $observerMock
+            ->expects($this->never())
+            ->method('getTransport');
+        $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
+        $observerMock->setBlock($block);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
+        $dhlObserver->appendServices($observerMock);
+    }
+
+    /**
      * Assert early return.
      *
      * @test
