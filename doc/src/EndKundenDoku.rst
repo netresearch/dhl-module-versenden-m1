@@ -84,6 +84,27 @@ Sprachunterstützung
 Das Modul unterstützt die Lokalisierungen ``en_US`` und ``de_DE``. Die Übersetzungen
 sind in den CSV-Übersetzungsdateien gepflegt und somit auch durch Dritt-Module anpassbar.
 
+Dritt-Modul Kompabilität
+------------------------
+
+Amazon Pay For Europe
+~~~~~~~~~~~~~~~~~~~~~
+
+Das Modul *DHL Versenden* ist kompatibel mit dem Modul *Amazon Pay For Europe* ab der Version 1.0.16.
+Zusätzlich zu der Version muss noch eine Einstellung in der Konfiguration des Amazon Pay Modules vorgenommen werden.
+Welche hier sich hier befindet:
+
+::
+
+    System → Konfiguration → creativestyle → Amazon Pay → Allgemeine Einstellungen → Login mit Amazon aktivieren
+
+Diese Einstellung muss auf Ja gesetzt werden, da ansonsten im Checkout keine Adressinformationen an DHL gesendet werden
+und diese später bei der Bestellung manuell nachgepflegt werden müssten.
+
+Desweiteren existiert noch ein bekanntes Problem, wobei bei der Existenz von mehreren Liefermethoden, die DHL Services,
+bei der Liefermethode, nicht angezeigt werden. Diese werden eingeblendet, sobald eine Aktion wie *Adresse ändern*
+ausgeführt oder die Seite neu geladen wurde. Der Bug ist bekannt und wird in den zukünftigen Versionen auch behoben sein.
+
 .. raw:: pdf
 
    PageBreak
