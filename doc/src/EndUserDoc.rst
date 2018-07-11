@@ -82,6 +82,27 @@ Language support
 The module supports the locales ``en_US`` and ``de_DE``. The translations are stored
 in CSV translation files and can therefore be modified by third-party modules.
 
+Third-Party module compability
+------------------------------
+
+Amazon Pay For Europe
+~~~~~~~~~~~~~~~~~~~~~
+
+The module *DHL Versenden* is compatible with the module *Amazon Pay For Europe* from version 1.0.16 onwards.
+In addition to the version, a setting must be made in the configuration of the Amazon Pay Module.
+Which can be found here:
+
+::
+
+    System → Configuration → creativestyle → Amazon Pay → General Settings → Enable Login with Amazon
+
+This setting must be set to Yes, otherwise no address information will be sent to DHL during checkout.
+These would have to be maintained manually later in the order within the Magento Backend.
+
+There is also a known problem with the existence of several active delivery methods.
+DHL Services are not displayed for the delivery method. These are displayed as soon as an action such as
+*change address* is performed or the page has been reloaded. The bug is known and will be fixed in future versions.
+
 .. raw:: pdf
 
    PageBreak
