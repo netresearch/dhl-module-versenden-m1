@@ -263,6 +263,16 @@ additional DHL services you want to offer to your customers.
   in the checkout if both service has been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
 
+.. admonition:: Hint
+
+   **In case you like to offer preferred delivery options in your shop frontend, please note the following hint**
+
+   The plugin contains a tracking pixel due to reporting purposes of preferred services.
+   Its output is the URL where the preferred services are integrated via plugin as well as the number of plugin calls.
+   There is no personal data created or collected.
+
+      Deactivation: System -> Configuration -> Checkout -> DHL Versenden Tracking
+
 **Important:** The services *Preferred Day* and *Preferred Time* are **enabled by default!**
 Therefore the standard DHL handling fees will be added to the shipping cost.
 
