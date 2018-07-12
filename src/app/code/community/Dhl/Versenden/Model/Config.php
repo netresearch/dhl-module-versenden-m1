@@ -59,6 +59,8 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
     const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
 
+    const CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED = 'checkout/dhl_versenden/checkout_tracking_enabled';
+
     /**
      * Wrap store config access.
      *
