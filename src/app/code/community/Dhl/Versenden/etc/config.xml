@@ -307,6 +307,15 @@
                     </reset_service_settings>
                 </observers>
             </controller_action_predispatch_checkout_onepage_saveShipping>
+            <sales_order_place_after>
+                <observers>
+                    <dhl_versenden_add_track>
+                        <class>dhl_versenden/observer</class>
+                        <method>addTrack</method>
+                        <type>singleton</type>
+                    </dhl_versenden_add_track>
+                </observers>
+            </sales_order_place_after>
         </events>
         <translate>
             <modules>
@@ -393,6 +402,11 @@
                 <service_perferreddayandtime_handling_fee_text>*Bei der Buchung von Wunschtag und Wunschzeit fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_perferreddayandtime_handling_fee_text>
             </dhlversenden>
         </carriers>
+        <checkout>
+            <dhl_versenden>
+                <checkout_tracking_enabled>1</checkout_tracking_enabled>
+            </dhl_versenden>
+        </checkout>
     </default>
     <phpunit>
         <suite>

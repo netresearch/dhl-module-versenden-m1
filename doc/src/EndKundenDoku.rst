@@ -106,6 +106,7 @@ Damit die Adresse korrekt gespeichert wird, muss folgende Einstellung in der Kon
    korrekt gespeichert und später nicht an DHL gesendet werden können. Die Adresse müsste
    dann von Hand in der Bestellung nachgetragen werden.
 
+
 .. raw:: pdf
 
    PageBreak
@@ -270,6 +271,17 @@ angeboten werden.
   im Checkout angezeigt, wenn beide Zusatzservices ausgewählt sind. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
+
+.. admonition:: Hinweis
+
+   **Sollten Sie die Wunschpaket-Services in Ihrem Shop Frontend anzeigen wollen,
+   beachten Sie bitte folgenden Hinweis:**
+
+   Das Plugin enthält zu Reportingzwecken ein Tracking-Pixel.
+   Das Pixel gibt die URL, auf der das Plugin zum Einsatz kommt, sowie die Summe der Plugin-Aufrufe zurück. 
+   Hiermit werden keine personenbezogenen und personenbeziehbare Daten erhoben oder verarbeitet.
+
+      Deaktivierung: System -> Konfiguration -> Zur Kasse -> DHL Versenden Tracking
 
 **Achtung:** Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!**
 Dadurch werden die von DHL vorgegebenen Service-Aufschläge, auch für die Kombination von beiden zu den Versandkosten
