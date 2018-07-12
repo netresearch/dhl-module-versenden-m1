@@ -6,7 +6,7 @@ shipping API into the order processing workflow.
 
 Facts
 -----
-- version: 1.3.1
+- version: 1.4.0
 - extension key: Dhl_Versenden
 - [extension on GitLab](https://git.netresearch.de/dhl/versenden-m1)
 - [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.3.1/archive.tar.gz)

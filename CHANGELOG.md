@@ -9,8 +9,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+
+## [1.4.0] - 2018-07-12
+
+### Added
+
 - Allow using placeholders in bank reference fields for Cash On Delivery
 - Added configuration option to transmit the customer's phone number to DHL
+- Added compatibility to the module *Amazon Pay for Europe*
 
 ### Changed
 
@@ -25,6 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Security
 
 ### Known issues
+
 - If more than one shipment method exists, the DHL services are not displayed immediately.
   They become visible when clicking *Edit address* or when the page is reloaded. This will
   be fixed in future versions.
@@ -105,7 +122,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Initial release
 
-[Unreleased]: https://git.netresearch.de/dhl/versenden-m1/compare/1.3.1...develop
+[Unreleased]: https://git.netresearch.de/dhl/versenden-m1/compare/1.4.0...develop
+[1.4.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.3.1...1.4.0
 [1.3.1]: https://git.netresearch.de/dhl/versenden-m1/compare/1.3.0...1.3.1
 [1.3.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.2.0...1.3.0
 [1.2.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.1.1...1.2.0
