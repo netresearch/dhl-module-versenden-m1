@@ -88,20 +88,21 @@ Third-Party module compability
 Amazon Pay For Europe
 ~~~~~~~~~~~~~~~~~~~~~
 
-The module *DHL Versenden* is compatible with the module *Amazon Pay For Europe* from version 1.0.16 onwards.
-In addition to the version, a setting must be made in the configuration of the Amazon Pay Module.
-Which can be found here:
+The module is compatible with the extension *Creativestyle Amazon Pay For Europe*,
+version **1.0.16** or higher.
+
+To make sure the address is saved correctly, the following setting must be made in the
+configuration of the Amazon Pay Module:
 
 ::
 
-    System → Configuration → creativestyle → Amazon Pay → General Settings → Enable Login with Amazon
+    System → Configuration → creativestyle → Amazon Pay → General Settings → 
+    Enable Login with Amazon → Yes
 
-This setting must be set to Yes, otherwise no address information will be sent to DHL during checkout.
-These would have to be maintained manually later in the order within the Magento Backend.
+.. admonition:: Important
 
-There is also a known problem with the existence of several active delivery methods.
-DHL Services are not displayed for the delivery method. These are displayed as soon as an action such as
-*change address* is performed or the page has been reloaded. The bug is known and will be fixed in future versions.
+   This setting **must be enabled**, otherwise the address will not be saved correctly and
+   therefore cannot be sent to DHL. The address would have to be edited manually later.
 
 .. raw:: pdf
 
