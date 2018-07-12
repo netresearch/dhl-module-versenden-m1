@@ -187,4 +187,28 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
 
         return false;
     }
+
+    /**
+     * @return bool
+     */
+    public function isDayAndTime()
+    {
+        $services = $this->getServices();
+        $time = $services->getItem(Service\PreferredTime::CODE)->isEnabled();
+        $day = $services->getItem(Service\PreferredDay::CODE)->isEnabled();
+
+        return $time && $day;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDayAndTimeFeeText()
+    {
+        /** @var DHL_Versenden_Model_Config_Service $serviceConfig */
+        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
+        $msg = $serviceConfig->getPrefDayAndTimeHandlingFeeText($this->getQuote()->getStoreId());
+
+        return $msg;
+    }
 }
