@@ -90,20 +90,21 @@ Dritt-Modul Kompabilität
 Amazon Pay For Europe
 ~~~~~~~~~~~~~~~~~~~~~
 
-Das Modul *DHL Versenden* ist kompatibel mit dem Modul *Amazon Pay For Europe* ab der Version 1.0.16.
-Zusätzlich zu der Version muss noch eine Einstellung in der Konfiguration des Amazon Pay Modules vorgenommen werden.
-Welche hier sich hier befindet:
+Das Modul ist kompatibel mit der Extension *Creativestyle Amazon Pay For Europe* ab
+Version **1.0.16**.
+
+Damit die Adresse korrekt gespeichert wird, muss folgende Einstellung in der Konfiguration des Amazon Pay Moduls vorgenommen werden:
 
 ::
 
-    System → Konfiguration → creativestyle → Amazon Pay → Allgemeine Einstellungen → Login mit Amazon aktivieren
+    System → Konfiguration → creativestyle → Amazon Pay →  Allgemeine Einstellungen → 
+    Login mit Amazon aktivieren → Ja
 
-Diese Einstellung muss auf Ja gesetzt werden, da ansonsten im Checkout keine Adressinformationen an DHL gesendet werden
-und diese später bei der Bestellung manuell nachgepflegt werden müssten.
+.. admonition:: Wichtig
 
-Desweiteren existiert noch ein bekanntes Problem, wobei bei der Existenz von mehreren Liefermethoden, die DHL Services,
-bei der Liefermethode, nicht angezeigt werden. Diese werden eingeblendet, sobald eine Aktion wie *Adresse ändern*
-ausgeführt oder die Seite neu geladen wurde. Der Bug ist bekannt und wird in den zukünftigen Versionen auch behoben sein.
+   Diese Einstellung **muss aktiviert werden**, da ansonsten die Adressinformationen nicht
+   korrekt gespeichert und später nicht an DHL gesendet werden können. Die Adresse müsste
+   dann von Hand in der Bestellung nachgetragen werden.
 
 .. raw:: pdf
 
