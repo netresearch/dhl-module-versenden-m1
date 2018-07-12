@@ -26,6 +26,7 @@
 ?>
 <?php /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $this */
     $services = $this->getServices();
+    $isCombined = $this->isDayAndTime();
 ?>
 
 <?php if (!$this->isShippingAddressDHLLocation() || $services->count() > 0): ?>
@@ -69,6 +70,9 @@
                     <?php echo $service->getValueHtml(); ?>
                 </dd>
             <?php endforeach; ?>
+            <?php if ($isCombined): ?>
+                <dd><p><?php echo  $this->getDayAndTimeFeeText()?></p></dd>
+            <?php endif; ?>
         </dl>
         <?php endif; ?>
 

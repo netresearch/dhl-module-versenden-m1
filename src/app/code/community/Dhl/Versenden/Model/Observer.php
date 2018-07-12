@@ -291,12 +291,13 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
 
         $services = $dhlVersendenInfo->getServices();
         if ($services->preferredTime || $services->preferredDay) {
+            $combined = $services->preferredTime && $services->preferredDay;
             $store = Mage::app()->getStore($quote->getStoreId());
             /** @var Dhl_Versenden_Model_Config_Service $config */
             $config = Mage::getModel('dhl_versenden/config_service');
             $prefTimeHandlingFee = $services->preferredTime ? $config->getPrefTimeFee($store->getId()) : 0;
             $prefDayHandlingFee = $services->preferredDay ? $config->getPrefDayFee($store->getId()) : 0;
-
+            $prefDayAndTimeHandlingFee = $combined ? $config->getPrefDayAndTimeFee($store->getId()) : 0;
 
             list($carrierCode, $method) = explode('_', $shippingMethod, 2);
 
@@ -305,12 +306,16 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             $initialFee = $store->getConfig("carriers/{$carrierCode}/handling_fee");
 
             if ($initialFeeType === Mage_Shipping_Model_Carrier_Abstract::HANDLING_TYPE_FIXED) {
-                $handlingFee = $prefDayHandlingFee + $prefTimeHandlingFee + $initialFee ;
+                $handlingFee = $combined ?
+                    $prefDayAndTimeHandlingFee :
+                    $prefDayHandlingFee + $prefTimeHandlingFee + $initialFee ;
             } elseif ($initialFeeType === Mage_Shipping_Model_Carrier_Abstract::HANDLING_TYPE_PERCENT) {
                 $initialFixedFee = ($initialFee / 100) * $initialPrice;
-                $handlingFee =  $initialFixedFee + $prefDayHandlingFee + $prefTimeHandlingFee;
+                $handlingFee =  $combined ?
+                    $initialFixedFee + $prefDayAndTimeHandlingFee :
+                    $initialFixedFee + $prefDayHandlingFee + $prefTimeHandlingFee;
             } else {
-                $handlingFee =  $prefDayHandlingFee + $prefTimeHandlingFee;
+                $handlingFee =  $combined ? $prefDayAndTimeHandlingFee : $prefDayHandlingFee + $prefTimeHandlingFee;
             }
 
             /**

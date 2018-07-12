@@ -53,6 +53,10 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_RETURNSHIPMENT = 'service_returnshipment_enabled';
     const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
     const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
+    const CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE =
+        'service_perferreddayandtime_handling_fee';
+    const CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE_TEXT =
+        'service_perferreddayandtime_handling_fee_text';
 
     const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
     const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT   = 'shipment_autocreate_service_returnshipment';
@@ -496,6 +500,38 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
                 '$1',
                 '<strong>' . $formattedFee . '</strong>',
                 $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT, $store)
+            );
+        }
+
+        return $text;
+    }
+
+    /**
+     * Obtain combined prefered day and time handling fees from config.
+     * @param null $store
+     * @return float
+     */
+    public function getPrefDayAndTimeFee($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE, $store);
+    }
+
+    /**
+     * Obtain combined pref day and time handling fee text from config.
+     *
+     * @param null $store
+     * @return string
+     */
+    public function getPrefDayAndTimeHandlingFeeText($store = null)
+    {
+        $text = '';
+        $fee  = $this->getPrefDayAndTimeFee($store);
+        if ($fee > 0) {
+            $formattedFee = Mage::helper('core')->currency($this->getPrefDayAndTimeFee($store), true, false);
+            $text = str_replace(
+                '$1',
+                '<strong>' . $formattedFee . '</strong>',
+                $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE_TEXT, $store)
             );
         }
 
