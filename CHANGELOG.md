@@ -24,6 +24,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+### Known issues
+- If more than one shipment method exists, the DHL services are not displayed immediately.
+  They become visible when clicking *Edit address* or when the page is reloaded. This will
+  be fixed in future versions.
+
 
 ## [1.3.1] - 2018-04-25
 
