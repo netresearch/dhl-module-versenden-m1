@@ -255,6 +255,13 @@ additional DHL services you want to offer to your customers.
 * *Preferred day / time handling fee text*: This text will be displayed to the customer
   in the checkout if the service has been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
+* *Combined preferred day and time handling additional charge (handling fee)*: This amount will
+  be added to the shipping cost if the services are used. Use a decimal point, not comma.
+  The gross amount must be entered here (incl. VAT). If you want to offer the services combination
+  for free, enter a ``0`` here.
+* *Combined preferred day and time handling fee text*: This text will be displayed to the customer
+  in the checkout if both service has been selected. You can use the placeholder ``$1``
+  in the text which will show the additional handling fee and currency in the checkout.
 
 **Important:** The services *Preferred Day* and *Preferred Time* are **enabled by default!**
 Therefore the standard DHL handling fees will be added to the shipping cost.

@@ -194,8 +194,10 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     public function isDayAndTime()
     {
         $services = $this->getServices();
-        $time = $services->getItem(Service\PreferredTime::CODE)->isEnabled();
-        $day = $services->getItem(Service\PreferredDay::CODE)->isEnabled();
+        $time = $services->getItem(Service\PreferredTime::CODE);
+        $day = $services->getItem(Service\PreferredDay::CODE);
+        $time = $time ? true : false;
+        $day = $day ? true : false;
 
         return $time && $day;
     }
