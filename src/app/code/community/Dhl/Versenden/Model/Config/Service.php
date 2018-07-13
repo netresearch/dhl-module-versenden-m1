@@ -513,7 +513,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     public function getPrefDayAndTimeFee($store = null)
     {
-        return $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE, $store);
+        return (float) $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE, $store);
     }
 
     /**
