@@ -360,9 +360,9 @@
                         <service_perferreddayandtime_handling_fee>
                             <label>Additional charge for combined preferred day and time</label>
                             <tooltip>
-                                Insert gross value as surcharge for the combination of preferred day and time.
-                                Insert 0 to offer service for free. Use "." as decimal separator.
+                                Insert gross value as surcharge for the combination of preferred day and time. Insert 0 to offer service for free.
                             </tooltip>
+                            <comment>Use . as decimal separator.</comment>
                             <frontend_type>text</frontend_type>
                             <validate>validate-not-negative-number required-entry</validate>
                             <sort_order>473</sort_order>
