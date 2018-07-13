@@ -179,3 +179,6 @@
 "Not Available","Not Available",
 "Status_Failed", "Failed"
 "Your input is invalid", "Your input is invalid"
+"Additional charge for combined preferred day and time","Additional charge for combined preferred day and time"
+"Combined Preferred day and time handling fee text","Combined Preferred day and time handling fee text"
+"Insert gross value as surcharge for the combination of preferred day and time. Insert 0 to offer service for free.", "Insert gross value as surcharge for the combination of preferred day and time. Insert 0 to offer service for free."
