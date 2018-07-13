@@ -47,7 +47,7 @@ class PreferredLocation extends Type\Text
      * @param string $placeholder
      * @param int    $maxLength
      */
-    public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 100)
+    public function __construct($name, $isEnabled, $isSelected, $placeholder, $maxLength = 80)
     {
         $this->customerService = true;
 
@@ -60,7 +60,7 @@ class PreferredLocation extends Type\Text
     public function getValueHtml()
     {
         $format = <<<'HTML'
-<input type="text" name="service_setting[%s]" value="%s" class="input-text input-with-checkbox validate-with-neighbour"
+<input type="text" name="service_setting[%s]" value="%s" class="input-text input-with-checkbox validate-with-neighbour validate-text"
        maxlength="%d" id="shipment_service_%sDetails" data-select-id="shipment_service_%s" placeholder="%s" />
 HTML;
 
