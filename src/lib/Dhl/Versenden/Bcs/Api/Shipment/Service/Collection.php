@@ -123,4 +123,14 @@ class Collection implements \IteratorAggregate, \Countable
 
         return $this->services[$serviceCode];
     }
+
+    /**
+     * @param $serviceCode
+     * @return $this
+     */
+    public function removeItem($serviceCode)
+    {
+        unset($this->services[$serviceCode]);
+        return $this;
+    }
 }

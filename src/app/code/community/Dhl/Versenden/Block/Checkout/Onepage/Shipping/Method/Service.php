@@ -60,6 +60,12 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
             $storeId
         );
 
+        $hasBackOrders = $this->hasBackOrderedProducts();
+
+        if ($hasBackOrders && $availableServices->getItem(Service\PreferredDay::CODE)) {
+            $availableServices->removeItem(Service\PreferredDay::CODE);
+        }
+
         return $availableServices;
     }
 
@@ -212,5 +218,25 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
         $msg = $serviceConfig->getPrefDayAndTimeHandlingFeeText($this->getQuote()->getStoreId());
 
         return $msg;
+    }
+
+    /**
+     * Check if Quote consists of back ordered items.
+     *
+     * @return bool
+     */
+    public function hasBackOrderedProducts()
+    {
+        $quoteItems = $this->getQuote()->getAllItems();
+        $backorders = 0;
+        foreach ($quoteItems as $item) {
+            /**
+             * @var Mage_CatalogInventory_Model_Stock_Item
+             */
+            $itemBackorders = $item->getProduct()->getData('stock_item')->getBackorders();
+            $backorders = $backorders + $itemBackorders;
+        }
+
+        return $backorders > 0;
     }
 }
