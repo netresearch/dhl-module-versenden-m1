@@ -261,9 +261,18 @@ angeboten werden.
   im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
+* *Kombination Wunschtag und Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
+  hinzu addiert, wenn beide Services verwendet werden. Verwenden Sie Punkt statt Komma
+  als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
+  ``0`` ein.
+* *Kombination Wunschtag und Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+  im Checkout angezeigt, wenn beide Zusatzservices ausgewählt sind. Sie können den
+  Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
+  und die Währung ersetzt wird.
 
 **Achtung:** Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!**
-Dadurch werden die von DHL vorgegebenen Service-Aufschläge zu den Versandkosten
+Dadurch werden die von DHL vorgegebenen Service-Aufschläge, auch für die Kombination von beiden zu den Versandkosten
 hinzugefügt.
 
 * *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
