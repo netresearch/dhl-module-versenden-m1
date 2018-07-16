@@ -60,7 +60,7 @@ class PreferredNeighbour extends Type\Text
     public function getValueHtml()
     {
         $format = <<<'HTML'
-<input type="text" name="service_setting[%s]" value="%s" class="input-text input-with-checkbox validate-with-location"
+<input type="text" name="service_setting[%s]" value="%s" class="input-text input-with-checkbox validate-with-location validate-detail validate-special"
        maxlength="%d" id="shipment_service_%sDetails" data-select-id="shipment_service_%s" placeholder="%s" />
 HTML;
 
