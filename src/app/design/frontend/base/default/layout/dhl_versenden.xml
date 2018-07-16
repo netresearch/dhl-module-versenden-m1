@@ -42,7 +42,11 @@
             </action>
             <action method="addItem">
                 <type>skin_js</type>
-                <script>js/dhl_versenden/validationText.js</script>
+                <name helper="dhl_versenden/service/setDetailValidation"/>
+            </action>
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="dhl_versenden/service/setSpecialValidation"/>
             </action>
             <action method="addItem" ifconfig="carriers/dhlversenden/active">
                 <type>skin_css</type>
