@@ -67,10 +67,26 @@ document.observe("dom:loaded", function() {
                 }
             }
         }
+        var locationSel = $('shipment_service_preferredLocation');
+        var neighbourSel = $('shipment_service_preferredNeighbour');
+        var location = $('shipment_service_preferredLocationDetails');
+        var neighbour = $('shipment_service_preferredNeighbourDetails');
+        if (locationSel.checked) {
+            if(Validation.validate(location)) {
+                var isValidLocation = true;
+            }
 
-        // add service and customs info to ajax request
-        packaging.setParamsCreateLabelRequest(requestData);
-        packaging.confirmPackaging();
+        } else if (neighbourSel.checked) {
+            if (Validation.validate(neighbour)) {
+                var isValidNeighbour = true;
+            }
+        }
+
+        if ((location && isValidLocation) || (neighbour && isValidNeighbour)) {
+            // add service and customs info to ajax request
+            packaging.setParamsCreateLabelRequest(requestData);
+            packaging.confirmPackaging();
+        }
     };
 });
 //]]>
