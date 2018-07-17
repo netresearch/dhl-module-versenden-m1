@@ -247,6 +247,14 @@
                     </dhl_versenden_extendedgrid>
                 </observers>
             </sales_order_grid_collection_load_before>
+            <dhl_versenden_create_shipment_order_before>
+                <observers>
+                    <dhl_versenden_checkservice>
+                        <class>dhl_versenden/observer_services</class>
+                        <method>validateLocationDetails</method>
+                    </dhl_versenden_checkservice>
+                </observers>
+            </dhl_versenden_create_shipment_order_before>
         </events>
     </adminhtml>
     <frontend>

@@ -17,3 +17,6 @@ src/skin/frontend/base/default/js/dhl_versenden/ skin/frontend/base/default/js/d
 src/skin/adminhtml/default/default/dhl_versenden.css skin/adminhtml/default/default/dhl_versenden.css
 src/skin/adminhtml/default/default/dhl_versenden.css skin/adminhtml/default/default/dhl_versenden.css
 src/skin/adminhtml/default/default/images/dhl_versenden/ skin/adminhtml/default/default/images/dhl_versenden/
+src/js/dhl_versenden  js/dhl_versenden
+
+
