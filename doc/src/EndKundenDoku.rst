@@ -1,13 +1,13 @@
-.. |date| date:: %Y-%m-%d
-.. |year| date:: %Y
+.. ,date, date:: %Y-%m-%d
+.. ,year, date:: %Y
 
 .. footer::
    .. class:: footertable
 
    +-------------------------+-------------------------+
-   | Stand: |date|           | .. class:: rightalign   |
-   |                         |                         |
-   |                         | ###Page###/###Total###  |
+   , Stand: ,date,           , .. class:: rightalign   ,
+   ,                         ,                         ,
+   ,                         , ###Page###/###Total###  ,
    +-------------------------+-------------------------+
 
 .. header::
@@ -97,7 +97,7 @@ Damit die Adresse korrekt gespeichert wird, muss folgende Einstellung in der Kon
 
 ::
 
-    System → Konfiguration → creativestyle → Amazon Pay →  Allgemeine Einstellungen → 
+    System → Konfiguration → creativestyle → Amazon Pay →  Allgemeine Einstellungen →
     Login mit Amazon aktivieren → Ja
 
 .. admonition:: Wichtig
@@ -459,6 +459,14 @@ werden im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet.
 Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, ebenso
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
+
+Sollten Sie Wunschort oder Wunschnachbar bearbeiten oder hinzufügen wollen, beachten
+Sie das Sonderzeichen oder Angaben wie Paketbox, Packstation, Postfach, Postfiliale,
+Filiale, Postfiliale Direkt, Filiale Direkt, Paketkasten, DHL, P-A-C-K-S-T-A-T-I-O-N,
+Paketstation, Pack Station, P.A.C.K.S.T.A.T.I.O.N., Pakcstation, Paackstation, Pakstation,
+Backstation, Bakstation, P A C K S T A T I O N, Wunschfiliale, Deutsche Post
+nicht zulässig sind.
+
 
 .. raw:: pdf
 
