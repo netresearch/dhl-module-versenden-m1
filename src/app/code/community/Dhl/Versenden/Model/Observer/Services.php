@@ -147,4 +147,52 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
 
         $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
     }
+
+    /**
+     * @param Varien_Event_Observer $observer
+     */
+    public function validateLocationDetails(Varien_Event_Observer $observer)
+    {
+        $requests = $observer->getEvent()->getData('shipment_requests');
+        foreach ($requests as $requset) {
+            /**
+             * @var Mage_Shipping_Model_Shipment_Request
+             */
+            $services = $requset->getData('services');
+            $serviceSettings = $services['service_setting'];
+            $keys = array(
+                \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE,
+                \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE
+            );
+        }
+
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $serviceSettings)) {
+                $this->checkValue($serviceSettings[$key], $key);
+            }
+        }
+    }
+
+    /**
+     * @param $value
+     * @param $key
+     *
+     */
+    public function checkValue($value, $key)
+    {
+        $pattern = '/\bPaketbox|\bPackstation|\bPostfach|\bPostfiliale|\bFiliale|\bPostfiliale Direkt|'.'
+                    \bFiliale Direkt|\bPaketkasten|\bDHL|\bP-A-C-K-S-T-A-T-I-O-N|\bPaketstation|\bPack Station|'.'
+                    \bP.A.C.K.S.T.A.T.I.O.N.|\bPakcstation|\bPaackstation|\bPakstation|\bBackstation|\bBakstation|'.'
+                    \bP A C K S T A T I O N|\bWunschfiliale|\bDeutsche Post/';
+        $patternSpec = "/[+[\]\'\;,.\/{}|\":<>?~\\\\]/";
+        preg_match($pattern, $value, $test);
+        preg_match($patternSpec, $value, $testSp);
+
+        if (!empty($test) || !empty($testSp)) {
+            $hint = ucfirst(strtolower(preg_replace('/(?=[A-Z])/', '$1 $2', $key)));
+            $msg = Mage::helper('dhl_versenden/data')->__($hint);
+            $msg .= ': ' . Mage::helper('dhl_versenden/data')->__('Your input is invalid');
+            Mage::throwException($msg);
+        }
+    }
 }
