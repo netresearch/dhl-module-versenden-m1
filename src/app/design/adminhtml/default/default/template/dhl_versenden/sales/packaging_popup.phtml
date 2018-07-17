@@ -68,22 +68,31 @@ document.observe("dom:loaded", function() {
             }
         }
         var locationSel = $('shipment_service_preferredLocation');
-        var neighbourSel = $('shipment_service_preferredNeighbour');
+        var neighborSel = $('shipment_service_preferredNeighbour');
         var location = $('shipment_service_preferredLocationDetails');
-        var neighbour = $('shipment_service_preferredNeighbourDetails');
-        if (locationSel.checked) {
+        var neighbor = $('shipment_service_preferredNeighbourDetails');
+        var locCheck = false;
+        var neighborCheck = false;
+
+        if (locationSel !== null && locationSel.checked) {
+            locCheck = true;
             if(Validation.validate(location)) {
                 var isValidLocation = true;
             }
 
-        } else if (neighbourSel.checked) {
-            if (Validation.validate(neighbour)) {
-                var isValidNeighbour = true;
+        } else if (neighborSel !== null  && neighborSel.checked) {
+            neighborCheck = true;
+            if (Validation.validate(neighbor)) {
+                var isValidNeighbor = true;
             }
         }
 
-        if ((location && isValidLocation) || (neighbour && isValidNeighbour)) {
+        if ((locCheck && isValidLocation) ||
+            (neighborCheck && isValidNeighbor)) {
             // add service and customs info to ajax request
+            packaging.setParamsCreateLabelRequest(requestData);
+            packaging.confirmPackaging();
+        } else if (!location && !neighbor) {
             packaging.setParamsCreateLabelRequest(requestData);
             packaging.confirmPackaging();
         }

@@ -96,7 +96,7 @@ configuration of the Amazon Pay Module:
 
 ::
 
-    System → Configuration → creativestyle → Amazon Pay → General Settings → 
+    System → Configuration → creativestyle → Amazon Pay → General Settings →
     Enable Login with Amazon → Yes
 
 .. admonition:: Important
@@ -449,6 +449,12 @@ are shown in the popup window for selecting the shipment articles.
 The services selected by the customer in the checkout will already be selected
 here. Also, the service *Address validation* (Print only if codeable) will be
 selected if enabled in the general `Module configuration`_.
+
+If you want to edit or add the preferred location or neighbor, please note that
+special characters or informations such as Paketbox, Packstation, Postfach, Postfiliale,
+Filiale, Postfiliale Direkt, Filiale Direkt, Paketkasten, DHL, P-A-C-K-S-T-A-T-I-O-N,
+Paketstation, Pack Station, P.A.C.K.S.T.A.T.I.O.N., Pakcstation, Paackstation, Pakstation,
+Backstation, Bakstation, P A C K S T A T I O N, Wunschfiliale, Deutsche Post are invalid.
 
 .. raw:: pdf
 
