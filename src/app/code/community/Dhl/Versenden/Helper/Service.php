@@ -43,6 +43,8 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
         if ($this->isLoctionOrneighbourEnabled()) {
             return 'js/dhl_versenden/validationDetail.js';
         }
+
+        return '';
     }
 
     /**
@@ -53,6 +55,8 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
         if ($this->isLoctionOrneighbourEnabled()) {
             return 'js/dhl_versenden/validationSpecial.js';
         }
+
+        return '';
     }
 
     /**
