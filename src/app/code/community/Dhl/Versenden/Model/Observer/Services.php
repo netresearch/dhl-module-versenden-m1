@@ -150,6 +150,7 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
 
     /**
      * @param Varien_Event_Observer $observer
+     * @throws Exception
      */
     public function validateLocationDetails(Varien_Event_Observer $observer)
     {
@@ -176,7 +177,7 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
     /**
      * @param $value
      * @param $key
-     *
+     * @throws Exception
      */
     public function checkValue($value, $key)
     {
@@ -185,10 +186,10 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
                     \bP.A.C.K.S.T.A.T.I.O.N.|\bPakcstation|\bPaackstation|\bPakstation|\bBackstation|\bBakstation|'.'
                     \bP A C K S T A T I O N|\bWunschfiliale|\bDeutsche Post/';
         $patternSpec = "/[+[\]\'\;,.\/{}|\":<>?~\\\\]/";
-        preg_match($pattern, $value, $test);
-        preg_match($patternSpec, $value, $testSp);
+        preg_match($pattern, $value, $matchWords);
+        preg_match($patternSpec, $value, $matchSpecialChars);
 
-        if (!empty($test) || !empty($testSp)) {
+        if (!empty($matchWords) || !empty($matchSpecialChars)) {
             $hint = ucfirst(strtolower(preg_replace('/(?=[A-Z])/', '$1 $2', $key)));
             $msg = Mage::helper('dhl_versenden/data')->__($hint);
             $msg .= ': ' . Mage::helper('dhl_versenden/data')->__('Your input is invalid');
