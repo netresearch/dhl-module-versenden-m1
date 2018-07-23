@@ -33,59 +33,53 @@
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Core_Block_Template
+class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Checkout_Block_Success
 {
-    protected $services = array(
+    public $services = array(
         'preferred_day',
         'preferred_time',
         'preferred_location',
         'preferred_neighbour'
     );
 
-
+    /**
+     * Set the template for tracking.
+     */
     public function _construct()
     {
         $this->setTemplate('dhl_versenden/checkout/success-tracking.phtml');
     }
 
     /**
-     * @return Mage_Sales_Model_Order
+     * @return \Dhl\Versenden\Bcs\Api\Info
      */
-    public function getOrder()
+    public function getDhlVersendenInfo()
     {
-        $orderId = Mage::getSingleton('checkout/session')->getLastRealOrderId();
-        return Mage::getModel('sales/order')->loadByIncrementId($orderId);
+        $checkoutSession = Mage::getSingleton('checkout/session');
+        $orderId  = $checkoutSession->getData('last_real_order_id');
+        /** @var Mage_Sales_Model_Order $orderModel */
+        $orderModel = Mage::getModel('sales/order');
+        $order = $orderModel->loadByIncrementId($orderId);
+        $shippingAddress = $order->getShippingAddress();
+
+        if (!$shippingAddress) {
+            return null;
+        }
+
+        return $shippingAddress->getData('dhl_versenden_info');
     }
 
     /**
      * @return bool
      */
-    public function isDevelopMode()
+    public function checkIfServiceIsSelected()
     {
-        return Mage::getIsDeveloperMode();
-    }
-
-    /**
-     * @return \Dhl\Versenden\Bcs\Api\Info\Services
-     */
-    public function getServices()
-    {
-        $order = $this->getOrder();
-        return $order->getShippingAddress()->getData('dhl_versenden_info')->getServices();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isServiceSelected()
-    {
-        $order = $this->getOrder();
-        $servicesinfo = $order->getShippingAddress()->getData('dhl_versenden_info');
-        if (!$servicesinfo) {
+        $serviceInfo = $this->getDhlVersendenInfo();
+        if (!$serviceInfo) {
             return false;
         }
 
-        $services = $servicesinfo->getServices();
+        $services = $serviceInfo->getServices()->toArray();
         $result = array_intersect_key($services, array_flip($this->services));
 
         return  count(array_filter($result)) > 0;
@@ -96,12 +90,11 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Core_Block_Templ
      */
     public function canAddTracking()
     {
-        $isTrackingEnabled = Mage::getStoreConfigFlag(
-            Dhl_Versenden_Model_Config::CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED
-        );
+        /** @var Dhl_Versenden_Model_Config $moduleConfig */
+        $moduleConfig = Mage::getModel('dhl_versenden/config');
+        $isTrackingEnabled = $moduleConfig->isTrackingEnabled();
 
-        return !Mage::getIsDeveloperMode() && $this->isServiceSelected() && $isTrackingEnabled;
+        return !Mage::getIsDeveloperMode() && $this->checkIfServiceIsSelected() && $isTrackingEnabled;
     }
-
 
 }

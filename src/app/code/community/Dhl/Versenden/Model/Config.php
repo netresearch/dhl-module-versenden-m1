@@ -250,4 +250,15 @@ class Dhl_Versenden_Model_Config
     {
         return $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SENDRECEIVERPHONE, $store);
     }
+
+    /**
+     * Check if inclusion of dhl tracking pixel is enabled.
+     *
+     * @param null $store
+     * @return bool
+     */
+    public function isTrackingEnabled($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED, $store);
+    }
 }
