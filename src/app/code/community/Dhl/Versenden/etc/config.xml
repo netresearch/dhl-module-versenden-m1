@@ -307,15 +307,6 @@
                     </reset_service_settings>
                 </observers>
             </controller_action_predispatch_checkout_onepage_saveShipping>
-            <sales_order_place_after>
-                <observers>
-                    <dhl_versenden_add_track>
-                        <class>dhl_versenden/observer</class>
-                        <method>addTrack</method>
-                        <type>singleton</type>
-                    </dhl_versenden_add_track>
-                </observers>
-            </sales_order_place_after>
         </events>
         <translate>
             <modules>

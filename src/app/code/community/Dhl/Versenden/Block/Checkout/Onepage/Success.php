@@ -1,6 +1,6 @@
 <?php
 /**
- * ${PACKAGE}
+ * Dhl Versenden
  *
  * NOTICE OF LICENSE
  *
@@ -14,19 +14,34 @@
  * Do not edit or add to this file if you wish to upgrade this extension to
  * newer versions in the future.
  *
- * @copyright Copyright (c) 2018 Netresearch GmbH & Co. KG (http://www.netresearch.de/)
- * @license   Open Software License (OSL 3.0)
- * @link      http://opensource.org/licenses/osl-3.0.php
+ * PHP version 5
+ *
+ * @category  Dhl
+ * @package   Dhl_Versenden
+ * @author    Andreas Müller <andreas.mueller@netresearch.de>
+ * @copyright 2018 Netresearch GmbH & Co. KG
+ * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link      http://www.netresearch.de/
  */
 
+/**
+ * Dhl_Versenden_Block_Checkout_Onepage_Success
+ *
+ * @category Dhl
+ * @package  Dhl_Versenden
+ * @author   Andreas Müller <andreas.mueller@netresearch.de>
+ * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
+ * @link     http://www.netresearch.de/
+ */
 class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Core_Block_Template
 {
     protected $services = array(
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredDay::CODE,
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredTime::CODE,
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE,
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE
+        'preferred_day',
+        'preferred_time',
+        'preferred_location',
+        'preferred_neighbour'
     );
+
 
     public function _construct()
     {
@@ -42,6 +57,9 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Core_Block_Templ
         return Mage::getModel('sales/order')->loadByIncrementId($orderId);
     }
 
+    /**
+     * @return bool
+     */
     public function isDevelopMode()
     {
         return Mage::getIsDeveloperMode();
@@ -61,20 +79,16 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Core_Block_Templ
      */
     public function isServiceSelected()
     {
-        $services = $this->getServices();
-        if ($services) {
-            $serviceList = $this->services;
-            $count = 0;
-
-            foreach ($serviceList as $item) {
-                $val = $services->$item;
-                if ($val != null) {
-                    $count++;
-                }
-            }
+        $order = $this->getOrder();
+        $servicesinfo = $order->getShippingAddress()->getData('dhl_versenden_info');
+        if (!$servicesinfo) {
+            return false;
         }
 
-        return $count > 0;
+        $services = $servicesinfo->getServices();
+        $result = array_intersect_key($services, array_flip($this->services));
+
+        return  count(array_filter($result)) > 0;
     }
 
     /**
