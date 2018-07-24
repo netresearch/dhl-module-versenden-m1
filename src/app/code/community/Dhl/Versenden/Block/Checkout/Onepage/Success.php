@@ -93,8 +93,9 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Checkout_Block_S
         /** @var Dhl_Versenden_Model_Config $moduleConfig */
         $moduleConfig = Mage::getModel('dhl_versenden/config');
         $isTrackingEnabled = $moduleConfig->isTrackingEnabled();
+        $isSandboxMode = $moduleConfig->isSandboxModeEnabled();
 
-        return !Mage::getIsDeveloperMode() && $this->checkIfServiceIsSelected() && $isTrackingEnabled;
+        return !$isSandboxMode && $this->checkIfServiceIsSelected() && $isTrackingEnabled;
     }
 
 }
