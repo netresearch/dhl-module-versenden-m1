@@ -221,6 +221,26 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
+     * @param string $html
+     * @param string $serviceCode
+     * @return string
+     */
+    public function addNoneOption($html, $serviceCode)
+    {
+        $span = $serviceCode === Service\PreferredDay::CODE ? '<span>-</span>' : '';
+        $noneOption = '<div>'.
+            '<input type="radio" name="service_setting['.$serviceCode.']" '.
+            'id="shipment_service_preferredDay_none" value="" checked="checked">'.
+            '<label for="shipment_service_'.$serviceCode.'_none" '.
+            'title="'.$this->helper('dhl_versenden/data')->__('none').'">'.
+            $span.
+            '<span>'.$this->helper('dhl_versenden/data')->__('none').'</span></label>'.
+            '</div>';
+
+        return $noneOption.$html;
+    }
+
+    /**
      * Check if Quote consists of back ordered items.
      *
      * @return bool
