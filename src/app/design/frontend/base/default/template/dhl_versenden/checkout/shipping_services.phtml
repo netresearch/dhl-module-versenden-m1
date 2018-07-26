@@ -69,15 +69,28 @@
                     <p><?php echo $this->getServiceFeeText($service->getCode()) ?></p>
                 </dd>
                 <dd class="service-<?php echo $this->escapeHtml($service->getFrontendInputType() . ' ' . $service::CODE) ?>">
-                    <?php echo $service->getValueHtml(); ?>
-                    <?php if ($this->isLocationAndNeighbour() &&
-                        $service->getCode() === \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE): ?>
-                        <p><?php /* @noEscape */ echo $this->getLocationAndNeighbourAdvice(); ?></p>
-                    <?php endif; ?>
+                    <?php
+                    if (in_array(
+                        $service->getCode(),
+                        array(
+                            \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredDay::CODE,
+                            \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredTime::CODE
+                        ),
+                        true
+                    )) {
+                        /* @noEscape */ echo $this->addNoneOption($service->getValueHtml(), $service->getCode());
+                    } else {
+                        /* @noEscape */ echo $service->getValueHtml();
+                    }
+
+                    if ($this->isLocationAndNeighbour() &&
+                        $service->getCode() === \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE) {
+                        /* @noEscape */ echo '<p>' . $this->getLocationAndNeighbourAdvice() . '</p>';
+                    } ?>
                 </dd>
             <?php endforeach; ?>
             <?php if ($isCombined): ?>
-                <dd><p><?php echo  $this->getDayAndTimeFeeText()?></p></dd>
+                <dd><p><?php /* @noEscape */ echo $this->getDayAndTimeFeeText()?></p></dd>
             <?php endif; ?>
         </dl>
         <?php endif; ?>
