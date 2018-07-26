@@ -208,6 +208,9 @@
     z-index: 1;
 }
 
+#checkout-dhlversenden-services input[type=text]:disableds {
+    color: #b5b2b2;
+}
 .dhl-services {
     border: 1px solid rgb(255, 204, 0);
     position: relative;
