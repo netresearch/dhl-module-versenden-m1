@@ -126,6 +126,11 @@
                     }
                 });
             }
+            var location = $('shipment_service_preferredLocationDetails');
+            var neighbour = $('shipment_service_preferredNeighbourDetails');
+            if (location && neighbour) {
+                observeAndDisable(location, neighbour);
+            }
 
             //]]>
         </script>
