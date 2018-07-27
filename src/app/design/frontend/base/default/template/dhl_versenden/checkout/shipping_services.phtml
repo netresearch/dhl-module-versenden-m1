@@ -65,9 +65,15 @@
                     ?>
                     <?php /* @noEscape */ echo $labelHtml; ?>
                 </dt>
-                <dd><p><?php echo $this->getServiceFeeText($service->getCode()) ?></p></dd>
+                <dd>
+                    <p><?php echo $this->getServiceFeeText($service->getCode()) ?></p>
+                </dd>
                 <dd class="service-<?php echo $this->escapeHtml($service->getFrontendInputType() . ' ' . $service::CODE) ?>">
                     <?php echo $service->getValueHtml(); ?>
+                    <?php if ($this->isLocationAndNeighbour() &&
+                        $service->getCode() === \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE): ?>
+                        <p><?php /* @noEscape */ echo $this->getLocationAndNeighbourAdvice(); ?></p>
+                    <?php endif; ?>
                 </dd>
             <?php endforeach; ?>
             <?php if ($isCombined): ?>
@@ -126,6 +132,7 @@
                     }
                 });
             }
+
             var location = $('shipment_service_preferredLocationDetails');
             var neighbour = $('shipment_service_preferredNeighbourDetails');
             if (location && neighbour) {
