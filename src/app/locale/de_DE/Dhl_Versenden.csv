@@ -188,3 +188,4 @@
 "* You cannot choose a <strong>preferred neighbor</strong> in combination with a <strong>preferred location</strong>.","* Die Services <strong>Wunschort und Wunschnachbar</strong> können nicht in Kombination gebucht werden."
 "Not available with preferred neighbor", "Nicht kombinierbar mit Wunschnachbar"
 "Not available with preferred location", "Nicht kombinierbar mit Wunschort"
+"Participation = the last two characters of the accounting number for the referring product","Teilnahme = letzten beiden Zeichen der Abrechnungsnummer für das jeweilige Produkt"

@@ -162,6 +162,7 @@
                         </account_ekp>
                         <account_participation>
                             <label>Participation Numbers</label>
+                            <tooltip>Participation = the last two characters of the accounting number for the referring product</tooltip>
                             <comment><![CDATA[See the Knowledge Base tutorial on how to configure the Participation Numbers.]]></comment>
                             <frontend_model>dhl_versenden/adminhtml_form_field_participation</frontend_model>
                             <backend_model>adminhtml/system_config_backend_serialized_array</backend_model>
