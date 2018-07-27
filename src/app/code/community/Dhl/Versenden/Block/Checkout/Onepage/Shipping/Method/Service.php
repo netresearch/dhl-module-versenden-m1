@@ -176,7 +176,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
                 $msg = '';
         }
 
-        return $msg;
+        return $msg ? $this->__($msg): '';
     }
 
     /**
@@ -238,5 +238,29 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
         }
 
         return $backorders > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocationAndNeighbour()
+    {
+        $services = $this->getServices();
+        $location = $services->getItem(Service\PreferredLocation::CODE);
+        $neighbour = $services->getItem(Service\PreferredNeighbour::CODE);
+        $location = $location ? true : false;
+        $neighbour = $neighbour ? true : false;
+
+        return $location && $neighbour;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocationAndNeighbourAdvice()
+    {
+        $msg = $this->
+            __('* You cannot choose a <strong>preferred neighbor</strong> in combination with a <strong>preferred location</strong>.');
+        return $msg;
     }
 }
