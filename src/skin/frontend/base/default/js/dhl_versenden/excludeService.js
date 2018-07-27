@@ -5,13 +5,18 @@ function observeAndDisable(location, neighbour) {
 }
 
 function addKeypressListener(elem, sibling) {
+    var orgPlaceholder = sibling.placeholder;
     elem.addEventListener('change', function(){
         self = elem;
-        if (sibling.value !== '' && self.value !== '') {
-            sibling.disable();
+        if (self.value !== '') {
+            if (!sibling.disabled) {
+                sibling.placeholder = '--------';
+                sibling.disable();
+            }
         }
-        if(self.value === '') {
+        if (self.value === '') {
             if (sibling.disabled) {
+                sibling.placeholder = orgPlaceholder;
                 sibling.enable();
             }
         }
