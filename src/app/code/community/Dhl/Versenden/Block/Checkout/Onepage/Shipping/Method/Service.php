@@ -230,7 +230,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
         $span = $serviceCode === Service\PreferredDay::CODE ? '<span>-</span>' : '';
         $noneOption = '<div>'.
             '<input type="radio" name="service_setting['.$serviceCode.']" '.
-            'id="shipment_service_preferredDay_none" value="" checked="checked">'.
+            'id="shipment_service_'.$serviceCode.'_none" value="" checked="checked">'.
             '<label for="shipment_service_'.$serviceCode.'_none" '.
             'title="'.$this->helper('dhl_versenden/data')->__('none').'">'.
             $span.
