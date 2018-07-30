@@ -241,23 +241,22 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
-     * Check if Quote consists of back ordered items.
+     * Check if Quote contains backordered items (items with qty === 0).
      *
      * @return bool
      */
     public function hasBackOrderedProducts()
     {
         $quoteItems = $this->getQuote()->getAllItems();
-        $backorders = 0;
         foreach ($quoteItems as $item) {
-            /**
-             * @var Mage_CatalogInventory_Model_Stock_Item
-             */
-            $itemBackorders = $item->getProduct()->getData('stock_item')->getBackorders();
-            $backorders = $backorders + $itemBackorders;
+            /** @var Mage_CatalogInventory_Model_Stock_Item $item */
+            $stockItem = $item->getProduct()->getData('stock_item');
+            if ($stockItem->getQty() === 0) {
+                return true;
+            }
         }
 
-        return $backorders > 0;
+        return false;
     }
 
     /**
