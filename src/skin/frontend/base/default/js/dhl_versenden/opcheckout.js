@@ -112,7 +112,6 @@ DhlServiceContainer.prototype = {
         var idRadioElement = ['shipment_service_preferredDay','shipment_service_preferredTime'];
         idRadioElement.each( function (id) {
             currentClass.getSeviceListener(id);
-            console.log(this);
         });
     },
 
