@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jstranslator>
+    <dhl-not-available-neighbor translate="message" module="dhl_versenden">
+        <message>Not available with preferred neighbor</message>
+    </dhl-not-available-neighbor>
+    <dhl-not-available-location translate="message" module="dhl_versenden">
+        <message>Not available with preferred location</message>
+    </dhl-not-available-location>
+</jstranslator>
