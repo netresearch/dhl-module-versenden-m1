@@ -283,4 +283,37 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     {
         return $this->getContact($store)->getCountryISOCode();
     }
+
+    /**
+     * @return string
+     */
+    public function getAccountEkp()
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserSignature()
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD);
+    }
+
+    /**
+     * @return string
+     */
+    public function getParcelmanagementApiKey()
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER).
+            ':'. $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE );
+    }
 }

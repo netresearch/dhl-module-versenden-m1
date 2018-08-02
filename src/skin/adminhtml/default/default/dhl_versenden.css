@@ -142,3 +142,17 @@
 #packaging-dhlversenden-services dt.preferredNeighbour {
     float: none;
 }
+
+#carriers_dhlversenden ul.list-inline li {
+    display: inline-block;
+    margin: 0;
+}
+
+#carriers_dhlversenden ul.list-inline li:not(:last-child) {
+    margin-right: 13px;
+}
+
+#carriers_dhlversenden ul.list-inline li label {
+    display: inline-block;
+    vertical-align: middle;
+}

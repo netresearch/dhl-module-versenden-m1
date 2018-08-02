@@ -55,6 +55,10 @@ class Dhl_Versenden_Model_Autoloader
             "Dhl\\Versenden\\Bcs\\", // prefix
             sprintf('%s/Dhl/Versenden/Bcs/', Mage::getBaseDir('lib'))
         );
+        $autoloader->addNamespace(
+            "Dhl\\Versenden\\Cig\\", // prefix
+            sprintf('%s/Dhl/Versenden/Cig/', Mage::getBaseDir('lib'))
+        );
 
         $autoloader->register();
     }

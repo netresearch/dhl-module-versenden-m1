@@ -53,11 +53,15 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'sandbox_auth_username';
     const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'sandbox_auth_password';
 
+    const CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT = 'parcelmanagement_endpoint';
+    const CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT = 'parcelmanagement_sandbox_endpoint';
+
     const CONFIG_XML_PATH_SENDRECEIVERPHONE     = 'shipment_sendreceiverphone';
 
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
     const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
+    const CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS = 'drop_off_days';
 
     const CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED = 'checkout/dhl_versenden/checkout_tracking_enabled';
 
@@ -260,5 +264,27 @@ class Dhl_Versenden_Model_Config
     public function isTrackingEnabled($store = null)
     {
         return Mage::getStoreConfigFlag(self::CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED, $store);
+    }
+
+    /**
+     * Get Parcelmanagement API Endpoint
+     * @return string
+     */
+    public function getParcelManagementEndpoint()
+    {
+        if ($this->isSandboxModeEnabled()) {
+            return $this->getStoreConfig(self::CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT);
+        }
+
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT);
+    }
+
+    /**
+     * @param null $scopeId
+     * @return string
+     */
+    public function getExcludedDropOffDays($scopeId = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS, $scopeId);
     }
 }
