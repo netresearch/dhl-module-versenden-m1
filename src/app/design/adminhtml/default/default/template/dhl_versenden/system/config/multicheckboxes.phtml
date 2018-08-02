@@ -1,0 +1,15 @@
+<?php
+/** @var Dhl_Versenden_Block_Adminhtml_System_Config_MultiCheckbox $this */
+?>
+<ul class="list-inline">
+    <?php foreach ($this->getValues() as $name => $label): ?>
+    <li>
+        <input type="checkbox" value="<?php echo $name?>"
+               name="<?php echo $this->getNamePrefix() ?>[]"
+               id="<?php echo $this->getHtmlId() . '_' . $name ?>"
+            <?php echo ($this->isChecked($name) ? ' checked="checked"' : '') ?>/>
+        <label for="<?php echo $this->getHtmlId() . '_' . $name ?>">
+            <?php echo $this->escapeHtml($label); ?>
+        </label>
+    <?php endforeach; ?>
+</ul>

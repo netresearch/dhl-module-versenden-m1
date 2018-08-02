@@ -89,4 +89,11 @@
             <block type="dhl_versenden/adminhtml_sales_order_address_form" name="dhl_versenden_form" />
         </reference>
     </adminhtml_sales_order_address>
+    <adminhtml_system_config_edit>
+        <reference name="head">
+            <action method="addCss">
+                <stylesheet>dhl_versenden.css</stylesheet>
+            </action>
+        </reference>
+    </adminhtml_system_config_edit>
 </layout>
