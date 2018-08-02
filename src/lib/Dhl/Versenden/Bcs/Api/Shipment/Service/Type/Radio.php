@@ -101,4 +101,12 @@ abstract class Radio extends Text
 
         return $optionsHtml;
     }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+    }
 }

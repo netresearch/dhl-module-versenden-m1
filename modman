@@ -9,6 +9,7 @@ src/app/locale/en_US/Dhl_Versenden.csv app/locale/en_US/Dhl_Versenden.csv
 
 src/lib/Dhl/Versenden/Bcs/ lib/Dhl/Versenden/Bcs/
 src/lib/Dhl/Versenden/Psr/ lib/Dhl/Versenden/Psr/
+src/lib/Dhl/Versenden/Cig/ lib/Dhl/Versenden/Cig/
 src/lib/Mal/ lib/Mal/
 
 src/skin/frontend/base/default/css/dhl_versenden/ skin/frontend/base/default/css/dhl_versenden/

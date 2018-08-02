@@ -64,9 +64,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS       = 'shipment_autocreate_service_bulkygoods';
 
     /**
-     * @param mixed $store
-     *
+     * @param null $store
      * @return Service\PreferredDay
+     * @throws Exception
      */
     protected function initPreferredDay($store = null)
     {
@@ -81,8 +81,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $holidayCheck = new Mal_Holidays();
         /** @var Mage_Core_Model_Date $dateModel */
         $dateModel  = Mage::getSingleton('core/date');
-        $start      = $dateModel->gmtDate("Y-m-d H:i:s");
+        $start      = $dateModel->date("Y-m-d H:i:s");
         $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
+
         $startDate  = ($cutOffTime < $dateModel->gmtTimestamp($start)) ? 3 : 2;
         $endDate    = $startDate + 5;
 
@@ -423,7 +424,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $isPostalFacility,
         $onlyCustomerServices = false,
         $store = null
-    ) {
+    )
+    {
         $services = $this->getEnabledServices($store);
 
         $euCountries      =
@@ -525,7 +527,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     public function getPrefDayAndTimeHandlingFeeText($store = null)
     {
         $text = '';
-        $fee  = $this->getPrefDayAndTimeFee($store);
+        $fee = $this->getPrefDayAndTimeFee($store);
         if ($fee > 0) {
             $formattedFee = Mage::helper('core')->currency($this->getPrefDayAndTimeFee($store), true, false);
             $text = str_replace(
@@ -536,5 +538,14 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         }
 
         return $text;
+    }
+
+    /**
+     * @param null $store
+     * @return mixed
+     */
+    public function getCutOffTime($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
     }
 }

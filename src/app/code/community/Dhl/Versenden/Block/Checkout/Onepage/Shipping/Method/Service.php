@@ -23,7 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Bcs\Api\Shipment\Service as Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use \Mage_Checkout_Block_Onepage_Abstract as Onepage_Abstract;
 
 /**
  * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
@@ -34,9 +35,52 @@ use \Dhl\Versenden\Bcs\Api\Shipment\Service as Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
-    extends Mage_Checkout_Block_Onepage_Abstract
+class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepage_Abstract
 {
+    /**
+     * @var Dhl_Versenden_Model_Config
+     */
+    private $config;
+
+    /**
+     * @var Dhl_Versenden_Model_Config_Service
+     */
+    private $serviceConfig;
+
+    /**
+     * @var Dhl_Versenden_Model_Config_Shipment
+     */
+    private $shipmentConfig;
+
+    /**
+     * @var Dhl_Versenden_Helper_Data
+     */
+    private $helper;
+
+    /**
+     * @var Dhl_Versenden_Model_Services_Processor
+     */
+    private $serviceProcessor;
+
+    /**
+     * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service constructor.
+     *
+     * @param array $args
+     */
+    public function __construct(array $args = array())
+    {
+        $this->config = Mage::getModel('dhl_versenden/config');
+        $this->serviceConfig = Mage::getModel('dhl_versenden/config_service');
+        $this->shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
+        $this->helper = $this->helper('dhl_versenden/data');
+        $this->serviceProcessor = Mage::getModel(
+            'dhl_versenden/services_processor',
+            array('quote' => $this->getQuote())
+        );
+
+        parent::__construct($args);
+    }
+
     /**
      * Obtain the services that are enabled via config and can be chosen by customer.
      *
@@ -46,13 +90,12 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     {
         $storeId = $this->getQuote()->getStoreId();
         $shippingAddress = $this->getQuote()->getShippingAddress();
-        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
-
-        $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
+        $shipperCountry = $this->config->getShipperCountry($storeId);
         $recipientCountry = $shippingAddress->getCountryId();
-        $isPostalFacility = $this->helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
+        $isPostalFacility = $this->helper->isPostalFacility($shippingAddress);
 
-        $availableServices = $serviceConfig->getAvailableServices(
+        /** @var Service\Collection $availableServices */
+        $availableServices = $this->serviceConfig->getAvailableServices(
             $shipperCountry,
             $recipientCountry,
             $isPostalFacility,
@@ -60,13 +103,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
             $storeId
         );
 
-        $hasBackOrders = $this->hasBackOrderedProducts();
-
-        if ($hasBackOrders && $availableServices->getItem(Service\PreferredDay::CODE)) {
-            $availableServices->removeItem(Service\PreferredDay::CODE);
-        }
-
-        return $availableServices;
+        return $this->serviceProcessor->processServices($availableServices);
     }
 
     /**
@@ -91,23 +128,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     }
 
     /**
-     * @param \Dhl\Versenden\Bcs\Api\Info $versendenInfo
-     *
-     * @return boolean
-     */
-    protected function isReceiverLocationUsed($versendenInfo)
-    {
-        if ($versendenInfo->getReceiver()->packstation->packstationNumber
-            || $versendenInfo->getReceiver()->postfiliale->postfilialNumber
-            || $versendenInfo->getReceiver()->parcelShop->parcelShopNumber
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Obtain the shipping methods that should be processed with DHL Versenden.
      *
      * @return string json encoded methods array
@@ -115,9 +135,8 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
     public function getDhlMethods()
     {
         $storeId = $this->getQuote()->getStoreId();
+        $dhlMethods = $this->shipmentConfig->getSettings($storeId)->getShippingMethods();
 
-        $config = Mage::getModel('dhl_versenden/config_shipment');
-        $dhlMethods = $config->getSettings($storeId)->getShippingMethods();
         return $this->helper('core/data')->jsonEncode($dhlMethods);
     }
 
@@ -139,7 +158,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
                     . ' choosing one of the displayed time windows.';
                 break;
             case Service\PreferredLocation::CODE:
-                $msg = 'Choose a weather-protected and non-visible place on your property,'
+                $msg = 'Choose a weather-protected and non-visible place on your property'
                     . ' where we can deposit the parcel in your absence.';
                 break;
             case Service\PreferredNeighbour::CODE:
@@ -278,8 +297,25 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service
      */
     public function getLocationAndNeighbourAdvice()
     {
-        $msg = $this->
-            __('* You cannot choose a <strong>preferred neighbor</strong> in combination with a <strong>preferred location</strong>.');
+        $msg = $this->__('* You cannot choose a <strong>preferred neighbor</strong> in combination with a <strong>preferred location</strong>.');
+
         return $msg;
+    }
+
+    /**
+     * @param \Dhl\Versenden\Bcs\Api\Info $versendenInfo
+     *
+     * @return boolean
+     */
+    protected function isReceiverLocationUsed($versendenInfo)
+    {
+        if ($versendenInfo->getReceiver()->packstation->packstationNumber
+            || $versendenInfo->getReceiver()->postfiliale->postfilialNumber
+            || $versendenInfo->getReceiver()->parcelShop->parcelShopNumber
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
