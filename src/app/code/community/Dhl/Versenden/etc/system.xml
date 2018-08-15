@@ -387,8 +387,8 @@
                         <drop_off_days>
                             <label>Days excluded from drop-off</label>
                             <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
-                            <source_model>dhl_versenden/adminhtml_system_config_source_dropoffdays</source_model>
-                            <frontend_model>dhl_versenden/adminhtml_system_config_multicheckbox</frontend_model>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_dropOffDays</source_model>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_multiCheckbox</frontend_model>
                             <sort_order>475</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
