@@ -71,10 +71,15 @@ class Dhl_Versenden_Block_Adminhtml_System_Config_MultiCheckbox extends Mage_Adm
     /**
      * @param $name
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isChecked($name)
     {
-        return in_array($name, $this->getCheckedValues(), true);
+        if (!is_array($this->getCheckedValues())) {
+            return false;
+        }
+
+        return in_array((string)$name, $this->getCheckedValues(), true);
     }
 
     /**
