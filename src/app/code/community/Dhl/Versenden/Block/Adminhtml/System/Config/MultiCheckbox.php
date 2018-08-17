@@ -89,10 +89,7 @@ class Dhl_Versenden_Block_Adminhtml_System_Config_MultiCheckbox extends Mage_Adm
     public function getCheckedValues()
     {
         if ($this->values === null) {
-            /** @var Dhl_Versenden_Model_Config $config */
-            $config = Mage::getModel('dhl_versenden/config');
-            $storeId = Mage::app()->getStore()->getId();
-            $data = $config->getExcludedDropOffDays($storeId);
+            $data = $this->getConfigData('carriers/dhlversenden/drop_off_days');
             if ($data) {
                 $this->values = explode(',', $data);
             }
