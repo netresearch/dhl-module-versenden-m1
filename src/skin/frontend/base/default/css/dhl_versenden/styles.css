@@ -227,3 +227,7 @@
     margin-bottom: 3px;
     display: inline-block;
 }
+
+#checkout-dhlversenden-services dl dt {
+    padding: 15px 0 0 0;
+}
