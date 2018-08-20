@@ -322,6 +322,16 @@
                                 <service_preferredday_enabled>1</service_preferredday_enabled>
                             </depends>
                         </service_cutoff_time>
+                        <drop_off_days>
+                            <label>Days excluded from drop-off</label>
+                            <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_dropOffDays</source_model>
+                            <frontend_model>dhl_versenden/adminhtml_system_config_multiCheckbox</frontend_model>
+                            <sort_order>465</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </drop_off_days>
                         <service_preferredtime_enabled>
                             <label>Enable Preferred time</label>
                             <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
@@ -384,16 +394,6 @@
                                 <service_preferredday_enabled>1</service_preferredday_enabled>
                             </depends>
                         </service_perferreddayandtime_handling_fee_text>
-                        <drop_off_days>
-                            <label>Days excluded from drop-off</label>
-                            <comment>On the working days checked, there is no transfer of parcels to DHL (in addition to sundays and public holidays). This information influences the first displayed preferred day in the frontend.</comment>
-                            <source_model>dhl_versenden/adminhtml_system_config_source_dropOffDays</source_model>
-                            <frontend_model>dhl_versenden/adminhtml_system_config_multiCheckbox</frontend_model>
-                            <sort_order>475</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </drop_off_days>
                         <dhlversenden_fields_shipment_autocreate>
                             <label>Automatic Shipment Creation</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>
