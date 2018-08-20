@@ -1,6 +1,6 @@
 Validation.add(
     'validate-special',
-    'Your input is invalid',
+    'Your input is invalid.',
     function (v) {
         var expSpec = /["+;<>,.']|\\/g;
 
