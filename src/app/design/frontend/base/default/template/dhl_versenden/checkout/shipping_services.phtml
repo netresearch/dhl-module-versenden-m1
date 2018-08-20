@@ -82,11 +82,7 @@
                     } else {
                         /* @noEscape */ echo $service->getValueHtml();
                     }
-
-                    if ($this->isLocationAndNeighbour() &&
-                        $service->getCode() === \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE) {
-                        /* @noEscape */ echo '<p>' . $this->getLocationAndNeighbourAdvice() . '</p>';
-                    } ?>
+                    ?>
                 </dd>
             <?php endforeach; ?>
             <?php if ($isCombined): ?>
@@ -100,7 +96,7 @@
             <span>
                 <?php
                 $locationHint = $this->escapeHtml(
-                    $this->__('Or as an alternative choose a shipment to a Parcelstation or a Post Office.')
+                    $this->__('Or choose a DHL Packstation or a branch as an alternative delivery address.')
                 );
                 if($this->isOnePageCheckout()): ?>
                     <a id="locationfinder-link" href="javascript:void(0)"><?php echo $locationHint; ?></a>

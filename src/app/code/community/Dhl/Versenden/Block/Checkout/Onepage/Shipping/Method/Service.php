@@ -247,13 +247,14 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     public function addNoneOption($html, $serviceCode)
     {
         $span = $serviceCode === Service\PreferredDay::CODE ? '<span>-</span>' : '';
+        $title = $serviceCode === Service\PreferredDay::CODE ? 'none day' : 'none time';
         $noneOption = '<div>'.
             '<input type="radio" name="service_setting['.$serviceCode.']" '.
             'id="shipment_service_'.$serviceCode.'_none" value="" checked="checked">'.
             '<label for="shipment_service_'.$serviceCode.'_none" '.
-            'title="'.$this->helper('dhl_versenden/data')->__('none').'">'.
+            'title="'.$this->helper('dhl_versenden/data')->__($title).'">'.
             $span.
-            '<span>'.$this->helper('dhl_versenden/data')->__('none').'</span></label>'.
+            '<span>'.$this->helper('dhl_versenden/data')->__($title).'</span></label>'.
             '</div>';
 
         return $noneOption.$html;
