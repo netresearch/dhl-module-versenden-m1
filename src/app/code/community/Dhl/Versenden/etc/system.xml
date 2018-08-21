@@ -820,7 +820,7 @@
         <checkout>
             <groups>
                 <dhl_versenden>
-                    <label>DHL Versenden Tracking</label>
+                    <label>DHL Wunschpaket/preferred services Tracking</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>2500</sort_order>
                     <show_in_default>1</show_in_default>
@@ -835,6 +835,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <comment><![CDATA[<strong>In case you like to offer preferred delivery options in your shop frontend, please note the following hint:</strong><br> The plugin contains a tracking pixel due to reporting purposes of preferred services. Its output is the URL where the preferred services are integrated via plugin as well as the number of plugin calls. There is no personal data created or collected.]]></comment>
                         </checkout_tracking_enabled>
                     </fields>
                 </dhl_versenden>
