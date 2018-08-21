@@ -28,8 +28,7 @@
     $services = $this->getServices();
     $isCombined = $this->isDayAndTime();
 ?>
-
-<?php if (!$this->isShippingAddressDHLLocation() || $services->count() > 0): ?>
+<?php if (!$this->isShippingAddressDHLLocation() && $services->count() > 0): ?>
     <div id="checkout-dhlversenden-services" style="display: none;">
         <img
             src="<?php echo $this->escapeUrl($this->getSkinUrl('images/dhl_versenden/logo.png')) ?>"
