@@ -70,6 +70,11 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredDay($store = null)
     {
+        /** @var Dhl_Versenden_Model_Tracking $testTrack */
+        //$testTrack = Mage::getModel('dhl_versenden/tracking');
+        //$testTrack->canExecute();
+
+
         $name              = Mage::helper('dhl_versenden/data')->__("Preferred day") .
             Mage::helper('dhl_versenden/data')->__(": Delivery at your preferred day");
         $isAvailable       = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);

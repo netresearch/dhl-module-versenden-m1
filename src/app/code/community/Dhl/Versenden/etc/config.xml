@@ -399,6 +399,7 @@
         <checkout>
             <dhl_versenden>
                 <checkout_tracking_enabled>1</checkout_tracking_enabled>
+                <checkout_tracking_interval>10</checkout_tracking_interval>
             </dhl_versenden>
         </checkout>
     </default>

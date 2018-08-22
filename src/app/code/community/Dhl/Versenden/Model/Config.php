@@ -64,6 +64,9 @@ class Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS = 'drop_off_days';
 
     const CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED = 'checkout/dhl_versenden/checkout_tracking_enabled';
+    const CONFIG_XML_PATH_CHECKOUT_TRACKING_NEXT_EXEC = 'checkout/dhl_versenden/checkout_tracking_next_exec';
+    const CONFIG_XML_PATH_CHECKOUT_TRACKING_INTERVAL = 'checkout/dhl_versenden/checkout_tracking_interval';
+
 
     /**
      * Wrap store config access.
@@ -286,5 +289,23 @@ class Dhl_Versenden_Model_Config
     public function getExcludedDropOffDays($scopeId = null)
     {
         return $this->getStoreConfig(self::CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS, $scopeId);
+    }
+
+    /**
+     * @param null $store
+     * @return string
+     */
+    public function getNextTrackDate($store = null)
+    {
+        return Mage::getStoreConfig(self::CONFIG_XML_PATH_CHECKOUT_TRACKING_NEXT_EXEC, $store);
+    }
+
+    /**
+     * @param null $store
+     * @return string
+     */
+    public function getTrackingInterval($store = null)
+    {
+        return Mage::getStoreConfig(self::CONFIG_XML_PATH_CHECKOUT_TRACKING_INTERVAL, $store);
     }
 }
