@@ -72,7 +72,22 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Checkout_Block_S
     /**
      * @return bool
      */
-    public function checkIfServiceIsSelected()
+    public function canAddTracking()
+    {
+        if ($this->isServiceAvailable()) {
+            /** @var Dhl_Versenden_Model_Tracking $tracking */
+            $tracking = Mage::getModel('dhl_versenden/tracking');
+
+            return $tracking->canExecute();
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isServiceAvailable()
     {
         $serviceInfo = $this->getDhlVersendenInfo();
         if (!$serviceInfo) {
@@ -83,21 +98,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Checkout_Block_S
         $result = array_intersect_key($services, array_flip($this->services));
 
         return  count(array_filter($result)) > 0;
-    }
-
-    /**
-     * @return bool
-     */
-    public function canAddTracking()
-    {
-        if ($this->checkIfServiceIsSelected()) {
-            /** @var Dhl_Versenden_Model_Tracking $tracking */
-            $tracking = Mage::getModel('dhl_versenden/tracking');
-
-            return $tracking->canExecute();
-        }
-
-        return false;
     }
 
 }
