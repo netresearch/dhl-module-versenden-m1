@@ -90,12 +90,14 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Checkout_Block_S
      */
     public function canAddTracking()
     {
-        /** @var Dhl_Versenden_Model_Config $moduleConfig */
-        $moduleConfig = Mage::getModel('dhl_versenden/config');
-        $isTrackingEnabled = $moduleConfig->isTrackingEnabled();
-        $isSandboxMode = $moduleConfig->isSandboxModeEnabled();
+        if ($this->checkIfServiceIsSelected()) {
+            /** @var Dhl_Versenden_Model_Tracking $tracking */
+            $tracking = Mage::getModel('dhl_versenden/tracking');
 
-        return !$isSandboxMode && $this->checkIfServiceIsSelected() && $isTrackingEnabled;
+            return $tracking->canExecute();
+        }
+
+        return false;
     }
 
 }
