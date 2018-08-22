@@ -30,11 +30,15 @@ class Dhl_Versenden_Model_Tracking
      * @var Dhl_Versenden_Model_Config
      */
     protected $config;
+
     /**
      * @var Mage_Core_Model_Date
      */
     protected $dateModel;
 
+    /**
+     * @var string
+     */
     protected $timeformat = 'Y-m-d';
 
     /**
@@ -103,6 +107,4 @@ class Dhl_Versenden_Model_Tracking
     {
         return $this->config->isTrackingEnabled() && !$this->config->isSandboxModeEnabled();
     }
-
-
 }
