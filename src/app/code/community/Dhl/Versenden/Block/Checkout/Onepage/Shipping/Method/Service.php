@@ -280,30 +280,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     }
 
     /**
-     * @return bool
-     */
-    public function isLocationAndNeighbour()
-    {
-        $services = $this->getServices();
-        $location = $services->getItem(Service\PreferredLocation::CODE);
-        $neighbour = $services->getItem(Service\PreferredNeighbour::CODE);
-        $location = $location ? true : false;
-        $neighbour = $neighbour ? true : false;
-
-        return $location && $neighbour;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLocationAndNeighbourAdvice()
-    {
-        $msg = $this->__('* You cannot choose a <strong>preferred neighbor</strong> in combination with a <strong>preferred location</strong>.');
-
-        return $msg;
-    }
-
-    /**
      * @param \Dhl\Versenden\Bcs\Api\Info $versendenInfo
      *
      * @return boolean
