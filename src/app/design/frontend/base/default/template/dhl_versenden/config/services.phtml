@@ -52,6 +52,9 @@ $services = $this->getServices();
                     <?php continue; ?>
                 <?php endif; ?>
             <?php endforeach; ?>
+            <?php if ($services->preferredDay || $services->preferredTime): ?>
+            <li class="dhl-service-fee-hint"><span><?php echo $this->renderFeeText($services)?></span></li>
+            <?php endif; ?>
         </ul>
     </div>
 <?php endif; ?>
