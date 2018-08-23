@@ -99,5 +99,4 @@ class Dhl_Versenden_Block_Checkout_Onepage_Success extends Mage_Checkout_Block_S
 
         return  count(array_filter($result)) > 0;
     }
-
 }

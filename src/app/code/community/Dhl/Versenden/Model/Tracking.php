@@ -60,8 +60,9 @@ class Dhl_Versenden_Model_Tracking
         }
         $currentDate = $this->dateModel->date($this->timeformat);
         $nextDate = $this->checkInterval($currentDate);
+
         if ($nextDate) {
-            $this->saveNewDate($nextDate);
+            $this->config->setNextTrackDate($nextDate);
             return true;
         }
 
@@ -71,33 +72,23 @@ class Dhl_Versenden_Model_Tracking
     /**
      * @param $date
      * @return bool|string
-     * @throws Exception
      */
     protected function checkInterval($date)
     {
-        $dateTime = new DateTime($date);
-        $interval = $this->config->getTrackingInterval();
-        $tmpDate = $dateTime->add(new DateInterval("P{$interval}D"));
-        $nextTrackConfig = $this->config->getNextTrackDate();
-        $nextPossibleDay = $tmpDate->format($this->timeformat);
-        if (!$nextTrackConfig || $date === $nextTrackConfig) {
-            return $nextPossibleDay;
+        try {
+            $dateTime = new DateTime($date);
+            $interval = $this->config->getTrackingInterval();
+            $tmpDate = $dateTime->add(new DateInterval("P{$interval}D"));
+            $nextTrackConfig = $this->config->getNextTrackDate();
+            $nextPossibleDay = $tmpDate->format($this->timeformat);
+            if (!$nextTrackConfig || $date === $nextTrackConfig) {
+                return $nextPossibleDay;
+            }
+            
+            return false;
+        } catch(Exception $e) {
+            return false;
         }
-
-        return false;
-    }
-
-    /**
-     * @param $date
-     */
-    protected function saveNewDate($date)
-    {
-        /** @var Mage_Core_Model_Config $config */
-        $config = Mage::getModel('core/config');
-        /** @var  Dhl_Versenden_Model_Config $modulConfig */
-        $modulConfig = $this->config;
-        $path = $modulConfig::CONFIG_XML_PATH_CHECKOUT_TRACKING_NEXT_EXEC;
-        $config->saveConfig($path, $date, 'default');
     }
 
     /**
