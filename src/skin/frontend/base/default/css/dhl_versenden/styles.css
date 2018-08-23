@@ -231,3 +231,11 @@
 #checkout-dhlversenden-services dl dt {
     padding: 15px 0 0 0;
 }
+
+.dhl-service-fee-hint {
+    margin-top: 20px;
+}
+
+.dhl-service-fee-hint span {
+    font-size: 90%;
+}

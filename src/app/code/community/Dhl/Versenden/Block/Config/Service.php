@@ -74,7 +74,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
     }
 
     /**
-     * check if there are services selected 
+     * check if there are services selected
      *
      * @return bool
      */
@@ -111,5 +111,57 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         }
 
         return $dhlVersendenInfo->getServices();
+    }
+
+    /**
+     * @param $services
+     * @return string
+     */
+    public function renderFeeText($services)
+    {
+        /** @var Dhl_Versenden_Model_Config_Service $config */
+        $config = Mage::getModel('dhl_versenden/config_service');
+        $fee = 0;
+        $text = '';
+        $type = 'single';
+
+        if ($services->preferredDay && $services->preferredTime) {
+            $fee = $config->getPrefDayAndTimeFee();
+            $type = 'combined';
+        } elseif ($services->preferredDay) {
+            $fee = $config->getPrefDayFee();
+        } elseif ($services->preferredTime) {
+            $fee = $config->getPrefTimeFee();
+        }
+
+        if ($fee > 0) {
+            $formattedFee = Mage::helper('core')->currency($fee, true, false);
+            $msg = $this->getFeetext($type);
+            $text = str_replace(
+                '$1',
+                 $formattedFee,
+                $msg
+            );
+        }
+
+        return $text;
+    }
+
+    /**
+     * @param string$type
+     * @return string
+     */
+    public function getFeetext($type)
+    {
+        $default = __('(The cost of $1 for $2 already included in the delivery costs.)');
+        $service = $type === 'single' ? __('your preferred delivery option') : __('your preferred delivery options');
+
+        $text = str_replace(
+            '$2',
+            $service,
+            $default
+        );
+
+        return $text;
     }
 }
