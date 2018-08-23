@@ -835,7 +835,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment><![CDATA[<strong>In case you like to offer Preferred Delivery options in your shop frontend, please note:</strong><br> This plugin displays a tracking pixel to collect statistical data. It reports your checkout URL and the number of plugin calls. No personal data is created or collected.]]></comment>
+                            <comment><![CDATA[<strong>In case you like to offer Preferred Delivery options in your shop frontend, please note:</strong><br> When enabled, this plugin displays a tracking pixel to collect statistical data about Preferred Delivery options usage once every 30 days. It reports your checkout URL and the number of plugin calls. No personal data is created or collected.]]></comment>
                         </checkout_tracking_enabled>
                     </fields>
                 </dhl_versenden>
