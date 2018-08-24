@@ -35,6 +35,9 @@
  */
 class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
 {
+    /**
+     * @var string[]
+     */
     protected $_nameArray = array(
         'preferredDay'       => 'Preferred day',
         'preferredTime'      => 'Preferred time',
@@ -43,11 +46,19 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         'parcelAnnouncement' => 'Parcel announcement',
     );
 
+    /**
+     * @param string $nameKey
+     * @return string
+     */
     public function renderName($nameKey)
     {
         return $this->_nameArray[$nameKey];
     }
 
+    /**
+     * @param string $value
+     * @return string
+     */
     public function renderDate($value)
     {
         /** @var Mage_Core_Model_Date $dateModel */
@@ -61,9 +72,13 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         return $formatedDate;
     }
 
+    /**
+     * @param $value
+     * @return string
+     */
     public function renderTime($value)
     {
-        if (!ctype_digit($value) || strlen($value) <> 8) {
+        if (!ctype_digit($value) || strlen($value) !== 8) {
             return $value;
         }
 
@@ -84,37 +99,10 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $servicesArray     = $services->toArray();
         $filteredServices  = array_filter($servicesArray);
 
-        return count($filteredServices) > 0 ? true : false;
+        return count($filteredServices) > 0;
     }
 
     /**
-     * @return array|\Dhl\Versenden\Bcs\Api\Info\Services
-     */
-    public function getServices()
-    {
-        /** @var Mage_Sales_Model_Quote $quote */
-        $quote = Mage::getSingleton('checkout/session')->getQuote();
-        $shippingAddress = $quote->getShippingAddress();
-        $shippingMethod  = $shippingAddress->getShippingMethod();
-
-        /** @var Dhl_Versenden_Model_Config_Shipment $config */
-        $config = Mage::getModel('dhl_versenden/config_shipment');
-        if (!$config->canProcessMethod($shippingMethod, $quote->getStoreId())) {
-            return array();
-        }
-
-        /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
-        $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
-        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
-            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
-            $dhlVersendenInfo = $serializer->unserialize($dhlVersendenInfo);
-        }
-
-        return $dhlVersendenInfo->getServices();
-    }
-
-    /**
-     * @param $services
      * @return string
      */
     public function renderFeeText()
@@ -124,11 +112,11 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $config = Mage::getModel('dhl_versenden/config_service');
         $fee = 0;
         $text = '';
-        $type = false;
+        $isCombined = false;
 
         if ($services->preferredDay && $services->preferredTime) {
             $fee = $config->getPrefDayAndTimeFee();
-            $type = true;
+            $isCombined = true;
         } elseif ($services->preferredDay) {
             $fee = $config->getPrefDayFee();
         } elseif ($services->preferredTime) {
@@ -136,27 +124,27 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         }
 
         if ($fee > 0) {
-            $text = $this->getFeetext($type, $fee);
+            $text = $this->getFeetext($isCombined, $fee);
         }
 
         return $text;
     }
 
     /**
-     * @param bool $type
+     * @param bool $isCombined
      * @param int|float $fee
      * @return string
      */
-    protected function getFeetext($type, $fee)
+    protected function getFeetext($isCombined, $fee)
     {
         /** @var Dhl_Versenden_Helper_Data $helper */
         $helper = Mage::helper('dhl_versenden/data');
         $default = $helper->__('(The cost of %s for %s already included in the delivery costs.)');
         $formattedFee = Mage::helper('core')->currency($fee, true, false);
 
-        $service = !$type ?
-            $helper->__('your preferred delivery option') :
-            $helper->__('your preferred delivery options');
+        $service = $isCombined ?
+            $helper->__('your preferred delivery options') :
+            $helper->__('your preferred delivery option');
 
         return sprintf($default, $formattedFee, $service);
     }
