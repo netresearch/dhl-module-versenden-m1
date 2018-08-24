@@ -241,7 +241,7 @@
                             <sort_order>400</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </dhlversenden_fields_service>
                         <service_preferredlocation_enabled>
                             <label>Enable Preferred location</label>
@@ -251,7 +251,7 @@
                             <sort_order>430</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </service_preferredlocation_enabled>
                         <service_preferredneighbour_enabled>
                             <label>Enable Preferred neighbor</label>
@@ -261,7 +261,7 @@
                             <sort_order>440</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </service_preferredneighbour_enabled>
                         <service_parcelannouncement_enabled>
                             <label>Enable Parcel announcement</label>
@@ -271,7 +271,7 @@
                             <sort_order>450</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </service_parcelannouncement_enabled>
                         <service_preferredday_enabled>
                             <label>Enable Preferred day</label>
@@ -281,7 +281,7 @@
                             <sort_order>460</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </service_preferredday_enabled>
                         <service_preferredday_handling_fee>
                             <label>Additional charge for your preferred day</label>
@@ -317,7 +317,7 @@
                             <sort_order>463</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                             <depends>
                                 <service_preferredday_enabled>1</service_preferredday_enabled>
                             </depends>
@@ -340,7 +340,7 @@
                             <sort_order>470</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </service_preferredtime_enabled>
                         <service_preferredtime_handling_fee>
                             <label>Additional charge for your preferred time</label>
@@ -410,7 +410,7 @@
                             <sort_order>510</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </shipment_autocreate_enabled>
                         <shipment_autocreate_notify_customer>
                             <label>Notify Customer</label>
@@ -419,7 +419,7 @@
                             <sort_order>515</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </shipment_autocreate_notify_customer>
                         <shipment_autocreate_order_status>
                             <label>Order Status</label>
@@ -439,7 +439,7 @@
                             <sort_order>530</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_visualcheckofage>
                         <shipment_autocreate_service_returnshipment>
                             <label>Return Shipment</label>
@@ -449,7 +449,7 @@
                             <sort_order>540</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_returnshipment>
                         <shipment_autocreate_service_insurance>
                             <label>Additional Insurance</label>
@@ -459,7 +459,7 @@
                             <sort_order>550</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_insurance>
                         <shipment_autocreate_service_bulkygoods>
                             <label>Bulky Goods</label>
@@ -469,7 +469,7 @@
                             <sort_order>560</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
+                            <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_bulkygoods>
 
                         <dhlversenden_fields_contact>
