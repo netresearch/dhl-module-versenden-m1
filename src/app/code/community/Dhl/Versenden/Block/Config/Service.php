@@ -117,17 +117,18 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      * @param $services
      * @return string
      */
-    public function renderFeeText($services)
+    public function renderFeeText()
     {
+        $services = $this->getData('services');
         /** @var Dhl_Versenden_Model_Config_Service $config */
         $config = Mage::getModel('dhl_versenden/config_service');
         $fee = 0;
         $text = '';
-        $type = 'single';
+        $type = false;
 
         if ($services->preferredDay && $services->preferredTime) {
             $fee = $config->getPrefDayAndTimeFee();
-            $type = 'combined';
+            $type = true;
         } elseif ($services->preferredDay) {
             $fee = $config->getPrefDayFee();
         } elseif ($services->preferredTime) {
@@ -135,33 +136,28 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         }
 
         if ($fee > 0) {
-            $formattedFee = Mage::helper('core')->currency($fee, true, false);
-            $msg = $this->getFeetext($type);
-            $text = str_replace(
-                '$1',
-                 $formattedFee,
-                $msg
-            );
+            $text = $this->getFeetext($type, $fee);
         }
 
         return $text;
     }
 
     /**
-     * @param string$type
+     * @param bool $type
+     * @param int|float $fee
      * @return string
      */
-    public function getFeetext($type)
+    protected function getFeetext($type, $fee)
     {
-        $default = __('(The cost of $1 for $2 already included in the delivery costs.)');
-        $service = $type === 'single' ? __('your preferred delivery option') : __('your preferred delivery options');
+        /** @var Dhl_Versenden_Helper_Data $helper */
+        $helper = Mage::helper('dhl_versenden/data');
+        $default = $helper->__('(The cost of %s for %s already included in the delivery costs.)');
+        $formattedFee = Mage::helper('core')->currency($fee, true, false);
 
-        $text = str_replace(
-            '$2',
-            $service,
-            $default
-        );
+        $service = !$type ?
+            $helper->__('your preferred delivery option') :
+            $helper->__('your preferred delivery options');
 
-        return $text;
+        return sprintf($default, $formattedFee, $service);
     }
 }
