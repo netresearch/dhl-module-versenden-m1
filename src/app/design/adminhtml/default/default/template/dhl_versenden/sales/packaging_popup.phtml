@@ -92,7 +92,7 @@ document.observe("dom:loaded", function() {
             // add service and customs info to ajax request
             packaging.setParamsCreateLabelRequest(requestData);
             packaging.confirmPackaging();
-        } else if (!location && !neighbor) {
+        } else if (!locCheck && !neighborCheck) {
             packaging.setParamsCreateLabelRequest(requestData);
             packaging.confirmPackaging();
         }
