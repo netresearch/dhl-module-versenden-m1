@@ -155,7 +155,7 @@ class Dhl_Versenden_Model_Services_Processor
         foreach ($this->quote->getAllItems() as $item) {
             /** @var Mage_CatalogInventory_Model_Stock_Item $item */
             $stockItem = $item->getProduct()->getData('stock_item');
-            if ($stockItem->getQty() === 0) {
+            if ((int)$stockItem->getBackorders() === 1 || (float)$stockItem->getQty() === 0.0) {
                 return true;
             }
         }

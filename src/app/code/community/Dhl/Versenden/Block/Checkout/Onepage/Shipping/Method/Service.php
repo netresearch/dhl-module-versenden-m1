@@ -271,7 +271,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
         foreach ($quoteItems as $item) {
             /** @var Mage_CatalogInventory_Model_Stock_Item $item */
             $stockItem = $item->getProduct()->getData('stock_item');
-            if ($stockItem->getQty() === 0) {
+            if ((float)$stockItem->getQty() === 0.0 || (int)$stockItem->getBackOrders() === 1) {
                 return true;
             }
         }
