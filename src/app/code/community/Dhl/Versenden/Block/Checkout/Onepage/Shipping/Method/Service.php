@@ -261,25 +261,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     }
 
     /**
-     * Check if Quote contains backordered items (items with qty === 0).
-     *
-     * @return bool
-     */
-    public function hasBackOrderedProducts()
-    {
-        $quoteItems = $this->getQuote()->getAllItems();
-        foreach ($quoteItems as $item) {
-            /** @var Mage_CatalogInventory_Model_Stock_Item $item */
-            $stockItem = $item->getProduct()->getData('stock_item');
-            if ((float)$stockItem->getQty() === 0.0 || (int)$stockItem->getBackOrders() === 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param \Dhl\Versenden\Bcs\Api\Info $versendenInfo
      *
      * @return boolean
