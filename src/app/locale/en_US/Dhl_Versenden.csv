@@ -170,7 +170,7 @@
 "Failed ","Failed"
 "Pending","Pending"
 "Processed","Processed"
-"Not Available","Not Available",
+"Not Available","Not Available"
 "Status_Failed", "Failed"
 "Your input is invalid.", "Your input is invalid."
 "Additional charge for combined preferred day and time","Additional charge for combined preferred day and time"
@@ -187,3 +187,4 @@
 "(The cost of %s for %s is already included in the delivery costs.)","(The cost of %s for %s are already included in the delivery costs.)"
 "your preferred delivery option","your preferred delivery option"
 "your preferred delivery options","your preferred delivery options"
+"Enable Checkout Tracking","Enable Checkout Tracking"
