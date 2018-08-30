@@ -73,7 +73,6 @@ class Dhl_Versenden_Model_Services_Processor
             );
             $this->removeOfflineServices($availableServices);
         }
-
         if ($this->hasBackOrderedProducts() && $availableServices->getItem(Service\PreferredDay::CODE)) {
             $availableServices->removeItem(Service\PreferredDay::CODE);
         }
@@ -155,7 +154,11 @@ class Dhl_Versenden_Model_Services_Processor
         foreach ($this->quote->getAllItems() as $item) {
             /** @var Mage_CatalogInventory_Model_Stock_Item $item */
             $stockItem = $item->getProduct()->getData('stock_item');
-            if ((int)$stockItem->getBackorders() === 1 || (float)$stockItem->getQty() === 0.0) {
+            $qty = $item->getParentItemId() ? (float)$item->getParentItem()->getQty() : (float)$item->getQty();
+
+            if (empty($item->getChildren()) &&
+                ((float)$stockItem->getQty() === 0.0 || $qty >= (float)$stockItem->getQty())
+            ) {
                 return true;
             }
         }
