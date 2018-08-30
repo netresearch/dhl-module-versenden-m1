@@ -143,13 +143,14 @@ Für die Abwicklung von Versandaufträgen relevant sind drei Konfigurationsberei
     System → Konfiguration → Verkäufe → Versandeinstellungen → Herkunft
     System → Konfiguration → Verkäufe → Versandarten → DHL Versenden
 
-Stellen Sie sicher, dass die erforderlichen Felder aus den Bereichen
-Store-Information und Herkunft ausgefüllt sind:
+Stellen Sie sicher, dass die erforderlichen Felder in folgenden Bereichen
+ausgefüllt sind:
 
 * Store-Information
 
   * Store-Name
   * Store-Kontakttelefon
+
 * Herkunft
 
   * Land
@@ -158,16 +159,21 @@ Store-Information und Herkunft ausgefüllt sind:
   * Stadt
   * Straße
 
-Im Folgenden werden die Konfigurationsabschnitte für *DHL Versenden* beschrieben.
+* DHL Versenden
 
-.. admonition:: Hinweis
+  * Kontaktinformationen
+  * Bankverbindung
 
-   Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
-   sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
-   Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden)
-   in Deutschland bzw. Österreich. Aktivieren Sie diese Abschnitte nicht, wenn Sie
-   *DHL Versenden* nutzen!
+Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
+sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
+Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden)
+in Deutschland bzw. Österreich.
 
+**Aktivieren Sie diese Abschnitte nicht, wenn Sie DHL Versenden nutzen!**
+
+.. raw:: pdf
+
+   PageBreak
 
 Allgemeine Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,7 +191,8 @@ drei Protokollstufen:
 * ``Error`` zeichnet Fehler in der Kommunikation zwischen Shop und DHL Webservice auf.
 * ``Warning`` zeichnet Kommunikationsfehler sowie Fehler, die auf den Inhalt der
   Nachrichten zurückgehen (z.B. Adressvalidierung, ungültige Service-Auswahl) auf.
-* ``Debug`` zeichnet sämtliche Nachrichten, Fehler und übertragenen Inhalte auf.
+* ``Debug`` zeichnet sämtliche Nachrichten, Fehler und übertragenen Inhalte auf (nur
+  zur Fehlersuche empfohlen).
 
 .. admonition:: Hinweis
 
@@ -237,6 +244,9 @@ Im Konfigurationsbereich *DHL Zusatzleistungen im Checkout* legen Sie fest,
 welche im Rahmen des DHL Geschäftskundenversand zubuchbaren Services Ihren Kunden
 angeboten werden.
 
+Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie die
+`Zusatzkosten für Services`_.
+
 * *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
@@ -261,52 +271,25 @@ angeboten werden.
   im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
-* *Kombination Wunschtag und Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
-  hinzu addiert, wenn beide Services verwendet werden. Verwenden Sie Punkt statt Komma
-  als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+* *Kombination Wunschtag und Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu
+  den Versandkosten hinzu addiert, wenn **beide** Services gebucht werden. Verwenden Sie Punkt
+  statt Komma als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
   Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
   ``0`` ein.
 * *Kombination Wunschtag und Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
-  im Checkout angezeigt, wenn beide Zusatzservices ausgewählt sind. Sie können den
+  im Checkout angezeigt, wenn **beide** Zusatzservices ausgewählt sind. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
-
-.. admonition:: Hinweis
-
-   **Sollten Sie die Wunschpaket-Services in Ihrem Shop Frontend anzeigen wollen,
-   beachten Sie bitte folgenden Hinweis:**
-
-   Das Plugin enthält zu Reportingzwecken ein Tracking-Pixel.
-   Das Pixel gibt die URL, auf der das Plugin zum Einsatz kommt, sowie die Summe der Plugin-Aufrufe zurück. 
-   Hiermit werden keine personenbezogenen und personenbeziehbare Daten erhoben oder verarbeitet.
-
-      Deaktivierung: System -> Konfiguration -> Zur Kasse -> DHL Wunschpaket Tracking
-
-**Achtung:** Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!**
-Dadurch werden die von DHL vorgegebenen Service-Aufschläge, auch für die Kombination von beiden zu den Versandkosten
-hinzugefügt.
-
 * *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
   noch am selben Tag abgeschickt werden. Bestellungen, die *nach* Annahmeschluss
   eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Wunschtag
   verschiebt sich dann um einen Tag.
 
-.. admonition:: Zusatzkosten für Wunschtag / Wunschzeit
-
-   Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
-   Zusatzkosten generell außer Kraft gesetzt!
-
-Wenn die Versandart *Table Rates / Tabellenbasierte Versandkosten* genutzt wird und eine
-Grenze für kostenlosen Versand festgelegt werden soll, empfehlen wir dazu eine
-Warenkorbpreisregel einzurichten. Durch Nutzung dieser Versandart bleiben die Aufpreise
-für Zusatzservices erhalten.
-
 .. admonition:: Hinweis zu Annahmeschluss
 
-   Für dieses Feature ist die Serverzeit Ihres Systems wichtig. Damit die Zeitschwelle
-   korrekt funktioniert, muss die Serverzeit richtig gesetzt sein. Achten Sie auf eventuelle
-   Verschiebungen durch Sommer- bzw. Winterzeit oder abweichende Zeitzonen. Setzen Sie
-   wenn nötig eine andere Annahmeschluss-Zeit, um dies auszugleichen.
+   Damit die Zeitschwelle korrekt berechnet wird, muss die Systemzeit auf Ihrem Server richtig
+   gesetzt sein. Achten Sie auf eventuelle Verschiebungen durch Sommer- bzw. Winterzeit oder
+   abweichende Zeitzonen. Ändern Sie wenn nötig die Annahmeschluss-Zeit, um dies auszugleichen.
 
 .. raw:: pdf
 
@@ -349,6 +332,54 @@ Retourenbeileger
 Im Konfigurationsbereich *Retourenbeileger* legen Sie fest, welche Empfängeradresse
 auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 
+.. raw:: pdf
+
+   PageBreak
+
+
+Buchbarkeit von Zusatzservices
+------------------------------
+
+Die tatsächlich buchbaren Services sowie die wählbaren Wunschtage und Wunschzeiten hängen
+von der Lieferadresse bzw. dem Zielland ab. Nicht verfügbare Services werden im Checkout
+automatisch ausgeblendet.
+
+Falls die Bestellung Artikel enthält, die nicht sofort lieferbar sind, ist keine Buchung
+von Wunschtag und Wunschzeit möglich.
+
+Die gleichzeitige Buchung von Wunschort und Wunschnachbar ist nicht möglich.
+
+Zusatzkosten für Services
+-------------------------
+
+Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!** Wenn diese
+gebucht werden, werden die konfigurierten Service-Aufschläge zu den Versandkosten hinzugefügt.
+
+Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
+Zusatzkosten generell außer Kraft gesetzt!
+
+Wenn die Versandart *Table Rates / Tabellenbasierte Versandkosten* genutzt wird und eine
+Grenze für kostenlosen Versand festgelegt werden soll, empfehlen wir dazu eine
+Warenkorbpreisregel einzurichten. Durch Nutzung dieser Versandart bleiben die Aufpreise
+für Zusatzservices erhalten.
+
+Trackingpixel für Zusatzservices
+--------------------------------
+
+Sollten Sie die Wunschpaket-Services in Ihrem Shop-Frontend anzeigen wollen, beachten Sie bitte
+folgenden Hinweis:
+
+Die Extension stellt zu Reportingzwecken ein Tracking-Pixel im Checkout dar. Darüber werden
+die URL, auf der die Extensions zum Einsatz kommt, sowie die Summe der Extension-Aufrufe an
+DHL zurückgemeldet. Es werden keine personenbezogenen oder personenbeziehbare Daten erhoben oder
+verarbeitet. Das Tracking-Pixel wird einmal in 30 Tagen dargestellt.
+
+Diese Funktion kann hier deaktiviet werden:
+
+::
+
+  System → Konfiguration → Zur Kasse → DHL Wunschpaket Tracking → Nein
+
 
 Ablaufbeschreibung und Features
 ===============================
@@ -366,7 +397,8 @@ In der Modulkonfiguration_ wurden Versandarten gewählt, die über DHL abgewicke
 werden sollen.
 
 Wählt der Kunde im Checkout-Schritt *Versandart* eine dieser Versandarten, werden
-die in der Konfiguration aktivierten DHL-Zusatzleistungen angeboten.
+die in der Konfiguration aktivierten DHL-Zusatzleistungen angeboten. Beachten Sie
+dazu bitte die Infos zur `Buchbarkeit von Zusatzservices`_.
 
 .. image:: images/de/checkout_services.png
    :scale: 180 %
@@ -388,16 +420,17 @@ DHL-Abholorte zu finden und zu übernehmen.
 
    PageBreak
 
-Admin Order
-~~~~~~~~~~~
+Admin-Bestellung
+~~~~~~~~~~~~~~~~
 
-Bei der Erzeugung von Bestellungen im Admin Panel stehen keine Zusatzleistungen
+Beim Anlegen von Bestellungen im Admin Panel stehen keine Zusatzleistungen
 zur Verfügung. Es ist aber möglich, Zusatzleistungen zu wählen, wenn später die
 Lieferung erstellt wird.
 
 Nachnahme-Zahlarten werden ebenso wie im Checkout deaktiviert, falls
 der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung steht.
 
+Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_.
 
 DHL Lieferadressen (Packstationen, Postfilialen, Paket-Shops)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -466,6 +499,10 @@ sowie den Inhaltstyp der Sendung an.
 
 Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 
+.. raw:: pdf
+
+   PageBreak
+
 Service-Auswahl
 ~~~~~~~~~~~~~~~
 
@@ -481,13 +518,26 @@ Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, eben
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
 
-Sollten Sie Wunschort oder Wunschnachbar bearbeiten oder hinzufügen wollen, beachten
-Sie das Sonderzeichen oder Angaben wie Paketbox, Packstation, Postfach, Postfiliale,
-Filiale, Postfiliale Direkt, Filiale Direkt, Paketkasten, DHL, P-A-C-K-S-T-A-T-I-O-N,
-Paketstation, Pack Station, P.A.C.K.S.T.A.T.I.O.N., Pakcstation, Paackstation, Pakstation,
-Backstation, Bakstation, P A C K S T A T I O N, Wunschfiliale, Deutsche Post
-nicht zulässig sind.
+Beachten Sie, dass bei Wunschort oder Wunschnachbar folgende Angaben **nicht** zulässig sind:
 
+**Unzulässige Sonderzeichen**
+
+::
+
+    < > \ ' " " + \n \r
+
+**Unzulässige Angaben**
+
+* Paketbox
+* Postfach
+* Postfiliale / Postfiliale Direkt / Filiale / Filiale Direkt / Wunschfiliale
+* Paketkasten
+* DHL / Deutsche Post
+* Packstation / P-A-C-K-S-T-A-T-I-O-N / Paketstation / Pack Station / P.A.C.K.S.T.A.T.I.O.N. /
+  Pakcstation / Paackstation / Pakstation / Backstation / Bakstation / P A C K S T A T I O N
+
+Für den Versand an DHL-Abholorte (Packstation, Filiale, usw.) nutzen Sie bitte die dafür
+vorgesehenen Adressfelder.
 
 .. raw:: pdf
 
