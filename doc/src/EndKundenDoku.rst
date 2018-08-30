@@ -280,7 +280,7 @@ angeboten werden.
    Das Pixel gibt die URL, auf der das Plugin zum Einsatz kommt, sowie die Summe der Plugin-Aufrufe zurück. 
    Hiermit werden keine personenbezogenen und personenbeziehbare Daten erhoben oder verarbeitet.
 
-      Deaktivierung: System -> Konfiguration -> Zur Kasse -> DHL Versenden Tracking
+      Deaktivierung: System -> Konfiguration -> Zur Kasse -> DHL Wunschpaket Tracking
 
 **Achtung:** Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!**
 Dadurch werden die von DHL vorgegebenen Service-Aufschläge, auch für die Kombination von beiden zu den Versandkosten
