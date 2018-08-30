@@ -1,13 +1,13 @@
-.. ,date, date:: %Y-%m-%d
-.. ,year, date:: %Y
+.. |date| date:: %Y-%m-%d
+.. |year| date:: %Y
 
 .. footer::
    .. class:: footertable
 
    +-------------------------+-------------------------+
-   , Stand: ,date,           , .. class:: rightalign   ,
-   ,                         ,                         ,
-   ,                         , ###Page###/###Total###  ,
+   | Stand: |date|           | .. class:: rightalign   |
+   |                         |                         |
+   |                         | ###Page###/###Total###  |
    +-------------------------+-------------------------+
 
 .. header::
@@ -105,7 +105,6 @@ Damit die Adresse korrekt gespeichert wird, muss folgende Einstellung in der Kon
    Diese Einstellung **muss aktiviert werden**, da ansonsten die Adressinformationen nicht
    korrekt gespeichert und später nicht an DHL gesendet werden können. Die Adresse müsste
    dann von Hand in der Bestellung nachgetragen werden.
-
 
 .. raw:: pdf
 
@@ -309,6 +308,10 @@ für Zusatzservices erhalten.
    Verschiebungen durch Sommer- bzw. Winterzeit oder abweichende Zeitzonen. Setzen Sie
    wenn nötig eine andere Annahmeschluss-Zeit, um dies auszugleichen.
 
+.. raw:: pdf
+
+   PageBreak
+
 Automatische Sendungserstellung
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -346,9 +349,6 @@ Retourenbeileger
 Im Konfigurationsbereich *Retourenbeileger* legen Sie fest, welche Empfängeradresse
 auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 
-.. raw:: pdf
-
-   PageBreak
 
 Ablaufbeschreibung und Features
 ===============================
