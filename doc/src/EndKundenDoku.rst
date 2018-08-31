@@ -22,11 +22,14 @@
 DHL Versenden: Paketversand für DHL Geschäftskunden
 ===================================================
 
-Das Modul *DHL Versenden* für Magento® ermöglicht es Händlern mit einem
+Das Modul *DHL Versenden* (Shipping) für Magento® ermöglicht es Händlern mit einem
 DHL Geschäftskundenkonto, Sendungen über die DHL Geschäftskundenversand API
 anzulegen und Versandscheine (Paketaufkleber) abzurufen. Die Extension
 ermöglicht dabei auch das Hinzubuchen von Zusatzleistungen sowie den Abruf von
 Exportdokumenten für den internationalen Versand.
+
+Diese Dokumentation erklärt die **Installation, Einrichtung und Nutzung des Moduls
+in Magento® 1**.
 
 .. raw:: pdf
 
@@ -63,7 +66,6 @@ Folgende PHP-Versionen werden vom Modul unterstützt:
 
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.
-
 
 Hinweise zur Verwendung des Moduls
 ==================================
@@ -135,7 +137,7 @@ Die Attribute werden in folgenden Tabellen hinzugefügt:
 Modulkonfiguration
 ------------------
 
-Für die Abwicklung von Versandaufträgen relevant sind drei Konfigurationsbereiche:
+Für die Abwicklung von Versandaufträgen sind drei Konfigurationsbereiche relevant:
 
 ::
 
@@ -159,7 +161,7 @@ ausgefüllt sind:
   * Stadt
   * Straße
 
-* DHL Versenden
+* DHL Versenden (Shipping)
 
   * Kontaktinformationen
   * Bankverbindung
@@ -169,7 +171,7 @@ sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
 Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden)
 in Deutschland bzw. Österreich.
 
-**Aktivieren Sie diese Abschnitte nicht, wenn Sie DHL Versenden nutzen!**
+**Aktivieren Sie diese Abschnitte nicht, wenn Sie DHL Versenden (Shipping) nutzen!**
 
 .. raw:: pdf
 
@@ -335,7 +337,6 @@ auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 .. raw:: pdf
 
    PageBreak
-
 
 Buchbarkeit von Zusatzservices
 ------------------------------
