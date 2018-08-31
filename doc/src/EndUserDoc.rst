@@ -22,10 +22,13 @@
 DHL Versenden: Shipping for DHL Business Customers
 ==================================================
 
-The module *DHL Versenden* (Ship) for Magento® enables merchants with a DHL Business
+The module *DHL Versenden* (Shipping) for Magento® enables merchants with a DHL Business
 Account to create shipments via the DHL Business Customer API (webservice) and
 retrieve shipping labels. The extension also allows booking additional services
 and creating the customs declaration for international shipping.
+
+This document covers the **installation, configuration, and usage of the module
+in Magento® 1**.
 
 .. raw:: pdf
 
@@ -147,6 +150,7 @@ and *Origin* are filled in completely:
 
   * Store Name
   * Store Contact Telephone
+
 * Origin
 
   * Country
@@ -155,14 +159,16 @@ and *Origin* are filled in completely:
   * City
   * Street Address
 
-Next, the configuration sections for the DHL module are explained.
+* DHL Versenden (Shipping)
 
-.. admonition:: Note
+  * Contact data
+  * Bank data
 
-   The sections *Shipping Methods → DHL* and *Shipping Methods → DHL (deprecated)*
-   are core parts of Magento® which connect to the webservice of DHL USA only.
-   They are not relevant for DHL Business Shipping (Versenden) in Germany or Austria.
-   Do not enable those sections if you are using *DHL Versenden*!
+The sections *Shipping Methods → DHL* and *Shipping Methods → DHL (deprecated)*
+are core parts of Magento® which connect to the webservice of DHL USA only.
+They are not relevant for DHL Business Shipping (Versenden) in Germany or Austria.
+
+**Do not enable those sections if you are using DHL Versenden (Shipping)!**
 
 .. raw:: pdf
 
@@ -182,7 +188,8 @@ You can choose between three log levels:
 * ``Error`` records communication errors between the shop and the DHL webservice.
 * ``Warning`` records communication errors and also errors related to the message
   content (e.g. address validation failed, invalid services selected).
-* ``Debug`` records all errors, messages, and transferred content.
+* ``Debug`` records all errors, messages, and transferred content (only enable
+  this for troubleshooting).
 
 .. admonition:: Note
 
@@ -233,6 +240,9 @@ Additional Services In Checkout
 In the configuration section *Additional Services In Checkout* you can choose which
 additional DHL services you want to offer to your customers.
 
+Please also note the information about `Booking additional services`_ and
+`Additional costs for services`_.
+
 * *Enable Preferred Location*: The customer selects an alternative location where
   the shipment can be placed in case they are not at home.
 * *Enable Preferred Neighbor*: The customer selects an alternative address in the
@@ -256,45 +266,21 @@ additional DHL services you want to offer to your customers.
   in the checkout if the service has been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
 * *Combined preferred day and time handling additional charge (handling fee)*: This amount will
-  be added to the shipping cost if the services are used. Use a decimal point, not comma.
+  be added to the shipping cost if **both** services are booked. Use a decimal point, not comma.
   The gross amount must be entered here (incl. VAT). If you want to offer the services combination
   for free, enter a ``0`` here.
 * *Combined preferred day and time handling fee text*: This text will be displayed to the customer
-  in the checkout if both service has been selected. You can use the placeholder ``$1``
+  in the checkout if both services have been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
-
-.. admonition:: Hint
-
-   **In case you like to offer preferred delivery options in your shop frontend, please note the following hint**
-
-   The plugin contains a tracking pixel due to reporting purposes of preferred services.
-   Its output is the URL where the preferred services are integrated via plugin as well as the number of plugin calls.
-   There is no personal data created or collected.
-
-      Deactivation: System -> Configuration -> Checkout -> DHL Versenden Tracking
-
-**Important:** The services *Preferred Day* and *Preferred Time* are **enabled by default!**
-Therefore the standard DHL handling fees will be added to the shipping cost.
-
 * *Cut off time*: This sets the time up to which new orders will be dispatched on the
   same day. Orders placed *after* the cut off time will not be dispatched on the same
   day. The earliest possible preferred day will then be postponed by one day.
 
-.. admonition:: Additional cost for Preferred Day / Preferred Time
-
-   When using the shipping method *Free Shipping* the additional handling fees will
-   always be ignored!
-
-If you want to use the shipping method *Table Rates* and set a threshold for free shipping,
-we recommend setting up a Shopping Cart Price Rule for this. By using this shipping method
-the additional fees for DHL services will be included.
-
 .. admonition:: Cut off time
 
-   For this feature the server time of your system is important. To make sure the time
-   threshold works as expected, the server time needs to be set correctly. Check if there
-   are any offsets due to daylight saving time or differing time zones. Adjust the cut
-   off time setting to compensate this, if needed.
+   To make sure the time threshold works as expected, the server time needs to be set
+   correctly. Check for any offsets due to daylight saving time or differing time
+   zones. Adjust the cut off time setting to compensate, if needed.
 
 .. raw:: pdf
 
@@ -342,6 +328,49 @@ on the Return Label, if that service was booked.
 
    PageBreak
 
+
+Booking additional services
+---------------------------
+
+The available services as well as preferred days and preferred times depend on the
+actual shipping address and country. Unusable services will be hidden in the checkout
+automatically.
+
+If the order contains articles which are not in stock, it won't be possible to book
+preferred day or time.
+
+The services *Preferred location* and *Preferred neighbor* cannot be booked together.
+
+Additional costs for services
+-----------------------------
+
+The services *Preferred Day* and *Preferred Time* are **enabled by default!**
+Therefore the standard DHL handling fees will be added to the shipping cost.
+
+When using the shipping method *Free Shipping* the additional handling fees will
+always be ignored!
+
+If you want to use the shipping method *Table Rates* and set a threshold for free
+shipping, we recommend setting up a Shopping Cart Price Rule for this. By using this
+shipping method the additional fees for DHL services will be included.
+
+Tracking pixel for additional services
+--------------------------------------
+
+In case you'd like to offer preferred delivery options in your shop frontend, please note the following hint:
+
+The extensions displays a tracking pixel in the checkout for reporting purposes. It
+reports the URL on which the extension is used, as well as the number of extension
+calls to DHL. No personal data is created and / or collected. The tracking pixel will
+be displayed once every 30 days.
+
+This function can be disabled here:
+
+::
+
+  System → Configuration → Checkout → DHL Versenden Tracking → No
+
+
 Workflow and features
 =====================
 
@@ -386,6 +415,7 @@ creating the shipment.
 The Cash On Delivery payment methods will be disabled if Cash On Delivery is not
 available for the delivery address (same behaviour as in the checkout).
 
+Please also note the information about `Booking additional services`_.
 
 DHL Locationfinder (Packing Stations, Post Offices, Parcel Stations)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -452,6 +482,10 @@ the content type.
 
 Everything else is the same as described in the section `National shipments`_.
 
+.. raw:: pdf
+
+   PageBreak
+
 Service selection
 ~~~~~~~~~~~~~~~~~
 
@@ -467,11 +501,25 @@ The services selected by the customer in the checkout will already be selected
 here. Also, the service *Address validation* (Print only if codeable) will be
 selected if enabled in the general `Module configuration`_.
 
-If you want to edit or add the preferred location or neighbor, please note that
-special characters or informations such as Paketbox, Packstation, Postfach, Postfiliale,
-Filiale, Postfiliale Direkt, Filiale Direkt, Paketkasten, DHL, P-A-C-K-S-T-A-T-I-O-N,
-Paketstation, Pack Station, P.A.C.K.S.T.A.T.I.O.N., Pakcstation, Paackstation, Pakstation,
-Backstation, Bakstation, P A C K S T A T I O N, Wunschfiliale, Deutsche Post are invalid.
+Please note that the following inputs are **not** allowed for *Preferred location* and *Preferred neighbor*:
+
+**Invalid special characters**
+
+::
+
+    < > \ ' " " + \n \r
+
+**Invalid data**
+
+* Paketbox
+* Postfach
+* Postfiliale / Postfiliale Direkt / Filiale / Filiale Direkt / Wunschfiliale
+* Paketkasten
+* DHL / Deutsche Post
+* Packstation / P-A-C-K-S-T-A-T-I-O-N / Paketstation / Pack Station / P.A.C.K.S.T.A.T.I.O.N. /
+  Pakcstation / Paackstation / Pakstation / Backstation / Bakstation / P A C K S T A T I O N
+
+For shipments to DHL locations (Packstation, Post Offices, etc.) please use the appropriate address fields.
 
 .. raw:: pdf
 
@@ -540,6 +588,10 @@ tracking number.
 If the shipment was canceled successfully, the tracking number and the
 shipping label will be deleted from the system.
 
+.. raw:: pdf
+
+   PageBreak
+
 Automatic shipment creation
 ---------------------------
 
@@ -568,6 +620,10 @@ If you want to change the timing for the automatic shipment creation, or you nee
 a better monitoring of the execution, you can install the extension `Aoe_Scheduler`_.
 
 .. _Aoe_Scheduler:  https://github.com/AOEpeople/Aoe_Scheduler
+
+.. raw:: pdf
+
+   PageBreak
 
 Troubleshooting
 ---------------
