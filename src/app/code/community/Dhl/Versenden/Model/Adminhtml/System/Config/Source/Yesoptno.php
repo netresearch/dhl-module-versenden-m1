@@ -63,9 +63,9 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno
     public function toArray()
     {
         return array(
-            self::N => Mage::helper('adminhtml')->__('No'),
-            self::Y => Mage::helper('adminhtml')->__('Yes'),
-            self::OPT => Mage::helper('adminhtml')->__('Optional'),
+            self::N => Mage::helper('adminhtml')->__('Disable'),
+            self::Y => Mage::helper('adminhtml')->__('Enable'),
+            self::OPT => Mage::helper('adminhtml')->__('Enable on customers choice'),
         );
     }
 }
