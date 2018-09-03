@@ -108,6 +108,21 @@ Damit die Adresse korrekt gespeichert wird, muss folgende Einstellung in der Kon
    korrekt gespeichert und später nicht an DHL gesendet werden können. Die Adresse müsste
    dann von Hand in der Bestellung nachgetragen werden.
 
+Datenschutz
+-----------
+
+Durch das Modul werden personenbezogene Daten an DHL übermittelt, die zur Verarbeitung des Auftrags
+erforderlich sind (Namen, Anschriften, Telefonnumern, E-Mail-Adressen, etc.). Der Umfang der
+übermittelten Daten hängt von der `Modulkonfiguration`_ sowie den gewählten
+`DHL Zusatzleistungen im Checkout`_ ab.
+
+Der Händler muss sich vom Kunden das Einverständnis zur Verarbeitung der Daten einholen,
+beispielsweise über die AGB des Shops und / oder eine Einverständniserklärung im Checkout (Magento®
+Checkout Agreements / Terms and Conditions).
+
+Die tatsächlich übermittelten Daten können vollständig im Log ``var/log/dhl_versenden.log``
+eingesehen werden (siehe `Allgemeine Einstellungen`_).
+
 .. raw:: pdf
 
    PageBreak
@@ -180,25 +195,27 @@ in Deutschland bzw. Österreich.
 Allgemeine Einstellungen
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Im Konfigurationsbereich *Allgemeine Einstellungen* wird festgelegt, ob der
-*Sandbox-Modus* zum Testen der Integration verwendet oder die
-Extension produktiv betrieben werden soll.
+Wählen Sie, ob der **Sandbox-Modus** zum Testen der Integration verwendet, oder die Extension
+**produktiv** betrieben werden soll.
 
-Außerdem kann hier die Protokollierung konfiguriert werden. Wenn die Protokollierung
+Außerdem kann hier die **Protokollierung (Logging)** konfiguriert werden. Wenn die Protokollierung
 hier und unter *System → Konfiguration → Erweitert → Entwickleroptionen → Log
 Einstellungen* aktiviert ist, werden Webservice-Nachrichten in der Datei
 ``var/log/dhl_versenden.log`` aufgezeichnet. Dabei haben Sie die Auswahl zwischen
 drei Protokollstufen:
 
-* ``Error`` zeichnet Fehler in der Kommunikation zwischen Shop und DHL Webservice auf.
-* ``Warning`` zeichnet Kommunikationsfehler sowie Fehler, die auf den Inhalt der
-  Nachrichten zurückgehen (z.B. Adressvalidierung, ungültige Service-Auswahl) auf.
-* ``Debug`` zeichnet sämtliche Nachrichten, Fehler und übertragenen Inhalte auf (nur
-  zur Fehlersuche empfohlen).
+* *Error*: Nur Kommunikationsprobleme zwischen Shop und DHL Webservice werden geloggt. Wenn
+  kein Problem auftritt, wird nichts in das Log geschrieben.
+* *Warning*: Kommunikationsprobleme sowie inhaltliche Fehler werden geloggt (z.B. Adressvalidierung,
+  ungültige Service-Auswahl).
+* *Debug*: Sämtliche Daten, Erfolgsmeldungen, Fehler und übertragenen Inhalte (PDF-Label) werden
+  geloggt. **Nur zur Fehlersuche empfohlen.**
 
-.. admonition:: Hinweis
+.. admonition:: Hinweise zum Logging
 
-   Stellen Sie sicher, dass die Log-Dateien regelmäßig bereinigt bzw. rotiert werden.
+   Stellen Sie sicher, dass die Log-Datei regelmäßig bereinigt bzw. archiviert wird.
+   Das Log wird durch das Modul nicht automatisch gelöscht. Personenbezogene Daten dürfen nur so
+   lange vorgehalten bzw. gespeichert werden, wie unbedingt erforderlich.
 
 Stammdaten
 ~~~~~~~~~~
@@ -209,6 +226,10 @@ DHL Vertragskunden über den Vertrieb DHL Paket.
 
 Eine detaillierte Anleitung zur Einrichtung der Teilnahmenummern finden Sie in `diesem Artikel
 in der Wissensdatenbank <http://dhl.support.netresearch.de/support/solutions/articles/12000024658>`_.
+
+.. raw:: pdf
+
+   PageBreak
 
 Versandaufträge
 ~~~~~~~~~~~~~~~
@@ -223,7 +244,8 @@ für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich s
   wofür ein Nachkodierungsentgelt erhoben wird. Wenn die Adresse überhaupt nicht
   zugeordnet werden kann, wird die Sendung dennoch abgelehnt.
 * *Empfänger-Telefonnummer übertragen*: Hiermit kann gesteuert werden, ob die Telefonnummer
-  des Käufers bei der Sendungserstellung an DHL übermittelt werden soll.
+  des Käufers bei der Sendungserstellung an DHL übermittelt werden soll. Siehe auch Hinweise
+  zum `Datenschutz`_.
 * *Gewichtseinheit*: Legen Sie fest, ob die Gewichtsangaben in Ihrem Katalog in
   Gramm oder Kilogramm gepflegt sind. Bei Bedarf wird das Gewicht während der
   Übertragung an DHL auf Kilogramm umgerechnet.
@@ -247,17 +269,18 @@ welche im Rahmen des DHL Geschäftskundenversand zubuchbaren Services Ihren Kund
 angeboten werden.
 
 Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie die
-`Zusatzkosten für Services`_.
+`Zusatzkosten für Services`_ und die Hinweise zum `Datenschutz`_.
 
 * *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
   für die Abgabe der Sendung, falls er nicht angetroffen wird.
 * *Automatische Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
-  Sendung informiert. Wählen Sie hier aus folgenden Optionen:
+  Sendung informiert. Hierzu wird die E-Mail-Adresse des Kunden an DHL übermittelt (siehe
+  Hinweise zum `Datenschutz`_). Wählen Sie hier aus folgenden Optionen:
 
-  * *Ja*: Der Service wird immer hinzugebucht.
-  * *Optional*: Der Kunde bestimmt im Checkout, ob er den Service wünscht.
+  * *Ja*: Der Service wird immer hinzugebucht. Im Checkout wird keine Auswahl angezeigt.
+  * *Optional*: Der Kunde kann im Checkout wählen, ob der Service gebucht werden soll.
   * *Nein*: Der Service wird nie hinzugebucht.
 
 * *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,

@@ -107,6 +107,19 @@ configuration of the Amazon Pay Module:
    This setting **must be enabled**, otherwise the address will not be saved correctly and
    therefore cannot be sent to DHL. The address would have to be edited manually later.
 
+Data protection
+---------------
+
+The module transmits personal data to DHL which are needed to process the shipment (names,
+addresses, phone numbers, email addresses, etc.). The amount of data depends on the
+`Module configuration`_ as well as the booked `Additional Services In Checkout`_.
+
+The merchant needs the agreement from the customer to process the data, e.g. via the shop's
+terms and conditions and / or an agreement in the checkout (Magento® Checkout Agreements).
+
+The actual data which is transmitted can be seen in the log ``var/log/dhl_versenden.log``
+(see `General Settings`_).
+
 .. raw:: pdf
 
    PageBreak
@@ -177,23 +190,24 @@ They are not relevant for DHL Business Shipping (Versenden) in Germany or Austri
 General Settings
 ~~~~~~~~~~~~~~~~
 
-In the configuration section *General Settings* you can choose if you want to run
-the module in *Sandbox Mode* to test the integration, or in production mode.
+Here you can choose if you want to run the module in **Sandbox Mode** to test the integration,
+or in **production mode**.
 
-You can also configure the logging. If the logging is enabled here and
+You can also configure the **logging**. If the logging is enabled here and
 in *System → Configuration → Advanced → Developer → Log Settings*, the DHL
 webservice messages will be recorded in the file ``var/log/dhl_versenden.log``.
 You can choose between three log levels:
 
-* ``Error`` records communication errors between the shop and the DHL webservice.
-* ``Warning`` records communication errors and also errors related to the message
+* *Error*: Only record communication errors between the shop and the DHL webservice.
+* *Warning*: Record communication errors and also errors related to the message
   content (e.g. address validation failed, invalid services selected).
-* ``Debug`` records all errors, messages, and transferred content (only enable
-  this for troubleshooting).
+* *Debug*: Record all errors, messages, and transferred content (label PDFs). **Recommended
+  only for troubleshooting**.
 
 .. admonition:: Note
 
-   Make sure to clear or rotate the log files regularly.
+   Make sure to clear or archive the log file regularly. The module does not delete the log
+   automatically. Personal data must only be stored as long as absolutely necessary.
 
 Account Data
 ~~~~~~~~~~~~
@@ -218,7 +232,7 @@ the DHL webservice is made.
   (Nachcodierungsentgelt). If the address cannot be corrected, DHL will still
   reject the shipment.
 * *Send receiver phone number*: This controls if the buyer's phone number should be
-  transmitted to DHL when creating the shipment.
+  transmitted to DHL when creating the shipment. See also the notes about `Data protection`_.
 * *Weight Unit*: Select if the product weights in your catalog are stored in
   gram or kilogram. If necessary, the weight will be converted to kilogram
   during transmission to DHL.
@@ -248,7 +262,8 @@ Please also note the information about `Booking additional services`_ and
 * *Enable Preferred Neighbor*: The customer selects an alternative address in the
   neighborhood for the shipment in case they are not at home.
 * *Enable Automatic Parcel Announcement*: The customer gets notified by email about the status
-  of the shipment. Select one of the following options:
+  of the shipment. The customer's email address will be transmitted to DHL for this service
+  (note the section `Data protection`_). Select one of the following options:
 
   * *Yes*: The service will be booked.
   * *Optional*: The customer decides in the checkout if the service should be booked.
