@@ -253,7 +253,7 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   falls er nicht angetroffen wird.
 * *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
   für die Abgabe der Sendung, falls er nicht angetroffen wird.
-* *Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
+* *Automatische Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
   Sendung informiert. Wählen Sie hier aus folgenden Optionen:
 
   * *Ja*: Der Service wird immer hinzugebucht.
