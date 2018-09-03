@@ -337,7 +337,7 @@ actual shipping address and country. Unusable services will be hidden in the che
 automatically.
 
 If the order contains articles which are not in stock, it won't be possible to book
-preferred day or time.
+preferred day.
 
 The services *Preferred location* and *Preferred neighbor* cannot be booked together.
 

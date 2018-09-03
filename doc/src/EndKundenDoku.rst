@@ -346,7 +346,7 @@ von der Lieferadresse bzw. dem Zielland ab. Nicht verfügbare Services werden im
 automatisch ausgeblendet.
 
 Falls die Bestellung Artikel enthält, die nicht sofort lieferbar sind, ist keine Buchung
-von Wunschtag und Wunschzeit möglich.
+vom Wunschtag möglich.
 
 Die gleichzeitige Buchung von Wunschort und Wunschnachbar ist nicht möglich.
 
