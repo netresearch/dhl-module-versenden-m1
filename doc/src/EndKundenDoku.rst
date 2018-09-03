@@ -280,7 +280,7 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   Hinweise zum `Datenschutz`_). Wählen Sie hier aus folgenden Optionen:
 
   * *Ja*: Der Service wird immer hinzugebucht. Im Checkout wird keine Auswahl angezeigt.
-  * *Optional*: Der Kunde kann im Checkout wählen, ob der Service gebucht werden soll.
+  * *Aktivieren auf Kundenwunsch*: Der Kunde kann im Checkout wählen, ob der Service gebucht werden soll.
   * *Nein*: Der Service wird nie hinzugebucht.
 
 * *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,

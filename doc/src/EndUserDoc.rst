@@ -266,7 +266,7 @@ Please also note the information about `Booking additional services`_ and
   (note the section `Data protection`_). Select one of the following options:
 
   * *Yes*: The service will be booked.
-  * *Optional*: The customer decides in the checkout if the service should be booked.
+  * *Enable on customers choice*: The customer decides in the checkout if the service should be booked.
   * *No*: The service will not be booked.
 
 * *Enable Preferred Day*: The customer chooses a specific day on which the shipment
