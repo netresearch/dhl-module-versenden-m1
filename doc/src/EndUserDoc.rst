@@ -247,7 +247,7 @@ Please also note the information about `Booking additional services`_ and
   the shipment can be placed in case they are not at home.
 * *Enable Preferred Neighbor*: The customer selects an alternative address in the
   neighborhood for the shipment in case they are not at home.
-* *Enable Parcel announcement*: The customer gets notified by email about the status
+* *Enable Automatic Parcel Announcement*: The customer gets notified by email about the status
   of the shipment. Select one of the following options:
 
   * *Yes*: The service will be booked.
