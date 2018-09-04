@@ -19,6 +19,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## [1.5.0] - 2018-08-04
+
+### Added
+
+- Connection to Parcel Management API for retrieving available services 
+- Tracking Pixel to success checkout working once every 30 days and configuration option for en- or disable 
+- Configuration options of handling fee & text for combined Preferred Day and Time
+- Configuration option for excluded drop-off days
+- 'none' option to checkout services
+- Blacklist validation for Preferred Location and Neighbour
+- Display included service fees in delivery costs in checkout sidebar
+
+### Changed
+
+- Configuration scopes
+- Preferred Neighbour and Preferred Location are now exclusive
+- Display DHL Service box only for shipping inside Germany
+- No provision of Preferred Day for orders containing backordered items
+
 
 ## [1.4.0] - 2018-07-12
 
