@@ -242,7 +242,8 @@ class Dhl_Versenden_Model_Services_CheckoutService
         }
 
         $map = $unserializedData[self::API_RESPONSE_CACHE_IDENT];
-        if (!is_a($map, \Dhl\Versenden\Cig\Model\AvailableServicesMap::class)) {
+
+        if (!$map instanceof \Dhl\Versenden\Cig\Model\AvailableServicesMap) {
             Mage::throwException('No cached data found.');
         }
 
