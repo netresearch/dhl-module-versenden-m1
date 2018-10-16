@@ -274,8 +274,9 @@ class Dhl_Versenden_Model_Services_CheckoutService
      */
     private function getCacheKey($startDate, $zip)
     {
+        $mode = $this->config->isSandboxModeEnabled() ? 'sandbox' : 'production';
         $dateString = (new DateTime($startDate))->format('Y-m-d');
 
-        return $dateString . '_' . $zip;
+        return implode('_', array($dateString, $mode, $zip));
     }
 }

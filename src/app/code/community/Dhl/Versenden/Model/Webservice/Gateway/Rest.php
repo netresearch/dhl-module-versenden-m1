@@ -56,8 +56,8 @@ class Dhl_Versenden_Model_Webservice_Gateway_Rest
     {
         $account = $this->config->getAccountSettings();
         $ekp = $account->getEkp();
-        $user = $this->config->getUsername();
-        $signature = $this->config->getUserSignature();
+        $user = $this->config->getWebserviceAuthUsername();
+        $signature = $this->config->getWebserviceAuthPassword();
         $cgiConfig = new CigConfiguration();
         $cgiConfig->setApiKey(
             'DPDHL-User-Authentication-Token', base64_encode($this->config->getParcelmanagementApiKey())
