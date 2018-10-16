@@ -23,7 +23,9 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper as Shipper;
+
+use Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper as Shipper;
+
 /**
  * Dhl_Versenden_Model_Config_Shipper
  *
@@ -105,18 +107,18 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
      */
     public function getAccountSettings()
     {
-        if (!$this->isSandboxModeEnabled()) {
-            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER));
-            $signature = Mage::helper('core')->decrypt($this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE));
-            $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP);
-
-            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION);
-        } else {
+        if ($this->isSandboxModeEnabled()) {
             $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER));
             $signature = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE);
             $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_EKP);
 
             $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_PARTICIPATION);
+        } else {
+            $user      = strtolower($this->getStoreConfig(self::CONFIG_XML_FIELD_USER));
+            $signature = Mage::helper('core')->decrypt($this->getStoreConfig(self::CONFIG_XML_FIELD_SIGNATURE));
+            $ekp       = $this->getStoreConfig(self::CONFIG_XML_FIELD_EKP);
+
+            $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION);
         }
 
         $participation = array();
@@ -295,25 +297,10 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     /**
      * @return string
      */
-    public function getUsername()
-    {
-        return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME);
-    }
-
-    /**
-     * @return string
-     */
-    public function getUserSignature()
-    {
-        return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD);
-    }
-
-    /**
-     * @return string
-     */
     public function getParcelmanagementApiKey()
     {
-        return $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_USER).
-            ':'. $this->getStoreConfig(self::CONFIG_XML_FIELD_SANDBOX_SIGNATURE );
+        $accountSettings = $this->getAccountSettings();
+
+        return $accountSettings->getUser() . ':' . $accountSettings->getSignature();
     }
 }
