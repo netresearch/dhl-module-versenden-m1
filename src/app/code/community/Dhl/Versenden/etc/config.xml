@@ -196,11 +196,11 @@
         </layout>
         <translate>
             <modules>
-                <dhl_versenden>
+                <Dhl_Versenden>
                     <files>
                         <default>Dhl_Versenden.csv</default>
                     </files>
-                </dhl_versenden>
+                </Dhl_Versenden>
             </modules>
         </translate>
         <events>
@@ -310,11 +310,11 @@
         </events>
         <translate>
             <modules>
-                <dhl_versenden>
+                <Dhl_Versenden>
                     <files>
                         <default>Dhl_Versenden.csv</default>
                     </files>
-                </dhl_versenden>
+                </Dhl_Versenden>
             </modules>
         </translate>
     </frontend>
