@@ -61,6 +61,10 @@ class Dhl_Versenden_Model_Services_Startdate
         } else {
             $end = 2;
             for ($i = 1; $i < $end; $i++) {
+                if ($i > 7) {
+                    Mage::throwException('No valid start date found within next week.');
+                }
+
                 $datetime = new DateTime($date);
                 $tmpDate = $datetime->add(new DateInterval("P{$i}D"));
                 $nextPossibleDay = $tmpDate->format($timeformat);
