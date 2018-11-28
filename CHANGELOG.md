@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- Switch to application version 2 with parcel management
+- Application credentials for parcel management
 
 ### Fixed
 
