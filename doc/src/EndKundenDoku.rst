@@ -120,8 +120,11 @@ Der Händler muss sich vom Kunden das Einverständnis zur Verarbeitung der Daten
 beispielsweise über die AGB des Shops und / oder eine Einverständniserklärung im Checkout (Magento®
 Checkout Agreements / Terms and Conditions).
 
-Die tatsächlich übermittelten Daten können vollständig im Log ``var/log/dhl_versenden.log``
-eingesehen werden (siehe `Allgemeine Einstellungen`_).
+Die an die DHL Geschäftskundenversand API übermittelten Daten können im Log ``var/log/dhl_versenden.log``
+eingesehen werden (siehe `Allgemeine Einstellungen`_ zur Aktivierung).
+
+Für `DHL Zusatzleistungen im Checkout`_ (Paketsteuerung API) werden im Fehlerfall Daten im Log
+``var/log/dhl_service.log`` gespeichert. Im Normalbetrieb (ohne Fehler) wird nichts geloggt.
 
 .. raw:: pdf
 
@@ -199,8 +202,8 @@ Wählen Sie, ob der **Sandbox-Modus** zum Testen der Integration verwendet, oder
 **produktiv** betrieben werden soll.
 
 Außerdem kann hier die **Protokollierung (Logging)** konfiguriert werden. Wenn die Protokollierung
-hier und unter *System → Konfiguration → Erweitert → Entwickleroptionen → Log
-Einstellungen* aktiviert ist, werden Webservice-Nachrichten in der Datei
+hier **und** unter *System → Konfiguration → Erweitert → Entwickleroptionen → Log
+Einstellungen* aktiviert ist, wird die Kommunikation mit der Geschäftskundenversand API in der Datei
 ``var/log/dhl_versenden.log`` aufgezeichnet. Dabei haben Sie die Auswahl zwischen
 drei Protokollstufen:
 
@@ -213,9 +216,14 @@ drei Protokollstufen:
 
 .. admonition:: Hinweise zum Logging
 
-   Stellen Sie sicher, dass die Log-Datei regelmäßig bereinigt bzw. archiviert wird.
-   Das Log wird durch das Modul nicht automatisch gelöscht. Personenbezogene Daten dürfen nur so
+   Stellen Sie sicher, dass die Log-Dateien regelmäßig bereinigt bzw. archiviert werden.
+   Die Logs werden durch das Modul nicht automatisch gelöscht. Personenbezogene Daten dürfen nur so
    lange vorgehalten bzw. gespeichert werden, wie unbedingt erforderlich.
+
+   Log-Dateien:
+   
+   * ``var/log/dhl_versenden.log`` für Label-Erstellung (Geschäftskundenversand API)
+   * ``var/log/dhl_service.log`` für DHL Zusatzservices (Paketsteuerung API)
 
 Stammdaten
 ~~~~~~~~~~
@@ -284,9 +292,11 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   * *Nein*: Der Service wird nie hinzugebucht.
 
 * *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
-  an welchem die Lieferung ankommen soll.
+  an welchem die Lieferung ankommen soll. Die verfügbaren Wunschtage werden dynamisch
+  angezeigt, basierend auf der Empfängeradresse.
 * *Wunschzeit*: Der Kunde wählt ein Zeitfenster für seine Sendung,
-  in welchem die Lieferung ankommen soll.
+  in welchem die Lieferung ankommen soll. Die verfügbaren Wunschzeiten werden dynamisch
+  angezeigt, basierend auf der Empfängeradresse.
 * *Wunschtag / Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
   hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
   als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
@@ -365,7 +375,8 @@ Buchbarkeit von Zusatzservices
 ------------------------------
 
 Die tatsächlich buchbaren Services sowie die wählbaren Wunschtage und Wunschzeiten hängen
-von der Lieferadresse bzw. dem Zielland ab. Nicht verfügbare Services werden im Checkout
+von der Lieferadresse bzw. dem Zielland ab. Dazu wird die DHL Paketsteuerung API während
+des Checkouts verwendet. Nicht verfügbare Services werden im Checkout
 automatisch ausgeblendet.
 
 Falls die Bestellung Artikel enthält, die nicht sofort lieferbar sind, ist keine Buchung
@@ -673,6 +684,9 @@ die Ausführung besser überwachen wollen, installieren Sie die Extension
 Fehlerbehandlung
 ----------------
 
+Sendungserstellung
+~~~~~~~~~~~~~~~~~~
+
 Während der Übertragung von Versandaufträgen an den DHL Webservice kann es zu
 Fehlern bei der Erstellung eines Paketaufklebers kommen. Die Ursache dafür ist
 in der Regel eine invalide Lieferadresse oder eine für die Lieferadresse nicht
@@ -728,6 +742,15 @@ Versandauftrag wie im Abschnitt `Stornieren eines Versandauftrags`_ beschrieben
 und betätigen Sie anschließend den Button *Paketaufkleber erstellen…* in
 derselben Box *Versand- und Trackinginformationen*. Es gilt dasselbe Vorgehen
 wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
+
+DHL Zusatzservices
+~~~~~~~~~~~~~~~~~~
+
+Bei Problemen mit `DHL Zusatzleistungen im Checkout`_ (z.B. Wunschtag) werden die Fehlermeldungen
+in eine separate Log-Datei geschrieben. Siehe Hinweise im Kapitel `Allgemeine Einstellungen`_.
+Das Log enthält Hinweise zur weiteren Fehlersuche.
+
+Beachten Sie auch die Hinweise zur `Buchbarkeit von Zusatzservices`_.
 
 .. raw:: pdf
 
