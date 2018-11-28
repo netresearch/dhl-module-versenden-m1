@@ -117,8 +117,11 @@ addresses, phone numbers, email addresses, etc.). The amount of data depends on 
 The merchant needs the agreement from the customer to process the data, e.g. via the shop's
 terms and conditions and / or an agreement in the checkout (Magento® Checkout Agreements).
 
-The actual data which is transmitted can be seen in the log ``var/log/dhl_versenden.log``
-(see `General Settings`_).
+The data which is transmitted to the DHL Business Customer Shipping API can be seen in the
+log ``var/log/dhl_versenden.log`` (see `General Settings`_ to enable this).
+
+For `Additional Services In Checkout`_ (Parcel Management API), data will be logged in the
+file ``var/log/dhl_service.log``. If no errors occur, nothing is logged.
 
 .. raw:: pdf
 
@@ -193,9 +196,9 @@ General Settings
 Here you can choose if you want to run the module in **Sandbox Mode** to test the integration,
 or in **production mode**.
 
-You can also configure the **logging**. If the logging is enabled here and
-in *System → Configuration → Advanced → Developer → Log Settings*, the DHL
-webservice messages will be recorded in the file ``var/log/dhl_versenden.log``.
+You can also configure the **logging**. If the logging is enabled here **and**
+in *System → Configuration → Advanced → Developer → Log Settings*, the communication with
+the Busincess Customer Shipping API will be recorded in the file ``var/log/dhl_versenden.log``.
 You can choose between three log levels:
 
 * *Error*: Only record communication errors between the shop and the DHL webservice.
@@ -204,10 +207,15 @@ You can choose between three log levels:
 * *Debug*: Record all errors, messages, and transferred content (label PDFs). **Recommended
   only for troubleshooting**.
 
-.. admonition:: Note
+.. admonition:: Notes about logging
 
-   Make sure to clear or archive the log file regularly. The module does not delete the log
+   Make sure to clear or archive the log files regularly. The module does not delete the logs
    automatically. Personal data must only be stored as long as absolutely necessary.
+
+   Log files:
+   
+   * ``var/log/dhl_versenden.log`` for label creation (Business Customer Shipping API)
+   * ``var/log/dhl_service.log`` for additional DHL services (Parcel Management API)
 
 Account Data
 ~~~~~~~~~~~~
@@ -218,6 +226,10 @@ this information directly from the DHL team (Vertrieb DHL Paket).
 
 A detailed tutorial for configuring the Participation Numbers (Teilnahmenummern) can
 be found in `this article in the Knowledge Base <http://dhl.support.netresearch.de/support/solutions/articles/12000024659>`_.
+
+.. raw:: pdf
+
+   PageBreak
 
 Shipment Orders
 ~~~~~~~~~~~~~~~
@@ -270,9 +282,11 @@ Please also note the information about `Booking additional services`_ and
   * *No*: The service will not be booked.
 
 * *Enable Preferred Day*: The customer chooses a specific day on which the shipment
-  should arrive.
+  should arrive. The available days are displayed dynamically, depending on the recipient's
+  address.
 * *Enable Preferred Time*: The customer chooses a time frame within which the
-  shipment should arrive.
+  shipment should arrive. The available times are displayed dynamically, depending on the recipient's
+  address.
 * *Preferred day / time handling additional charge (handling fee)*: This amount will
   be added to the shipping cost if the service is used. Use a decimal point, not comma.
   The gross amount must be entered here (incl. VAT). If you want to offer the service
@@ -348,7 +362,8 @@ Booking additional services
 ---------------------------
 
 The available services as well as preferred days and preferred times depend on the
-actual shipping address and country. Unusable services will be hidden in the checkout
+actual shipping address and country. The DHL Parcel Management API is used for this
+during the checkout process. Unusable services will be hidden in the checkout
 automatically.
 
 If the order contains articles which are not in stock, it won't be possible to book
@@ -643,6 +658,9 @@ a better monitoring of the execution, you can install the extension `Aoe_Schedul
 Troubleshooting
 ---------------
 
+Shipment creation
+~~~~~~~~~~~~~~~~~
+
 During the transmission of shipments to DHL, errors can occur. These are often
 caused by an invalid address or an invalid combination of additional services.
 
@@ -690,6 +708,15 @@ you want to make changes afterwards, please cancel the shipment first as describ
 in the section `Canceling a shipment`_. Then click *Create shipping label...*
 inside the same box *Shipping and tracking information*. From here on, the
 process is the same as described in `Creating a shipment`_.
+
+Addition DHL services
+~~~~~~~~~~~~~~~~~~~~~
+
+In case of problems with `Additional Services In Checkout`_ (e.g. preferred day), error messages will be
+written to a separate log file. See the notes in chapter `General settings`_. The log contains information
+for further troubleshooting.
+
+Also note the hints about `Booking additional services`_.
 
 .. raw:: pdf
 
