@@ -19,6 +19,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
+## [1.5.1] - 2018-11-28
+
+### Changed
+
+- switch to application vesion 2 with parcel management
+
+### Fixed
+
+- credential usage
+- make cache key dependend on endpoint
+- avoid infinite loop when calculating start date
+- translation configuration
+
+
 ## [1.5.0] - 2018-09-05
 
 ### Added
