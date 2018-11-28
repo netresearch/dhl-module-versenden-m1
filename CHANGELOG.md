@@ -23,14 +23,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- switch to application version 2 with parcel management
+- Switch to application version 2 with parcel management
 
 ### Fixed
 
-- credential usage
-- make cache key dependent on endpoint
-- avoid infinite loop when calculating start date
-- translation configuration
+- Credential usage
+- Make cache key dependent on endpoint
+- Avoid infinite loop when calculating start date
+- Translation configuration
 
 
 ## [1.5.0] - 2018-09-05
