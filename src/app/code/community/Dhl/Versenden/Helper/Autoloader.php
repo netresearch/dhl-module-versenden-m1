@@ -76,8 +76,7 @@ class Dhl_Versenden_Helper_Autoloader
      */
     public function loadClass($class)
     {
-        reset($this->_prefixes);
-        while (list($prefix, $baseDir) = each($this->_prefixes)) {
+        foreach($this->_prefixes as $prefix => $baseDir) {
             $len = strlen($prefix);
             if (strncmp($prefix, $class, $len) !== 0) {
                 // class does not match current namespace prefix, go on.
