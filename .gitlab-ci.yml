@@ -1,11 +1,22 @@
 image: registry.netresearch.de/magento-ci/ci-toolchain:latest
 
+services:
+  - docker:dind
+
 stages:
   - analyze
   - build
   - validate
   - deploy
 
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+variables:
+  PHPUNIT: "phpunit-4.8"
+  SHARED_PATH: "${CI_PROJECT_DIR}/build/shared"
+  VENDOR: "Dhl"
+  MODULE: "Versenden"
 phpcs:
   stage: analyze
   only:
@@ -19,16 +30,23 @@ phpcs:
             --ignore=*/Test/*,*/Tests/*,*/build/*,*/deployment/*
             ${CI_PROJECT_DIR}
 
-#phpunit:5.6:
-#  stage: analyze
-#  only:
-#  - develop
-#  - master
-#  - /^(release|hotfix)-.*$/
-#  script:
-#  - php /phpunit-6.5.phar --version
-#  - php /phpunit-5.7.phar --version
-#  - php /phpunit-4.8.phar --version
+install-php72-ce1.9.4:
+  variables:
+    PHP_VERSION: "7.2"
+    MAGENTO_TAG_VERSION: "1.9.4.0"
+  extends: .installationcheck
+
+phpunit-4.8-ce1.9.4:
+  variables:
+    PHP_VERSION: "5.6"
+    MAGENTO_TAG_VERSION: "1.9.4.0"
+  extends: .phpunit
+
+phpunit-4.8-ce1.9.3:
+  variables:
+    PHP_VERSION: "5.6"
+    MAGENTO_TAG_VERSION: "1.9.3.10"
+  extends: .phpunit
 
 package-build:
   stage: build
@@ -39,13 +57,11 @@ package-build:
     - make
     - magento-tar-to-connect build/scripts/packageconfig.php
     - mv var/connect/*.tgz ${CI_PROJECT_DIR}
-
   artifacts:
-      when: on_success
-      paths:
-        - ${CI_PROJECT_DIR}/*.zip
-        - ${CI_PROJECT_DIR}/*.tgz
-
+    when: on_success
+    paths:
+      - ${CI_PROJECT_DIR}/*.zip
+      - ${CI_PROJECT_DIR}/*.tgz
 
 package-validate:
   stage: validate
@@ -58,6 +74,48 @@ package-validate:
   dependencies:
     - package-build
 
+# Templates for jobs running PHPUnit and Integration tests
+.installationcheck:
+  stage: analyze
+  variables:
+    MAGENTO_URL: "http://test.local/"
+    VIRTUAL_HOST: "test.local"
+    MAGENTO_INSTALL_SAMPLES: "no"
+  tags:
+    - docker
+  only:
+    - develop
+    - master
+    - /^(release|hotfix)-.*$/
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - rm -rf ${SHARED_PATH}
+    - mkdir -p /tmp/project && cp -r ${CI_PROJECT_DIR} /tmp/project/  # Copy Project Dir (Extension) Outside to avoid recursive copying
+    - mkdir -p ${SHARED_PATH}
+    - cp -r -t ${SHARED_PATH} /tmp/project/${CI_PROJECT_NAME}
+    - cd ${TEST_ENV_DIR_M1} && cp .env.dist .env && echo "PROJECT_SHARED_DIR=${SHARED_PATH}" >> .env
+  script:
+    # Start Docker environment
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+    # Do Docker setup and print the logs to wait for completion
+    - docker-compose logs -f setup
+    # Process the exit code from the docker setup logs
+    - if [ -z "$(docker-compose logs --tail=0 -f setup | grep 'exited with code 0')" ]; then exit 127; fi
+  after_script:
+    - cd ${TEST_ENV_DIR_M1}
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml down --rmi local -v &> /dev/null
+
+.phpunit:
+  extends: .installationcheck
+  script:
+    # Start Docker environment
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
+    # Run Docker setup and print the logs to wait for completion
+    - docker-compose logs -f setup
+    # Process the exit code from the docker setup logs
+    - if [ -z "$(docker-compose logs --tail=0 -f setup | grep 'exited with code 0')" ]; then exit 127; fi
+    # Run PHPUnit
+    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml run phpcli ${PHPUNIT} --configuration=/var/www/html/.modman/${CI_PROJECT_NAME}/phpunit.xml
 
 github:
   stage: deploy

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/4.8/phpunit.xsd"
+         cacheTokens="true"
+         bootstrap="build/bootstrap.php">
+    <listeners>
+        <listener file="../../app/code/community/EcomDev/PHPUnit/Test/Listener.php" class="EcomDev_PHPUnit_Test_Listener" />
+    </listeners>
+    <testsuites>
+        <testsuite name="Magento Test Suite">
+            <file>../../app/code/community/EcomDev/PHPUnit/Test/Suite.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/app/code/community/Dhl/Versenden</directory>
+            <directory suffix=".php">src/lib/Dhl/Versenden</directory>
+            <exclude>
+                <directory suffix=".php">src/app/code/community/Dhl/Versenden/Test</directory>
+                <directory>src/app/code/community/Dhl/*/data</directory>
+                <directory>src/app/code/community/Dhl/*/sql</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="junit" target="var/phpunit/junit.xml"/>
+    </logging>
+</phpunit>
