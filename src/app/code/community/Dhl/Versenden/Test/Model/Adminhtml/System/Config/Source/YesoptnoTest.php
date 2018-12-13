@@ -41,7 +41,7 @@ class Dhl_Versenden_Test_Model_Adminhtml_System_Config_Source_YesoptnoTest
      */
     public function toOptionArray()
     {
-        $expected = array('No', 'Yes', 'Optional');
+        $expected = array('Disable', 'Enable', 'Enable on customers choice');
 
         $source = new Dhl_Versenden_Model_Adminhtml_System_Config_Source_Yesoptno();
         $options = $source->toOptionArray();

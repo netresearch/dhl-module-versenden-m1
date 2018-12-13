@@ -108,16 +108,21 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $telephone = '54321';
         $email = 'a@b.c';
 
-        $address = new Mage_Sales_Model_Quote_Address();
-        $address->setFirstname($firstName);
-        $address->setLastname($lastName);
-        $address->setCompany($company);
-        $address->setStreetFull($streetFull);
-        $address->setPostcode($postCode);
-        $address->setCity($city);
-        $address->setCountryId($country);
-        $address->setTelephone($telephone);
-        $address->setEmail($email);
+        $order = new Mage_Sales_Model_Order();
+        $order->setStoreId(0);
+        /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->getMock();
+        $address->method('getOrder')->willReturn($order);
+        $address->method('getFirstname')->willReturn($firstName);
+        $address->method('getLastname')->willReturn($lastName);
+        $address->method('getCompany')->willReturn($company);
+        $address->method('getStreetFull')->willReturn($streetFull);
+        $address->method('getPostcode')->willReturn($postCode);
+        $address->method('getCity')->willReturn($city);
+        $address->method('getCountryId')->willReturn($country);
+        $address->method('getTelephone')->willReturn($telephone);
+        $address->method('getEmail')->willReturn($email);
 
         $receiver = $builder->getReceiver($address);
         $this->assertSame($name, $receiver->getName1());
@@ -158,16 +163,20 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $email = 'a@b.c';
         $postNumber = '123456';
 
-        $address = new Mage_Sales_Model_Quote_Address();
-        $address->setFirstname($firstName);
-        $address->setLastname($lastName);
-        $address->setCompany($postNumber);
-        $address->setStreetFull($streetFull);
-        $address->setPostcode($postCode);
-        $address->setCity($city);
-        $address->setCountryId($country);
-        $address->setTelephone($telephone);
-        $address->setEmail($email);
+        $order = new Mage_Sales_Model_Order();
+        $order->setStoreId(0);
+        /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')->getMock();
+        $address->method('getOrder')->willReturn($order);
+        $address->method('getFirstname')->willReturn($firstName);
+        $address->method('getLastname')->willReturn($lastName);
+        $address->method('getCompany')->willReturn($postNumber);
+        $address->method('getStreetFull')->willReturn($streetFull);
+        $address->method('getPostcode')->willReturn($postCode);
+        $address->method('getCity')->willReturn($city);
+        $address->method('getCountryId')->willReturn($country);
+        $address->method('getTelephone')->willReturn($telephone);
+        $address->method('getEmail')->willReturn($email);
 
         $receiver = $builder->getReceiver($address);
         $this->assertSame($name, $receiver->getName1());
@@ -203,16 +212,20 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $email = 'a@b.c';
         $postNumber = '654321';
 
-        $address = new Mage_Sales_Model_Quote_Address();
-        $address->setFirstname($firstName);
-        $address->setLastname($lastName);
-        $address->setCompany($postNumber);
-        $address->setStreetFull($streetFull);
-        $address->setPostcode($postCode);
-        $address->setCity($city);
-        $address->setCountryId($country);
-        $address->setTelephone($telephone);
-        $address->setEmail($email);
+        $order = new Mage_Sales_Model_Order();
+        $order->setStoreId(0);
+        /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')->getMock();
+        $address->method('getOrder')->willReturn($order);
+        $address->method('getFirstname')->willReturn($firstName);
+        $address->method('getLastname')->willReturn($lastName);
+        $address->method('getCompany')->willReturn($postNumber);
+        $address->method('getStreetFull')->willReturn($streetFull);
+        $address->method('getPostcode')->willReturn($postCode);
+        $address->method('getCity')->willReturn($city);
+        $address->method('getCountryId')->willReturn($country);
+        $address->method('getTelephone')->willReturn($telephone);
+        $address->method('getEmail')->willReturn($email);
 
         $receiver = $builder->getReceiver($address);
         $this->assertSame($name, $receiver->getName1());
@@ -249,16 +262,20 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $email = 'a@b.c';
         $postNumber = '654321';
 
-        $address = new Mage_Sales_Model_Quote_Address();
-        $address->setFirstname($firstName);
-        $address->setLastname($lastName);
-        $address->setCompany($postNumber);
-        $address->setStreetFull($streetFull);
-        $address->setPostcode($postCode);
-        $address->setCity($city);
-        $address->setCountryId($country);
-        $address->setTelephone($telephone);
-        $address->setEmail($email);
+        $order = new Mage_Sales_Model_Order();
+        $order->setStoreId(0);
+        /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')->getMock();
+        $address->method('getOrder')->willReturn($order);
+        $address->method('getFirstname')->willReturn($firstName);
+        $address->method('getLastname')->willReturn($lastName);
+        $address->method('getCompany')->willReturn($postNumber);
+        $address->method('getStreetFull')->willReturn($streetFull);
+        $address->method('getPostcode')->willReturn($postCode);
+        $address->method('getCity')->willReturn($city);
+        $address->method('getCountryId')->willReturn($country);
+        $address->method('getTelephone')->willReturn($telephone);
+        $address->method('getEmail')->willReturn($email);
 
         // parcel shops are not handled by this extension
         $receiver = $builder->getReceiver($address);
