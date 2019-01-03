@@ -35,6 +35,39 @@
  */
 class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer_AbstractObserver
 {
+    /**
+     * @var Dhl_Versenden_Model_Config
+     */
+    protected $config;
+
+    /**
+     * @var Dhl_Versenden_Model_Config_Shipment
+     */
+    protected $shipmentConfig;
+
+    /**
+     * @var Dhl_Versenden_Model_Info_Builder
+     */
+    protected $infoBuilder;
+
+    /**
+     * @var Dhl_Versenden_Helper_Data
+     */
+    protected $helper;
+
+    /**
+     * Dhl_Versenden_Model_Observer_Services constructor.
+     */
+    public function __construct()
+    {
+        $this->config = Mage::getModel('dhl_versenden/config');
+        $this->shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
+        $this->infoBuilder = Mage::getModel('dhl_versenden/info_builder');
+        $this->helper = Mage::helper('dhl_versenden/data');
+
+        parent::__construct();
+    }
+
 
     /**
      * Append the service selection form elements to the opc shipping method form.
@@ -44,17 +77,17 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
      */
     public function appendServices(Varien_Event_Observer $observer)
     {
+        if (!$this->config->isActive()) {
+            return;
+        }
+
+        /** @var Mage_Checkout_Block_Onepage_Shipping_Method_Available $block */
         $block = $observer->getData('block');
         if (!$block instanceof Mage_Checkout_Block_Onepage_Shipping_Method_Available) {
             return;
         }
 
-        /** @var Dhl_Versenden_Model_Config $configModel */
-        $configModel = Mage::getModel('dhl_versenden/config');
-        if (!$configModel->isActive()) {
-            return;
-        }
-
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $serviceBlock */
         $serviceBlock = Mage::app()->getLayout()->createBlock(
             'dhl_versenden/checkout_onepage_shipping_method_service',
             'dhl_versenden_service',
@@ -79,34 +112,25 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
     {
         $block = $observer->getData('block');
         if (!$block instanceof Mage_Checkout_Block_Onepage_Progress
-            || $block->getLayout()->getUpdate()->getHandles()[0] != 'checkout_onepage_progress_shipping_method'
+            || $block->getLayout()->getUpdate()->getHandles()[0] !== 'checkout_onepage_progress_shipping_method'
         ) {
             return;
         }
 
-        $versendenInfo = Mage::getSingleton('checkout/session')
-            ->getQuote()
-            ->getShippingAddress()
-            ->getData('dhl_versenden_info');
+        $transport     = $observer->getData('transport');
+        $transportHtml = trim($transport->getHtml());
 
-        if ($versendenInfo) {
-            $serializer    = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
-            $versendenInfo = $serializer->unserialize($versendenInfo);
-            $transport     = $observer->getData('transport');
-            $transportHtml = trim($transport->getHtml());
+        /** @var Dhl_Versenden_Block_Config_Service $block */
+        $block = Mage::app()
+            ->getLayout()
+            ->createBlock(
+                'dhl_versenden/config_service',
+                'dhl_services',
+                array('template' => 'dhl_versenden/config/services.phtml')
+            );
 
-            $block = Mage::app()
-                ->getLayout()
-                ->createBlock(
-                    'dhl_versenden/config_service',
-                    'dhl_services',
-                    array('template' => 'dhl_versenden/config/services.phtml')
-                );
-            $block->setData('services', $versendenInfo->getServices());
-
-            $html = str_replace('</dd>', $block->toHtml() . '</dd>', $transportHtml);
-            $transport->setHtml($html);
-        }
+        $html = str_replace('</dd>', $block->toHtml() . '</dd>', $transportHtml);
+        $transport->setHtml($html);
     }
 
     /**
@@ -124,15 +148,13 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
         $quote           = $observer->getQuote();
         $shippingAddress = $quote->getShippingAddress();
 
-        $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
-        if (!$shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
+        if (!$this->shipmentConfig->canProcessMethod($shippingAddress->getShippingMethod())) {
             // customer selected a shipping method not to be processed via DHL Versenden
             return;
         }
 
         /** @var Mage_Core_Controller_Request_Http $request */
         $request       = $observer->getRequest();
-        $infoBuilder   = Mage::getModel('dhl_versenden/info_builder');
         $serviceInfo   = array(
             'shipment_service' => $request->getPost('shipment_service', array()),
             'service_setting'  => $request->getPost('service_setting', array()),
@@ -143,7 +165,7 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
             $shippingAddress->setData('email', $quote->getBillingAddress()->getData('email'));
         }
 
-        $versendenInfo = $infoBuilder->infoFromSales($shippingAddress, $serviceInfo, $quote->getStoreId());
+        $versendenInfo = $this->infoBuilder->infoFromSales($shippingAddress, $serviceInfo, $quote->getStoreId());
 
         $shippingAddress->setData('dhl_versenden_info', $versendenInfo);
     }
@@ -154,22 +176,19 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
      */
     public function validateLocationDetails(Varien_Event_Observer $observer)
     {
+        /** @var Mage_Shipping_Model_Shipment_Request[] $requests */
         $requests = $observer->getEvent()->getData('shipment_requests');
-        foreach ($requests as $requset) {
-            /**
-             * @var Mage_Shipping_Model_Shipment_Request
-             */
-            $services = $requset->getData('services');
+        foreach ($requests as $request) {
+            $services = $request->getData('services');
             $serviceSettings = $services['service_setting'];
             $keys = array(
                 \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE,
                 \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE
             );
-        }
-
-        foreach ($keys as $key) {
-            if (array_key_exists($key, $serviceSettings)) {
-                $this->checkValue($serviceSettings[$key], $key);
+            foreach ($keys as $key) {
+                if (array_key_exists($key, $serviceSettings)) {
+                    $this->checkValue($serviceSettings[$key], $key);
+                }
             }
         }
     }
@@ -191,8 +210,8 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
 
         if (!empty($matchWords) || !empty($matchSpecialChars)) {
             $hint = ucfirst(strtolower(preg_replace('/(?=[A-Z])/', '$1 $2', $key)));
-            $msg = Mage::helper('dhl_versenden/data')->__($hint);
-            $msg .= ': ' . Mage::helper('dhl_versenden/data')->__('Your input is invalid');
+            $msg = $this->helper->__($hint);
+            $msg .= ': ' . $this->helper->__('Your input is invalid');
             Mage::throwException($msg);
         }
     }

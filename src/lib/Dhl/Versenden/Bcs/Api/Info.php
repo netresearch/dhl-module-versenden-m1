@@ -38,11 +38,19 @@ class Info extends Info\AbstractInfo
 {
     const SCHEMA_VERSION = '1.0';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     public $schemaVersion;
-    /** @var Info\Receiver */
+
+    /**
+     * @var Info\Receiver
+     */
     public $receiver;
-    /** @var Info\Services */
+
+    /**
+     * @var Info\Services
+     */
     public $services;
 
     /**
@@ -93,6 +101,9 @@ class Info extends Info\AbstractInfo
         return $info;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return Info\Serializer::serialize($this);

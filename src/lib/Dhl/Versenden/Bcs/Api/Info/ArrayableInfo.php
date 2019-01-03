@@ -61,7 +61,7 @@ abstract class ArrayableInfo extends AbstractInfo implements ArrayableInterface
     protected static function underscore($propertyName)
     {
         // separate
-        $propertyName = preg_replace('/(.)([A-Z])/', "$1_$2", $propertyName);
+        $propertyName = preg_replace('/(.)([A-Z])/', '$1_$2', $propertyName);
         // convert to lower case
         $propertyName = strtolower($propertyName);
 
@@ -77,9 +77,8 @@ abstract class ArrayableInfo extends AbstractInfo implements ArrayableInterface
         $getter = function ($value) use ($underscoreKeys) {
             if ($value instanceof ArrayableInterface) {
                 return $value->toArray($underscoreKeys);
-            } else {
-                return $value;
             }
+            return $value;
         };
 
         $keysMapper = function ($key) {
