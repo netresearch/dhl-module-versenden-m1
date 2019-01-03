@@ -57,25 +57,19 @@ class Dhl_Versenden_Model_Services_Startdate
         $isWdAv = $this->isAvailable($date, $noDropOffDays);
 
         if ($isInCt && $isWdAv) {
-            $startdate = $date;
-        } else {
-            $end = 2;
-            for ($i = 1; $i < $end; $i++) {
-                if ($i > 7) {
-                    Mage::throwException('No valid start date found within next week.');
-                }
-
-                $datetime = new DateTime($date);
-                $tmpDate = $datetime->add(new DateInterval("P{$i}D"));
-                $nextPossibleDay = $tmpDate->format($timeformat);
-                $isAvailble = $this->isAvailable($nextPossibleDay, $noDropOffDays);
-                $isAvailble ? $end-- : $end++;
-            }
-
-            $startdate = $nextPossibleDay;
+            return $date;
         }
 
-        return $startdate;
+        for ($i = 1; $i < 8; $i++) {
+            $datetime = new DateTime($date);
+            $tmpDate = $datetime->add(new DateInterval("P{$i}D"));
+            $nextPossibleDay = $tmpDate->format($timeformat);
+            if ($this->isAvailable($nextPossibleDay, $noDropOffDays)) {
+                return $nextPossibleDay;
+            }
+        }
+
+        Mage::throwException('No valid start date found within next week.');
     }
 
     /**

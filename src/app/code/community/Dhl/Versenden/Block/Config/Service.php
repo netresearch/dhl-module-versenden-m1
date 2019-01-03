@@ -47,6 +47,43 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
     );
 
     /**
+     * @var Mage_Core_Model_Date
+     */
+    protected $coreDate;
+
+    /**
+     * @var Dhl_Versenden_Helper_Data
+     */
+    protected $helper;
+
+    /**
+     * @var Dhl_Versenden_Model_Config_Service
+     */
+    protected $serviceConfig;
+
+    /**
+     * @var Dhl_Versenden_Model_Config_Shipment $shipmentConfig
+     */
+    protected $shipmentConfig;
+
+    /**
+     * Dhl_Versenden_Block_Config_Service constructor.
+     *
+     * @param mixed[] $args
+     */
+    public function __construct(array $args = array())
+    {
+        $this->coreDate = Mage::getSingleton('core/date');
+        $this->helper = Mage::helper('dhl_versenden/data');
+        $this->serviceConfig = Mage::getModel('dhl_versenden/config_service');
+        $this->shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
+
+        parent::__construct($args);
+
+        $this->setData('services', $this->loadServices());
+    }
+
+    /**
      * @param string $nameKey
      * @return string
      */
@@ -61,12 +98,9 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      */
     public function renderDate($value)
     {
-        /** @var Mage_Core_Model_Date $dateModel */
-        $dateModel = Mage::getSingleton('core/date');
-
-        $formatedDate = $dateModel->date("d.m.Y", $value);
+        $formatedDate = $this->coreDate->date("d.m.Y", $value);
         if (strpos(Mage::app()->getLocale()->getLocaleCode(), 'de_') === false) {
-            $formatedDate = $dateModel->date("d/m/Y", $value);
+            $formatedDate = $this->coreDate->date("d/m/Y", $value);
         }
 
         return $formatedDate;
@@ -85,7 +119,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $timeValues = str_split($value, 2);
         $result     = $timeValues[0] . ' - ' . $timeValues[2];
 
-        return Mage::helper('dhl_versenden/data')->__($result);
+        return $this->helper->__($result);
     }
 
     /**
@@ -93,10 +127,9 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      *
      * @return bool
      */
-    public function isServiceSelected()
+    public function isAnyServiceSelected()
     {
-        $services          = $this->getData('services');
-        $servicesArray     = $services->toArray();
+        $servicesArray     = $this->getServices()->toArray();
         $filteredServices  = array_filter($servicesArray);
 
         return count($filteredServices) > 0;
@@ -107,20 +140,18 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      */
     public function renderFeeText()
     {
-        $services = $this->getData('services');
-        /** @var Dhl_Versenden_Model_Config_Service $config */
-        $config = Mage::getModel('dhl_versenden/config_service');
+        $services = $this->getServices();
         $fee = 0;
         $text = '';
         $isCombined = false;
 
         if ($services->preferredDay && $services->preferredTime) {
-            $fee = $config->getPrefDayAndTimeFee();
+            $fee = $this->serviceConfig->getPrefDayAndTimeFee();
             $isCombined = true;
         } elseif ($services->preferredDay) {
-            $fee = $config->getPrefDayFee();
+            $fee = $this->serviceConfig->getPrefDayFee();
         } elseif ($services->preferredTime) {
-            $fee = $config->getPrefTimeFee();
+            $fee = $this->serviceConfig->getPrefTimeFee();
         }
 
         if ($fee > 0) {
@@ -137,15 +168,45 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      */
     protected function getFeetext($isCombined, $fee)
     {
-        /** @var Dhl_Versenden_Helper_Data $helper */
-        $helper = Mage::helper('dhl_versenden/data');
-        $default = $helper->__('(The cost of %s for %s already included in the delivery costs.)');
-        $formattedFee = Mage::helper('core')->currency($fee, true, false);
+        $default = $this->helper->__('(The cost of %s for %s already included in the delivery costs.)');
+        $formattedFee = Mage_Core_Helper_Data::currency($fee, true, false);
 
         $service = $isCombined ?
-            $helper->__('your preferred delivery options') :
-            $helper->__('your preferred delivery option');
+            $this->helper->__('your preferred delivery options') :
+            $this->helper->__('your preferred delivery option');
 
         return sprintf($default, $formattedFee, $service);
+    }
+
+    /**
+     * @return array|\Dhl\Versenden\Bcs\Api\Info\Services
+     */
+    protected function loadServices()
+    {
+        /** @var Mage_Sales_Model_Quote $quote */
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingMethod = $shippingAddress->getShippingMethod();
+
+        if (!$this->shipmentConfig->canProcessMethod($shippingMethod, $quote->getStoreId())) {
+            return array();
+        }
+
+        /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
+        $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
+        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
+            $dhlVersendenInfo = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($dhlVersendenInfo);
+        }
+
+        return $dhlVersendenInfo->getServices();
+    }
+
+
+    /**
+     * @return Dhl\Versenden\Bcs\Api\Info\Services|array
+     */
+    public function getServices()
+    {
+        return $this->getData('services');
     }
 }
