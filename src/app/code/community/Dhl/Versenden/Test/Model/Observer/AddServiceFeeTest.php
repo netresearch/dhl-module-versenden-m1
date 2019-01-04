@@ -39,7 +39,6 @@ class Dhl_Versenden_Test_Model_Observer_AddServiceFeeTest
 
     protected function setUp()
     {
-
         parent::setUp();
         $coreSessionMock = $this
             ->getMockBuilder('Mage_Core_Model_Session')

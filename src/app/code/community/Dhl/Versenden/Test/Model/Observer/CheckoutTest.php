@@ -33,17 +33,29 @@ use \Dhl\Versenden\Bcs\Api\Shipment\Service;
  * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link     http://www.netresearch.de/
  */
-class Dhl_Versenden_Test_Model_Observer_CheckoutTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Test_Case
 {
+
+    public function setUp()
+    {
+        $mockQuote = $this->getModelMockBuilder('sales/quote')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockSession = $this->getModelMockBuilder('customer/session')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $mockSession->method('getQuote')->willReturn($mockQuote);
+        $this->replaceByMock('singleton', 'customer/session', $mockSession);
+
+        parent::setUp();
+    }
+
     /**
      * @test
      * @loadFixture Model_ConfigTest
      */
     public function appendServices()
     {
-        $this::markTestIncomplete('This might be broken because it triggers session_start()');
-
         $this->setCurrentStore('store_two');
         $serviceBlockHtml = 'checkout-dhlversenden-services';
 
@@ -129,7 +141,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $this->setCurrentStore('store_two');
 
         /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
-        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+        $observerMock = $this->getMockBuilder('Varien_Event_Observer')
             ->setMethods(array('getTransport'))
             ->getMock();
         $observerMock
@@ -156,7 +168,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $parcelAnnouncement = 'parcelAnnouncement';
 
         // two settings, only one actually enabled
-        $requestMock = $this->getMockBuilder(Mage_Core_Controller_Request_Http::class)
+        $requestMock = $this->getMockBuilder('Mage_Core_Controller_Request_Http')
             ->setMethods(array('getPost'))
             ->getMock();
         $requestMock
@@ -174,7 +186,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
             );
 
         /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
-        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+        $observerMock = $this->getMockBuilder('Varien_Event_Observer')
             ->setMethods(array('getRequest'))
             ->getMock();
         $observerMock
@@ -195,7 +207,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
 
         /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
         $versendenInfo = $quote->getShippingAddress()->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
+        $this->assertInstanceOf('\Dhl\Versenden\Bcs\Api\Info', $versendenInfo);
         $this->assertTrue($versendenInfo->getServices()->parcelAnnouncement);
         $this->assertNull($versendenInfo->getServices()->preferredNeighbour);
         $this->assertEquals($addressCompany, $versendenInfo->getReceiver()->name2);
@@ -214,7 +226,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest
         $quote = Mage::getModel('sales/quote')->load(100);
 
         /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
-        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
+        $observerMock = $this->getMockBuilder('Varien_Event_Observer')
             ->setMethods(array('getRequest'))
             ->getMock();
         $observerMock
