@@ -38,6 +38,7 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
 {
     protected function setUp()
     {
+        parent::setUp();
         // load layout
         Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_address_form', 'dhl_versenden_form');
 

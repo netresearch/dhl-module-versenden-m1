@@ -42,9 +42,11 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function constructorArgCountryDirectoryMissing()
     {
-        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
-            'helper' => Mage::helper('dhl_versenden/data')
-        ));
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver(
+            array(
+                'helper' => Mage::helper('dhl_versenden/data')
+            )
+        );
     }
 
     /**
@@ -53,10 +55,12 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
      */
     public function constructorArgCountryDirectoryWrongType()
     {
-        new Dhl_Versenden_Model_Webservice_Builder_Receiver(array(
-            'country_directory' => new stdClass(),
-            'helper' => Mage::helper('dhl_versenden/data')
-        ));
+        new Dhl_Versenden_Model_Webservice_Builder_Receiver(
+            array(
+                'country_directory' => new stdClass(),
+                'helper' => Mage::helper('dhl_versenden/data')
+            )
+        );
     }
 
     /**
@@ -112,6 +116,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
         $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
             ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
@@ -125,18 +130,19 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getEmail')->willReturn($email);
 
         $receiver = $builder->getReceiver($address);
-        $this->assertSame($name, $receiver->getName1());
-        $this->assertSame($company, $receiver->getName2());
-        $this->assertSame($streetName, $receiver->getStreetName());
-        $this->assertSame($streetNumber, $receiver->getStreetNumber());
-        $this->assertSame($postCode, $receiver->getZip());
-        $this->assertSame($city, $receiver->getCity());
-        $this->assertSame($country, $receiver->getCountryISOCode());
-        $this->assertSame($telephone, $receiver->getPhone());
-        $this->assertSame($email, $receiver->getEmail());
-        $this->assertNull($receiver->getPackstation());
-        $this->assertNull($receiver->getPostfiliale());
-        $this->assertNull($receiver->getParcelShop());
+        $this::assertSame($name, $receiver->getName1(), 'First name does not match');
+        $this::assertSame($company, $receiver->getName2(), 'Last name does not match');
+        $this::assertSame($streetName, $receiver->getStreetName(), 'Street name does not match');
+        $this::assertSame($streetNumber, $receiver->getStreetNumber(), 'Street number does not match');
+        $this::assertSame($postCode, $receiver->getZip(), 'ZIP code does not match');
+        $this::assertSame($city, $receiver->getCity(), 'City does not match');
+        $this::assertSame($country, $receiver->getCountryISOCode(), 'Country ISO does not match');
+        /** Phone number is only set when Config::SENDRECEIVERPHONE is true. */
+        $this::assertEmpty($receiver->getPhone(), 'Phone should not be set by default');
+        $this::assertSame($email, $receiver->getEmail(), 'Email does not match');
+        $this::assertNull($receiver->getPackstation(), 'Packstation is not null');
+        $this::assertNull($receiver->getPostfiliale(), 'Postfiliale is not null');
+        $this::assertNull($receiver->getParcelShop(), 'Parcel shop is not null');
     }
 
     /**
@@ -148,6 +154,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
             'country_directory' => Mage::getModel('directory/country'),
             'helper' => Mage::helper('dhl_versenden/address')
         );
+
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
@@ -166,7 +173,9 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order = new Mage_Sales_Model_Order();
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
-        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')->getMock();
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
         $address->method('getLastname')->willReturn($lastName);
@@ -179,14 +188,14 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getEmail')->willReturn($email);
 
         $receiver = $builder->getReceiver($address);
-        $this->assertSame($name, $receiver->getName1());
-        $this->assertNotNull($receiver->getPackstation());
-        $this->assertSame($streetNumber, $receiver->getPackstation()->getPackstationNumber());
-        $this->assertSame($postNumber, $receiver->getPackstation()->getPostNumber());
-        $this->assertSame($postCode, $receiver->getPackstation()->getZip());
-        $this->assertSame($city, $receiver->getPackstation()->getCity());
-        $this->assertNull($receiver->getPostfiliale());
-        $this->assertNull($receiver->getParcelShop());
+        $this::assertSame($name, $receiver->getName1());
+        $this::assertNotNull($receiver->getPackstation());
+        $this::assertSame($streetNumber, $receiver->getPackstation()->getPackstationNumber());
+        $this::assertSame($postNumber, $receiver->getPackstation()->getPostNumber());
+        $this::assertSame($postCode, $receiver->getPackstation()->getZip());
+        $this::assertSame($city, $receiver->getPackstation()->getCity());
+        $this::assertNull($receiver->getPostfiliale());
+        $this::assertNull($receiver->getParcelShop());
     }
     /**
      * @test
@@ -215,7 +224,9 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order = new Mage_Sales_Model_Order();
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
-        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')->getMock();
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
         $address->method('getLastname')->willReturn($lastName);
@@ -228,14 +239,14 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getEmail')->willReturn($email);
 
         $receiver = $builder->getReceiver($address);
-        $this->assertSame($name, $receiver->getName1());
-        $this->assertNotNull($receiver->getPostfiliale());
-        $this->assertSame($streetNumber, $receiver->getPostfiliale()->getPostfilialNumber());
-        $this->assertSame($postNumber, $receiver->getPostfiliale()->getPostNumber());
-        $this->assertSame($postCode, $receiver->getPostfiliale()->getZip());
-        $this->assertSame($city, $receiver->getPostfiliale()->getCity());
-        $this->assertNull($receiver->getPackstation());
-        $this->assertNull($receiver->getParcelShop());
+        $this::assertSame($name, $receiver->getName1());
+        $this::assertNotNull($receiver->getPostfiliale());
+        $this::assertSame($streetNumber, $receiver->getPostfiliale()->getPostfilialNumber());
+        $this::assertSame($postNumber, $receiver->getPostfiliale()->getPostNumber());
+        $this::assertSame($postCode, $receiver->getPostfiliale()->getZip());
+        $this::assertSame($city, $receiver->getPostfiliale()->getCity());
+        $this::assertNull($receiver->getPackstation());
+        $this::assertNull($receiver->getParcelShop());
     }
 
     /**
@@ -265,7 +276,9 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order = new Mage_Sales_Model_Order();
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
-        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')->getMock();
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
         $address->method('getLastname')->willReturn($lastName);
@@ -279,9 +292,9 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
 
         // parcel shops are not handled by this extension
         $receiver = $builder->getReceiver($address);
-        $this->assertSame($name, $receiver->getName1());
-        $this->assertNull($receiver->getParcelShop());
-        $this->assertNull($receiver->getPackstation());
-        $this->assertNull($receiver->getPostfiliale());
+        $this::assertSame($name, $receiver->getName1());
+        $this::assertNull($receiver->getParcelShop());
+        $this::assertNull($receiver->getPackstation());
+        $this::assertNull($receiver->getPostfiliale());
     }
 }
