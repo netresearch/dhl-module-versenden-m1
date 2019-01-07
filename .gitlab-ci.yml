@@ -5,18 +5,18 @@ services:
 
 stages:
   - analyze
+  - test
   - build
   - validate
   - deploy
-
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 variables:
   PHPUNIT: "phpunit-4.8"
   SHARED_PATH: "${CI_PROJECT_DIR}/build/shared"
   VENDOR: "Dhl"
   MODULE: "Versenden"
+  MAGENTO_ENVIRONMENT_VERSION: "1" # "1" or "2"
+
 phpcs:
   stage: analyze
   only:
@@ -24,25 +24,24 @@ phpcs:
     - master
     - /^(release|hotfix)-.*$/
   script:
-    - phpcs --standard=MEQP1
-            --severity=10
-            --extensions=php,phtml
-            --ignore=*/Test/*,*/Tests/*,*/build/*,*/deployment/*
-            ${CI_PROJECT_DIR}
+  - ci-analyze
 
 install-php72-ce1.9.4:
+  stage: test
   variables:
     PHP_VERSION: "7.2"
     MAGENTO_TAG_VERSION: "1.9.4.0"
   extends: .installationcheck
 
 phpunit-4.8-ce1.9.4:
+  stage: test
   variables:
     PHP_VERSION: "5.6"
     MAGENTO_TAG_VERSION: "1.9.4.0"
   extends: .phpunit
 
 phpunit-4.8-ce1.9.3:
+  stage: test
   variables:
     PHP_VERSION: "5.6"
     MAGENTO_TAG_VERSION: "1.9.3.10"
@@ -69,8 +68,7 @@ package-validate:
     - master
     - /^(release|hotfix)-.*$/
   script:
-    # Not implemented yet. Should use "mage install-file ${MODULE_NAME}-${MODULE_VERSION}.tar"
-    - echo "Not implemented yet."
+    - ci-validate
   dependencies:
     - package-build
 
@@ -88,34 +86,19 @@ package-validate:
     - master
     - /^(release|hotfix)-.*$/
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - rm -rf ${SHARED_PATH}
-    - mkdir -p /tmp/project && cp -r ${CI_PROJECT_DIR} /tmp/project/  # Copy Project Dir (Extension) Outside to avoid recursive copying
-    - mkdir -p ${SHARED_PATH}
-    - cp -r -t ${SHARED_PATH} /tmp/project/${CI_PROJECT_NAME}
-    - cd ${TEST_ENV_DIR_M1} && cp .env.dist .env && echo "PROJECT_SHARED_DIR=${SHARED_PATH}" >> .env
+    - ci-install-before
   script:
-    # Start Docker environment
-    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
-    # Do Docker setup and print the logs to wait for completion
-    - docker-compose logs -f setup
-    # Process the exit code from the docker setup logs
-    - if [ -z "$(docker-compose logs --tail=0 -f setup | grep 'exited with code 0')" ]; then exit 127; fi
+    - ci-install
   after_script:
-    - cd ${TEST_ENV_DIR_M1}
-    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml down --rmi local -v &> /dev/null
+    - ci-install-after
 
 .phpunit:
   extends: .installationcheck
   script:
     # Start Docker environment
-    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml up -d
-    # Run Docker setup and print the logs to wait for completion
-    - docker-compose logs -f setup
-    # Process the exit code from the docker setup logs
-    - if [ -z "$(docker-compose logs --tail=0 -f setup | grep 'exited with code 0')" ]; then exit 127; fi
+    - ci-install
     # Run PHPUnit
-    - docker-compose -f docker-compose.yml -f docker-compose.ci.yml run phpcli ${PHPUNIT} --configuration=/var/www/html/.modman/${CI_PROJECT_NAME}/phpunit.xml
+    - ci-docker-run "${PHPUNIT} --configuration=/var/www/html/.modman/${CI_PROJECT_NAME}/phpunit.xml"
 
 github:
   stage: deploy
