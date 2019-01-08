@@ -36,6 +36,22 @@
 class Dhl_Versenden_Test_Block_Config_ServiceTest
     extends EcomDev_PHPUnit_Test_Case
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        /**
+         * Mock session to avoid "headers already sent" errors.
+         */
+        $quote = Mage::getModel('sales/quote');
+        $payment = Mage::getModel('sales/quote_payment');
+        $quote->setData('payment', $payment);
+        $sessionMock = $this->getModelMock('checkout/session', array('getQuote', 'start'));
+        $sessionMock->method('getQuote')
+                    ->willReturn($quote);
+        $this->replaceByMock('singleton', 'checkout/session', $sessionMock);
+    }
+
     /**
      * @test
      */
@@ -52,6 +68,5 @@ class Dhl_Versenden_Test_Block_Config_ServiceTest
         $result = $serviceBlock->renderTime($value);
 
         $this->assertNotEquals('19 - 21', $result);
-
     }
 }
