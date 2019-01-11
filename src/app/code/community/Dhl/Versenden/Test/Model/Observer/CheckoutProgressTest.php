@@ -41,7 +41,13 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         parent::setUp();
 
         $this->setCurrentStore('store_two');
+
         Mage::app()->getLayout()->getUpdate()->resetHandles();
+
+        $baseCurrencyCode = 'USD';
+        $currency = Mage::getModel('directory/currency')->load($baseCurrencyCode);
+        Mage::app()->getStore()->setData('current_currency', $currency);
+        Mage::app()->getStore()->setData('base_currency', $currency);
 
         $quote = Mage::getModel('sales/quote');
         $shippingAddress = Mage::getModel('sales/quote_address');

@@ -23,7 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+
 /**
  * Dhl_Versenden_Test_Model_Observer_CheckoutTest
  *
@@ -60,12 +60,12 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $serviceBlockHtml = 'checkout-dhlversenden-services';
 
         $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
-        $blockMock = $this->getBlockMock(
-            $blockType,
-            array('renderView'),
-            false,
-            array(array('template' => 'dhl_versenden/checkout/shipping_services.phtml'))
-        );
+
+        $blockMock = $this->getBlockMock($blockType, array('getTemplate', 'renderView'), false, array(), '', false);
+        $blockMock
+            ->expects($this->any())
+            ->method('getTemplate')
+            ->willReturn('dhl_versenden/checkout/shipping_services.phtml');
         $blockMock
             ->expects($this->any())
             ->method('renderView')
