@@ -106,7 +106,7 @@ abstract class Person extends RequestData
         $this->validateLength('Country ISO Code', $countryISOCode, 2, 2);
         $this->validateLength('Region', $state, 0, 30);
         $this->validateLength('Phone', $phone, 0, 20);
-        $this->validateLength('E-Mail', $email, 0, 50);
+        $this->validateLength('E-Mail', $email, 0, 70);
         $this->validateLength('Contact Person', $contactPerson, 0, 50);
 
         $this->name1 = $name1;
