@@ -129,7 +129,8 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      */
     public function isAnyServiceSelected()
     {
-        $servicesArray     = $this->getServices()->toArray();
+        $services = $this->getServices();
+        $servicesArray     = is_array($services) ? $services : $services->toArray();
         $filteredServices  = array_filter($servicesArray);
 
         return count($filteredServices) > 0;
