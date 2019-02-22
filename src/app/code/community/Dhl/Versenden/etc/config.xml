@@ -386,13 +386,13 @@
                 <parcelmanagement_sandbox_endpoint>https://cig.dhl.de/services/sandbox/rest</parcelmanagement_sandbox_endpoint>
 
                 <service_preferredday_enabled>1</service_preferredday_enabled>
-                <service_preferredday_handling_fee>1.20</service_preferredday_handling_fee>
+                <service_preferredday_handling_fee>0.99</service_preferredday_handling_fee>
                 <service_preferredday_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredday_handling_fee_text>
                 <service_preferredtime_enabled>1</service_preferredtime_enabled>
-                <service_preferredtime_handling_fee>4.80</service_preferredtime_handling_fee>
+                <service_preferredtime_handling_fee>3.99</service_preferredtime_handling_fee>
                 <service_preferredtime_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredtime_handling_fee_text>
                 <service_cutoff_time>13,00,00</service_cutoff_time>
-                <service_perferreddayandtime_handling_fee>4.80</service_perferreddayandtime_handling_fee>
+                <service_perferreddayandtime_handling_fee>3.99</service_perferreddayandtime_handling_fee>
                 <service_perferreddayandtime_handling_fee_text>*Bei einer Kombinationsbuchung von Wunschtag und Wunschzeit fällt zu den Versandkosten ein Gesamtaufpreis von $1 inkl. MwSt. an.</service_perferreddayandtime_handling_fee_text>
             </dhlversenden>
         </carriers>
