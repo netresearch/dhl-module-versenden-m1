@@ -604,6 +604,20 @@ the DHL labels which are already stored in Magento®.
 To create *new* DHL shipments and labels, please follow the instructions in the
 section `Mass action`_.
 
+Printing a return slip
+----------------------
+
+When shipping within Germany (DE → DE), within Austria (AT → AT), or from Austria to
+Germany (AT → DE), it is possible to create a return slip together with the shipping label.
+
+Use the option *Return shipment* when requesting a label in the packaging popup.
+
+To book this service, make sure the participation numbers for returns are properly configured:
+
+* Retoure DHL Paket (DE → DE)
+* Retoure DHL Paket Austria (AT → AT)
+* Retoure DHL Paket Connect (AT → DE)
+
 Canceling a shipment
 --------------------
 
