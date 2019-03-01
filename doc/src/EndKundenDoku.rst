@@ -627,6 +627,20 @@ sondern lediglich die bereits in Magento® gespeicherten DHL-Label abgerufen wer
 Zur Erstellung von *neuen* DHL-Aufträgen und Labeln gehen Sie bitte wie unter
 Massenaktion_ beschrieben vor.
 
+Erstellen eines Retouren-Beilegers
+----------------------------------
+
+Bei Versand innerhalb Deutschlands (DE → DE), innerhalb Österreichs (AT → AT) oder
+von Österreich nach Deutschland (AT → DE) ist es möglich, gemeinsam mit dem Paketaufkleber
+einen Retouren-Beileger zu beauftragen.
+
+Nutzen Sie dafür beim Erstellen des Labels im Popup das Auswahlfeld *Retouren-Beileger*.
+Stellen Sie sicher, dass die Teilnahmenummern für Retouren korrekt konfiguriert sind:
+
+* Retoure DHL Paket (DE → DE)
+* Retoure DHL Paket Austria (AT → AT)
+* Retoure DHL Paket Connect (AT → DE)
+
 Stornieren eines Versandauftrags
 --------------------------------
 

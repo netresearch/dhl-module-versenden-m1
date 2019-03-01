@@ -115,6 +115,7 @@ class Filter
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
+                ReturnShipment::CODE,
             ],
             Product::CODE_PAKET_CONNECT => [
                 BulkyGoods::CODE,
@@ -122,6 +123,7 @@ class Filter
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
                 PrintOnlyIfCodeable::CODE,
+                ReturnShipment::CODE,
             ],
             Product::CODE_PAKET_INTERNATIONAL => [
                 BulkyGoods::CODE,
