@@ -147,7 +147,8 @@ class Product
             return static::getCodesDeToEu();
         }
 
-        if ($shipperCountry == 'AT' && in_array($recipientCountry, $euCountries)) {
+        $supportedEUCountriesForAT = array('DE','BE','LU','NL','PL','SK','CZ');
+        if ($shipperCountry == 'AT' && in_array($recipientCountry, $supportedEUCountriesForAT, true)) {
             return static::getCodesAtToEu();
         }
 
