@@ -52,15 +52,15 @@ abstract class ShipmentLabel extends Shipment implements Parser
             $state->getLabelData()->getStatus()->getStatusMessage()
         );
 
+        $data = $state->getLabelData();
         $label = new ResponseData\CreateShipment\Label(
             $labelStatus,
             $state->getSequenceNumber(),
-            $state->getLabelData()->getLabelData(),
-            $state->getLabelData()->getReturnLabelData(),
-            $state->getLabelData()->getExportLabelData(),
-            $state->getLabelData()->getCodLabelData()
+            $data->getLabelData() ? base64_decode($data->getLabelData()) : $data->getLabelData(),
+            $data->getReturnLabelData() ? base64_decode($data->getReturnLabelData()) : $data->getReturnLabelData(),
+            $data->getExportLabelData() ? base64_decode($data->getExportLabelData()) : $data->getExportLabelData(),
+            $data->getCodLabelData() ? base64_decode($data->getCodLabelData()) : $data->getCodLabelData()
         );
-
         return $label;
     }
 }

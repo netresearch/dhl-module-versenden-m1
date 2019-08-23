@@ -60,8 +60,13 @@ class Label
      * @param string $exportLabel
      * @param string $codLabel
      */
-    public function __construct(CreationState $status, $sequenceNumber, $label,
-                                $returnLabel = null, $exportLabel = null, $codLabel = null
+    public function __construct(
+        CreationState $status,
+        $sequenceNumber,
+        $label,
+        $returnLabel = null,
+        $exportLabel = null,
+        $codLabel = null
     ) {
         $this->status = $status;
         $this->sequenceNumber = $sequenceNumber;

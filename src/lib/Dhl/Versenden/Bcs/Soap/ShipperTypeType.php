@@ -23,13 +23,11 @@ class ShipperTypeType
     /**
      * @param NameType $Name
      * @param NativeAddressType $Address
-     * @param CommunicationType $Communication
      */
-    public function __construct($Name, $Address, $Communication)
+    public function __construct($Name, $Address)
     {
       $this->Name = $Name;
       $this->Address = $Address;
-      $this->Communication = $Communication;
     }
 
     /**

@@ -11,6 +11,16 @@ class CreationState
     protected $sequenceNumber = null;
 
     /**
+     * @var shipmentNumber $shipmentNumber
+     */
+    protected $shipmentNumber = null;
+
+    /**
+     * @var returnShipmentNumber $returnShipmentNumber
+     */
+    protected $returnShipmentNumber = null;
+
+    /**
      * @var LabelData $LabelData
      */
     protected $LabelData = null;
@@ -40,6 +50,42 @@ class CreationState
     public function setSequenceNumber($sequenceNumber)
     {
       $this->sequenceNumber = $sequenceNumber;
+      return $this;
+    }
+
+    /**
+     * @return shipmentNumber
+     */
+    public function getShipmentNumber()
+    {
+      return $this->shipmentNumber;
+    }
+
+    /**
+     * @param shipmentNumber $shipmentNumber
+     * @return \Dhl\Versenden\Bcs\Soap\CreationState
+     */
+    public function setShipmentNumber($shipmentNumber)
+    {
+      $this->shipmentNumber = $shipmentNumber;
+      return $this;
+    }
+
+    /**
+     * @return returnShipmentNumber
+     */
+    public function getReturnShipmentNumber()
+    {
+      return $this->returnShipmentNumber;
+    }
+
+    /**
+     * @param returnShipmentNumber $returnShipmentNumber
+     * @return \Dhl\Versenden\Bcs\Soap\CreationState
+     */
+    public function setReturnShipmentNumber($returnShipmentNumber)
+    {
+      $this->returnShipmentNumber = $returnShipmentNumber;
       return $this;
     }
 

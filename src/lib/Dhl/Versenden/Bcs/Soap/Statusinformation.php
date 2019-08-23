@@ -23,13 +23,11 @@ class Statusinformation
     /**
      * @param int $statusCode
      * @param string $statusText
-     * @param string[] $statusMessage
      */
-    public function __construct($statusCode, $statusText, array $statusMessage)
+    public function __construct($statusCode, $statusText)
     {
       $this->statusCode = $statusCode;
       $this->statusText = $statusText;
-      $this->statusMessage = $statusMessage;
     }
 
     /**
@@ -80,7 +78,7 @@ class Statusinformation
      * @param string[] $statusMessage
      * @return \Dhl\Versenden\Bcs\Soap\Statusinformation
      */
-    public function setStatusMessage(array $statusMessage)
+    public function setStatusMessage(array $statusMessage = null)
     {
       $this->statusMessage = $statusMessage;
       return $this;

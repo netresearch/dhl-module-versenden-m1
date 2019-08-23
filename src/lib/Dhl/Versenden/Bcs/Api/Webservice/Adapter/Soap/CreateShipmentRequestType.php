@@ -23,9 +23,11 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+
 namespace Dhl\Versenden\Bcs\Api\Webservice\Adapter\Soap;
-use Dhl\Versenden\Bcs\Soap as VersendenApi;
+
 use Dhl\Versenden\Bcs\Api\Webservice\RequestData;
+use Dhl\Versenden\Bcs\Soap as VersendenApi;
 
 /**
  * CreateShipmentRequestType
@@ -88,15 +90,12 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipper(RequestData\ShipmentOrder\Shipper\Contact $shipper)
     {
-        $nameType          = NameType::prepare($shipper);
-        $addressType       = AddressType::prepare($shipper);
+        $nameType = NameType::prepare($shipper);
+        $addressType = AddressType::prepare($shipper);
         $communicationType = CommunicationType::prepare($shipper);
 
-        $shipperType = new VersendenApi\ShipperType(
-            $nameType,
-            $addressType,
-            $communicationType
-        );
+        $shipperType = new VersendenApi\ShipperType($nameType, $addressType);
+        $shipperType->setCommunication($communicationType);
 
         return $shipperType;
     }
@@ -107,25 +106,24 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareReceiver(RequestData\ShipmentOrder\Receiver $receiver)
     {
-        $packStationType     = PostalFacilityType::prepare($receiver->getPackstation());
-        $postfilialeType     = PostalFacilityType::prepare($receiver->getPostfiliale());
-        $parcelShopType      = PostalFacilityType::prepare($receiver->getParcelShop());
+        $packStationType = PostalFacilityType::prepare($receiver->getPackstation());
+        $postfilialeType = PostalFacilityType::prepare($receiver->getPostfiliale());
 
-        if ($packStationType || $postfilialeType || $parcelShopType) {
+        if ($packStationType || $postfilialeType) {
             $receiverAddressType = null;
         } else {
             $receiverAddressType = ReceiverAddressType::prepare($receiver);
         }
-        $communicationType   = CommunicationType::prepare($receiver);
+
+        $communicationType = CommunicationType::prepare($receiver);
 
         $receiverType = new VersendenApi\ReceiverType(
             $receiver->getName1(),
             $receiverAddressType,
             $packStationType,
-            $postfilialeType,
-            $parcelShopType,
-            $communicationType
+            $postfilialeType
         );
+        $receiverType->setCommunication($communicationType);
 
         return $receiverType;
     }
@@ -136,16 +134,15 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareReturnReceiver(RequestData\ShipmentOrder\Shipper\Contact $returnReceiver)
     {
-        $nameType          = NameType::prepare($returnReceiver);
-        $addressType       = AddressType::prepare($returnReceiver);
+        $nameType = NameType::prepare($returnReceiver);
+        $addressType = AddressType::prepare($returnReceiver);
         $communicationType = CommunicationType::prepare($returnReceiver);
 
         $returnReceiverType = new VersendenApi\ShipperType(
             $nameType,
-            $addressType,
-            $communicationType
+            $addressType
         );
-
+        $returnReceiverType->setCommunication($communicationType);
         return $returnReceiverType;
     }
 
@@ -189,8 +186,9 @@ class CreateShipmentRequestType implements RequestType
                 $position->getNetWeightInKG(),
                 $position->getValue()
             );
-            $exportDocPositions[]= $exportDocPosition;
+            $exportDocPositions[] = $exportDocPosition;
         }
+
         $exportDocType->setExportDocPosition($exportDocPositions);
 
         return $exportDocType;
@@ -202,9 +200,9 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipment(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $details        = static::prepareShipmentDetails($shipmentOrder);
-        $shipper        = static::prepareShipper($shipmentOrder->getShipper()->getContact());
-        $receiver       = static::prepareReceiver($shipmentOrder->getReceiver());
+        $details = static::prepareShipmentDetails($shipmentOrder);
+        $shipper = static::prepareShipper($shipmentOrder->getShipper()->getContact());
+        $receiver = static::prepareReceiver($shipmentOrder->getReceiver());
 
         // remove email adress from communication object if parcelanouncement is set to no
         if (!$shipmentOrder->getServiceSelection()->getParcelAnnouncement()) {
@@ -236,7 +234,7 @@ class CreateShipmentRequestType implements RequestType
      */
     protected static function prepareShipmentOrder(RequestData\ShipmentOrder $shipmentOrder)
     {
-        $shipment           = static::prepareShipment($shipmentOrder);
+        $shipment = static::prepareShipment($shipmentOrder);
 
         $requestType = new VersendenApi\ShipmentOrderType(
             $shipmentOrder->getSequenceNumber(),
@@ -246,8 +244,6 @@ class CreateShipmentRequestType implements RequestType
         $printOnlyIfCodeable = $shipmentOrder->getServiceSelection()->isPrintOnlyIfCodeable();
         $printOnlyIfCodeable = new VersendenApi\Serviceconfiguration($printOnlyIfCodeable);
         $requestType->setPrintOnlyIfCodeable($printOnlyIfCodeable);
-
-        $requestType->setLabelResponseType($shipmentOrder->getLabelResponseType());
 
         return $requestType;
     }
@@ -264,16 +260,25 @@ class CreateShipmentRequestType implements RequestType
             $requestData->getVersion()->getBuild()
         );
 
-
-        $shipmentOrders = [];
-        /** @var RequestData\ShipmentOrder $order */
-        foreach ($requestData->getShipmentOrders() as $order) {
-            $shipmentOrders[]= static::prepareShipmentOrder($order);
+        /** @var RequestData\ShipmentOrder[] $shipmentOrders */
+        $shipmentOrders = $requestData->getShipmentOrders();
+        $shipmentOrderTypes = [];
+        $labelResponseType = null;
+        foreach ($shipmentOrders as $order) {
+            $labelResponseType = $order->getLabelResponseType();
+            $shipmentOrderTypes[] = static::prepareShipmentOrder($order);
         }
+
 
         $requestType = new VersendenApi\CreateShipmentOrderRequest(
             $version,
-            $shipmentOrders
+            $shipmentOrderTypes,
+            $labelResponseType,
+            null,
+            null,
+            null,
+            null,
+            null
         );
 
         return $requestType;

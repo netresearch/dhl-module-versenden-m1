@@ -6,18 +6,18 @@ class ServiceconfigurationDateOfDelivery
 {
 
     /**
-     * @var anonymous148 $active
+     * @var anonymous179 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous149 $details
+     * @var anonymous180 $details
      */
     protected $details = null;
 
     /**
-     * @param anonymous148 $active
-     * @param anonymous149 $details
+     * @param anonymous179 $active
+     * @param anonymous180 $details
      */
     public function __construct($active, $details)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationDateOfDelivery
     }
 
     /**
-     * @return anonymous148
+     * @return anonymous179
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationDateOfDelivery
     }
 
     /**
-     * @param anonymous148 $active
+     * @param anonymous179 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDateOfDelivery
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationDateOfDelivery
     }
 
     /**
-     * @return anonymous149
+     * @return anonymous180
      */
     public function getDetails()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationDateOfDelivery
     }
 
     /**
-     * @param anonymous149 $details
+     * @param anonymous180 $details
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDateOfDelivery
      */
     public function setDetails($details)

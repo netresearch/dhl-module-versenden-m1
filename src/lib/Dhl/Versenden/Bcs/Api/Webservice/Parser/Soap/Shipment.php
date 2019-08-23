@@ -54,7 +54,7 @@ abstract class Shipment implements Parser
         $status = new ResponseData\Status\Response(
             $statusInfo->getStatusCode(),
             $statusInfo->getStatusText(),
-            $statusInfo->getStatusMessage()
+            (array) $statusInfo->getStatusMessage()
         );
         return $status;
     }

@@ -45,9 +45,9 @@ class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
     public function parse($response)
     {
         $status = $this->parseResponseStatus($response->getStatus());
-        
-        if ($status->getStatusCode() === 1001) {
-            // login failed
+
+        if ($status->getStatusCode() === 1001 || $status->getStatusCode() === 112) {
+            // authentication failure
             throw new Webservice\ResponseData\Status\Exception($status);
         }
 
@@ -59,7 +59,7 @@ class CreateShipmentOrder extends ShipmentLabel implements Webservice\Parser
 
         /** @var VersendenApi\CreationState $creationState */
         foreach ($creationStates as $creationState) {
-            $sequence[$creationState->getSequenceNumber()] = $creationState->getLabelData()->getShipmentNumber();
+            $sequence[$creationState->getSequenceNumber()] = $creationState->getShipmentNumber();
             $label = $this->parseLabel($creationState);
             $labels->addItem($label);
         }

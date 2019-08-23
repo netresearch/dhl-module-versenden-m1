@@ -55,6 +55,7 @@ class ReceiverAddressType implements RequestType
             $requestData->getStreetNumber(),
             $requestData->getZip(),
             $requestData->getCity(),
+            null,
             $countryType
         );
 

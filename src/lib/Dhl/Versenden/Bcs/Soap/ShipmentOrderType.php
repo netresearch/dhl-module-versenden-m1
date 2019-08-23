@@ -21,11 +21,6 @@ class ShipmentOrderType
     protected $PrintOnlyIfCodeable = null;
 
     /**
-     * @var labelResponseType $labelResponseType
-     */
-    protected $labelResponseType = null;
-
-    /**
      * @param SequenceNumber $sequenceNumber
      * @param Shipment $Shipment
      */
@@ -86,24 +81,6 @@ class ShipmentOrderType
     public function setPrintOnlyIfCodeable($PrintOnlyIfCodeable)
     {
       $this->PrintOnlyIfCodeable = $PrintOnlyIfCodeable;
-      return $this;
-    }
-
-    /**
-     * @return labelResponseType
-     */
-    public function getLabelResponseType()
-    {
-      return $this->labelResponseType;
-    }
-
-    /**
-     * @param labelResponseType $labelResponseType
-     * @return \Dhl\Versenden\Bcs\Soap\ShipmentOrderType
-     */
-    public function setLabelResponseType($labelResponseType)
-    {
-      $this->labelResponseType = $labelResponseType;
       return $this;
     }
 

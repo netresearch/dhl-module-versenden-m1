@@ -1,7 +1,7 @@
 <?php
 
 
- function autoload_cb7a1e3c1c35d7211bbe881b51042ac1($class)
+ function autoload_c552f46557d93281e86e7ceb502897c2($class)
 {
     $classes = array(
         'Dhl\Versenden\Bcs\Soap\GVAPI_2_0_de' => __DIR__ .'/GVAPI_2_0_de.php',
@@ -27,6 +27,7 @@
         'Dhl\Versenden\Bcs\Soap\ServiceconfigurationAdditionalInsurance' => __DIR__ .'/ServiceconfigurationAdditionalInsurance.php',
         'Dhl\Versenden\Bcs\Soap\ServiceconfigurationIC' => __DIR__ .'/ServiceconfigurationIC.php',
         'Dhl\Versenden\Bcs\Soap\Ident' => __DIR__ .'/Ident.php',
+        'Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetailsOptional' => __DIR__ .'/ServiceconfigurationDetailsOptional.php',
         'Dhl\Versenden\Bcs\Soap\ShipmentNotificationType' => __DIR__ .'/ShipmentNotificationType.php',
         'Dhl\Versenden\Bcs\Soap\BankType' => __DIR__ .'/BankType.php',
         'Dhl\Versenden\Bcs\Soap\ShipperType' => __DIR__ .'/ShipperType.php',
@@ -40,7 +41,6 @@
         'Dhl\Versenden\Bcs\Soap\ReceiverNativeAddressType' => __DIR__ .'/ReceiverNativeAddressType.php',
         'Dhl\Versenden\Bcs\Soap\PackStationType' => __DIR__ .'/PackStationType.php',
         'Dhl\Versenden\Bcs\Soap\PostfilialeType' => __DIR__ .'/PostfilialeType.php',
-        'Dhl\Versenden\Bcs\Soap\ParcelShopType' => __DIR__ .'/ParcelShopType.php',
         'Dhl\Versenden\Bcs\Soap\ExportDocumentType' => __DIR__ .'/ExportDocumentType.php',
         'Dhl\Versenden\Bcs\Soap\ExportDocPosition' => __DIR__ .'/ExportDocPosition.php',
         'Dhl\Versenden\Bcs\Soap\Statusinformation' => __DIR__ .'/Statusinformation.php',
@@ -55,7 +55,7 @@
     };
 }
 
-spl_autoload_register('autoload_cb7a1e3c1c35d7211bbe881b51042ac1');
+spl_autoload_register('autoload_c552f46557d93281e86e7ceb502897c2');
 
 // Do nothing. The rest is just leftovers from the code generation.
 {

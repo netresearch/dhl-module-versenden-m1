@@ -51,8 +51,8 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
     const OPERATION_UPDATE_SHIPMENT_ORDER = 'updateShipmentOrder';
     const OPERATION_VALIDATE_SHIPMENT = 'validateShipment';
 
-    const WEBSERVICE_VERSION_MAJOR = '2';
-    const WEBSERVICE_VERSION_MINOR = '2';
+    const WEBSERVICE_VERSION_MAJOR = '3';
+    const WEBSERVICE_VERSION_MINOR = '0';
     const WEBSERVICE_VERSION_BUILD = '';
 
     /**

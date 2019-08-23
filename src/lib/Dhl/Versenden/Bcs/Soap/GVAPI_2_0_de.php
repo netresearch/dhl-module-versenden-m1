@@ -31,6 +31,7 @@ class GVAPI_2_0_de extends \SoapClient
       'ServiceconfigurationAdditionalInsurance' => 'Dhl\\Versenden\\Bcs\\Soap\\ServiceconfigurationAdditionalInsurance',
       'ServiceconfigurationIC' => 'Dhl\\Versenden\\Bcs\\Soap\\ServiceconfigurationIC',
       'Ident' => 'Dhl\\Versenden\\Bcs\\Soap\\Ident',
+      'ServiceconfigurationDetailsOptional' => 'Dhl\\Versenden\\Bcs\\Soap\\ServiceconfigurationDetailsOptional',
       'ShipmentNotificationType' => 'Dhl\\Versenden\\Bcs\\Soap\\ShipmentNotificationType',
       'BankType' => 'Dhl\\Versenden\\Bcs\\Soap\\BankType',
       'ShipperType' => 'Dhl\\Versenden\\Bcs\\Soap\\ShipperType',
@@ -42,9 +43,8 @@ class GVAPI_2_0_de extends \SoapClient
       'ReceiverType' => 'Dhl\\Versenden\\Bcs\\Soap\\ReceiverType',
       'ReceiverTypeType' => 'Dhl\\Versenden\\Bcs\\Soap\\ReceiverTypeType',
       'ReceiverNativeAddressType' => 'Dhl\\Versenden\\Bcs\\Soap\\ReceiverNativeAddressType',
-      'cis:PackStationType' => 'Dhl\\Versenden\\Bcs\\Soap\\PackStationType',
-      'cis:PostfilialeType' => 'Dhl\\Versenden\\Bcs\\Soap\\PostfilialeType',
-      'cis:ParcelShopType' => 'Dhl\\Versenden\\Bcs\\Soap\\ParcelShopType',
+      'PackStationType' => 'Dhl\\Versenden\\Bcs\\Soap\\PackStationType',
+      'PostfilialeType' => 'Dhl\\Versenden\\Bcs\\Soap\\PostfilialeType',
       'ExportDocumentType' => 'Dhl\\Versenden\\Bcs\\Soap\\ExportDocumentType',
       'ExportDocPosition' => 'Dhl\\Versenden\\Bcs\\Soap\\ExportDocPosition',
       'Statusinformation' => 'Dhl\\Versenden\\Bcs\\Soap\\Statusinformation',
@@ -70,7 +70,7 @@ class GVAPI_2_0_de extends \SoapClient
       'features' => 1,
     ), $options);
       if (!$wsdl) {
-        $wsdl = 'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/2.2/geschaeftskundenversand-api-2.2.wsdl';
+        $wsdl = 'https://cig.dhl.de/cig-wsdls/com/dpdhl/wsdl/geschaeftskundenversand-api/3.0/geschaeftskundenversand-api-3.0.wsdl';
       }
       parent::__construct($wsdl, $options);
     }

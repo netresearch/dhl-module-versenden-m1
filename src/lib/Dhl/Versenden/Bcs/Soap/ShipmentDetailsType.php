@@ -26,6 +26,11 @@ class ShipmentDetailsType
     protected $shipmentDate = null;
 
     /**
+     * @var costCentre $costCentre
+     */
+    protected $costCentre = null;
+
+    /**
      * @var returnShipmentAccountNumber $returnShipmentAccountNumber
      */
     protected $returnShipmentAccountNumber = null;
@@ -116,6 +121,24 @@ class ShipmentDetailsType
     public function setShipmentDate($shipmentDate)
     {
       $this->shipmentDate = $shipmentDate;
+      return $this;
+    }
+
+    /**
+     * @return costCentre
+     */
+    public function getCostCentre()
+    {
+      return $this->costCentre;
+    }
+
+    /**
+     * @param costCentre $costCentre
+     * @return \Dhl\Versenden\Bcs\Soap\ShipmentDetailsType
+     */
+    public function setCostCentre($costCentre)
+    {
+      $this->costCentre = $costCentre;
       return $this;
     }
 

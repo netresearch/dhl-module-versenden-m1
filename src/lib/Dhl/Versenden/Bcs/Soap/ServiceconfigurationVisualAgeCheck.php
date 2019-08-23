@@ -6,18 +6,18 @@ class ServiceconfigurationVisualAgeCheck
 {
 
     /**
-     * @var anonymous142 $active
+     * @var anonymous173 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous143 $type
+     * @var anonymous174 $type
      */
     protected $type = null;
 
     /**
-     * @param anonymous142 $active
-     * @param anonymous143 $type
+     * @param anonymous173 $active
+     * @param anonymous174 $type
      */
     public function __construct($active, $type)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationVisualAgeCheck
     }
 
     /**
-     * @return anonymous142
+     * @return anonymous173
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationVisualAgeCheck
     }
 
     /**
-     * @param anonymous142 $active
+     * @param anonymous173 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationVisualAgeCheck
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationVisualAgeCheck
     }
 
     /**
-     * @return anonymous143
+     * @return anonymous174
      */
     public function getType()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationVisualAgeCheck
     }
 
     /**
-     * @param anonymous143 $type
+     * @param anonymous174 $type
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationVisualAgeCheck
      */
     public function setType($type)

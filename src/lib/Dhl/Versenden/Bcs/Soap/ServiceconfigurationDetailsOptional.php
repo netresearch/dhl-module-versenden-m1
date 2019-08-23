@@ -2,22 +2,22 @@
 
 namespace Dhl\Versenden\Bcs\Soap;
 
-class ServiceconfigurationDetails
+class ServiceconfigurationDetailsOptional
 {
 
     /**
-     * @var anonymous153 $active
+     * @var anonymous156 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous154 $details
+     * @var anonymous157 $details
      */
     protected $details = null;
 
     /**
-     * @param anonymous153 $active
-     * @param anonymous154 $details
+     * @param anonymous156 $active
+     * @param anonymous157 $details
      */
     public function __construct($active, $details)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationDetails
     }
 
     /**
-     * @return anonymous153
+     * @return anonymous156
      */
     public function getActive()
     {
@@ -34,8 +34,8 @@ class ServiceconfigurationDetails
     }
 
     /**
-     * @param anonymous153 $active
-     * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetails
+     * @param anonymous156 $active
+     * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetailsOptional
      */
     public function setActive($active)
     {
@@ -44,7 +44,7 @@ class ServiceconfigurationDetails
     }
 
     /**
-     * @return anonymous154
+     * @return anonymous157
      */
     public function getDetails()
     {
@@ -52,8 +52,8 @@ class ServiceconfigurationDetails
     }
 
     /**
-     * @param anonymous154 $details
-     * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetails
+     * @param anonymous157 $details
+     * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetailsOptional
      */
     public function setDetails($details)
     {

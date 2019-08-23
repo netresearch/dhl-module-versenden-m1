@@ -57,8 +57,11 @@ class GlobalSettings extends RequestData
      * @param string $labelType
      */
     public function __construct(
-        $printOnlyIfCodeable, $unitOfMeasure,
-        array $shippingMethods, array $codPaymentMethods, $labelType
+        $printOnlyIfCodeable,
+        $unitOfMeasure,
+        array $shippingMethods,
+        array $codPaymentMethods,
+        $labelType
     ) {
         $this->printOnlyIfCodeable = $printOnlyIfCodeable;
         $this->unitOfMeasure = $unitOfMeasure;

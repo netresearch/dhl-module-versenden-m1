@@ -49,8 +49,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
     {
         $response = unserialize($serializedResponse);
 
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
             ->setMethods(array('getVersion'))
@@ -101,6 +101,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
     }
 
     /**
+     * Authentication errors have no CreationState, exception must be thrown before status parsing.
+     *
      * @test
      * @dataProvider dataProvider
      *
@@ -126,7 +128,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $adapter = new SoapAdapter($soapClient);
         $parser  = new SoapParser\CreateShipmentOrder();
 
-        $response = $adapter->createShipmentOrder($requestData, $parser);
+        $adapter->createShipmentOrder($requestData, $parser);
     }
 
     /**
@@ -205,8 +207,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function getLabel()
     {
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
         $requestData = new RequestData\Version($major, $minor, null);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
@@ -224,8 +226,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function getExportDoc()
     {
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
         $requestData = new RequestData\Version($major, $minor, null);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
@@ -243,8 +245,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function doManifest()
     {
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
         $requestData = new RequestData\Version($major, $minor, null);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
@@ -262,8 +264,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function getManifest()
     {
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
         $requestData = new RequestData\Version($major, $minor, null);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
@@ -281,8 +283,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function updateShipmentOrder()
     {
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
         $requestData = new RequestData\Version($major, $minor, null);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
@@ -300,8 +302,8 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
      */
     public function validateShipment()
     {
-        $major = '2';
-        $minor = '1';
+        $major = '3';
+        $minor = '0';
         $requestData = new RequestData\Version($major, $minor, null);
 
         $soapClient = $this->getMockBuilder(\SoapClient::class)
@@ -380,44 +382,11 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
     /**
      * @test
      */
-    public function parseParcelShop()
-    {
-        $zip = '111';
-        $city = 'Foo';
-        $country = 'Germany';
-        $countryISOCode = 'DE';
-        $state = 'Saxony';
-
-        $parcelShopNumber = '123';
-        $streetName   = 'Foo Street';
-        $streetNumber = '909';
-
-        $parcelShop = new RequestData\ShipmentOrder\Receiver\ParcelShop(
-            $zip,
-            $city,
-            $country,
-            $countryISOCode,
-            $state,
-            $parcelShopNumber,
-            $streetName,
-            $streetNumber
-        );
-
-        $postalFacility = SoapAdapter\PostalFacilityType::prepare($parcelShop);
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Soap\ParcelShopType::class, $postalFacility);
-        $this->assertEquals($zip, $postalFacility->getZip());
-        $this->assertEquals($city, $postalFacility->getCity());
-        $this->assertEquals($parcelShopNumber, $postalFacility->getParcelShopNumber());
-        $this->assertEquals($streetName, $postalFacility->getStreetName());
-        $this->assertEquals($streetNumber, $postalFacility->getStreetNumber());
-    }
-
-    /**
-     * @test
-     */
     public function parseUnknownFacilityType()
     {
-        $facility = new RequestData\Version('2', '1');
+        $major = '3';
+        $minor = '0';
+        $facility = new RequestData\Version($major, $minor, null);
         $postalFacility = SoapAdapter\PostalFacilityType::prepare($facility);
         $this->assertNull($postalFacility);
     }
