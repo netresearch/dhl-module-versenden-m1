@@ -11,13 +11,13 @@ class ServiceconfigurationIC
     protected $Ident = null;
 
     /**
-     * @var anonymous170 $active
+     * @var anonymous201 $active
      */
     protected $active = null;
 
     /**
      * @param Ident $Ident
-     * @param anonymous170 $active
+     * @param anonymous201 $active
      */
     public function __construct($Ident, $active)
     {
@@ -44,7 +44,7 @@ class ServiceconfigurationIC
     }
 
     /**
-     * @return anonymous170
+     * @return anonymous201
      */
     public function getActive()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationIC
     }
 
     /**
-     * @param anonymous170 $active
+     * @param anonymous201 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationIC
      */
     public function setActive($active)

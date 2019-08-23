@@ -53,6 +53,7 @@ class AddressType implements RequestType
             $requestData->getStreetNumber(),
             $requestData->getZip(),
             $requestData->getCity(),
+            null,
             $countryType
         );
 

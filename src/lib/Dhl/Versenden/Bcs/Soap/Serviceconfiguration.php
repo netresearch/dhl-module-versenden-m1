@@ -6,12 +6,12 @@ class Serviceconfiguration
 {
 
     /**
-     * @var anonymous125 $active
+     * @var anonymous151 $active
      */
     protected $active = null;
 
     /**
-     * @param anonymous125 $active
+     * @param anonymous151 $active
      */
     public function __construct($active)
     {
@@ -19,7 +19,7 @@ class Serviceconfiguration
     }
 
     /**
-     * @return anonymous125
+     * @return anonymous151
      */
     public function getActive()
     {
@@ -27,7 +27,7 @@ class Serviceconfiguration
     }
 
     /**
-     * @param anonymous125 $active
+     * @param anonymous151 $active
      * @return \Dhl\Versenden\Bcs\Soap\Serviceconfiguration
      */
     public function setActive($active)

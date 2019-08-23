@@ -6,18 +6,18 @@ class ServiceconfigurationISR
 {
 
     /**
-     * @var anonymous136 $active
+     * @var anonymous167 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous137 $details
+     * @var anonymous168 $details
      */
     protected $details = null;
 
     /**
-     * @param anonymous136 $active
-     * @param anonymous137 $details
+     * @param anonymous167 $active
+     * @param anonymous168 $details
      */
     public function __construct($active, $details)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationISR
     }
 
     /**
-     * @return anonymous136
+     * @return anonymous167
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationISR
     }
 
     /**
-     * @param anonymous136 $active
+     * @param anonymous167 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationISR
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationISR
     }
 
     /**
-     * @return anonymous137
+     * @return anonymous168
      */
     public function getDetails()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationISR
     }
 
     /**
-     * @param anonymous137 $details
+     * @param anonymous168 $details
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationISR
      */
     public function setDetails($details)

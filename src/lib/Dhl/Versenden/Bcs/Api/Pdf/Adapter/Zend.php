@@ -24,10 +24,11 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Bcs\Api\Pdf\Adapter;
+
 use Dhl\Versenden\Bcs\Api\Pdf\Adapter;
 
 /**
- * Product
+ * Zend Pdf Adapter
  *
  * @category Dhl
  * @package  Dhl\Versenden\Bcs\Api
@@ -43,13 +44,14 @@ class Zend implements Adapter
      */
     public function merge($pages)
     {
+        $pages = array_filter($pages);
+        if (count($pages) === 1) {
+            return current($pages);
+        }
+
         $pdfOut = new \Zend_Pdf();
 
         foreach ($pages as $page) {
-            if (!is_string($page) || $page === "") {
-                continue;
-            }
-
             $pdfIn = \Zend_Pdf::parse($page);
             foreach ($pdfIn->pages as $pageIn) {
                 $pdfOut->pages[]= clone $pageIn;

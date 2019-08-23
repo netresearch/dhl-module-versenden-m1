@@ -95,7 +95,7 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
         if (stripos($result['street_number'], '/') !== false) {
             list($result['street_number'], $addition) = explode('/', $result['street_number'], 2);
             $result['supplement'] = $addition.$result['supplement'];
-            //remove empty spaces if occure
+            //remove empty spaces if occur
             $result['street_number'] = str_replace(' ', '', $result['street_number']);
             $result['supplement'] = str_replace(' ', '', $result['supplement']);
         }

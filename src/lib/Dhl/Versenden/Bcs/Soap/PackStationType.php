@@ -26,6 +26,11 @@ class PackStationType
     protected $city = null;
 
     /**
+     * @var province $province
+     */
+    protected $province = null;
+
+    /**
      * @var CountryType $Origin
      */
     protected $Origin = null;
@@ -34,13 +39,15 @@ class PackStationType
      * @param packstationNumber $packstationNumber
      * @param ZipType $zip
      * @param city $city
+     * @param province $province
      * @param CountryType $Origin
      */
-    public function __construct($packstationNumber, $zip, $city, $Origin)
+    public function __construct($packstationNumber, $zip, $city, $province, $Origin)
     {
       $this->packstationNumber = $packstationNumber;
       $this->zip = $zip;
       $this->city = $city;
+      $this->province = $province;
       $this->Origin = $Origin;
     }
 
@@ -113,6 +120,24 @@ class PackStationType
     public function setCity($city)
     {
       $this->city = $city;
+      return $this;
+    }
+
+    /**
+     * @return province
+     */
+    public function getProvince()
+    {
+      return $this->province;
+    }
+
+    /**
+     * @param province $province
+     * @return \Dhl\Versenden\Bcs\Soap\PackStationType
+     */
+    public function setProvince($province)
+    {
+      $this->province = $province;
       return $this;
     }
 

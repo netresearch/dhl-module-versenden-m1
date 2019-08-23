@@ -6,24 +6,24 @@ class ServiceconfigurationCashOnDelivery
 {
 
     /**
-     * @var anonymous154 $active
+     * @var anonymous185 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous155 $addFee
+     * @var anonymous186 $addFee
      */
     protected $addFee = null;
 
     /**
-     * @var anonymous156 $codAmount
+     * @var anonymous187 $codAmount
      */
     protected $codAmount = null;
 
     /**
-     * @param anonymous154 $active
-     * @param anonymous155 $addFee
-     * @param anonymous156 $codAmount
+     * @param anonymous185 $active
+     * @param anonymous186 $addFee
+     * @param anonymous187 $codAmount
      */
     public function __construct($active, $addFee, $codAmount)
     {
@@ -33,7 +33,7 @@ class ServiceconfigurationCashOnDelivery
     }
 
     /**
-     * @return anonymous154
+     * @return anonymous185
      */
     public function getActive()
     {
@@ -41,7 +41,7 @@ class ServiceconfigurationCashOnDelivery
     }
 
     /**
-     * @param anonymous154 $active
+     * @param anonymous185 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationCashOnDelivery
      */
     public function setActive($active)
@@ -51,7 +51,7 @@ class ServiceconfigurationCashOnDelivery
     }
 
     /**
-     * @return anonymous155
+     * @return anonymous186
      */
     public function getAddFee()
     {
@@ -59,7 +59,7 @@ class ServiceconfigurationCashOnDelivery
     }
 
     /**
-     * @param anonymous155 $addFee
+     * @param anonymous186 $addFee
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationCashOnDelivery
      */
     public function setAddFee($addFee)
@@ -69,7 +69,7 @@ class ServiceconfigurationCashOnDelivery
     }
 
     /**
-     * @return anonymous156
+     * @return anonymous187
      */
     public function getCodAmount()
     {
@@ -77,7 +77,7 @@ class ServiceconfigurationCashOnDelivery
     }
 
     /**
-     * @param anonymous156 $codAmount
+     * @param anonymous187 $codAmount
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationCashOnDelivery
      */
     public function setCodAmount($codAmount)

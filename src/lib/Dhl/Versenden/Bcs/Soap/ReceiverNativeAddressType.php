@@ -46,6 +46,11 @@ class ReceiverNativeAddressType
     protected $city = null;
 
     /**
+     * @var province $province
+     */
+    protected $province = null;
+
+    /**
      * @var CountryType $Origin
      */
     protected $Origin = null;
@@ -57,9 +62,10 @@ class ReceiverNativeAddressType
      * @param streetNumber $streetNumber
      * @param ZipType $zip
      * @param city $city
+     * @param province $province
      * @param CountryType $Origin
      */
-    public function __construct($name2, $name3, $streetName, $streetNumber, $zip, $city, $Origin)
+    public function __construct($name2, $name3, $streetName, $streetNumber, $zip, $city, $province, $Origin)
     {
       $this->name2 = $name2;
       $this->name3 = $name3;
@@ -67,6 +73,7 @@ class ReceiverNativeAddressType
       $this->streetNumber = $streetNumber;
       $this->zip = $zip;
       $this->city = $city;
+      $this->province = $province;
       $this->Origin = $Origin;
     }
 
@@ -211,6 +218,24 @@ class ReceiverNativeAddressType
     public function setCity($city)
     {
       $this->city = $city;
+      return $this;
+    }
+
+    /**
+     * @return province
+     */
+    public function getProvince()
+    {
+      return $this->province;
+    }
+
+    /**
+     * @param province $province
+     * @return \Dhl\Versenden\Bcs\Soap\ReceiverNativeAddressType
+     */
+    public function setProvince($province)
+    {
+      $this->province = $province;
       return $this;
     }
 

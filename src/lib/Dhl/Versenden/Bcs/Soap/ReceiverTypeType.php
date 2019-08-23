@@ -26,11 +26,6 @@ class ReceiverTypeType
     protected $Postfiliale = null;
 
     /**
-     * @var ParcelShopType $ParcelShop
-     */
-    protected $ParcelShop = null;
-
-    /**
      * @var CommunicationType $Communication
      */
     protected $Communication = null;
@@ -40,17 +35,13 @@ class ReceiverTypeType
      * @param ReceiverNativeAddressType $Address
      * @param PackStationType $Packstation
      * @param PostfilialeType $Postfiliale
-     * @param ParcelShopType $ParcelShop
-     * @param CommunicationType $Communication
      */
-    public function __construct($name1, $Address, $Packstation, $Postfiliale, $ParcelShop, $Communication)
+    public function __construct($name1, $Address, $Packstation, $Postfiliale)
     {
       $this->name1 = $name1;
       $this->Address = $Address;
       $this->Packstation = $Packstation;
       $this->Postfiliale = $Postfiliale;
-      $this->ParcelShop = $ParcelShop;
-      $this->Communication = $Communication;
     }
 
     /**
@@ -122,24 +113,6 @@ class ReceiverTypeType
     public function setPostfiliale($Postfiliale)
     {
       $this->Postfiliale = $Postfiliale;
-      return $this;
-    }
-
-    /**
-     * @return ParcelShopType
-     */
-    public function getParcelShop()
-    {
-      return $this->ParcelShop;
-    }
-
-    /**
-     * @param ParcelShopType $ParcelShop
-     * @return \Dhl\Versenden\Bcs\Soap\ReceiverTypeType
-     */
-    public function setParcelShop($ParcelShop)
-    {
-      $this->ParcelShop = $ParcelShop;
       return $this;
     }
 

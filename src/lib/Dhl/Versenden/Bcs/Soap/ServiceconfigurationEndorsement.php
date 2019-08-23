@@ -6,18 +6,18 @@ class ServiceconfigurationEndorsement
 {
 
     /**
-     * @var anonymous133 $active
+     * @var anonymous164 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous134 $type
+     * @var anonymous165 $type
      */
     protected $type = null;
 
     /**
-     * @param anonymous133 $active
-     * @param anonymous134 $type
+     * @param anonymous164 $active
+     * @param anonymous165 $type
      */
     public function __construct($active, $type)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationEndorsement
     }
 
     /**
-     * @return anonymous133
+     * @return anonymous164
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationEndorsement
     }
 
     /**
-     * @param anonymous133 $active
+     * @param anonymous164 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationEndorsement
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationEndorsement
     }
 
     /**
-     * @return anonymous134
+     * @return anonymous165
      */
     public function getType()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationEndorsement
     }
 
     /**
-     * @param anonymous134 $type
+     * @param anonymous165 $type
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationEndorsement
      */
     public function setType($type)

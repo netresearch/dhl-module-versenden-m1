@@ -6,18 +6,18 @@ class ServiceconfigurationDeliveryTimeframe
 {
 
     /**
-     * @var anonymous145 $active
+     * @var anonymous176 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous146 $type
+     * @var anonymous177 $type
      */
     protected $type = null;
 
     /**
-     * @param anonymous145 $active
-     * @param anonymous146 $type
+     * @param anonymous176 $active
+     * @param anonymous177 $type
      */
     public function __construct($active, $type)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationDeliveryTimeframe
     }
 
     /**
-     * @return anonymous145
+     * @return anonymous176
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationDeliveryTimeframe
     }
 
     /**
-     * @param anonymous145 $active
+     * @param anonymous176 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDeliveryTimeframe
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationDeliveryTimeframe
     }
 
     /**
-     * @return anonymous146
+     * @return anonymous177
      */
     public function getType()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationDeliveryTimeframe
     }
 
     /**
-     * @param anonymous146 $type
+     * @param anonymous177 $type
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationDeliveryTimeframe
      */
     public function setType($type)

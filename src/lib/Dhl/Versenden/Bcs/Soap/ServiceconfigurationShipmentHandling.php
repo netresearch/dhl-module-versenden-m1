@@ -6,18 +6,18 @@ class ServiceconfigurationShipmentHandling
 {
 
     /**
-     * @var anonymous158 $active
+     * @var anonymous189 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous159 $type
+     * @var anonymous190 $type
      */
     protected $type = null;
 
     /**
-     * @param anonymous158 $active
-     * @param anonymous159 $type
+     * @param anonymous189 $active
+     * @param anonymous190 $type
      */
     public function __construct($active, $type)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationShipmentHandling
     }
 
     /**
-     * @return anonymous158
+     * @return anonymous189
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationShipmentHandling
     }
 
     /**
-     * @param anonymous158 $active
+     * @param anonymous189 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationShipmentHandling
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationShipmentHandling
     }
 
     /**
-     * @return anonymous159
+     * @return anonymous190
      */
     public function getType()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationShipmentHandling
     }
 
     /**
-     * @param anonymous159 $type
+     * @param anonymous190 $type
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationShipmentHandling
      */
     public function setType($type)

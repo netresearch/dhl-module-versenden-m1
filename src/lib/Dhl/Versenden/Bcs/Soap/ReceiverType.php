@@ -10,12 +10,10 @@ class ReceiverType extends ReceiverTypeType
      * @param ReceiverNativeAddressType $Address
      * @param PackStationType $Packstation
      * @param PostfilialeType $Postfiliale
-     * @param ParcelShopType $ParcelShop
-     * @param CommunicationType $Communication
      */
-    public function __construct($name1, $Address, $Packstation, $Postfiliale, $ParcelShop, $Communication)
+    public function __construct($name1, $Address, $Packstation, $Postfiliale)
     {
-      parent::__construct($name1, $Address, $Packstation, $Postfiliale, $ParcelShop, $Communication);
+      parent::__construct($name1, $Address, $Packstation, $Postfiliale);
     }
 
 }

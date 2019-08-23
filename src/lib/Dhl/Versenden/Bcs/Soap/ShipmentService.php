@@ -125,6 +125,11 @@ class ShipmentService
      */
     protected $IdentCheck = null;
 
+    /**
+     * @var ServiceconfigurationDetailsOptional $ParcelOutletRouting
+     */
+    protected $ParcelOutletRouting = null;
+
 
     public function __construct()
     {
@@ -560,6 +565,24 @@ class ShipmentService
     public function setIdentCheck($IdentCheck)
     {
       $this->IdentCheck = $IdentCheck;
+      return $this;
+    }
+
+    /**
+     * @return ServiceconfigurationDetailsOptional
+     */
+    public function getParcelOutletRouting()
+    {
+      return $this->ParcelOutletRouting;
+    }
+
+    /**
+     * @param ServiceconfigurationDetailsOptional $ParcelOutletRouting
+     * @return \Dhl\Versenden\Bcs\Soap\ShipmentService
+     */
+    public function setParcelOutletRouting($ParcelOutletRouting)
+    {
+      $this->ParcelOutletRouting = $ParcelOutletRouting;
       return $this;
     }
 

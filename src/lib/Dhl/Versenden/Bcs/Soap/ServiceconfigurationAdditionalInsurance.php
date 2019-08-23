@@ -6,18 +6,18 @@ class ServiceconfigurationAdditionalInsurance
 {
 
     /**
-     * @var anonymous151 $active
+     * @var anonymous182 $active
      */
     protected $active = null;
 
     /**
-     * @var anonymous152 $insuranceAmount
+     * @var anonymous183 $insuranceAmount
      */
     protected $insuranceAmount = null;
 
     /**
-     * @param anonymous151 $active
-     * @param anonymous152 $insuranceAmount
+     * @param anonymous182 $active
+     * @param anonymous183 $insuranceAmount
      */
     public function __construct($active, $insuranceAmount)
     {
@@ -26,7 +26,7 @@ class ServiceconfigurationAdditionalInsurance
     }
 
     /**
-     * @return anonymous151
+     * @return anonymous182
      */
     public function getActive()
     {
@@ -34,7 +34,7 @@ class ServiceconfigurationAdditionalInsurance
     }
 
     /**
-     * @param anonymous151 $active
+     * @param anonymous182 $active
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationAdditionalInsurance
      */
     public function setActive($active)
@@ -44,7 +44,7 @@ class ServiceconfigurationAdditionalInsurance
     }
 
     /**
-     * @return anonymous152
+     * @return anonymous183
      */
     public function getInsuranceAmount()
     {
@@ -52,7 +52,7 @@ class ServiceconfigurationAdditionalInsurance
     }
 
     /**
-     * @param anonymous152 $insuranceAmount
+     * @param anonymous183 $insuranceAmount
      * @return \Dhl\Versenden\Bcs\Soap\ServiceconfigurationAdditionalInsurance
      */
     public function setInsuranceAmount($insuranceAmount)
