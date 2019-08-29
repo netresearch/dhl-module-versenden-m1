@@ -218,7 +218,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
     public function getReturnReceiver($store = null)
     {
         if ($this->useShipperForReturns($store)) {
-            return $this->getContact();
+            return $this->getContact($store);
         }
 
         $countryId = $this->getStoreConfig(self::CONFIG_XML_FIELD_RETURN_COUNTRYID, $store);
