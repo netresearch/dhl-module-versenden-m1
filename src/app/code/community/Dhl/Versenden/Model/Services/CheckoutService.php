@@ -111,16 +111,7 @@ class Dhl_Versenden_Model_Services_CheckoutService
     {
         $startDate = $this->getStartDate();
         $zip = $this->getZipCode();
-        if ($this->serviceResponse === null) {
-            try {
-                $this->serviceResponse = $this->loadFromCache($startDate, $zip);
-            } catch (Mage_Core_Exception $e) {
-                $this->serviceResponse = $this->client->checkoutRecipientZipAvailableServicesGet($startDate, $zip);
-                $this->saveToCache($this->serviceResponse, $startDate, $zip);
-            }
-        }
-
-        return $this->serviceResponse;
+        return $this->client->checkoutRecipientZipAvailableServicesGet($startDate, $zip);
     }
 
     /**
@@ -220,63 +211,5 @@ class Dhl_Versenden_Model_Services_CheckoutService
         $cutOffTime = $dateModel->gmtTimestamp(str_replace(',', ':', $cutOffTime));
 
         return $cutOffTime;
-    }
-
-    /**
-     * @param string $startDate
-     * @param string $zip
-     * @return \Dhl\Versenden\Cig\Model\AvailableServicesMap
-     * @throws Mage_Core_Exception
-     */
-    protected function loadFromCache($startDate, $zip)
-    {
-        $cacheId = $this->getCacheKey($startDate, $zip);
-        $cacheData = Mage::app()->getCache()->load($cacheId);
-        if (!$cacheData) {
-            Mage::throwException('No cached data found.');
-        }
-
-        $unserializedData = unserialize($cacheData);
-        if (!isset($unserializedData[self::API_RESPONSE_CACHE_IDENT])) {
-            Mage::throwException('No cached data found.');
-        }
-
-        $map = $unserializedData[self::API_RESPONSE_CACHE_IDENT];
-
-        if (!$map instanceof \Dhl\Versenden\Cig\Model\AvailableServicesMap) {
-            Mage::throwException('No cached data found.');
-        }
-
-        return $map;
-    }
-
-    /**
-     * @param \Dhl\Versenden\Cig\Model\AvailableServicesMap $data
-     * @param string $startDate
-     * @param string $zip
-     * @throws Zend_Cache_Exception
-     */
-    protected function saveToCache(\Dhl\Versenden\Cig\Model\AvailableServicesMap $data, $startDate, $zip)
-    {
-        $cacheData = serialize(array(self::API_RESPONSE_CACHE_IDENT => $data));
-        Mage::app()->getCache()->save(
-            $cacheData,
-            $this->getCacheKey($startDate, $zip),
-            array('pmapi_cache'),
-            60 * 60 * 12
-        );
-    }
-
-    /**
-     * @param string $startDate
-     * @param string $zip
-     * @return string
-     */
-    private function getCacheKey($startDate, $zip)
-    {
-        $mode = $this->config->isSandboxModeEnabled() ? 'sandbox' : 'production';
-        $dateString = (new DateTime($startDate))->format('Y-m-d');
-
-        return implode('_', array($dateString, $mode, $zip));
     }
 }
