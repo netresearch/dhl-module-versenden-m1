@@ -23,6 +23,7 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
+use Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service as ServiceBlock;
 
 /**
  * Dhl_Versenden_Test_Model_Observer_CheckoutTest
@@ -35,7 +36,6 @@
  */
 class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Test_Case
 {
-
     public function setUp()
     {
         $mockQuote = $this->getModelMockBuilder('sales/quote')
@@ -51,108 +51,160 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
     }
 
     /**
+     * @param string $serviceBlockHtml
+     * @param bool $render
+     * @return void
+     */
+    private function initServiceBlock($serviceBlockHtml, $render = true)
+    {
+        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+
+        /** @var ServiceBlock|PHPUnit_Framework_MockObject_MockObject $blockMock */
+        $blockMock = $this->getBlockMock($blockType, array('renderView'), false, array(), '', false);
+        $blockMock->setTemplate('dhl_versenden/checkout/shipping_services.phtml');
+
+        $blockMock
+            ->expects($render ? $this->any() : $this->never())
+            ->method('renderView')
+            ->willReturn($serviceBlockHtml);
+
+        $this->replaceByMock('block', $blockType, $blockMock);
+    }
+
+    /**
+     * Make sure that the Wunschpaket services block is appended if
+     * - carrier is enabled for checkout
+     * - shipping origin is DE
+     * - the current block to be rendered is the shipping methods block
+     *
      * @test
      * @loadFixture Model_ConfigTest
      */
-    public function appendServices()
+    public function appendWunschpaketServices()
     {
-        $this->setCurrentStore('store_two');
-        $serviceBlockHtml = 'checkout-dhlversenden-services';
+        // config for store_three: carrier enabled, shipping origin DE
+        $this->setCurrentStore('store_three');
 
-        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
+        $shippingMethodsBlockHtml = '<span>foo</span>';
+        $serviceBlockHtml = '<span class="checkout-dhlversenden-services"/>';
 
-        $blockMock = $this->getBlockMock($blockType, array('getTemplate', 'renderView'), false, array(), '', false);
-        $blockMock
-            ->expects($this->any())
-            ->method('getTemplate')
-            ->willReturn('dhl_versenden/checkout/shipping_services.phtml');
-        $blockMock
-            ->expects($this->any())
-            ->method('renderView')
-            ->willReturn($serviceBlockHtml);
-        $this->replaceByMock('block', $blockType, $blockMock);
+        $this->initServiceBlock($serviceBlockHtml);
+
+        $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
+        $transport = new Varien_Object();
+        $transport->setHtml($shippingMethodsBlockHtml);
 
         $observer = new Varien_Event_Observer();
-        $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
-        $blockHtml = '<span>foo</span>';
-        $transport = new Varien_Object();
-        $transport->setHtml($blockHtml);
-
         $observer->setBlock($block);
         $observer->setTransport($transport);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observer);
 
-        $this->assertStringStartsWith($blockHtml, $transport->getHtml());
+        $this->assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
         $this->assertStringEndsWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**
-     * Assert early return, if module is disabled
+     * Make sure that the Wunschpaket services block is *not* appended if
+     * - carrier is *not* enabled for checkout
+     * - shipping origin is DE
+     * - the current block to be rendered is the shipping methods block
      *
      * @test
      * @loadFixture Model_ConfigTest
-     * @loadFixture Model_DisableTest
      */
-    public function appendServicesDisabled()
+    public function doNotAppendWunschpaketServicesIfCarrierIsDisabledForCheckout()
     {
-        $this::markTestIncomplete('This might be broken because it triggers session_start()');
+        // config for store_one: carrier not enabled, shipping origin DE
+        $this->setCurrentStore('store_one');
 
-        $this->setCurrentStore('store_two');
-        $serviceBlockHtml = 'checkout-dhlversenden-services';
+        $shippingMethodsBlockHtml = '<span>foo</span>';
+        $serviceBlockHtml = '<span class="checkout-dhlversenden-services"/>';
 
-        $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
-        $blockMock = $this->getBlockMock(
-            $blockType,
-            array('renderView'),
-            false,
-            array(array('template' => 'dhl_versenden/checkout/shipping_services.phtml'))
-        );
-        $blockMock
-            ->expects($this->any())
-            ->method('renderView')
-            ->willReturn($serviceBlockHtml);
-        $this->replaceByMock('block', $blockType, $blockMock);
+        $this->initServiceBlock($serviceBlockHtml, false);
 
-        $observerMock = $this->getMockBuilder(Varien_Event_Observer::class)
-                             ->setMethods(array('getTransport'))
-                             ->getMock();
-        $observerMock
-            ->expects($this->never())
-            ->method('getTransport');
         $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
-        $observerMock->setBlock($block);
+        $transport = new Varien_Object();
+        $transport->setHtml($shippingMethodsBlockHtml);
+
+        $observer = new Varien_Event_Observer();
+        $observer->setBlock($block);
+        $observer->setTransport($transport);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
-        $dhlObserver->appendServices($observerMock);
+        $dhlObserver->appendServices($observer);
+
+        $this->assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
+        $this->assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**
-     * Assert early return.
+     * Make sure that the Wunschpaket services block is *not* appended if
+     * - carrier is enabled for checkout
+     * - shipping origin is not DE
+     * - the current block to be rendered is the shipping methods block
      *
      * @test
      * @loadFixture Model_ConfigTest
      */
-    public function appendNoServices()
+    public function doNotAppendWunschpaketServicesIfOriginIsAt()
     {
-        $this::markTestIncomplete('This might be broken because it triggers session_start()');
-
+        // config for store_one: carrier enabled, shipping origin AT
         $this->setCurrentStore('store_two');
 
-        /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
-        $observerMock = $this->getMockBuilder('Varien_Event_Observer')
-            ->setMethods(array('getTransport'))
-            ->getMock();
-        $observerMock
-            ->expects($this->never())
-            ->method('getTransport');
+        $shippingMethodsBlockHtml = '<span>foo</span>';
+        $serviceBlockHtml = '<span class="checkout-dhlversenden-services"/>';
 
-        $block = new Mage_Core_Block_Text();
-        $observerMock->setBlock($block);
+        $this->initServiceBlock($serviceBlockHtml, false);
+
+        $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Available();
+        $transport = new Varien_Object();
+        $transport->setHtml($shippingMethodsBlockHtml);
+
+        $observer = new Varien_Event_Observer();
+        $observer->setBlock($block);
+        $observer->setTransport($transport);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
-        $dhlObserver->appendServices($observerMock);
+        $dhlObserver->appendServices($observer);
+
+        $this->assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
+        $this->assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
+    }
+    /**
+     * Make sure that the Wunschpaket services block is *not* appended if
+     * - carrier is enabled for checkout
+     * - shipping origin is DE
+     * - the current block to be rendered is *not* the shipping methods block
+     *
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function doNotAppendWunschpaketToArbitraryBlock()
+    {
+        // config for store_three: carrier enabled, shipping origin DE
+        $this->setCurrentStore('store_three');
+
+        $shippingMethodsAdditionalBlockHtml = '<span>bar</span>';
+        $serviceBlockHtml = '<span class="checkout-dhlversenden-services"/>';
+
+        $this->initServiceBlock($serviceBlockHtml, false);
+
+        // rendering another block here
+        $block = new Mage_Checkout_Block_Onepage_Shipping_Method_Additional();
+        $transport = new Varien_Object();
+        $transport->setHtml($shippingMethodsAdditionalBlockHtml);
+
+        $observer = new Varien_Event_Observer();
+        $observer->setBlock($block);
+        $observer->setTransport($transport);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
+        $dhlObserver->appendServices($observer);
+
+        $this->assertStringStartsWith($shippingMethodsAdditionalBlockHtml, $transport->getHtml());
+        $this->assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**

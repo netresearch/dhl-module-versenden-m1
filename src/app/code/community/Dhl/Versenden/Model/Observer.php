@@ -50,8 +50,9 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         $shippingMethod = $order->getShippingMethod();
         /** @var Dhl_Versenden_Model_Config_Shipment $config */
         $config = Mage::getModel('dhl_versenden/config_shipment');
+        $shipperCountry = $config->getShipperCountry($order->getStoreId());
 
-        if ($config->canProcessMethod($shippingMethod, $order->getStoreId())) {
+        if (($shipperCountry !== 'AT') && $config->canProcessMethod($shippingMethod, $order->getStoreId())) {
             $parts          = explode('_', $shippingMethod);
             $parts[0]       = Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE;
             $shippingMethod = implode('_', $parts);
