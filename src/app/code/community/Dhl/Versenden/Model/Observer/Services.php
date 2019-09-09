@@ -81,6 +81,11 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
             return;
         }
 
+        $shipperCountry = $this->config->getShipperCountry();
+        if ($shipperCountry !== 'DE') {
+            return;
+        }
+
         /** @var Mage_Checkout_Block_Onepage_Shipping_Method_Available $block */
         $block = $observer->getData('block');
         if (!$block instanceof Mage_Checkout_Block_Onepage_Shipping_Method_Available) {

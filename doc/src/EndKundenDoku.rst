@@ -76,11 +76,19 @@ Versandursprung und Währung
 ---------------------------
 
 Die Extension *DHL Versenden* für Magento® wendet sich an Händler mit Sitz in
-Deutschland oder Österreich. Stellen Sie sicher, dass Ihre Absenderadressen in
+Deutschland. Stellen Sie sicher, dass Ihre Absenderadressen in
 den drei im Abschnitt Modulkonfiguration_ genannten Bereichen korrekt ist.
 
 Die Basiswährung der Installation wird als Euro angenommen. Es findet keine
 Konvertierung aus anderen Währungen statt.
+
+.. admonition:: Österreich nicht unterstützt
+
+   Versand aus Österreich (AT) wird nicht mehr unterstützt.
+
+   Bestehende Bestellungen im System können noch abgeschlossen werden, aber es können
+   keine neuen Bestellungen mehr über DHL verarbeitet werden, wenn aus Österreich
+   verschickt wird.
 
 Sprachunterstützung
 -------------------
@@ -189,7 +197,7 @@ ausgefüllt sind:
 Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
 sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
 Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden)
-in Deutschland bzw. Österreich.
+in Deutschland.
 
 **Aktivieren Sie diese Abschnitte nicht, wenn Sie DHL Versenden (Shipping) nutzen!**
 
@@ -632,16 +640,13 @@ Massenaktion_ beschrieben vor.
 Erstellen eines Retouren-Beilegers
 ----------------------------------
 
-Bei Versand innerhalb Deutschlands (DE → DE), innerhalb Österreichs (AT → AT) oder
-von Österreich nach Deutschland (AT → DE) ist es möglich, gemeinsam mit dem Paketaufkleber
+Bei Versand innerhalb Deutschlands (DE → DE) ist es möglich, gemeinsam mit dem Paketaufkleber
 einen Retouren-Beileger zu beauftragen.
 
 Nutzen Sie dafür beim Erstellen des Labels im Popup das Auswahlfeld *Retouren-Beileger*.
 Stellen Sie sicher, dass die Teilnahmenummern für Retouren korrekt konfiguriert sind:
 
 * Retoure DHL Paket (DE → DE)
-* Retoure DHL Paket Austria (AT → AT)
-* Retoure DHL Paket Connect (AT → DE)
 
 Stornieren eines Versandauftrags
 --------------------------------

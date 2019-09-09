@@ -74,12 +74,20 @@ Hints for using the module
 Shipping origin and currency
 ----------------------------
 
-This extension is intended for merchants located in Germany or Austria.
+This extension is intended for merchants located in Germany.
 Make sure the shipment origin address (your shop address) is correct in the
 three configuration sections mentioned in `Module configuration`_.
 
 The base currency of the installation is assumed to be Euro. There is no conversion
 from other currencies.
+
+.. admonition:: Austria not supported
+
+   Shipping from Austria (AT) is no longer supported.
+
+   It is possible to complete existing orders in the system, but new orders
+   cannot be processed via DHL if shipping from Austria.
+
 
 Language support
 ----------------
@@ -184,7 +192,7 @@ and *Origin* are filled in completely:
 
 The sections *Shipping Methods → DHL* and *Shipping Methods → DHL (deprecated)*
 are core parts of Magento® which connect to the webservice of DHL USA only.
-They are not relevant for DHL Business Shipping (Versenden) in Germany or Austria.
+They are not relevant for DHL Business Shipping (Versenden) in Germany.
 
 **Do not enable those sections if you are using DHL Versenden (Shipping)!**
 
@@ -609,16 +617,14 @@ section `Mass action`_.
 Printing a return slip
 ----------------------
 
-When shipping within Germany (DE → DE), within Austria (AT → AT), or from Austria to
-Germany (AT → DE), it is possible to create a return slip together with the shipping label.
+When shipping within Germany (DE → DE) it is possible to create a return slip together with
+the shipping label.
 
 Use the option *Return shipment* when requesting a label in the packaging popup.
 
 To book this service, make sure the participation numbers for returns are properly configured:
 
 * Retoure DHL Paket (DE → DE)
-* Retoure DHL Paket Austria (AT → AT)
-* Retoure DHL Paket Connect (AT → DE)
 
 Canceling a shipment
 --------------------
