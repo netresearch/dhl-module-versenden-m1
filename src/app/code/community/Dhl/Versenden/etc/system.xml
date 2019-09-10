@@ -472,6 +472,16 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_bulkygoods>
+                        <shipment_autocreate_service_parceloutletrouting>
+                            <label>Parcel Outlet Routing</label>
+                            <tooltip>Book the service Parcel Outlet Routing with automated shipment orders.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>570</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_parceloutletrouting>
 
                         <dhlversenden_fields_contact>
                             <label>Contact Data</label>

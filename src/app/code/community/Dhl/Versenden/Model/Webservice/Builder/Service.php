@@ -123,6 +123,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             ? (bool)$selectedServices[Service\BulkyGoods::CODE]
             : false;
 
+        $parcelOutletRouting = !empty($selectedServices[Service\ParcelOutletRouting::CODE])
+            ? $salesEntity->getShippingAddress()->getEmail()
+            : false;
+
         $paymentMethod = $salesEntity->getPayment()->getMethod();
         $cod = $this->_shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId())
             ? number_format($salesEntity->getBaseGrandTotal(), 2, '.', '')
@@ -142,6 +146,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             $returnShipment,
             $insurance,
             $bulkyGoods,
+            $parcelOutletRouting,
             $cod,
             $printOnlyIfCodeable
         );

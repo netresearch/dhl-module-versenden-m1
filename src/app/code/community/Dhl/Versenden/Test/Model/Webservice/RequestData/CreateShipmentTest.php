@@ -381,6 +381,10 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
             $order->getServiceSelection()->isBulkyGoods()
         );
         $this->assertEquals(
+            $expectation->getServiceSettingsParcelOutletRouting(),
+            $order->getServiceSelection()->getParcelOutletRouting()
+        );
+        $this->assertEquals(
             $expectation->getServiceSettingsCod(),
             $order->getServiceSelection()->getCod()
         );

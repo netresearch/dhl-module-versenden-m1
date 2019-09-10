@@ -78,6 +78,7 @@ class Filter
                 Cod::CODE,
                 Insurance::CODE,
                 ParcelAnnouncement::CODE,
+                ParcelOutletRouting::CODE,
                 PreferredLocation::CODE,
                 PreferredNeighbour::CODE,
                 PrintOnlyIfCodeable::CODE,

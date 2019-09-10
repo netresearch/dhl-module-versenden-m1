@@ -59,9 +59,10 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         'service_perferreddayandtime_handling_fee_text';
 
     const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
-    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT   = 'shipment_autocreate_service_returnshipment';
-    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE        = 'shipment_autocreate_service_insurance';
-    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS       = 'shipment_autocreate_service_bulkygoods';
+    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
+    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE = 'shipment_autocreate_service_insurance';
+    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS = 'shipment_autocreate_service_bulkygoods';
+    const CONFIG_XML_PATH_AUTOCREATE_PARCELOUTLETROUTING = 'shipment_autocreate_service_parceloutletrouting';
 
     /**
      * @param null $store
@@ -269,6 +270,18 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * @return Service\ParcelOutletRouting
+     */
+    protected function initParcelOutletRouting()
+    {
+        $name        = Mage::helper('dhl_versenden/data')->__("Parcel Outlet Routing");
+        $isAvailable = true;
+        $isSelected  = false;
+
+        return new Service\ParcelOutletRouting($name, $isAvailable, $isSelected);
+    }
+
+    /**
      * @param mixed $store
      *
      * @return Service\PrintOnlyIfCodeable
@@ -325,6 +338,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $bulkyGoods = $this->initBulkyGoods();
         $collection->addItem($bulkyGoods);
 
+        $parcelOutletRouting = $this->initParcelOutletRouting();
+        $collection->addItem($parcelOutletRouting);
+
         // implicit/config services
         $printOnlyIfCodeable = $this->initPrintOnlyIfCodeable($store);
         $collection->addItem($printOnlyIfCodeable);
@@ -365,20 +381,25 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     public function getAutoCreateServices($store = null)
     {
         // read autocreate service values from config
-        $ageCheckValue       = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
+        $ageCheckValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
         $returnShipmentValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT, $store);
-        $insuranceValue      = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
-        $bulkyGoodsValue     = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS, $store);
-        $validationValue     = $this->getStoreConfigFlag(
+        $insuranceValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
+        $bulkyGoodsValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS, $store);
+        $parcelOutletRoutingValue = $this->getStoreConfigFlag(
+            self::CONFIG_XML_PATH_AUTOCREATE_PARCELOUTLETROUTING,
+            $store
+        );
+        $validationValue = $this->getStoreConfigFlag(
             Dhl_Versenden_Model_Config_Shipment::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE,
             $store
         );
 
         $autoCreateValues = array(
-            Service\VisualCheckOfAge::CODE    => $ageCheckValue,
-            Service\ReturnShipment::CODE      => $returnShipmentValue,
-            Service\Insurance::CODE           => $insuranceValue,
-            Service\BulkyGoods::CODE          => $bulkyGoodsValue,
+            Service\VisualCheckOfAge::CODE => $ageCheckValue,
+            Service\ReturnShipment::CODE => $returnShipmentValue,
+            Service\Insurance::CODE => $insuranceValue,
+            Service\BulkyGoods::CODE => $bulkyGoodsValue,
+            Service\ParcelOutletRouting::CODE => $parcelOutletRoutingValue,
             Service\PrintOnlyIfCodeable::CODE => $validationValue,
         );
 
@@ -424,8 +445,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $isPostalFacility,
         $onlyCustomerServices = false,
         $store = null
-    )
-    {
+    ) {
         $services = $this->getEnabledServices($store);
 
         $euCountries      =

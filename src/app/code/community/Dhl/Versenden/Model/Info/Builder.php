@@ -223,6 +223,7 @@ class Dhl_Versenden_Model_Info_Builder
             'returnShipment' => $shipmentOrder->getServiceSelection()->isReturnShipment(),
             'insurance' => $shipmentOrder->getServiceSelection()->getInsurance(),
             'bulkyGoods' => $shipmentOrder->getServiceSelection()->isBulkyGoods(),
+            'parcelOutletRouting' => $shipmentOrder->getServiceSelection()->getParcelOutletRouting(),
             'cod' => $shipmentOrder->getServiceSelection()->getCod(),
             'printOnlyIfCodeable' => $shipmentOrder->getServiceSelection()->isPrintOnlyIfCodeable(),
         );
