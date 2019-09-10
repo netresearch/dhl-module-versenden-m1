@@ -24,6 +24,8 @@
  * @link      http://www.netresearch.de/
  */
 namespace Dhl\Versenden\Bcs\Api\Webservice\Adapter\Soap;
+
+use Dhl\Versenden\Bcs\Api\Webservice\RequestData;
 use Dhl\Versenden\Bcs\Soap as VersendenApi;
 use Dhl\Versenden\Bcs\Soap\Ident;
 use Dhl\Versenden\Bcs\Soap\Serviceconfiguration;
@@ -31,12 +33,12 @@ use Dhl\Versenden\Bcs\Soap\ServiceconfigurationAdditionalInsurance;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationCashOnDelivery;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationDeliveryTimeframe;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetails;
+use Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetailsOptional;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationEndorsement;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationIC;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationISR;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationShipmentHandling;
 use Dhl\Versenden\Bcs\Soap\ServiceconfigurationVisualAgeCheck;
-use Dhl\Versenden\Bcs\Api\Webservice\RequestData;
 
 /**
  * ServiceType
@@ -164,6 +166,12 @@ class ServiceType implements RequestType
         if ($requestData->isBulkyGoods()) {
             $bgConfig = new Serviceconfiguration(true);
             $service->setBulkyGoods($bgConfig);
+        }
+
+        if ($requestData->getParcelOutletRouting()) {
+            $customerEmail = $requestData->getParcelOutletRouting();
+            $porConfig = new ServiceconfigurationDetailsOptional(true, $customerEmail);
+            $service->setParcelOutletRouting($porConfig);
         }
 
         if ($identCheck = false) {

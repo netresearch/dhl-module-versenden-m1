@@ -404,13 +404,15 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $preferredNeighbour = 'Santa Berger';
         $parcelAnnouncement = false;
         $cod = 40.96;
+        $parcelOutletRouting = 'foo@example.org';
         $insurance = 34.06;
         $bulkyGoods = true;
         $printOnlyIfCodeable = true;
 
         $requestData = new RequestData\ShipmentOrder\ServiceSelection(
             $preferredDay, $preferredTime, $preferredLocation, $preferredNeighbour, $parcelAnnouncement,
-            $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods, $cod, $printOnlyIfCodeable
+            $visualCheckOfAge, $returnShipment, $insurance, $bulkyGoods, $parcelOutletRouting, $cod,
+            $printOnlyIfCodeable
         );
         $shipmentServices = SoapAdapter\ServiceType::prepare($requestData);
 
@@ -423,6 +425,7 @@ class Dhl_Versenden_Test_Model_Webservice_SoapAdapterTest
         $this->assertEquals($preferredLocation, $shipmentServices->getPreferredLocation()->getDetails());
         $this->assertEquals($preferredNeighbour, $shipmentServices->getPreferredNeighbour()->getDetails());
         // $parcelAnnouncement is no ServiceType service
+        $this->assertEquals($parcelOutletRouting, $shipmentServices->getParcelOutletRouting()->getDetails());
         $this->assertEquals($cod, $shipmentServices->getCashOnDelivery()->getCodAmount());
         $this->assertEquals($insurance, $shipmentServices->getAdditionalInsurance()->getInsuranceAmount());
         $this->assertEquals($bulkyGoods, $shipmentServices->getBulkyGoods()->getActive());

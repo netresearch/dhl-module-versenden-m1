@@ -142,6 +142,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $serviceSettingsReturnShipment = true;
         $serviceSettingsInsurance = 'B';
         $serviceSettingsBulkyGoods = true;
+        $serviceSettingsParcelOutletRouting = 'Receiver Routing Contact';
         $serviceSettingsCod = false;
         $serviceSettingsPrintOnlyIfCodeable = true;
 
@@ -184,7 +185,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $serviceSettingsDeliveryTimeFrame, $serviceSettingsPreferredLocation,
             $serviceSettingsPreferredNeighbour, $serviceSettingsParcelAnnouncement,
             $serviceSettingsVisualCheckOfAge, $serviceSettingsReturnShipment,
-            $serviceSettingsInsurance, $serviceSettingsBulkyGoods,
+            $serviceSettingsInsurance, $serviceSettingsBulkyGoods, $serviceSettingsParcelOutletRouting,
             $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable,
 
             $sequenceNumber, $labelResponseType
@@ -274,8 +275,8 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
             $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
             $serviceSettingsParcelAnnouncement,
             $serviceSettingsVisualCheckOfAge, $serviceSettingsReturnShipment,
-            $serviceSettingsInsurance, $serviceSettingsBulkyGoods, $serviceSettingsCod,
-            $serviceSettingsPrintOnlyIfCodeable
+            $serviceSettingsInsurance, $serviceSettingsBulkyGoods, $serviceSettingsParcelOutletRouting,
+            $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable
         );
 
 

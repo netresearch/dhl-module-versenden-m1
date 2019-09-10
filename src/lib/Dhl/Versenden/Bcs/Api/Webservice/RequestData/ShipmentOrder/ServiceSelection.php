@@ -55,6 +55,8 @@ class ServiceSelection extends RequestData
     private $insurance;
     /** @var bool false or true */
     private $bulkyGoods;
+    /** @var bool|string false or customer email */
+    private $parcelOutletRouting;
     /** @var bool|float false or amount */
     private $cod;
     /** @var bool false or true */
@@ -71,14 +73,24 @@ class ServiceSelection extends RequestData
      * @param bool $returnShipment
      * @param bool|string $insurance
      * @param bool $bulkyGoods
+     * @param bool|string $parcelOutletRouting
      * @param bool|float $cod
      * @param bool $printOnlyIfCodeable
      */
     public function __construct(
-        $preferredDay, $preferredTime, $preferredLocation, $preferredNeighbour,
-        $parcelAnnouncement, $visualCheckOfAge, $returnShipment, $insurance,
-        $bulkyGoods, $cod, $printOnlyIfCodeable)
-    {
+        $preferredDay,
+        $preferredTime,
+        $preferredLocation,
+        $preferredNeighbour,
+        $parcelAnnouncement,
+        $visualCheckOfAge,
+        $returnShipment,
+        $insurance,
+        $bulkyGoods,
+        $parcelOutletRouting,
+        $cod,
+        $printOnlyIfCodeable
+    ) {
         $this->preferredDay = $preferredDay;
         $this->preferredTime = $preferredTime;
         $this->preferredLocation = $preferredLocation;
@@ -88,6 +100,7 @@ class ServiceSelection extends RequestData
         $this->returnShipment = $returnShipment;
         $this->insurance = $insurance;
         $this->bulkyGoods = $bulkyGoods;
+        $this->parcelOutletRouting = $parcelOutletRouting;
         $this->cod = $cod;
         $this->printOnlyIfCodeable = $printOnlyIfCodeable;
     }
@@ -162,6 +175,14 @@ class ServiceSelection extends RequestData
     public function isBulkyGoods()
     {
         return $this->bulkyGoods;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getParcelOutletRouting()
+    {
+        return $this->parcelOutletRouting;
     }
 
     /**

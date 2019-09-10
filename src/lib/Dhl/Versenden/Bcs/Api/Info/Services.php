@@ -37,6 +37,11 @@ namespace Dhl\Versenden\Bcs\Api\Info;
 class Services extends ArrayableInfo
 {
     /**
+     * @var bool false or true
+     */
+    public $parcelOutletRouting;
+
+    /**
      * @var bool|string false or date
      */
     public $preferredDay;

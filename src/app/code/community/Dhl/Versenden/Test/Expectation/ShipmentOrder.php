@@ -187,6 +187,8 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     protected $serviceSettingsInsurance;
     /** @var bool false or true */
     protected $serviceSettingsBulkyGoods;
+    /** @var bool|string false or customer email */
+    protected $serviceSettingsParcelOutletRouting;
     /** @var bool|float false or order total */
     protected $serviceSettingsCod;
     /** @var bool false or true */
@@ -273,6 +275,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param bool $serviceSettingsReturnShipment
      * @param bool|float $serviceSettingsInsurance
      * @param bool $serviceSettingsBulkyGoods
+     * @param bool|string $serviceSettingsParcelOutletRouting
      * @param bool|float $serviceSettingsCod
      * @param bool $serviceSettingsPrintOnlyIfCodeable
      * @param int $sequenceNumber
@@ -316,8 +319,8 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $serviceSettingsPreferredDay, $serviceSettingsPreferredTime,
         $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
         $serviceSettingsParcelAnnouncement, $serviceSettingsVisualCheckOfAge,
-        $serviceSettingsReturnShipment, $serviceSettingsInsurance,
-        $serviceSettingsBulkyGoods, $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable,
+        $serviceSettingsReturnShipment, $serviceSettingsInsurance, $serviceSettingsBulkyGoods,
+        $serviceSettingsParcelOutletRouting, $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable,
 
         $sequenceNumber, $labelResponseType
     ) {
@@ -395,6 +398,7 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->serviceSettingsReturnShipment = $serviceSettingsReturnShipment;
         $this->serviceSettingsInsurance = $serviceSettingsInsurance;
         $this->serviceSettingsBulkyGoods = $serviceSettingsBulkyGoods;
+        $this->serviceSettingsParcelOutletRouting = $serviceSettingsParcelOutletRouting;
         $this->serviceSettingsCod = $serviceSettingsCod;
         $this->serviceSettingsPrintOnlyIfCodeable = $serviceSettingsPrintOnlyIfCodeable;
         $this->sequenceNumber = $sequenceNumber;
@@ -1003,6 +1007,14 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     public function isServiceSettingsBulkyGoods()
     {
         return $this->serviceSettingsBulkyGoods;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getServiceSettingsParcelOutletRouting()
+    {
+        return $this->serviceSettingsParcelOutletRouting;
     }
 
     /**
