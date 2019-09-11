@@ -59,6 +59,8 @@ PHP
 
 These PHP versions are supported:
 
+- PHP 7.2
+- PHP 7.1
 - PHP 7.0
 - PHP 5.6
 - PHP 5.5
@@ -213,7 +215,7 @@ You can choose between three log levels:
    automatically. Personal data must only be stored as long as absolutely necessary.
 
    Log files:
-   
+
    * ``var/log/dhl_versenden.log`` for label creation (Business Customer Shipping API)
    * ``var/log/dhl_service.log`` for additional DHL services (Parcel Management API)
 
