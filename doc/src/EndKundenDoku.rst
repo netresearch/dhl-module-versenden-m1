@@ -60,6 +60,8 @@ PHP
 
 Folgende PHP-Versionen werden vom Modul unterstützt:
 
+- PHP 7.2
+- PHP 7.1
 - PHP 7.0
 - PHP 5.6
 - PHP 5.5
@@ -221,7 +223,7 @@ drei Protokollstufen:
    lange vorgehalten bzw. gespeichert werden, wie unbedingt erforderlich.
 
    Log-Dateien:
-   
+
    * ``var/log/dhl_versenden.log`` für Label-Erstellung (Geschäftskundenversand API)
    * ``var/log/dhl_service.log`` für DHL Zusatzservices (Paketsteuerung API)
 
