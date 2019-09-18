@@ -13,12 +13,12 @@ stages:
 phpcs:
   stage: analyze
   only:
-  - develop
-  - master
-  - /^(release|hotfix)-.*$/
-  - merge_requests
+    - develop
+    - master
+    - /^(release|hotfix)-.*$/
+    - merge_requests
   script:
-  - ci-analyze
+    - ci-analyze
 
 install-php72-ce1.9.4:
   stage: test
