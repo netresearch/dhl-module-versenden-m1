@@ -4,19 +4,20 @@ stages:
   - analyze
   - build
   - validate
+  - deploy
 
 phpcs:
   stage: analyze
   only:
-  - develop
-  - master
-  - /^(release|hotfix)-.*$/
+    - develop
+    - master
+    - /^(release|hotfix)-.*$/
   script:
-  - phpcs --standard=MEQP1
-          --severity=10
-          --extensions=php,phtml
-          --ignore=*/Test/*,*/Tests/*,*/build/*,*/deployment/*
-          ${CI_PROJECT_DIR}
+    - phpcs --standard=MEQP1
+            --severity=10
+            --extensions=php,phtml
+            --ignore=*/Test/*,*/Tests/*,*/build/*,*/deployment/*
+            ${CI_PROJECT_DIR}
 
 #phpunit:5.6:
 #  stage: analyze
@@ -32,28 +33,41 @@ phpcs:
 package-build:
   stage: build
   only:
-  - master
-  - /^(release|hotfix)-.*$/
+    - master
+    - /^(release|hotfix)-.*$/
   script:
     - make
     - magento-tar-to-connect build/scripts/packageconfig.php
     - mv var/connect/*.tgz ${CI_PROJECT_DIR}
 
-
   artifacts:
       when: on_success
       paths:
-      - ${CI_PROJECT_DIR}/*.zip
-      - ${CI_PROJECT_DIR}/*.tgz
+        - ${CI_PROJECT_DIR}/*.zip
+        - ${CI_PROJECT_DIR}/*.tgz
 
 
 package-validate:
   stage: validate
   only:
-  - master
-  - /^(release|hotfix)-.*$/
+    - master
+    - /^(release|hotfix)-.*$/
   script:
-  # Not implemented yet. Should use "mage install-file ${MODULE_NAME}-${MODULE_VERSION}.tar"
-  - echo "Not implemented yet."
+    # Not implemented yet. Should use "mage install-file ${MODULE_NAME}-${MODULE_VERSION}.tar"
+    - echo "Not implemented yet."
   dependencies:
-  - package-build
+    - package-build
+
+
+github:
+  stage: deploy
+  when: manual
+  variables:
+    GIT_STRATEGY: "clone"
+    VAULT_PATH: "projects/DHL/Github/module-versenden-m1"
+  only:
+    - master
+  before_script:
+    - ci-github-before
+  script:
+    - ci-github
