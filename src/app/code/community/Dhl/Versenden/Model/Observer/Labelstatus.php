@@ -185,6 +185,8 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
             Dhl_Versenden_Model_Label_Status::CODE_FAILED => $block->__('Failed')
         );
 
+        $filterBlock = $block->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_grid');
+
         // Add a new column right after the "Ship to Name" column
         $block->addColumnAfter(
             'status_code',
@@ -194,7 +196,7 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
                 'renderer'  => 'dhl_versenden/adminhtml_sales_order_grid_renderer_icon',
                 'type'      => 'options',
                 'options'   => $columnOptions,
-                'filter_condition_callback' => array($this, 'filterStatus')
+                'filter_condition_callback' => array($filterBlock, 'filterStatus')
             ),
             'status'
         );
