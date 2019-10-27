@@ -133,8 +133,8 @@ class CheckoutApi
                 throw new ApiException(
                     "[{$e->getCode()}] {$e->getMessage()}",
                     $e->getCode(),
-                    $request->getLastResponse()->getHeaders() ?: null,
-                    $request->getLastResponse()->getBody() ?: null
+                    $request->getLastResponse() && $request->getLastResponse()->getHeaders() ?: null,
+                    $request->getLastResponse() && $request->getLastResponse()->getBody() ?: null
                 );
             }
 
@@ -148,8 +148,8 @@ class CheckoutApi
                         $request->getUri()
                     ),
                     $statusCode,
-                    $request->getLastResponse()->getHeaders(),
-                    $request->getLastResponse()->getBody()
+                    $request->getLastResponse() && $request->getLastResponse()->getHeaders(),
+                    $request->getLastResponse() && $request->getLastResponse()->getBody()
                 );
             }
 
