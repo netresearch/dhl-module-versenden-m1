@@ -10,7 +10,8 @@ stages:
   - validate
   - deploy
 
-phpcs:
+# Perform some pre package build checks
+package-check:
   stage: analyze
   only:
     - develop
@@ -18,6 +19,7 @@ phpcs:
     - /^(release|hotfix)-.*$/
     - merge_requests
   script:
+    - ci-check-path-length
     - ci-analyze
 
 install-php72-ce1.9.4:
