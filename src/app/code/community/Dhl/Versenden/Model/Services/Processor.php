@@ -93,7 +93,7 @@ class Dhl_Versenden_Model_Services_Processor
         /** @var Dhl_Versenden_Model_Services_ServiceOptions $serviceOptions */
         $serviceOptions = Mage::getModel('dhl_versenden/services_serviceOptions');
         /** @var Dhl_Versenden_Model_Services_CheckoutService $apiServices */
-        $apiServices = Mage::getModel(
+        $apiServices = Mage::getSingleton(
             'dhl_versenden/services_checkoutService',
             array('quote' => $this->quote)
         );

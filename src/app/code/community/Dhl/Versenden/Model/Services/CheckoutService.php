@@ -111,7 +111,11 @@ class Dhl_Versenden_Model_Services_CheckoutService
     {
         $startDate = $this->getStartDate();
         $zip = $this->getZipCode();
-        return $this->client->checkoutRecipientZipAvailableServicesGet($startDate, $zip);
+        if ($this->serviceResponse === null) {
+            $this->serviceResponse = $this->client->checkoutRecipientZipAvailableServicesGet($startDate, $zip);
+        }
+
+        return $this->serviceResponse;
     }
 
     /**

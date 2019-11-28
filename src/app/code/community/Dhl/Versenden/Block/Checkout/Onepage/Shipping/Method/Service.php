@@ -24,6 +24,7 @@
  * @link      http://www.netresearch.de/
  */
 use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection;
 use \Mage_Checkout_Block_Onepage_Abstract as Onepage_Abstract;
 
 /**
@@ -214,17 +215,15 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     }
 
     /**
+     * @param Collection $services
      * @return bool
      */
-    public function isDayAndTime()
+    public function isDayAndTime($services)
     {
-        $services = $this->getServices();
         $time = $services->getItem(Service\PreferredTime::CODE);
         $day = $services->getItem(Service\PreferredDay::CODE);
-        $time = $time ? true : false;
-        $day = $day ? true : false;
 
-        return $time && $day;
+        return ($time && $day);
     }
 
     /**
