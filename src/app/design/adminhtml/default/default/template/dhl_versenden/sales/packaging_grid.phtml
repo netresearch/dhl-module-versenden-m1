@@ -110,7 +110,7 @@
                         </td>
                         <td>
                             <input type="text" name="customs_value" class="input-text validate-zero-or-greater"
-                                   value="<?php echo $this->escapeHtml($this->formatPrice($item->getPrice())); ?>"
+                                   value="<?php echo $this->escapeHtml($this->formatPrice($orderItem->getBasePrice())); ?>"
                                    size="10"
                                    onblur="packaging.recalcContainerWeightAndCustomsValue(this);">
                         </td>
@@ -125,7 +125,7 @@
                         </td>
                         <td class="a-right last">
                             <input type="hidden" name="price"
-                                   value="<?php echo $this->escapeHtml($item->getPrice()); ?>">
+                                   value="<?php echo $this->escapeHtml($orderItem->getBasePrice()); ?>">
                             <input type="text" name="qty" value="<?php echo $item->getQty()*1; ?>"
                                    class="input-text qty
                                     <?php if ($item->getOrderItem()->getIsQtyDecimal()): ?>
