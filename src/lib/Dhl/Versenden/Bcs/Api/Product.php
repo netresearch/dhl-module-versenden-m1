@@ -36,16 +36,18 @@ namespace Dhl\Versenden\Bcs\Api;
  */
 class Product
 {
-    const CODE_PAKET_NATIONAL       = 'V01PAK';
-    const CODE_WELTPAKET            = 'V53WPAK';
-    const CODE_EUROPAKET            = 'V54EPAK';
-    const CODE_KURIER_TAGGLEICH     = 'V06TG';
-    const CODE_KURIER_WUNSCHZEIT    = 'V06WZ';
-    const CODE_PAKET_AUSTRIA        = 'V86PARCEL';
-    const CODE_PAKET_CONNECT        = 'V87PARCEL';
-    const CODE_PAKET_INTERNATIONAL  = 'V82PARCEL';
+    const CODE_PAKET_NATIONAL      = 'V01PAK';
+    const CODE_WARENPOST_NATIONAL  = 'V62WP';
+    const CODE_WELTPAKET           = 'V53WPAK';
+    const CODE_EUROPAKET           = 'V54EPAK';
+    const CODE_KURIER_TAGGLEICH    = 'V06TG';
+    const CODE_KURIER_WUNSCHZEIT   = 'V06WZ';
+    const CODE_PAKET_AUSTRIA       = 'V86PARCEL';
+    const CODE_PAKET_CONNECT       = 'V87PARCEL';
+    const CODE_PAKET_INTERNATIONAL = 'V82PARCEL';
 
     const PROCEDURE_PAKET_NATIONAL          = '01';
+    const PROCEDURE_WARENPOST_NATIONAL      = '62';
     const PROCEDURE_WELTPAKET               = '53';
     const PROCEDURE_EUROPAKET               = '54';
     const PROCEDURE_KURIER_TAGGLEICH        = '01';
@@ -66,6 +68,7 @@ class Product
     {
         return [
             self::CODE_PAKET_NATIONAL,
+            self::CODE_WARENPOST_NATIONAL,
             self::CODE_WELTPAKET,
             self::CODE_EUROPAKET,
             self::CODE_KURIER_TAGGLEICH,
@@ -86,6 +89,7 @@ class Product
     {
         $procedures = array(
             self::CODE_PAKET_NATIONAL => self::PROCEDURE_PAKET_NATIONAL,
+            self::CODE_WARENPOST_NATIONAL => self::PROCEDURE_WARENPOST_NATIONAL,
             self::CODE_WELTPAKET => self::PROCEDURE_WELTPAKET,
             self::CODE_EUROPAKET => self::PROCEDURE_EUROPAKET,
             self::CODE_KURIER_TAGGLEICH => self::PROCEDURE_KURIER_TAGGLEICH,
@@ -112,6 +116,7 @@ class Product
     {
         $procedures = array(
             self::CODE_PAKET_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
+            self::CODE_WARENPOST_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
             self::CODE_PAKET_AUSTRIA => self::PROCEDURE_RETURNSHIPMENT_AUSTRIA,
             self::CODE_PAKET_CONNECT => self::PROCEDURE_RETURNSHIPMENT_CONNECT,
         );
@@ -168,6 +173,7 @@ class Product
     {
         return [
             self::CODE_PAKET_NATIONAL,
+            self::CODE_WARENPOST_NATIONAL,
         ];
     }
 

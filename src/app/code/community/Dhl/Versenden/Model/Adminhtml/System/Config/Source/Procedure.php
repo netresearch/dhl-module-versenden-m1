@@ -62,6 +62,7 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure
         $helper = Mage::helper('dhl_versenden/data');
         return array(
             Product::PROCEDURE_PAKET_NATIONAL => $helper->__('DHL Paket: V01PAK'),
+            Product::PROCEDURE_WARENPOST_NATIONAL => $helper->__('DHL Warenpost National: V62WP'),
             Product::PROCEDURE_WELTPAKET => $helper->__('DHL Paket International: V53WPAK'),
             Product::PROCEDURE_PAKET_AUSTRIA => $helper->__('DHL Paket Austria: V86PARCEL'),
             Product::PROCEDURE_PAKET_CONNECT => $helper->__('DHL PAKET Connect: V87PARCEL'),
