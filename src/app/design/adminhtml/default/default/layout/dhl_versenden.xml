@@ -50,6 +50,9 @@
                         <block>shipment_packaging</block>
                     </template>
                 </action>
+                <block type="dhl_versenden/adminhtml_sales_order_shipment_product"
+                       name="shipping_product"
+                       template="dhl_versenden/sales/shipping_products.phtml"/>
                 <block type="dhl_versenden/adminhtml_sales_order_shipment_service_edit"
                        name="shipping_services"
                        template="dhl_versenden/sales/shipping_services.phtml"/>

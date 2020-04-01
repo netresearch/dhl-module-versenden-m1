@@ -70,6 +70,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     {
         $products = array(
             Product::CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
+            Product::CODE_WARENPOST_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Warenpost National'),
             Product::CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('DHL Weltpaket'),
             Product::CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('DHL Europaket'),
             Product::CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('DHL Kurier Taggleich'),
@@ -175,12 +176,17 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         $request->setData('services', $serviceData);
 
         // add dhl product to request
-        $shipperCountry = Mage::getModel('dhl_versenden/config')
-            ->getShipperCountry($request->getOrderShipment()->getStoreId());
-        $recipientCountry = $request->getOrderShipment()->getShippingAddress()->getCountryId();
-        $products = $this->getProducts($shipperCountry, $recipientCountry);
-        $productCodes = array_keys($products);
-        $request->setData('gk_api_product', $productCodes[0]);
+        $product = $httpRequest->getPost('shipping_product');
+        if (!$product) {
+            $storeId = $request->getOrderShipment()->getStoreId();
+            $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($storeId);
+            $recipientCountry = $request->getOrderShipment()->getShippingAddress()->getCountryId();
+            $products = $this->getProducts($shipperCountry, $recipientCountry);
+            $productCodes = array_keys($products);
+            $product = $productCodes[0];
+        }
+
+        $request->setData('gk_api_product', $product);
 
         // add customs information to request
         $request->setData('customs', $httpRequest->getPost('customs', array()));

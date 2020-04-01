@@ -9,6 +9,7 @@
 "Retoure DHL Paket Connect: V87PARCEL","Retoure DHL Parcel Connect: V87PARCEL"
 "DHL Versenden","DHL Versenden"
 "DHL Business Customer Shipping","DHL Business Customer Shipping"
+"DHL Warenpost National","DHL Merchandise Shipment"
 "General Settings","General Settings"
 "Module","Module"
 "Title","Title"
@@ -209,3 +210,4 @@
 "When service is applied, the buyer's email address will be transmitted to DHL.","When service is applied, the buyer's email address will be transmitted to DHL."
 "Enable on customers choice","Enable on customers choice"
 "Shipment Defaults","Shipment Defaults"
+"Shipping Product","Shipping Product"

@@ -4,7 +4,8 @@
 }
 
 #packaging-dhlversenden-services,
-#packaging-dhlversenden-customs {
+#packaging-dhlversenden-customs,
+#packaging-dhlversenden-products{
     background: #f6f6f6;
     border: 2px solid #d4d4d4;
     margin: 0 0 10px;
@@ -13,12 +14,14 @@
 }
 
 #packaging-dhlversenden-services > div,
-#packaging-dhlversenden-customs > div {
+#packaging-dhlversenden-customs > div ,
+#packaging-dhlversenden-products > div {
     font-weight: bold;
 }
 
 #packaging-dhlversenden-services > dl,
-#packaging-dhlversenden-customs > table {
+#packaging-dhlversenden-customs > table,
+#packaging-dhlversenden-products .product-list{
     border-top: 1px solid #ccc;
     padding: 10px 0 0;
     margin: 3px 0 0;
@@ -74,7 +77,8 @@
 }
 
 #packaging-dhlversenden-services dt,
-#packaging-dhlversenden-services dd {
+#packaging-dhlversenden-services dd,
+#packaging-dhlversenden-products ul li {
     padding: 5px 0;
 }
 
@@ -155,4 +159,16 @@
 #carriers_dhlversenden ul.list-inline li label {
     display: inline-block;
     vertical-align: middle;
+}
+
+#packaging-dhlversenden-products input {
+    vertical-align: text-top;
+}
+
+#packaging-dhlversenden-products label {
+    padding: 0 0 0 5px;
+}
+
+#packaging-dhlversenden-products label:hover {
+    cursor: pointer;
 }
