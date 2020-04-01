@@ -349,10 +349,6 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_CreateShipmentTest
             $order->getServiceSelection()->getPreferredDay()
         );
         $this->assertEquals(
-            $expectation->getServiceSettingsPreferredTime(),
-            $order->getServiceSelection()->getPreferredTime()
-        );
-        $this->assertEquals(
             $expectation->getServiceSettingsPreferredLocation(),
             $order->getServiceSelection()->getPreferredLocation()
         );

@@ -123,9 +123,9 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
                 && $this->isReceiverLocationUsed($shippingAddress->getData('dhl_versenden_info')))
         ) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -153,10 +153,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
             case Service\PreferredDay::CODE:
                 $msg = 'Choose one of the displayed days as your preferred day for your parcel delivery.'
                     . ' Other days are not possible due to delivery processes.';
-                break;
-            case Service\PreferredTime::CODE:
-                $msg = 'Indicate a preferred time, which suits you best for your parcel delivery by'
-                    . ' choosing one of the displayed time windows.';
                 break;
             case Service\PreferredLocation::CODE:
                 $msg = 'Choose a weather-protected and non-visible place on your property'
@@ -189,9 +185,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
             case Service\PreferredDay::CODE:
                 $msg = $serviceConfig->getPrefDayHandlingFeeText($this->getQuote()->getStoreId());
                 break;
-            case Service\PreferredTime::CODE:
-                $msg = $serviceConfig->getPrefTimeHandlingFeeText($this->getQuote()->getStoreId());
-                break;
             default:
                 $msg = '';
         }
@@ -214,29 +207,6 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
         return false;
     }
 
-    /**
-     * @param Collection $services
-     * @return bool
-     */
-    public function isDayAndTime($services)
-    {
-        $time = $services->getItem(Service\PreferredTime::CODE);
-        $day = $services->getItem(Service\PreferredDay::CODE);
-
-        return ($time && $day);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDayAndTimeFeeText()
-    {
-        /** @var DHL_Versenden_Model_Config_Service $serviceConfig */
-        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
-        $msg = $serviceConfig->getPrefDayAndTimeHandlingFeeText($this->getQuote()->getStoreId());
-
-        return $msg;
-    }
 
     /**
      * @param string $html
@@ -271,8 +241,8 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
             || $versendenInfo->getReceiver()->parcelShop->parcelShopNumber
         ) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 }

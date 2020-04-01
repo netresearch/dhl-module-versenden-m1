@@ -44,19 +44,6 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         return array(
             new Service\PreferredDay('', true, false, array('')),
-            new Service\PreferredTime(
-                '',
-                true,
-                false,
-                array(
-                    '10001200' => '10:00 - 12:00',
-                    '12001400' => '12:00 - 14:00',
-                    '14001600' => '14:00 - 16:00',
-                    '16001800' => '16:00 - 18:00',
-                    '18002000' => '18:00 - 20:00',
-                    '19002100' => '19:00 - 21:00',
-                )
-            ),
             new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false),
             new Service\PreferredLocation('', true, false, ''),
             new Service\PreferredNeighbour('', true, false, ''),
@@ -288,29 +275,6 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $this->assertContains($service->getCode(), $service->getSelectorHtml());
         $this->assertContains($service->getCode(), $service->getLabelHtml());
         $this->assertEmpty($service->getValueHtml());
-
-        // date
-        $name        = 'Radio Foo';
-        $placeholder = array('XXX' => '10 - 12');
-        $isEnabled   = true;
-        $isSelected  = true;
-        $value       = '2016-12-24';
-
-        $service = new Service\PreferredTime($name, $isEnabled, $isSelected, $placeholder);
-        $service->setValue($value);
-
-        $this->assertEquals(Service\PreferredTime::CODE, $service->getCode());
-        $this->assertEquals('radio', $service->getFrontendInputType());
-        $this->assertEquals($name, $service->getName());
-        $this->assertSame($isEnabled, $service->isEnabled());
-        $this->assertSame($isSelected, $service->isSelected());
-        $this->assertSame($value, $service->getValue());
-        $this->assertTrue($service->isCustomerService());
-
-        $this->assertContains($service->getCode(), $service->getSelectorHtml());
-        $this->assertContains($service->getCode(), $service->getLabelHtml());
-        $this->assertNotEmpty($service->getValueHtml());
-
 
         // select
         $name       = 'Option Foo';

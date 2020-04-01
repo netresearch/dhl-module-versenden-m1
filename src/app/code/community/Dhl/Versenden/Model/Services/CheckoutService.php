@@ -74,7 +74,6 @@ class Dhl_Versenden_Model_Services_CheckoutService
      */
     protected $services = array(
         \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredDay::CODE,
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredTime::CODE,
         \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE,
         \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE
 

@@ -333,68 +333,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </drop_off_days>
-                        <service_preferredtime_enabled>
-                            <label>Enable Preferred time</label>
-                            <tooltip>Allow customers to select a preferred time of delivery.</tooltip>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>470</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </service_preferredtime_enabled>
-                        <service_preferredtime_handling_fee>
-                            <label>Additional charge for your preferred time</label>
-                            <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
-                            <comment>Use . as decimal separator.</comment>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-not-negative-number required-entry</validate>
-                            <sort_order>471</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <service_preferredtime_enabled>1</service_preferredtime_enabled>
-                            </depends>
-                        </service_preferredtime_handling_fee>
-                        <service_preferredtime_handling_fee_text>
-                            <label>Preferred time handling fee text</label>
-                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>472</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <service_preferredtime_enabled>1</service_preferredtime_enabled>
-                            </depends>
-                        </service_preferredtime_handling_fee_text>
-                        <service_perferreddayandtime_handling_fee>
-                            <label>Additional charge for combined preferred day and time</label>
-                            <tooltip>Insert gross value as surcharge for the combination of preferred day and time. Insert 0 to offer service for free.</tooltip>
-                            <comment>Use . as decimal separator.</comment>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-not-negative-number required-entry</validate>
-                            <sort_order>473</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <service_preferredday_enabled>1</service_preferredday_enabled>
-                            </depends>
-                        </service_perferreddayandtime_handling_fee>
-                        <service_perferreddayandtime_handling_fee_text>
-                            <label>Combined Preferred day and time handling fee text</label>
-                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>474</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                            <depends>
-                                <service_preferredday_enabled>1</service_preferredday_enabled>
-                            </depends>
-                        </service_perferreddayandtime_handling_fee_text>
                         <dhlversenden_fields_shipment_autocreate>
                             <label>Automatic Shipment Creation</label>
                             <frontend_model>dhl_versenden/adminhtml_system_config_heading</frontend_model>

@@ -39,9 +39,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_PREFERREDDAY = 'service_preferredday_enabled';
     const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE = 'service_preferredday_handling_fee';
     const CONFIG_XML_FIELD_PREFERREDDAY_HANDLING_FEE_TEXT = 'service_preferredday_handling_fee_text';
-    const CONFIG_XML_FIELD_PREFERREDTIME = 'service_preferredtime_enabled';
-    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE = 'service_preferredtime_handling_fee';
-    const CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT = 'service_preferredtime_handling_fee_text';
     const CONFIG_XML_FIELD_CUTOFFTIME = 'service_cutoff_time';
     const CONFIG_XML_FIELD_PREFERREDLOCATION = 'service_preferredlocation_enabled';
     const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'service_preferredlocation_placeholder';
@@ -53,10 +50,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_RETURNSHIPMENT = 'service_returnshipment_enabled';
     const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
     const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
-    const CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE =
-        'service_perferreddayandtime_handling_fee';
-    const CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE_TEXT =
-        'service_perferreddayandtime_handling_fee_text';
 
     const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
     const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
@@ -138,35 +131,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         }
 
         return new Service\PreferredDay($name, $isAvailable, $isSelected, $options);
-    }
-
-    /**
-     * @param mixed $store
-     *
-     * @return Service\PreferredTime
-     */
-    protected function initPreferredTime($store = null)
-    {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred time") .
-            Mage::helper('dhl_versenden/data')->__(": Delivery during your preferred time slot");
-        $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDTIME, $store);
-        $isSelected  = false;
-        $options     = array();
-        if (Mage::app()->getStore()->isAdmin() || Mage::getDesign()->getArea() == 'adminhtml') {
-            $options = $options + array(
-                    '10001200' => Mage::helper('dhl_versenden/data')->__('10 - 12*'),
-                    '12001400' => Mage::helper('dhl_versenden/data')->__('12 - 14*'),
-                    '14001600' => Mage::helper('dhl_versenden/data')->__('14 - 16*'),
-                    '16001800' => Mage::helper('dhl_versenden/data')->__('16 - 18*'),
-                );
-        }
-
-        $options = $options + array(
-                '18002000' => Mage::helper('dhl_versenden/data')->__('18 - 20'),
-                '19002100' => Mage::helper('dhl_versenden/data')->__('19 - 21'),
-            );
-
-        return new Service\PreferredTime($name, $isAvailable, $isSelected, $options);
     }
 
     /**
@@ -312,9 +276,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         // customer/checkout services
         $preferredDay = $this->initPreferredDay($store);
         $collection->addItem($preferredDay);
-
-        $preferredTime = $this->initPreferredTime($store);
-        $collection->addItem($preferredTime);
 
         $preferredLocation = $this->initPreferredLocation($store);
         $collection->addItem($preferredLocation);
@@ -474,17 +435,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
-     * Obtain prefered time handling fees from config.
-     *
-     * @param null $store
-     * @return int
-     */
-    public function getPrefTimeFee($store = null)
-    {
-        return (float) $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE, $store);
-    }
-
-    /**
      * Obtain pref day handling fee text from config.
      *
      * @param null $store
@@ -506,59 +456,6 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         return $text;
     }
 
-    /**
-     * Obtain pref time handling fee text from config.
-     *
-     * @param null $store
-     * @return string
-     */
-    public function getPrefTimeHandlingFeeText($store = null)
-    {
-        $text = '';
-        $fee  = $this->getPrefTimeFee($store);
-        if ($fee > 0) {
-            $formattedFee = Mage::helper('core')->currency($this->getPrefTimeFee($store), true, false);
-            $text = str_replace(
-                '$1',
-                '<strong>' . $formattedFee . '</strong>',
-                $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDTIME_HANDLING_FEE_TEXT, $store)
-            );
-        }
-
-        return $text;
-    }
-
-    /**
-     * Obtain combined prefered day and time handling fees from config.
-     * @param null $store
-     * @return float
-     */
-    public function getPrefDayAndTimeFee($store = null)
-    {
-        return (float) $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE, $store);
-    }
-
-    /**
-     * Obtain combined pref day and time handling fee text from config.
-     *
-     * @param null $store
-     * @return string
-     */
-    public function getPrefDayAndTimeHandlingFeeText($store = null)
-    {
-        $text = '';
-        $fee = $this->getPrefDayAndTimeFee($store);
-        if ($fee > 0) {
-            $formattedFee = Mage::helper('core')->currency($this->getPrefDayAndTimeFee($store), true, false);
-            $text = str_replace(
-                '$1',
-                '<strong>' . $formattedFee . '</strong>',
-                $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDDAYANDTIME_HANDLING_FEE_TEXT, $store)
-            );
-        }
-
-        return $text;
-    }
 
     /**
      * @param null $store

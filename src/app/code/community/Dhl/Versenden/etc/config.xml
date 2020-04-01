@@ -356,7 +356,6 @@
                 <shipment_unitofmeasure>KG</shipment_unitofmeasure>
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
                 <service_preferredday_enabled>0</service_preferredday_enabled>
-                <service_preferredtime_enabled>0</service_preferredtime_enabled>
                 <service_preferredlocation_enabled>0</service_preferredlocation_enabled>
                 <service_preferredlocation_placeholder>e.g. garage, terrace</service_preferredlocation_placeholder>
                 <service_preferredneighbour_enabled>0</service_preferredneighbour_enabled>
@@ -388,12 +387,7 @@
                 <service_preferredday_enabled>1</service_preferredday_enabled>
                 <service_preferredday_handling_fee>0.99</service_preferredday_handling_fee>
                 <service_preferredday_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredday_handling_fee_text>
-                <service_preferredtime_enabled>1</service_preferredtime_enabled>
-                <service_preferredtime_handling_fee>3.99</service_preferredtime_handling_fee>
-                <service_preferredtime_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredtime_handling_fee_text>
                 <service_cutoff_time>13,00,00</service_cutoff_time>
-                <service_perferreddayandtime_handling_fee>3.99</service_perferreddayandtime_handling_fee>
-                <service_perferreddayandtime_handling_fee_text>*Bei einer Kombinationsbuchung von Wunschtag und Wunschzeit fällt zu den Versandkosten ein Gesamtaufpreis von $1 inkl. MwSt. an.</service_perferreddayandtime_handling_fee_text>
             </dhlversenden>
         </carriers>
         <checkout>

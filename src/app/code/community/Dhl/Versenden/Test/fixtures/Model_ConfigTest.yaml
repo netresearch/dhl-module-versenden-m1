@@ -60,5 +60,3 @@ config:
   default/carriers/dhlversenden/service_preferredday_handling_fee: 5
   default/carriers/dhlversenden/service_preferredday_handling_fee_text: This will cost $1
 
-  default/carriers/dhlversenden/service_preferredtime_handling_fee: 7
-  default/carriers/dhlversenden/service_preferredtime_handling_fee_text: This will cost $1

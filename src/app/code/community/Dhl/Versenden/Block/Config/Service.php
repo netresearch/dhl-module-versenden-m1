@@ -40,7 +40,6 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      */
     protected $_nameArray = array(
         'preferredDay'       => 'Preferred day',
-        'preferredTime'      => 'Preferred time',
         'preferredLocation'  => 'Preferred location',
         'preferredNeighbour' => 'Preferred neighbor',
         'parcelAnnouncement' => 'Parcel announcement',
@@ -146,13 +145,8 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $text = '';
         $isCombined = false;
 
-        if ($services->preferredDay && $services->preferredTime) {
-            $fee = $this->serviceConfig->getPrefDayAndTimeFee();
-            $isCombined = true;
-        } elseif ($services->preferredDay) {
+        if ($services->preferredDay) {
             $fee = $this->serviceConfig->getPrefDayFee();
-        } elseif ($services->preferredTime) {
-            $fee = $this->serviceConfig->getPrefTimeFee();
         }
 
         if ($fee > 0) {
@@ -201,7 +195,6 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
 
         return $dhlVersendenInfo->getServices();
     }
-
 
     /**
      * @return Dhl\Versenden\Bcs\Api\Info\Services|array
