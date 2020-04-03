@@ -38,7 +38,6 @@ class Dhl_Versenden_Model_Config
     const CONFIG_SECTION = 'carriers';
     const CONFIG_GROUP = 'dhlversenden';
 
-
     const CONFIG_XML_PATH_AUTOLOAD_ENABLED = 'dhl_versenden/dev/autoload_enabled';
 
     const CONFIG_XML_PATH_CARRIER_TITLE    = 'title';
@@ -60,13 +59,13 @@ class Dhl_Versenden_Model_Config
 
     const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
     const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
+    const CONFIG_XML_PATH_AUTOCREATE_SHIPPING_PRODUCT = 'shipment_autocreate_shipping_product';
     const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
     const CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS = 'drop_off_days';
 
     const CONFIG_XML_PATH_CHECKOUT_TRACKING_ENBLED = 'checkout/dhl_versenden/checkout_tracking_enabled';
     const CONFIG_XML_PATH_CHECKOUT_TRACKING_NEXT_EXEC = 'checkout/dhl_versenden/checkout_tracking_next_exec';
     const CONFIG_XML_PATH_CHECKOUT_TRACKING_INTERVAL = 'checkout/dhl_versenden/checkout_tracking_interval';
-
 
     /**
      * Wrap store config access.
@@ -212,7 +211,6 @@ class Dhl_Versenden_Model_Config
         return $shipperCountry;
     }
 
-
     /**
      * Check if shipment auto creation is enabled.
      *
@@ -234,6 +232,15 @@ class Dhl_Versenden_Model_Config
     {
         $status = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS, $store);
         return explode(',', $status);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getAutoCreateShippingProduct($store = null)
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_SHIPPING_PRODUCT, $store);
     }
 
     /**

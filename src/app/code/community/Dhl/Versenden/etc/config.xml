@@ -368,6 +368,7 @@
                 <returnshipment_use_shipper>1</returnshipment_use_shipper>
 
                 <shipment_autocreate_order_status>pending,processing</shipment_autocreate_order_status>
+                <shipment_autocreate_shipping_product>V01PAK</shipment_autocreate_shipping_product>
 
                 <webservice_auth_username>M1_SHIPPING_1</webservice_auth_username>
                 <webservice_auth_password>3hhwlgGytdblXrkVqNnXEjrdj1mEIs</webservice_auth_password>

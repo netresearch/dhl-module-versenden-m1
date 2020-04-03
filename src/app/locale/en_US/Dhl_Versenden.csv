@@ -211,3 +211,5 @@
 "Enable on customers choice","Enable on customers choice"
 "Shipment Defaults","Shipment Defaults"
 "Shipping Product","Shipping Product"
+"Shipping Product (Domestic)","Shipping Product (Domestic)"
+"Define the domestic default shipping product for automated shipment orders.","Define the domestic default shipping product for automated shipment orders."

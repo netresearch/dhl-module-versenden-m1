@@ -206,6 +206,12 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             $recipientCountry,
             $euCountries
         );
+        $defaultProduct = $this->_serviceConfig->getAutoCreateShippingProduct($storeId);
+
+        if (count($shippingProducts) > 1) {
+            $shippingProducts = array_intersect(array($defaultProduct), $shippingProducts);
+        }
+
         $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
         $serviceFilter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter(
@@ -268,7 +274,12 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 
         $products = Mage::getModel('dhl_versenden/shipping_carrier_versenden')
             ->getProducts($shipperCountry, $recipientCountry);
+        $defaultProduct = $this->_shipperConfig->getAutoCreateShippingProduct($this->_order->getStoreId());
+
         $productCodes = array_keys($products);
+        if (count($productCodes) > 1) {
+            $productCodes = array_intersect(array($defaultProduct), $productCodes);
+        }
 
         $request->setData('gk_api_product', $productCodes[0]);
     }

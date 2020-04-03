@@ -87,6 +87,13 @@ class Filter
                 PreferredDay::CODE,
                 PreferredTime::CODE
             ],
+            Product::CODE_WARENPOST_NATIONAL => [
+                ParcelAnnouncement::CODE,
+                ParcelOutletRouting::CODE,
+                PreferredLocation::CODE,
+                PreferredNeighbour::CODE,
+                PrintOnlyIfCodeable::CODE,
+            ],
             Product::CODE_WELTPAKET => [
                 BulkyGoods::CODE,
                 Insurance::CODE,

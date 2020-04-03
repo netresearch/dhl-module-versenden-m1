@@ -211,3 +211,5 @@
 "Enable on customers choice","Aktivieren auf Kundenwunsch"
 "Shipment Defaults","Standardwerte für Sendungen"
 "Shipping Product","Versandprodukt"
+"Shipping Product (Domestic)","Versandprodukt (Inland)"
+"Define the domestic default shipping product for automated shipment orders.","Legen Sie das Standard-Inlands-Versandprodukt für automatisiert erstellte Versandaufträge fest."

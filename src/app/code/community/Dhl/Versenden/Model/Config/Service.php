@@ -439,3 +439,4 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         return $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
     }
 }
+
