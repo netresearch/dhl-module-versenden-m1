@@ -294,22 +294,12 @@ Please also note the information about `Booking additional services`_ and
 * *Enable Preferred Day*: The customer chooses a specific day on which the shipment
   should arrive. The available days are displayed dynamically, depending on the recipient's
   address.
-* *Enable Preferred Time*: The customer chooses a time frame within which the
-  shipment should arrive. The available times are displayed dynamically, depending on the recipient's
-  address.
-* *Preferred day / time handling additional charge (handling fee)*: This amount will
+* *Preferred day handling additional charge (handling fee)*: This amount will
   be added to the shipping cost if the service is used. Use a decimal point, not comma.
   The gross amount must be entered here (incl. VAT). If you want to offer the service
   for free, enter a ``0`` here.
-* *Preferred day / time handling fee text*: This text will be displayed to the customer
+* *Preferred day handling fee text*: This text will be displayed to the customer
   in the checkout if the service has been selected. You can use the placeholder ``$1``
-  in the text which will show the additional handling fee and currency in the checkout.
-* *Combined preferred day and time handling additional charge (handling fee)*: This amount will
-  be added to the shipping cost if **both** services are booked. Use a decimal point, not comma.
-  The gross amount must be entered here (incl. VAT). If you want to offer the services combination
-  for free, enter a ``0`` here.
-* *Combined preferred day and time handling fee text*: This text will be displayed to the customer
-  in the checkout if both services have been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
 * *Cut off time*: This sets the time up to which new orders will be dispatched on the
   same day. Orders placed *after* the cut off time will not be dispatched on the same
@@ -338,7 +328,9 @@ You can also configure which *order status* an order must have to be processed
 automatically. You can use this to exclude specific orders from being processed
 automatically.
 
-Also, the *additional services* which should be booked automatically can be chosen here.
+Shipment Defaults
+~~~~~~~~~~~~~~~~~
+The *additional services* which should be booked automatically can be chosen here.
 
 Contact Data
 ~~~~~~~~~~~~
@@ -371,7 +363,7 @@ on the Return Label, if that service was booked.
 Booking additional services
 ---------------------------
 
-The available services as well as preferred days and preferred times depend on the
+The available services as well as preferred days depend on the
 actual shipping address and country. The DHL Parcel Management API is used for this
 during the checkout process. Unusable services will be hidden in the checkout
 automatically.
@@ -384,8 +376,8 @@ The services *Preferred location* and *Preferred neighbor* cannot be booked toge
 Additional costs for services
 -----------------------------
 
-The services *Preferred Day* and *Preferred Time* are **enabled by default!**
-Therefore the standard DHL handling fees will be added to the shipping cost.
+The service *Preferred Day* is **enabled by default!**
+Therefore the standard DHL handling fee will be added to the shipping cost.
 
 When using the shipping method *Free Shipping* the additional handling fees will
 always be ignored!

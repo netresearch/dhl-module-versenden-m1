@@ -304,25 +304,14 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
 * *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
   an welchem die Lieferung ankommen soll. Die verfügbaren Wunschtage werden dynamisch
   angezeigt, basierend auf der Empfängeradresse.
-* *Wunschzeit*: Der Kunde wählt ein Zeitfenster für seine Sendung,
-  in welchem die Lieferung ankommen soll. Die verfügbaren Wunschzeiten werden dynamisch
-  angezeigt, basierend auf der Empfängeradresse.
-* *Wunschtag / Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
+
+* *Wunschtag Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
   hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
   als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
   Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
   ``0`` ein.
-* *Wunschtag / Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+* *Wunschtag  Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
   im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
-  Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
-  und die Währung ersetzt wird.
-* *Kombination Wunschtag und Wunschzeit Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu
-  den Versandkosten hinzu addiert, wenn **beide** Services gebucht werden. Verwenden Sie Punkt
-  statt Komma als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
-  Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
-  ``0`` ein.
-* *Kombination Wunschtag und Wunschzeit Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
-  im Checkout angezeigt, wenn **beide** Zusatzservices ausgewählt sind. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
 * *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
@@ -353,7 +342,10 @@ Die Einstellung *Bestell-Status* legt fest, welchen Status eine Bestellung haben
 um durch die automatische Sendungserstellung berücksichtigt zu werden. Hierüber können Sie
 steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen werden sollen.
 
-Außerdem legen Sie hier die *Zusatzservices* fest, die automatisch hinzugebucht werden sollen.
+Standardwerte für Sendungen
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Hier legen Sie die *Zusatzservices* fest, die automatisch hinzugebucht werden sollen.
 
 Kontaktinformationen
 ~~~~~~~~~~~~~~~~~~~~
@@ -384,7 +376,7 @@ auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 Buchbarkeit von Zusatzservices
 ------------------------------
 
-Die tatsächlich buchbaren Services sowie die wählbaren Wunschtage und Wunschzeiten hängen
+Die tatsächlich buchbaren Services sowie die wählbaren Wunschtage hängen
 von der Lieferadresse bzw. dem Zielland ab. Dazu wird die DHL Paketsteuerung API während
 des Checkouts verwendet. Nicht verfügbare Services werden im Checkout
 automatisch ausgeblendet.
@@ -397,8 +389,8 @@ Die gleichzeitige Buchung von Wunschort und Wunschnachbar ist nicht möglich.
 Zusatzkosten für Services
 -------------------------
 
-Die Services *Wunschtag* und *Wunschzeit* sind **standardmäßig aktiviert!** Wenn diese
-gebucht werden, werden die konfigurierten Service-Aufschläge zu den Versandkosten hinzugefügt.
+Der Service *Wunschtag* ist **standardmäßig aktiviert!** Wird dieser gebucht, wird
+der konfigurierte Service-Aufschlag zu den Versandkosten hinzugefügt.
 
 Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
 Zusatzkosten generell außer Kraft gesetzt!
