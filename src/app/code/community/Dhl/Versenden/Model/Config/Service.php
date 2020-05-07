@@ -23,7 +23,8 @@
  * @license   http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
  * @link      http://www.netresearch.de/
  */
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+
+use Dhl\Versenden\Bcs\Api\Shipment\Service;
 
 /**
  * Dhl_Versenden_Model_Config_Service
@@ -44,18 +45,13 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_FIELD_PREFERREDLOCATION_PLACEHOLDER = 'service_preferredlocation_placeholder';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR = 'service_preferredneighbour_enabled';
     const CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER = 'service_preferredneighbour_placeholder';
-    const CONFIG_XML_FIELD_PACKSTATION = 'service_packstation_enabled';
     const CONFIG_XML_FIELD_PARCELANNOUNCEMENT = 'service_parcelannouncement_enabled';
-    const CONFIG_XML_FIELD_VISUALCHECKOFAGE = 'service_visualcheckofage_enabled';
-    const CONFIG_XML_FIELD_RETURNSHIPMENT = 'service_returnshipment_enabled';
-    const CONFIG_XML_FIELD_INSURANCE = 'service_insurance_enabled';
-    const CONFIG_XML_FIELD_BULKYGOODS = 'service_bulkygoods_enabled';
 
-    const CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
-    const CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
-    const CONFIG_XML_PATH_AUTOCREATE_INSURANCE = 'shipment_autocreate_service_insurance';
-    const CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS = 'shipment_autocreate_service_bulkygoods';
-    const CONFIG_XML_PATH_AUTOCREATE_PARCELOUTLETROUTING = 'shipment_autocreate_service_parceloutletrouting';
+    const CONFIG_XML_PATH_SHIPMENT_DEFAULT_VISUALCHECKOFAGE = 'shipment_autocreate_service_visualcheckofage';
+    const CONFIG_XML_PATH_SHIPMENT_DEFAULT_RETURNSHIPMENT = 'shipment_autocreate_service_returnshipment';
+    const CONFIG_XML_PATH_SHIPMENT_DEFAULT_INSURANCE = 'shipment_autocreate_service_insurance';
+    const CONFIG_XML_PATH_SHIPMENT_DEFAULT_BULKYGOODS = 'shipment_autocreate_service_bulkygoods';
+    const CONFIG_XML_PATH_SHIPMENT_DEFAULT_PARCELOUTLETROUTING = 'shipment_autocreate_service_parceloutletrouting';
 
     /**
      * @param null $store
@@ -157,8 +153,9 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredNeighbour($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred neighbor") .
-            Mage::helper('dhl_versenden/data')->__(": Delivery to a neighbor of your choice");
+        $name = Mage::helper('dhl_versenden/data')->__("Preferred neighbor");
+        $name.= Mage::helper('dhl_versenden/data')->__(": Delivery to a neighbor of your choice");
+
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR, $store);
         $isSelected  = false;
         $placeholder = $this->getStoreConfig(self::CONFIG_XML_FIELD_PREFERREDNEIGHBOUR_PLACEHOLDER, $store);
@@ -182,13 +179,15 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * @param mixed $store
+     *
      * @return Service\VisualCheckOfAge
      */
-    protected function initVisualCheckOfAge()
+    protected function initVisualCheckOfAge($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Visual Check of Age");
         $isAvailable = true;
-        $isSelected  = false;
+        $isSelected  = $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_VISUALCHECKOFAGE, $store);
         $options     = array(
             Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
             Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
@@ -198,49 +197,57 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
+     * @param mixed $store
+     *
      * @return Service\ReturnShipment
      */
-    protected function initReturnShipment()
+    protected function initReturnShipment($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Return Shipment");
         $isAvailable = true;
-        $isSelected  = false;
+        $isSelected  = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_RETURNSHIPMENT, $store);
 
         return new Service\ReturnShipment($name, $isAvailable, $isSelected);
     }
 
     /**
+     * @param mixed $store
+     *
      * @return Service\Insurance
      */
-    protected function initInsurance()
+    protected function initInsurance($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Additional Insurance");
         $isAvailable = true;
-        $isSelected  = false;
+        $isSelected  = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_INSURANCE, $store);
 
         return new Service\Insurance($name, $isAvailable, $isSelected);
     }
 
     /**
+     * @param mixed $store
+     *
      * @return Service\BulkyGoods
      */
-    protected function initBulkyGoods()
+    protected function initBulkyGoods($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Bulky Goods");
         $isAvailable = true;
-        $isSelected  = false;
+        $isSelected  = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_BULKYGOODS, $store);
 
         return new Service\BulkyGoods($name, $isAvailable, $isSelected);
     }
 
     /**
+     * @param mixed $store
+     *
      * @return Service\ParcelOutletRouting
      */
-    protected function initParcelOutletRouting()
+    protected function initParcelOutletRouting($store = null)
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Parcel Outlet Routing");
         $isAvailable = true;
-        $isSelected  = false;
+        $isSelected  = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_PARCELOUTLETROUTING, $store);
 
         return new Service\ParcelOutletRouting($name, $isAvailable, $isSelected);
     }
@@ -287,19 +294,19 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
         $collection->addItem($parcelAnnouncement);
 
         // merchant/admin services
-        $visualCheckOfAge = $this->initVisualCheckOfAge();
+        $visualCheckOfAge = $this->initVisualCheckOfAge($store);
         $collection->addItem($visualCheckOfAge);
 
-        $returnShipment = $this->initReturnShipment();
+        $returnShipment = $this->initReturnShipment($store);
         $collection->addItem($returnShipment);
 
-        $insurance = $this->initInsurance();
+        $insurance = $this->initInsurance($store);
         $collection->addItem($insurance);
 
-        $bulkyGoods = $this->initBulkyGoods();
+        $bulkyGoods = $this->initBulkyGoods($store);
         $collection->addItem($bulkyGoods);
 
-        $parcelOutletRouting = $this->initParcelOutletRouting();
+        $parcelOutletRouting = $this->initParcelOutletRouting($store);
         $collection->addItem($parcelOutletRouting);
 
         // implicit/config services
@@ -341,51 +348,15 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     public function getAutoCreateServices($store = null)
     {
-        // read autocreate service values from config
-        $ageCheckValue = $this->getStoreConfig(self::CONFIG_XML_PATH_AUTOCREATE_VISUALCHECKOFAGE, $store);
-        $returnShipmentValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_RETURNSHIPMENT, $store);
-        $insuranceValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_INSURANCE, $store);
-        $bulkyGoodsValue = $this->getStoreConfigFlag(self::CONFIG_XML_PATH_AUTOCREATE_BULKYGOODS, $store);
-        $parcelOutletRoutingValue = $this->getStoreConfigFlag(
-            self::CONFIG_XML_PATH_AUTOCREATE_PARCELOUTLETROUTING,
-            $store
-        );
-        $validationValue = $this->getStoreConfigFlag(
-            Dhl_Versenden_Model_Config_Shipment::CONFIG_XML_FIELD_PRINTONLYIFCODEABLE,
-            $store
-        );
-
-        $autoCreateValues = array(
-            Service\VisualCheckOfAge::CODE => $ageCheckValue,
-            Service\ReturnShipment::CODE => $returnShipmentValue,
-            Service\Insurance::CODE => $insuranceValue,
-            Service\BulkyGoods::CODE => $bulkyGoodsValue,
-            Service\ParcelOutletRouting::CODE => $parcelOutletRoutingValue,
-            Service\PrintOnlyIfCodeable::CODE => $validationValue,
-        );
-
-        // obtain all enabled services
-        $services = $this->getEnabledServices($store)->getItems();
-
-        // skip services disabled for auto creation
-        $items = array_filter(
-            $services,
-            function (Service\Type\Generic $service) use ($autoCreateValues) {
-                return (isset($autoCreateValues[$service->getCode()]) && $autoCreateValues[$service->getCode()]);
+        // obtain all enabled services but skip services disabled for auto creation.
+        $services = array_filter(
+            $this->getEnabledServices($store)->getItems(),
+            function (\Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service) {
+                return $service->isSelected();
             }
         );
 
-        // set autocreate service details to remaining services
-        /** @var Service\Type\Generic $service */
-        foreach ($services as $service) {
-            if (isset($autoCreateValues[$service->getCode()])) {
-                $service->setValue($autoCreateValues[$service->getCode()]);
-            }
-        }
-
-        $collection = new Service\Collection($items);
-
-        return $collection;
+        return new Service\Collection($services);
     }
 
     /**
@@ -409,10 +380,12 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     ) {
         $services = $this->getEnabledServices($store);
 
-        $euCountries      =
-            explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
-        $shippingProducts =
-            \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $store));
+        $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
+            $shipperCountry,
+            $recipientCountry,
+            $euCountries
+        );
 
         $filter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter(
             $shippingProducts,

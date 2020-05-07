@@ -202,7 +202,9 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 
         $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
-            $shipperCountry, $recipientCountry, $euCountries
+            $shipperCountry,
+            $recipientCountry,
+            $euCountries
         );
         $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
@@ -221,7 +223,6 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
             $serviceData['shipment_service'][$service->getCode()] = $service->isEnabled();
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
         }
-
 
         // add printOnlyIfCodeable flag from config
         $serviceData['shipment_service'][Service\PrintOnlyIfCodeable::CODE] =

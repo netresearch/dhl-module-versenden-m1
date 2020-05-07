@@ -201,3 +201,4 @@
 "If you want to enable DHL's Automatic parcel Announcement, please select <em>Enable</em> or <em>Enable on customer choice</em>. Last option gives the customer the choice to request the parcel announcement service by checkbox in the checkout.","Wenn Sie die automatische Paketankündigung von DHL aktivieren möchten, wählen Sie bitte <em>Aktivieren</em> oder <em>Aktivieren auf Kundenwunsch</em>. Letzte Option überlässt dem Kunden die Wahl die Paketankündigung per Checkbox im Checkout anzufordern."
 "When service is applied, the buyer's email address will be transmitted to DHL.","Wenn der Service angewendet wird, wird die E-Mail-Adresse des Käufers an DHL übermittelt."
 "Enable on customers choice","Aktivieren auf Kundenwunsch"
+"Shipment Defaults","Standardwerte für Sendungen"

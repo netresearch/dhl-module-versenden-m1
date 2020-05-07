@@ -158,8 +158,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit
     protected function overrideServiceSelections(
         Service\Collection $availableServices,
         \Dhl\Versenden\Bcs\Api\Info $versendenInfo
-    )
-    {
+    ) {
         /** @var Service\Type\Generic $availableService */
         foreach ($availableServices as $availableService) {
             $code = $availableService->getCode();

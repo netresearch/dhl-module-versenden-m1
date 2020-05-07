@@ -76,9 +76,7 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
      */
     public function isLoctionOrneighbourEnabled()
     {
-        /**
-         * @var Dhl_Versenden_Model_Config_Service $config
-         */
+        /** @var Dhl_Versenden_Model_Config_Service $config */
         $config = Mage::getModel('dhl_versenden/config_service');
         $services = $config->getEnabledServices(Mage::app()->getStore()->getStoreId())->getItems();
         $location = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE;
@@ -95,9 +93,7 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
      */
     public function isLocationAndNeighbourEnabled()
     {
-        /**
-         * @var Dhl_Versenden_Model_Config_Service $config
-         */
+        /** @var Dhl_Versenden_Model_Config_Service $config */
         $config = Mage::getModel('dhl_versenden/config_service');
         $services = $config->getEnabledServices(Mage::app()->getStore()->getStoreId())->getItems();
         $location = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE;
