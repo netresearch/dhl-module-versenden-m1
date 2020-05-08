@@ -6,7 +6,6 @@ shipping API into the order processing workflow.
 
 Facts
 -----
-- version: 1.6.0
 - extension key: Dhl_Versenden
 - [extension on GitLab](https://git.netresearch.de/dhl/versenden-m1)
 - [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.5.1/archive.tar.gz)
@@ -57,15 +56,15 @@ Uninstallation
 Support
 -------
 In case of questions or problems, please have a look at the
-[Support Portal (FAQ)](http://dhl.support.netresearch.de/) first.
+[Support Portal (FAQ)](https://dhl.support.netresearch.de/) first.
 
 If the issue cannot be resolved, you can contact the support team via the
-[Support Portal](http://dhl.support.netresearch.de/) or by sending an email
+[Support Portal](https://dhl.support.netresearch.de/) or by sending an email
 to <dhl.support@netresearch.de>.
 
 Developer
 ---------
-Christoph Aßmann | [Netresearch GmbH & Co. KG](http://www.netresearch.de/) | [@mam08ixo](https://twitter.com/mam08ixo)
+Christoph Aßmann | [Netresearch DTT GmbH & Co. KG](https://www.netresearch.de/) | [@mam08ixo](https://twitter.com/mam08ixo)
 
 Licence
 -------
@@ -73,4 +72,4 @@ Licence
 
 Copyright
 ---------
-(c) 2018 DHL Paket GmbH
+(c) 2020 DHL Paket GmbH

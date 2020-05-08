@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2020-05-08
+
+### Changed
+
+- moved Autocreate Services configuration to Shipment Defaults
+
+### Removed
+
+- Remove Preferred Time Service
+
+### Fixed
+
+- Autocreate Services preselection in packaging popup
 
 ## [1.6.0] - 2020-01-15
 
@@ -162,13 +175,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## 1.0.0 - 2016-10-17
 
 - Initial release
-
-[Unreleased]: https://git.netresearch.de/dhl/versenden-m1/compare/1.5.1...develop
-[1.5.1]: https://git.netresearch.de/dhl/versenden-m1/compare/1.5.0...1.5.1
-[1.5.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.4.0...1.5.0
-[1.4.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.3.1...1.4.0
-[1.3.1]: https://git.netresearch.de/dhl/versenden-m1/compare/1.3.0...1.3.1
-[1.3.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.2.0...1.3.0
-[1.2.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.1.1...1.2.0
-[1.1.1]: https://git.netresearch.de/dhl/versenden-m1/compare/1.1.0...1.1.1
-[1.1.0]: https://git.netresearch.de/dhl/versenden-m1/compare/1.0.0...1.1.0

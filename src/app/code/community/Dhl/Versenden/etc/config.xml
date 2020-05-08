@@ -28,7 +28,7 @@
 <config>
     <modules>
         <Dhl_Versenden>
-            <version>1.6.0</version>
+            <version>1.7.0</version>
         </Dhl_Versenden>
     </modules>
     <global>
