@@ -205,13 +205,13 @@ class Filter
             $productsContainService = array_reduce(
                 $productsServices,
                 function ($carry, $productServices) use ($service) {
-                    return $carry && in_array($service->getCode(), $productServices);
+                    return $carry || in_array($service->getCode(), $productServices);
                 },
-                true
+                false
             );
 
             if (!$productsContainService) {
-                // skip services that are not available in ALL requested products
+                // skip services that are not available in ANY of the requested products
                 continue;
             }
 
