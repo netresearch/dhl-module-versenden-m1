@@ -112,15 +112,9 @@ abstract class Dhl_Versenden_Model_Webservice_Gateway_Abstract
                     $shipmentRequest->getData('gk_api_product')
                 );
 
-                $cod = $shipmentOrder->getServiceSelection()->getCod();
-                $insurance = $shipmentOrder->getServiceSelection()->getInsurance();
-                $canShipPartially = empty($cod)
-                    && empty($insurance);
-                $isPartial = ($orderShipment->getOrder()->getTotalQtyOrdered() != $orderShipment->getTotalQty());
-                if (!$canShipPartially && $isPartial) {
-                    $message = 'Cannot do partial shipment with COD or Additional Insurance.';
-                    throw new RequestData\ValidationException($message);
-                }
+                /** @var \Dhl_Versenden_Model_Webservice_Builder_Validator $validator */
+                $validator = Mage::getSingleton('dhl_versenden/webservice_builder_validator');
+                $validator->validate($shipmentRequest, $shipmentOrder);
 
                 $shipmentOrderCollection->addItem($shipmentOrder);
             } catch (RequestData\ValidationException $e) {

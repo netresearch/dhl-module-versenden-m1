@@ -121,6 +121,7 @@
 "e.g. garage, terrace","e.g. garage, terrace"
 "name, street and house number","name, street and house number"
 "Cannot do partial shipment with COD or Additional Insurance.","Cannot do partial shipment with COD or Additional Insurance."
+"Warenpost cannot be booked with the services Additional Insurance, Bulky Goods, Cash on Delivery, Preferred Day, Visual Check of Age.","Warenpost cannot be booked with the services Additional Insurance, Bulky Goods, Cash on Delivery, Preferred Day, Visual Check of Age."
 "Customs Declaration","Customs Declaration"
 "Terms of Trade","Terms of Trade"
 "Additional Fee","Additional Fee"

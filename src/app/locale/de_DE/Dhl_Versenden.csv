@@ -121,6 +121,7 @@
 "e.g. garage, terrace","z.B. Garage, Terrasse"
 "name, street and house number","Name, Straße und Hausnr."
 "Cannot do partial shipment with COD or Additional Insurance.","Für Teillieferungen ist weder Nachnahme noch Transportversicherung verfügbar."
+"Warenpost cannot be booked with the services Additional Insurance, Bulky Goods, Cash on Delivery, Preferred Day, Visual Check of Age.","Warenpost kann nicht gebucht werden mit den Services Zusatzversicherung, Sperrgut, Nachnahme, Wunschtag, Alterssichtprüfung."
 "Customs Declaration","Zollinhaltserklärung"
 "Terms of Trade","Handelsklauseln"
 "Additional Fee","Zusatzentgelte"
