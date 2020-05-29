@@ -123,6 +123,6 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
         $this->assertEquals('TR', $block->getCountryOfManufacture('100'));
-        $this->assertEquals('AT', $block->getCountryOfManufacture('200'));
+        $this->assertEquals('DE', $block->getCountryOfManufacture('200'));
     }
 }

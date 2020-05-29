@@ -67,7 +67,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertInstanceOf(ShipperBankData::class, $defaultData);
         $this->assertEquals("Foo Name", $defaultData->getAccountOwner());
         $this->assertEquals("Foo Bank", $defaultData->getBankName());
-        $this->assertEquals("DE999", $defaultData->getIban());
+        $this->assertEquals("DE123", $defaultData->getIban());
         $this->assertEquals("XXXXX", $defaultData->getBic());
         $this->assertEquals("Foo Note", $defaultData->getNote1());
         $this->assertEquals("Foo Note 2", $defaultData->getNote2());
@@ -77,7 +77,7 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertInstanceOf(ShipperBankData::class, $storeData);
         $this->assertEquals("Bar Name", $storeData->getAccountOwner());
         $this->assertEquals("Bar Bank", $storeData->getBankName());
-        $this->assertEquals("AT999", $storeData->getIban());
+        $this->assertEquals("DE987", $storeData->getIban());
         $this->assertEquals("YYYYY", $storeData->getBic());
         $this->assertEquals("Bar Note", $storeData->getNote1());
         $this->assertEquals("Bar Note 2", $storeData->getNote2());
@@ -120,8 +120,8 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $this->assertEquals("D2I", $storeContact->getDispatchingInformation());
         $this->assertEquals("B1111", $storeContact->getZip());
         $this->assertEquals("Bar City", $storeContact->getCity());
-        $this->assertEquals("Austria", $storeContact->getCountry());
-        $this->assertEquals("AT", $storeContact->getCountryISOCode());
+        $this->assertEquals("Germany", $storeContact->getCountry());
+        $this->assertEquals("DE", $storeContact->getCountryISOCode());
         $this->assertEquals("9876", $storeContact->getPhone());
         $this->assertEquals("a@bar", $storeContact->getEmail());
         $this->assertEquals("Store Contact", $storeContact->getContactPerson());
@@ -182,14 +182,14 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $defaultShipper = $config->getShipper();
         $this->assertInstanceOf(Shipper::class, $defaultShipper);
         $this->assertEquals('pass', $defaultShipper->getAccount()->getSignature());
-        $this->assertEquals("DE999", $defaultShipper->getBankData()->getIban());
+        $this->assertEquals("DE123", $defaultShipper->getBankData()->getIban());
         $this->assertEquals("Foo City", $defaultShipper->getContact()->getCity());
         $this->assertEquals("Foo City", $defaultShipper->getReturnReceiver()->getCity());
 
         $storeShipper = $config->getShipper('store_two');
         $this->assertInstanceOf(Shipper::class, $storeShipper);
         $this->assertEquals('pass', $storeShipper->getAccount()->getSignature());
-        $this->assertEquals("AT999", $storeShipper->getBankData()->getIban());
+        $this->assertEquals("DE987", $storeShipper->getBankData()->getIban());
         $this->assertEquals("Bar City", $storeShipper->getContact()->getCity());
         $this->assertEquals("Return City", $storeShipper->getReturnReceiver()->getCity());
     }
@@ -203,6 +203,6 @@ class Dhl_Versenden_Test_Model_Config_ShipperTest extends EcomDev_PHPUnit_Test_C
         $config = new Dhl_Versenden_Model_Config_Shipper();
 
         $this->assertEquals('DE', $config->getShipperCountry());
-        $this->assertEquals('AT', $config->getShipperCountry('store_two'));
+        $this->assertEquals('DE', $config->getShipperCountry('store_two'));
     }
 }

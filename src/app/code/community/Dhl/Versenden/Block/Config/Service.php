@@ -106,22 +106,6 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
     }
 
     /**
-     * @param $value
-     * @return string
-     */
-    public function renderTime($value)
-    {
-        if (!ctype_digit($value) || strlen($value) !== 8) {
-            return $value;
-        }
-
-        $timeValues = str_split($value, 2);
-        $result     = $timeValues[0] . ' - ' . $timeValues[2];
-
-        return $this->helper->__($result);
-    }
-
-    /**
      * check if there are services selected
      *
      * @return bool

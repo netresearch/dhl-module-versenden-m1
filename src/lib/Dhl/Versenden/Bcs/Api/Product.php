@@ -42,9 +42,6 @@ class Product
     const CODE_EUROPAKET           = 'V54EPAK';
     const CODE_KURIER_TAGGLEICH    = 'V06TG';
     const CODE_KURIER_WUNSCHZEIT   = 'V06WZ';
-    const CODE_PAKET_AUSTRIA       = 'V86PARCEL';
-    const CODE_PAKET_CONNECT       = 'V87PARCEL';
-    const CODE_PAKET_INTERNATIONAL = 'V82PARCEL';
 
     const PROCEDURE_PAKET_NATIONAL          = '01';
     const PROCEDURE_WARENPOST_NATIONAL      = '62';
@@ -52,12 +49,7 @@ class Product
     const PROCEDURE_EUROPAKET               = '54';
     const PROCEDURE_KURIER_TAGGLEICH        = '01';
     const PROCEDURE_KURIER_WUNSCHZEIT       = '01';
-    const PROCEDURE_PAKET_AUSTRIA           = '86';
-    const PROCEDURE_PAKET_CONNECT           = '87';
-    const PROCEDURE_PAKET_INTERNATIONAL     = '82';
     const PROCEDURE_RETURNSHIPMENT_NATIONAL = '07';
-    const PROCEDURE_RETURNSHIPMENT_AUSTRIA  = '83';
-    const PROCEDURE_RETURNSHIPMENT_CONNECT  = '85';
 
     /**
      * Obtain all product codes.
@@ -73,9 +65,6 @@ class Product
             self::CODE_EUROPAKET,
             self::CODE_KURIER_TAGGLEICH,
             self::CODE_KURIER_WUNSCHZEIT,
-            self::CODE_PAKET_AUSTRIA,
-            self::CODE_PAKET_CONNECT,
-            self::CODE_PAKET_INTERNATIONAL,
         ];
     }
 
@@ -94,9 +83,6 @@ class Product
             self::CODE_EUROPAKET => self::PROCEDURE_EUROPAKET,
             self::CODE_KURIER_TAGGLEICH => self::PROCEDURE_KURIER_TAGGLEICH,
             self::CODE_KURIER_WUNSCHZEIT => self::PROCEDURE_KURIER_WUNSCHZEIT,
-            self::CODE_PAKET_AUSTRIA => self::PROCEDURE_PAKET_AUSTRIA,
-            self::CODE_PAKET_CONNECT => self::PROCEDURE_PAKET_CONNECT,
-            self::CODE_PAKET_INTERNATIONAL => self::PROCEDURE_PAKET_INTERNATIONAL,
         );
 
         if (!isset($procedures[$code])) {
@@ -117,8 +103,6 @@ class Product
         $procedures = array(
             self::CODE_PAKET_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
             self::CODE_WARENPOST_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
-            self::CODE_PAKET_AUSTRIA => self::PROCEDURE_RETURNSHIPMENT_AUSTRIA,
-            self::CODE_PAKET_CONNECT => self::PROCEDURE_RETURNSHIPMENT_CONNECT,
         );
 
         if (!isset($procedures[$code])) {
@@ -143,27 +127,14 @@ class Product
             return static::getCodesDeToDe();
         }
 
-        if ($shipperCountry == 'AT' && $recipientCountry == 'AT') {
-            return static::getCodesAtToAt();
-        }
-
         // eu
         if ($shipperCountry == 'DE' && in_array($recipientCountry, $euCountries)) {
             return static::getCodesDeToEu();
         }
 
-        $supportedEUCountriesForAT = array('DE','BE','LU','NL','PL','SK','CZ');
-        if ($shipperCountry == 'AT' && in_array($recipientCountry, $supportedEUCountriesForAT, true)) {
-            return static::getCodesAtToEu();
-        }
-
         // row
         if ($shipperCountry == 'DE') {
             return static::getCodesDeToRow();
-        }
-
-        if ($shipperCountry == 'AT') {
-            return static::getCodesAtToRow();
         }
 
         return [];
@@ -188,27 +159,6 @@ class Product
     {
         return [
             self::CODE_WELTPAKET,
-        ];
-    }
-
-    protected static function getCodesAtToAt()
-    {
-        return [
-            self::CODE_PAKET_AUSTRIA,
-        ];
-    }
-
-    protected static function getCodesAtToEu()
-    {
-        return [
-            self::CODE_PAKET_CONNECT,
-        ];
-    }
-
-    protected static function getCodesAtToRow()
-    {
-        return [
-            self::CODE_PAKET_INTERNATIONAL,
         ];
     }
 }

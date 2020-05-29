@@ -17,7 +17,7 @@ scope:
 
 config:
   default/dhl_versenden/dev/autoload_enabled: "0"
-  default/shipping/origin/country_id: "AT"
+  default/shipping/origin/country_id: "DE"
 
   stores/store_one/carriers/dhlversenden/shipment_dhlmethods:         "flatrate_flatrate,tablerate_bestway"
 

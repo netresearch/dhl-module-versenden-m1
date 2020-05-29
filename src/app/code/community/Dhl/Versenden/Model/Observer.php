@@ -52,7 +52,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         $config = Mage::getModel('dhl_versenden/config_shipment');
         $shipperCountry = $config->getShipperCountry($order->getStoreId());
 
-        if (($shipperCountry !== 'AT') && $config->canProcessMethod($shippingMethod, $order->getStoreId())) {
+        if ($config->canProcessMethod($shippingMethod, $order->getStoreId())) {
             $parts          = explode('_', $shippingMethod);
             $parts[0]       = Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE;
             $shippingMethod = implode('_', $parts);
@@ -157,16 +157,14 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             return;
         }
 
-        // obtain possible dhl products (national, weltpaket, …) and check if
-        // the filter allows cod for these them
-        $shipperCountry   = Mage::getStoreConfig(
+        // obtain possible dhl products (national, weltpaket, …) and check if the filter allows cod for them
+        $shipperCountry = Mage::getStoreConfig(
             Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID,
             $quote->getStoreId()
         );
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
-        $euCountries      =
-            Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $quote->getStoreId());
-        $euCountries      = explode(',', $euCountries);
+        $euCountries = Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $quote->getStoreId());
+        $euCountries = explode(',', $euCountries);
 
         $availableProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
             $shipperCountry,
@@ -174,7 +172,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             $euCountries
         );
 
-        $filter     = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter($availableProducts, false, false);
+        $filter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter($availableProducts, false, false);
         $codService = $filter->filterService(new \Dhl\Versenden\Bcs\Api\Shipment\Service\Cod('cod', true, true));
         if ($codService === null) {
             $checkResult->isAvailable = false;

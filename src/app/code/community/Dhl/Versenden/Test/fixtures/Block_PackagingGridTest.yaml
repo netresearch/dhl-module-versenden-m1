@@ -17,7 +17,7 @@ scope:
 
 config:
   default/dhl_versenden/dev/autoload_enabled: "0"
-  default/shipping/origin/country_id: "AT"
+  default/shipping/origin/country_id: "DE"
 
 eav:
   catalog_product:

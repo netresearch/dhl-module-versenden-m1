@@ -143,7 +143,7 @@ class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
         $shippingMethod  = 'flatrate_flatrate';
         $shippingAddress = new Mage_Sales_Model_Quote_Address();
         $shippingAddress->setShippingMethod($shippingMethod);
-        $shippingAddress->setCountryId('PL');
+        $shippingAddress->setCountryId('DE');
         $quote = new Mage_Sales_Model_Quote();
         $quote->setStoreId(1);
         $quote->setShippingAddress($shippingAddress);

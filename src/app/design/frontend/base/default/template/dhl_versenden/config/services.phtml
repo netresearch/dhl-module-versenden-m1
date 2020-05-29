@@ -36,8 +36,6 @@ $services = $this->getServices();
                 <?php endif; ?>
                 <?php if ($key === 'preferredDay'): ?>
                     <li><?php echo $this->__($this->renderName($key)) . ': ' . $this->renderDate($value) ?></li>
-                <?php elseif ($key === 'preferredTime'): ?>
-                    <li><?php echo $this->__($this->renderName($key)) . ': ' . $this->renderTime($value) ?></li>
                 <?php elseif ($key === 'parcelAnnouncement'): ?>
                     <?php if ($value): ?>
                         <li><?php echo $this->__($this->renderName($key)) ?></li>

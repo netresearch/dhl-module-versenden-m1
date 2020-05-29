@@ -75,10 +75,6 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
             Product::CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('DHL Europaket'),
             Product::CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('DHL Kurier Taggleich'),
             Product::CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__('DHL Kurier Wunschzeit'),
-
-            Product::CODE_PAKET_AUSTRIA => Mage::helper('dhl_versenden/data')->__('DHL Paket Austria'),
-            Product::CODE_PAKET_CONNECT => Mage::helper('dhl_versenden/data')->__('DHL PAKET Connect'),
-            Product::CODE_PAKET_INTERNATIONAL => Mage::helper('dhl_versenden/data')->__('DHL PAKET International'),
         );
 
         if (!$shipperCountry) {

@@ -117,28 +117,6 @@ class Filter
                 PrintOnlyIfCodeable::CODE,
                 ReturnShipment::CODE,
             ],
-            Product::CODE_PAKET_AUSTRIA => [
-                BulkyGoods::CODE,
-                Cod::CODE,
-                Insurance::CODE,
-                ParcelAnnouncement::CODE,
-                PrintOnlyIfCodeable::CODE,
-                ReturnShipment::CODE,
-            ],
-            Product::CODE_PAKET_CONNECT => [
-                BulkyGoods::CODE,
-                Cod::CODE,
-                Insurance::CODE,
-                ParcelAnnouncement::CODE,
-                PrintOnlyIfCodeable::CODE,
-                ReturnShipment::CODE,
-            ],
-            Product::CODE_PAKET_INTERNATIONAL => [
-                BulkyGoods::CODE,
-                Insurance::CODE,
-                ParcelAnnouncement::CODE,
-                PrintOnlyIfCodeable::CODE,
-            ],
         ];
 
         $this->postalFacilityServices = [

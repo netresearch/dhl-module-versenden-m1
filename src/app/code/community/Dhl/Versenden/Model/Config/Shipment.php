@@ -87,7 +87,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      */
     public function canProcessMethod($shippingMethod, $store = null)
     {
-        if (!in_array($this->getShipperCountry($store), array('AT', 'DE'))) {
+        if ($this->getShipperCountry($store) !== 'DE') {
             // shipper country is not supported, regardless of shipping method.
             return false;
         }

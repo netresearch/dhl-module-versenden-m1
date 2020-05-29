@@ -73,6 +73,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
     public function getProductsGermanShipper()
     {
         $paketNational = \Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_NATIONAL;
+        $paketMerchandise = \Dhl\Versenden\Bcs\Api\Product::CODE_WARENPOST_NATIONAL;
         $paketInternational = \Dhl\Versenden\Bcs\Api\Product::CODE_WELTPAKET;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
@@ -82,6 +83,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $products = $carrier->getProducts($shipperCountry, $receiverCountry);
         $this->assertInternalType('array', $products);
         $this->assertArrayHasKey($paketNational, $products);
+        $this->assertArrayHasKey($paketMerchandise, $products);
         $this->assertArrayNotHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Bcs\Api\Product::getProcedure($paketNational));
 
@@ -90,6 +92,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $products = $carrier->getProducts($shipperCountry, $receiverCountry);
         $this->assertInternalType('array', $products);
         $this->assertArrayNotHasKey($paketNational, $products);
+        $this->assertArrayNotHasKey($paketMerchandise, $products);
         $this->assertArrayHasKey($paketInternational, $products);
 
         // row receiver
@@ -97,45 +100,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $products = $carrier->getProducts($shipperCountry, $receiverCountry);
         $this->assertInternalType('array', $products);
         $this->assertArrayNotHasKey($paketNational, $products);
-        $this->assertArrayHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Bcs\Api\Product::getProcedure($paketInternational));
-    }
-    /**
-     * @test
-     */
-    public function getProductsAustrianShipper()
-    {
-        $paketNational = \Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_AUSTRIA;
-        $paketEu = \Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_CONNECT;
-        $paketInternational = \Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_INTERNATIONAL;
-
-        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
-        $shipperCountry = 'AT';
-
-        // national receiver
-        $receiverCountry = 'AT';
-        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
-        $this->assertInternalType('array', $products);
-        $this->assertArrayHasKey($paketNational, $products);
-        $this->assertArrayNotHasKey($paketEu, $products);
-        $this->assertArrayNotHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Bcs\Api\Product::getProcedure($paketNational));
-
-        // eu receiver
-        $receiverCountry = 'DE';
-        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
-        $this->assertInternalType('array', $products);
-        $this->assertArrayNotHasKey($paketNational, $products);
-        $this->assertArrayHasKey($paketEu, $products);
-        $this->assertArrayNotHasKey($paketInternational, $products);
-        $this->assertNotEmpty(\Dhl\Versenden\Bcs\Api\Product::getProcedure($paketEu));
-
-        // row receiver
-        $receiverCountry = 'NZ';
-        $products = $carrier->getProducts($shipperCountry, $receiverCountry);
-        $this->assertInternalType('array', $products);
-        $this->assertArrayNotHasKey($paketNational, $products);
-        $this->assertArrayNotHasKey($paketEu, $products);
+        $this->assertArrayNotHasKey($paketMerchandise, $products);
         $this->assertArrayHasKey($paketInternational, $products);
         $this->assertNotEmpty(\Dhl\Versenden\Bcs\Api\Product::getProcedure($paketInternational));
     }

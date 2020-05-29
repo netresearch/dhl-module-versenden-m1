@@ -17,7 +17,7 @@ scope:
 
 config:
   default/shipping/origin/country_id: "DE"
-  stores/store_two/shipping/origin/country_id: "AT"
+  stores/store_two/shipping/origin/country_id: "DE"
 
   default/dhl_versenden/dev/autoload_enabled: "0"
   default/carriers/dhlversenden/sandbox_mode: "1"
@@ -55,7 +55,7 @@ config:
   stores/store_two/carriers/dhlversenden/contact_city: "Bar City"
 
   default/carriers/dhlversenden/contact_countryid:          "DE"
-  stores/store_two/carriers/dhlversenden/contact_countryid: "AT"
+  stores/store_two/carriers/dhlversenden/contact_countryid: "DE"
 
   default/carriers/dhlversenden/contact_phone:          "1234"
   stores/store_two/carriers/dhlversenden/contact_phone: "9876"
@@ -72,8 +72,8 @@ config:
   default/carriers/dhlversenden/bankdata_bankname:          "Foo Bank"
   stores/store_two/carriers/dhlversenden/bankdata_bankname: "Bar Bank"
 
-  default/carriers/dhlversenden/bankdata_iban:          "DE999"
-  stores/store_two/carriers/dhlversenden/bankdata_iban: "AT999"
+  default/carriers/dhlversenden/bankdata_iban:          "DE123"
+  stores/store_two/carriers/dhlversenden/bankdata_iban: "DE987"
 
   default/carriers/dhlversenden/bankdata_bic:          "XXXXX"
   stores/store_two/carriers/dhlversenden/bankdata_bic: "YYYYY"

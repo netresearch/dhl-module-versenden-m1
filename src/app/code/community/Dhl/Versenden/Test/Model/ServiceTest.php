@@ -322,12 +322,13 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     }
 
     /**
+     * Assert that from the given set of services only the compatible items remain in the collection.
      * @test
      */
     public function filter()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_AUSTRIA);
+        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_WARENPOST_NATIONAL);
         $isPostalFacility     = false;
         $onlyCustomerServices = false;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
@@ -335,18 +336,18 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
         $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
-        $this->assertCount(4, $filteredCollection);
-        $this->assertInstanceOf(
-            Service\BulkyGoods::class,
-            $filteredCollection->getItem(Service\BulkyGoods::CODE)
-        );
-        $this->assertInstanceOf(
-            Service\Insurance::class,
-            $filteredCollection->getItem(Service\Insurance::CODE)
-        );
+        $this->assertCount(3, $filteredCollection);
         $this->assertInstanceOf(
             Service\ParcelAnnouncement::class,
             $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\PreferredLocation::class,
+            $filteredCollection->getItem(Service\PreferredLocation::CODE)
+        );
+        $this->assertInstanceOf(
+            Service\PreferredNeighbour::class,
+            $filteredCollection->getItem(Service\PreferredNeighbour::CODE)
         );
     }
 

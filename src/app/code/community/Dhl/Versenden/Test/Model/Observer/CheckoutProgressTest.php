@@ -57,7 +57,6 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
                 "schemaVersion":"1.0",
                 "services":{
                     "preferredDay":"2016-11-12",
-                    "preferredTime":"12001400",
                     "preferredLocation":"testt",
                     "preferredNeighbour":null
                 }
@@ -101,7 +100,6 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
 
         $dhlObserver->appendServicesToShippingMethod($observer);
         $this->assertContains('Preferred Day', $transport->getData('html'));
-        $this->assertContains('12 - 14', $transport->getData('html'));
     }
 
     /**
