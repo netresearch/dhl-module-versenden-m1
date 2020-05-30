@@ -26,7 +26,7 @@
 ?>
 <?php /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Product $this */ ?>
 <?php $products = $this->getProducts(); ?>
-<?php if (is_array($products) && count($products) > 1): ?>
+<?php if (is_array($products)): ?>
     <div id="packaging-dhlversenden-products">
         <div><?php echo $this->escapeHtml($this->__('Shipping Product')) ?></div>
         <ul class="product-list">
