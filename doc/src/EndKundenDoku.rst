@@ -344,8 +344,9 @@ steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen w
 
 Die Einstellung *Versandprodukt (Inland)* legt das Standard-Versandprodukt für die
 automatische Sendungserstellung nationaler Sendungen fest. Hier stehen folgende Produkte zur Verfügung:
-* Paket National für Sendungen bis 31,5 kg
-* Warenpost National (Merchandise Shipment) für kleinere/leichtere Sendungen
+
+- Paket National für Sendungen bis 31,5 kg
+- Warenpost National (Merchandise Shipment) für kleinere/leichtere Sendungen
 
 Standardwerte für Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~

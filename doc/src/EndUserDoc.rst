@@ -330,8 +330,9 @@ automatically.
 
 The setting *Shipping Product (Domestic)* defines the domestic default shipping product for automated shipment orders.
 The following products are available:
-* National Shipment (Paket National) for parcels up to 31.5 kg
-* Merchandise Shipment (Warenpost) for smaller/low weight goods
+
+- National Shipment (Paket National) for parcels up to 31.5 kg
+- Merchandise Shipment (Warenpost) for smaller/low weight goods
 
 Shipment Defaults
 ~~~~~~~~~~~~~~~~~
