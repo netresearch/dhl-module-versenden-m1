@@ -342,6 +342,11 @@ Die Einstellung *Bestell-Status* legt fest, welchen Status eine Bestellung haben
 um durch die automatische Sendungserstellung berücksichtigt zu werden. Hierüber können Sie
 steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen werden sollen.
 
+Die Einstellung *Versandprodukt (Inland)* legt das Standard-Versandprodukt für die
+automatische Sendungserstellung nationaler Sendungen fest. Hier stehen folgende Produkte zur Verfügung:
+* Paket National für Sendungen bis 31,5 kg
+* Warenpost National (Merchandise Shipment) für kleinere/leichtere Sendungen
+
 Standardwerte für Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -539,6 +544,13 @@ Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 .. raw:: pdf
 
    PageBreak
+
+Versandprodukt
+~~~~~~~~~~~~~~~
+
+Für nationale Sendungen stehen folgende Versandprodukte zur Verfügung:
+* Paket National für Sendungen bis 31,5 kg
+* Warenpost National (Merchandise Shipment) für kleinere/leichtere Sendungen
 
 Service-Auswahl
 ~~~~~~~~~~~~~~~

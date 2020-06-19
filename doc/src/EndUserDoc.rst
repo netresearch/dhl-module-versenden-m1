@@ -328,6 +328,11 @@ You can also configure which *order status* an order must have to be processed
 automatically. You can use this to exclude specific orders from being processed
 automatically.
 
+The setting *Shipping Product (Domestic)* defines the domestic default shipping product for automated shipment orders.
+The following products are available:
+* National Shipment (Paket National) for parcels up to 31.5 kg
+* Merchandise Shipment (Warenpost) for smaller/low weight goods
+
 Shipment Defaults
 ~~~~~~~~~~~~~~~~~
 The *additional services* which should be booked automatically can be chosen here.
@@ -517,6 +522,13 @@ Everything else is the same as described in the section `National shipments`_.
 .. raw:: pdf
 
    PageBreak
+
+Shipping Product
+~~~~~~~~~~~~~~~~~
+
+For domestic orders, the following products are available:
+* National Shipment (Paket National) for parcels up to 31.5 kg
+* Merchandise Shipment (Warenpost) for smaller/low weight goods
 
 Service selection
 ~~~~~~~~~~~~~~~~~
