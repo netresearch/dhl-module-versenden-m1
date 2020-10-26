@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description Supplemental data of active orders. These are set on the server side.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class ActiveOrderSupplements implements ModelInterface, ArrayAccess

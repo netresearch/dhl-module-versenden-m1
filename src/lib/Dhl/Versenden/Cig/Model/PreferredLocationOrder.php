@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description Orders for selecting a preferred drop location at the recipients home address (e.g. &#39;garage&#39;)
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class PreferredLocationOrder implements ModelInterface, ArrayAccess

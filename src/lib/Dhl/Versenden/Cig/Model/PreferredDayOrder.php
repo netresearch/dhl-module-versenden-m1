@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description Orders for selecting a preferred delivery day. Please note that the value for &#x60;preferredDay&#x60; MUST be among a &#x60;TimeInterval&#x60; with a &#x60;date-time&#x60; each for &#x60;start&#x60; and &#x60;end&#x60; and be among the &#x60;validDays&#x60; of a corresponding offer.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class PreferredDayOrder implements ModelInterface, ArrayAccess

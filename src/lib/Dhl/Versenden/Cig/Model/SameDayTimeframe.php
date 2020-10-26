@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description A time interval &#x60;[start,end]&#x60;, i.e., beginning at &#x60;start&#x60; and ending at &#x60;end&#x60; independet to an actual date. Each timeframe has an individual code which is given in &#x60;code&#x60;. Additionally, the Densely Populated Area (DPA) identifier and name is given. Both are required to check for availibility in the contracts with DHL. The &#x60;&#x60;deliveryBaseId&#x60;&#x60; denotes the Delivery Base which has to be used by the sender to enable same day delivery.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class SameDayTimeframe implements ModelInterface, ArrayAccess

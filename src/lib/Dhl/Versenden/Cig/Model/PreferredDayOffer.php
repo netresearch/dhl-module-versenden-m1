@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description Offer for rescheduling the delivery of the shipment to another day, which is restricted to certain &#x60;validDays&#x60;
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class PreferredDayOffer implements ModelInterface, ArrayAccess

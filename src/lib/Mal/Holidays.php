@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @author   MArcus at Localhosrt
- * @license  http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
- * @link     https://gist.github.com/marcus-at-localhorst/409f94440cf59e695eac
- */
 class Mal_Holidays
 {
     public static function getEaster()

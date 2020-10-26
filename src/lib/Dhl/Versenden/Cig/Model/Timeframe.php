@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description A time interval &#x60;[start,end]&#x60;, i.e., beginning at &#x60;start&#x60; and ending at &#x60;end&#x60; independet to an actual date. Each timeframe has an individual code which is given in &#x60;code&#x60;.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class Timeframe implements ModelInterface, ArrayAccess

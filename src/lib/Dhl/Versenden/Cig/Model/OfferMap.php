@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,6 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description An map from Offer types to respective instances. Each type of Offer is contained at most once.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class OfferMap implements ModelInterface, ArrayAccess

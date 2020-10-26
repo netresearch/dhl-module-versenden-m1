@@ -5,7 +5,6 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -35,7 +34,7 @@ use \Exception;
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class HeaderSelector

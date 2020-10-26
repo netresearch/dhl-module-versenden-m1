@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description A time interval &#x60;[start,end]&#x60;, i.e., beginning at &#x60;start&#x60; and ending at &#x60;end&#x60;. Values for &#x60;start&#x60; and &#x60;end&#x60; are formatted in &#x60;date-time&#x60; according to [RFC3339](http://xml2rfc.ietf.org/public/rfc/html/rfc3339.html#anchor14), e.g., of the form &#x60;2016-12-13T00:00:00.000+02:00&#x60; and &#x60;2016-12-13T23:59:59.999+02:00&#x60;, respectively.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class TimeInterval implements ModelInterface, ArrayAccess

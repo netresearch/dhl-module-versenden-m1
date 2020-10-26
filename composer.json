@@ -1,26 +1,28 @@
 {
-    "name": "dhl/module-versenden-m1",
-    "license": "OSL-3.0",
-    "type": "magento-module",
-    "description": "DHL business customer shipping extension for Magento",
-    "suggest": {
-        "magento-hackathon/magento-composer-installer": "^3.0.6"
-    },
-    "require" : {
-        "php" : "^5.5 || ^7.0",
-        "ext-soap": "*",
-        "ext-calendar": "*"
-    },
-    "support": {
-        "wiki": "http://dhl.support.netresearch.de/",
-        "issues": "http://dhl.support.netresearch.de/support/tickets/new",
-        "docs": "http://dhl.support.netresearch.de/support/solutions/articles/12000023174",
-        "email": "dhl.support@netresearch.de"
-    },
-    "authors":[
-        {
-            "name":"Christoph Aßmann",
-            "email":"christoph.assmann@netresearch.de"
-        }
-    ]
+  "name": "dhl/module-versenden-m1",
+  "license": "OSL-3.0",
+  "type": "magento-module",
+  "description": "DHL business customer shipping extension for Magento",
+  "suggest": {
+    "magento-hackathon/magento-composer-installer": "^3.0.6"
+  },
+  "require": {
+    "php": "^5.5 || ^7.0",
+    "ext-soap": "*",
+    "ext-calendar": "*"
+  },
+  "support": {
+    "wiki": "http://dhl.support.netresearch.de/",
+    "issues": "http://dhl.support.netresearch.de/support/tickets/new",
+    "docs": "http://dhl.support.netresearch.de/support/solutions/articles/12000023174",
+    "email": "dhl.support@netresearch.de"
+  },
+  "authors": [
+    {
+      "email": "plugins@netresearch.de",
+      "name": "Netresearch DTT GmbH",
+      "role": "Manufacturer",
+      "homepage": "https://www.netresearch.de/"
+    }
+  ]
 }

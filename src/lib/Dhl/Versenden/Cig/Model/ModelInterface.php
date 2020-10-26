@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig\Model
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -33,7 +33,6 @@ namespace Dhl\Versenden\Cig\Model;
  * Interface abstracting model access.
  *
  * @package Dhl\Versenden\Cig\Model
- * @author  Swagger Codegen team
  */
 interface ModelInterface
 {

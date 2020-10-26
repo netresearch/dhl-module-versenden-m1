@@ -3,10 +3,6 @@
  * IntransitApi
  * PHP version 5
  *
- * @category Class
- * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
  */
 
 /**
@@ -39,14 +35,6 @@ use Dhl\Versenden\Cig\Configuration;
 use Dhl\Versenden\Cig\HeaderSelector;
 use Dhl\Versenden\Cig\ObjectSerializer;
 
-/**
- * IntransitApi Class Doc Comment
- *
- * @category Class
- * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
- * @link     https://github.com/swagger-api/swagger-codegen
- */
 class IntransitApi
 {
     /**

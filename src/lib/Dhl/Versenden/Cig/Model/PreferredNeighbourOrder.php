@@ -6,7 +6,7 @@
  *
  * @category Class
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 
@@ -38,7 +38,7 @@ use \Dhl\Versenden\Cig\ObjectSerializer;
  * @category Class
  * @description Orders for nominating a neighbour that is eligible to receive the shipment, if the the original recipient is absent. Neighbours are supposed to reside in proximity to the original recipient, i.e., in another appartment in the same house, on the opposite street side, or next to the house of the original recipient.
  * @package  Dhl\Versenden\Cig
- * @author   Swagger Codegen team
+
  * @link     https://github.com/swagger-api/swagger-codegen
  */
 class PreferredNeighbourOrder implements ModelInterface, ArrayAccess
