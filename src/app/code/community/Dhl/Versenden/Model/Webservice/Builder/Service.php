@@ -15,6 +15,9 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
     /** @var Dhl_Versenden_Model_Config_Shipment */
     protected $_shipmentConfig;
 
+    /** @var Dhl_Versenden_Model_Config_Service */
+    protected $_serviceConfig;
+
     /**
      * Dhl_Versenden_Model_Webservice_Builder_Service constructor.
      * @param stdClass[] $args
@@ -43,6 +46,17 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
         }
 
         $this->_shipmentConfig = $args[$argName];
+
+        $argName = 'service_config';
+        if (!isset($args[$argName])) {
+            Mage::throwException("required argument missing: $argName");
+        }
+
+        if (!$args[$argName] instanceof Dhl_Versenden_Model_Config_Service) {
+            Mage::throwException("invalid argument: $argName");
+        }
+
+        $this->_serviceConfig = $args[$argName];
     }
 
     /**
@@ -96,9 +110,11 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             ? (bool)$selectedServices[Service\BulkyGoods::CODE]
             : false;
 
-        $parcelOutletRouting = !empty($selectedServices[Service\ParcelOutletRouting::CODE])
-            ? $salesEntity->getShippingAddress()->getEmail()
-            : false;
+        $parcelOutletRouting = false;
+        if (!empty($selectedServices[Service\ParcelOutletRouting::CODE])) {
+            $email = $this->_serviceConfig->getParcelOutletNotificationEmail($salesEntity->getStoreId());
+            $parcelOutletRouting = $email ? $email : $salesEntity->getShippingAddress()->getEmail();
+        }
 
         $paymentMethod = $salesEntity->getPayment()->getMethod();
         $cod = $this->_shipmentConfig->isCodPaymentMethod($paymentMethod, $salesEntity->getStoreId())

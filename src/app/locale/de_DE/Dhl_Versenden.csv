@@ -215,3 +215,6 @@
 "Shipping Product (Domestic)","Versandprodukt (Inland)"
 "Define the domestic default shipping product for automated shipment orders.","Legen Sie das Standard-Inlands-Versandprodukt für automatisiert erstellte Versandaufträge fest."
 "Select Merchandise Shipment (Warenpost) only if you ship all or most of your orders as Merchandise Shipments. Otherwise, choose National Shipment (Paket National).","Wählen Sie nur dann Warenpost als Standard, wenn Sie alle oder die meisten Ihrer Bestellungen als Warensendung versenden. Andernfalls wählen Sie die Option Nationaler Versand (Paket National)."
+"Non-delivery notice will be sent to this email address. If left empty, the customer's email address is used. In this case, you must make sure to obtain data privacy consent from your customers.","Eine Benachrichtigung über die Unzustellbarkeit wird an diese E-Mail-Adresse gesendet. Wenn leer, wird die E-Mail-Adresse des Kunden verwendet. Bitte beachten Sie, dass Sie in diesem Fall Ihre Kunden über die Datenschutzbestimmungen informieren müssen."
+"Enter your email address here if you, as the sender, would like to receive the collection information.","Geben Sie hier Ihre E-Mail-Adresse an, wenn Sie als Versender die Abholinformation erhalten möchten."
+"Alternative Email Address","Alternative E-Mail-Adresse"

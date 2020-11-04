@@ -215,3 +215,6 @@
 "Shipping Product (Domestic)","Shipping Product (Domestic)"
 "Define the domestic default shipping product for automated shipment orders.","Define the domestic default shipping product for automated shipment orders."
 "Select Merchandise Shipment (Warenpost) only if you ship all or most of your orders as Merchandise Shipments. Otherwise, choose National Shipment (Paket National).","Select Merchandise Shipment (Warenpost) only if you ship all or most of your orders as Merchandise Shipments. Otherwise, choose National Shipment (Paket National)."
+"Alternative Email Address","Alternative Email Address"
+"Enter your email address here if you, as the sender, would like to receive the collection information.","Enter your email address here if you, as the sender, would like to receive the collection information."
+"Non-delivery notice will be sent to this email address. If left empty, the customer's email address is used. In this case, you must make sure to obtain data privacy consent from your customers.","Non-delivery notice will be sent to this email address. If left empty, the customer's email address is used. In this case, you must make sure to obtain data privacy consent from your customers."

@@ -64,7 +64,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
             return false;
         }
 
-        $configuredMethods = $this->getSettings($store)->getShippingMethods();
+        $configuredMethods = array_filter($this->getSettings($store)->getShippingMethods());
         foreach ($configuredMethods as $method) {
             if (false !== strpos($shippingMethod, $method)) {
                 return true;

@@ -147,7 +147,7 @@ class Filter
             }
 
             if ($this->isPostalFacility && !in_array($service->getCode(), $this->postalFacilityServices)) {
-                // skip services that are not meant to be combined with postal facilitites
+                // skip services that are not meant to be combined with postal facilities
                 continue;
             }
 

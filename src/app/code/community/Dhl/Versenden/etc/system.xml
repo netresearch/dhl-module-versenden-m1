@@ -420,6 +420,20 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_parceloutletrouting>
+                        <shipment_autocreate_service_parceloutletrouting_notification_email>
+                            <label>Alternative Email Address</label>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-email</validate>
+                            <comment>Non-delivery notice will be sent to this email address. If left empty, the customer's email address is used. In this case, you must make sure to obtain data privacy consent from your customers.</comment>
+                            <tooltip>Enter your email address here if you, as the sender, would like to receive the collection information.</tooltip>
+                            <sort_order>660</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <shipment_autocreate_service_parceloutletrouting>1</shipment_autocreate_service_parceloutletrouting>
+                            </depends>
+                        </shipment_autocreate_service_parceloutletrouting_notification_email>
                         <!-- Contact Data -->
                         <dhlversenden_fields_contact>
                             <label>Contact Data</label>

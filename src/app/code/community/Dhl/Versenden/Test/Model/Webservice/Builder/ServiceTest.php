@@ -65,6 +65,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ServiceTest
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Service(array(
             'shipper_config' => Mage::getModel('dhl_versenden/config_shipper'),
             'shipment_config' => Mage::getModel('dhl_versenden/config_shipment'),
+            'service_config' => Mage::getModel('dhl_versenden/config_service'),
         ));
 
         $orderAmount        = '19.8600';

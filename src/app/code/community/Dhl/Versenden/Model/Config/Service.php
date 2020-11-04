@@ -23,6 +23,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     const CONFIG_XML_PATH_SHIPMENT_DEFAULT_INSURANCE = 'shipment_autocreate_service_insurance';
     const CONFIG_XML_PATH_SHIPMENT_DEFAULT_BULKYGOODS = 'shipment_autocreate_service_bulkygoods';
     const CONFIG_XML_PATH_SHIPMENT_DEFAULT_PARCELOUTLETROUTING = 'shipment_autocreate_service_parceloutletrouting';
+    const CONFIG_XML_PATH_SHIPMENT_DEFAULT_PARCELOUTLETROUTING_NOTIFICATION_EMAIL = 'shipment_autocreate_service_parceloutletrouting_notification_email';
 
     /**
      * @param null $store
@@ -370,8 +371,8 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     /**
      * Obtain preferred day handling fee from config.
      *
-     * @param null $store
-     * @return int
+     * @param mixed $store
+     * @return float
      */
     public function getPrefDayFee($store = null)
     {
@@ -381,7 +382,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     /**
      * Obtain pref day handling fee text from config.
      *
-     * @param null $store
+     * @param mixed $store
      * @return string
      */
     public function getPrefDayHandlingFeeText($store = null)
@@ -402,12 +403,24 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
 
 
     /**
-     * @param null $store
+     * @param mixed $store
      * @return mixed
      */
     public function getCutOffTime($store = null)
     {
         return $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
+    }
+
+    /**
+     * @param mixed $store
+     * @return string
+     */
+    public function getParcelOutletNotificationEmail($store = null)
+    {
+        return (string) $this->getStoreConfig(
+            self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_PARCELOUTLETROUTING_NOTIFICATION_EMAIL,
+            $store
+        );
     }
 }
 
