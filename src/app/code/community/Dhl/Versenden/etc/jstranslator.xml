@@ -4,7 +4,7 @@
         <message>Not available with preferred neighbor</message>
     </dhl-not-available-neighbor>
     <dhl-not-available-location translate="message" module="dhl_versenden">
-        <message>Not available with preferred location</message>
+        <message>Not available with drop-off location</message>
     </dhl-not-available-location>
     <dhl-validate-detail translate="message" module="dhl_versenden">
         <message>Your input is invalid.</message>

@@ -32,7 +32,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredDay($store = null)
     {
-        $name              = Mage::helper('dhl_versenden/data')->__("Preferred day") .
+        $name              = Mage::helper('dhl_versenden/data')->__("Delivery day") .
             Mage::helper('dhl_versenden/data')->__(": Delivery at your preferred day");
         $isAvailable       = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDDAY, $store);
         $cutOffTime        = $this->getStoreConfig(self::CONFIG_XML_FIELD_CUTOFFTIME, $store);
@@ -108,7 +108,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
      */
     protected function initPreferredLocation($store = null)
     {
-        $name        = Mage::helper('dhl_versenden/data')->__("Preferred location") .
+        $name        = Mage::helper('dhl_versenden/data')->__("Drop-off location") .
             Mage::helper('dhl_versenden/data')->__(": Delivery to your preferred drop-off location");
         $isAvailable = $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_PREFERREDLOCATION, $store);
         $isSelected  = false;
@@ -369,7 +369,7 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     }
 
     /**
-     * Obtain preferred day handling fee from config.
+     * Obtain delivery day handling fee from config.
      *
      * @param mixed $store
      * @return float

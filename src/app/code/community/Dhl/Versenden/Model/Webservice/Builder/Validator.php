@@ -45,7 +45,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
 
         if (!$canUseMerchandiseShipment && $isMerchandiseShipment) {
             $message = 'Warenpost cannot be booked with the services '
-                . 'Additional Insurance, Bulky Goods, Cash on Delivery, Preferred Day, Visual Check of Age.';
+                . 'Additional Insurance, Bulky Goods, Cash on Delivery, Delivery Day, Visual Check of Age.';
             throw new ValidationException($message);
         }
     }

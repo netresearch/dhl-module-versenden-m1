@@ -4,7 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use Dhl\Versenden\Bcs\Api\Shipment\Service;
 
 class Dhl_Versenden_Model_Services_Processor
 {

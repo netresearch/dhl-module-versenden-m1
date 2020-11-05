@@ -126,7 +126,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     {
         switch ($serviceCode) {
             case Service\PreferredDay::CODE:
-                $msg = 'Choose one of the displayed days as your preferred day for your parcel delivery.'
+                $msg = 'Choose one of the displayed days as your delivery day for your parcel delivery.'
                     . ' Other days are not possible due to delivery processes.';
                 break;
             case Service\PreferredLocation::CODE:

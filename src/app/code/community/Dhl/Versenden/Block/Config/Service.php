@@ -10,8 +10,8 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      * @var string[]
      */
     protected $_nameArray = array(
-        'preferredDay'       => 'Preferred day',
-        'preferredLocation'  => 'Preferred location',
+        'preferredDay'       => 'Delivery day',
+        'preferredLocation'  => 'Drop-off location',
         'preferredNeighbour' => 'Preferred neighbor',
         'parcelAnnouncement' => 'Parcel announcement',
     );

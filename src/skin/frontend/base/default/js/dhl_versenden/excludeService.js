@@ -5,7 +5,7 @@
  * @param {Element} neighbour
  */
 function observeAndDisable(location, neighbour) {
-    addKeypressListener(location, neighbour, Translator.translate('Not available with preferred location'));
+    addKeypressListener(location, neighbour, Translator.translate('Not available with drop-off location'));
     addKeypressListener(neighbour, location, Translator.translate('Not available with preferred neighbor'));
 }
 
