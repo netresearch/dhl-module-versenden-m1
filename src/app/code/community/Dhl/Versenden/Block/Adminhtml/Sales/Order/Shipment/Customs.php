@@ -45,4 +45,13 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
         $orderInfo = $this->getShipment()->getOrder();
         return $orderInfo->getBaseCurrency()->getCurrencyCode();
     }
+
+    /**
+     * @return float
+     */
+    public function getPostalCharges()
+    {
+        $order = $this->getShipment()->getOrder();
+        return $order->getBaseShippingInclTax() - $order->getBaseShippingRefunded() - $order->getBaseShippingTaxRefunded();
+    }
 }

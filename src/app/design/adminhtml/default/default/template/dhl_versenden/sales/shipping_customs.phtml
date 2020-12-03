@@ -18,7 +18,7 @@
                 </th>
                 <th class="no-link">
                     <span class="nobr">
-                        <?php echo $this->escapeHtml($this->__('Additional Fee')) ?>
+                        <?php echo $this->escapeHtml($this->__('Postal Charges / Fees')) ?>
                     </span>
                 </th>
                 <th class="no-link">
@@ -58,7 +58,7 @@
                 </td>
                 <td>
                     <input id="customs_additional_fee" name="customs[additional_fee]" type="text"
-                           title="" value="0"
+                           title="" value="<?php echo $this->escapeHtml($this->getPostalCharges()) ?>"
                            class="input-text required-entry validate-number"/>
                     <span class="customs-value-currency">
                         [<?php echo $this->escapeHtml($this->getCustomValueCurrencyCode()); ?>]
