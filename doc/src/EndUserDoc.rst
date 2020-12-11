@@ -279,9 +279,9 @@ additional DHL services you want to offer to your customers.
 Please also note the information about `Booking additional services`_ and
 `Additional costs for services`_.
 
-* *Enable Preferred Location*: The customer selects an alternative location where
+* *Enable Drop-off Location*: The customer selects an alternative location where
   the shipment can be placed in case they are not at home.
-* *Enable Preferred Neighbor*: The customer selects an alternative address in the
+* *Enable Neighbor*: The customer selects an alternative address in the
   neighborhood for the shipment in case they are not at home.
 * *Enable Automatic Parcel Announcement*: The customer gets notified by email about the status
   of the shipment. The customer's email address will be transmitted to DHL for this service
@@ -291,19 +291,19 @@ Please also note the information about `Booking additional services`_ and
   * *Enable on customers choice*: The customer decides in the checkout if the service should be booked.
   * *No*: The service will not be booked.
 
-* *Enable Preferred Day*: The customer chooses a specific day on which the shipment
+* *Enable delivery day*: The customer chooses a specific day on which the shipment
   should arrive. The available days are displayed dynamically, depending on the recipient's
   address.
-* *Preferred day handling additional charge (handling fee)*: This amount will
+* *delivery day handling additional charge (handling fee)*: This amount will
   be added to the shipping cost if the service is used. Use a decimal point, not comma.
   The gross amount must be entered here (incl. VAT). If you want to offer the service
   for free, enter a ``0`` here.
-* *Preferred day handling fee text*: This text will be displayed to the customer
+* *delivery day handling fee text*: This text will be displayed to the customer
   in the checkout if the service has been selected. You can use the placeholder ``$1``
   in the text which will show the additional handling fee and currency in the checkout.
 * *Cut off time*: This sets the time up to which new orders will be dispatched on the
   same day. Orders placed *after* the cut off time will not be dispatched on the same
-  day. The earliest possible preferred day will then be postponed by one day.
+  day. The earliest possible delivery day will then be postponed by one day.
 
 .. admonition:: Cut off time
 
@@ -369,20 +369,20 @@ on the Return Label, if that service was booked.
 Booking additional services
 ---------------------------
 
-The available services as well as preferred days depend on the
+The available services as well as delivery days depend on the
 actual shipping address and country. The DHL Parcel Management API is used for this
 during the checkout process. Unusable services will be hidden in the checkout
 automatically.
 
 If the order contains articles which are not in stock, it won't be possible to book
-preferred day.
+delivery day.
 
-The services *Preferred location* and *Preferred neighbor* cannot be booked together.
+The services *drop-off location* and *neighbor* cannot be booked together.
 
 Additional costs for services
 -----------------------------
 
-The service *Preferred Day* is **enabled by default!**
+The service *delivery day* is **enabled by default!**
 Therefore the standard DHL handling fee will be added to the shipping cost.
 
 When using the shipping method *Free Shipping* the additional handling fees will
@@ -406,7 +406,7 @@ This function can be disabled here:
 
 ::
 
-  System → Configuration → Checkout → DHL Versenden Tracking → No
+  System → Configuration → Checkout → DHL Preferred Delivery Tracking → No
 
 
 Workflow and features
@@ -546,7 +546,7 @@ The services selected by the customer in the checkout will already be selected
 here. Also, the service *Address validation* (Print only if codeable) will be
 selected if enabled in the general `Module configuration`_.
 
-Please note that the following inputs are **not** allowed for *Preferred location* and *Preferred neighbor*:
+Please note that the following inputs are **not** allowed for *drop-off location* and *neighbor*:
 
 **Invalid special characters**
 
@@ -739,7 +739,7 @@ process is the same as described in `Creating a shipment`_.
 Addition DHL services
 ~~~~~~~~~~~~~~~~~~~~~
 
-In case of problems with `Additional Services In Checkout`_ (e.g. preferred day), error messages will be
+In case of problems with `Additional Services In Checkout`_ (e.g. delivery day), error messages will be
 written to a separate log file. See the notes in chapter `General settings`_. The log contains information
 for further troubleshooting.
 

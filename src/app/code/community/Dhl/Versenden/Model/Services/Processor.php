@@ -122,10 +122,14 @@ class Dhl_Versenden_Model_Services_Processor
     {
         $result = false;
         foreach ($this->quote->getAllItems() as $item) {
-            /** @var Mage_Sales_Model_Quote_Item $item */
+            /** @var Mage_Sales_Model_Quote_Item|Mage_Sales_Model_Order_Item $item */
             $stockItem = $item->getProduct()->getData('stock_item');
             $qty = $item->getParentItemId() ? (float)$item->getParentItem()->getQty() : (float)$item->getQty();
-            $children = $item->getChildren();
+            if ($item instanceof Mage_Sales_Model_Quote_Item) {
+                $children = $item->getChildren();
+            } else {
+                $children = $item->getChildrenItems();
+            }
 
             if (empty($children) &&
                 ((float)$stockItem->getQty() === 0.0 || $qty >= (float)$stockItem->getQty())

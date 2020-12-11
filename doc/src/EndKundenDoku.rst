@@ -289,9 +289,9 @@ angeboten werden.
 Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie die
 `Zusatzkosten für Services`_ und die Hinweise zum `Datenschutz`_.
 
-* *Wunschort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
+* *Ablageort*: Der Kunde wählt einen alternativen Ablageort für seine Sendung,
   falls er nicht angetroffen wird.
-* *Wunschnachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
+* *Nachbar*: Der Kunde wählt eine alternative Adresse in der Nachbarschaft
   für die Abgabe der Sendung, falls er nicht angetroffen wird.
 * *Automatische Paketankündigung*: Der Kunde wird per E-Mail von DHL über den Status seiner
   Sendung informiert. Hierzu wird die E-Mail-Adresse des Kunden an DHL übermittelt (siehe
@@ -301,22 +301,22 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   * *Aktivieren auf Kundenwunsch*: Der Kunde kann im Checkout wählen, ob der Service gebucht werden soll.
   * *Nein*: Der Service wird nie hinzugebucht.
 
-* *Wunschtag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
-  an welchem die Lieferung ankommen soll. Die verfügbaren Wunschtage werden dynamisch
+* *Liefertag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
+  an welchem die Lieferung ankommen soll. Die verfügbaren Liefertage werden dynamisch
   angezeigt, basierend auf der Empfängeradresse.
 
-* *Wunschtag Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
+* *Liefertag Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
   hinzu addiert, wenn der Zusatzservice verwendet wird. Verwenden Sie Punkt statt Komma
   als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
   Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
   ``0`` ein.
-* *Wunschtag  Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+* *Liefertag  Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
   im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
 * *Annahmeschluss*: Legt den Zeitpunkt fest, bis zu dem eingegangene Bestellungen
   noch am selben Tag abgeschickt werden. Bestellungen, die *nach* Annahmeschluss
-  eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Wunschtag
+  eingehen, werden nicht mehr am selben Tag verschickt. Der früheste Liefertag
   verschiebt sich dann um einen Tag.
 
 .. admonition:: Hinweis zu Annahmeschluss
@@ -382,20 +382,20 @@ auf das Retoure-Label gedruckt werden soll, wenn dieser Service gebucht wird.
 Buchbarkeit von Zusatzservices
 ------------------------------
 
-Die tatsächlich buchbaren Services sowie die wählbaren Wunschtage hängen
+Die tatsächlich buchbaren Services sowie die wählbaren Liefertage hängen
 von der Lieferadresse bzw. dem Zielland ab. Dazu wird die DHL Paketsteuerung API während
 des Checkouts verwendet. Nicht verfügbare Services werden im Checkout
 automatisch ausgeblendet.
 
 Falls die Bestellung Artikel enthält, die nicht sofort lieferbar sind, ist keine Buchung
-vom Wunschtag möglich.
+vom Liefertag möglich.
 
-Die gleichzeitige Buchung von Wunschort und Wunschnachbar ist nicht möglich.
+Die gleichzeitige Buchung von Ablageort und Nachbar ist nicht möglich.
 
 Zusatzkosten für Services
 -------------------------
 
-Der Service *Wunschtag* ist **standardmäßig aktiviert!** Wird dieser gebucht, wird
+Der Service *Liefertag* ist **standardmäßig aktiviert!** Wird dieser gebucht, wird
 der konfigurierte Service-Aufschlag zu den Versandkosten hinzugefügt.
 
 Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
@@ -409,7 +409,7 @@ für Zusatzservices erhalten.
 Trackingpixel für Zusatzservices
 --------------------------------
 
-Sollten Sie die Wunschpaket-Services in Ihrem Shop-Frontend anzeigen wollen, beachten Sie bitte
+Sollten Sie die Wunschzustellung-Services in Ihrem Shop-Frontend anzeigen wollen, beachten Sie bitte
 folgenden Hinweis:
 
 Die Extension stellt zu Reportingzwecken ein Tracking-Pixel im Checkout dar. Darüber werden
@@ -421,7 +421,7 @@ Diese Funktion kann hier deaktiviet werden:
 
 ::
 
-  System → Konfiguration → Zur Kasse → DHL Wunschpaket Tracking → Nein
+  System → Konfiguration → Zur Kasse → DHL Wunschzustellung Tracking → Nein
 
 
 Ablaufbeschreibung und Features
@@ -568,7 +568,7 @@ Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, eben
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
 
-Beachten Sie, dass bei Wunschort oder Wunschnachbar folgende Angaben **nicht** zulässig sind:
+Beachten Sie, dass bei Ablageort oder Nachbar folgende Angaben **nicht** zulässig sind:
 
 **Unzulässige Sonderzeichen**
 
@@ -772,7 +772,7 @@ wie im Abschnitt `Erstellen eines Versandauftrags`_ beschrieben.
 DHL Zusatzservices
 ~~~~~~~~~~~~~~~~~~
 
-Bei Problemen mit `DHL Zusatzleistungen im Checkout`_ (z.B. Wunschtag) werden die Fehlermeldungen
+Bei Problemen mit `DHL Zusatzleistungen im Checkout`_ (z.B. Liefertag) werden die Fehlermeldungen
 in eine separate Log-Datei geschrieben. Siehe Hinweise im Kapitel `Allgemeine Einstellungen`_.
 Das Log enthält Hinweise zur weiteren Fehlersuche.
 

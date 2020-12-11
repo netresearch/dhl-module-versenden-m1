@@ -783,7 +783,7 @@
         <checkout>
             <groups>
                 <dhl_versenden>
-                    <label>DHL Preferred Services Tracking</label>
+                    <label>DHL Preferred Delivery Tracking</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>2500</sort_order>
                     <show_in_default>1</show_in_default>
