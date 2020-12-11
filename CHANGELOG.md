@@ -4,37 +4,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.8.0] - 2020-06-22
+## 1.9.0 - 2020-12-14
 
 ### Added
-- shipment product Merchandise shipment
-- shipment default selection for automatic shipment creation
 
-### Removed
-
-- austrian shipment products
-
-
-## [1.7.0] - 2020-05-08
+- Possibility to configure an alternative notification email for parcel outlet routing service.
 
 ### Changed
 
-- moved Autocreate Services configuration to Shipment Defaults
+- Rename Wunschpaket (Preferred Delivery) services to align with official DHL naming.
+- Transmit shipping cost for label requests with customs declaration.
 
-### Removed
 
-- Remove Preferred Time Service
-
-### Fixed
-
-- Autocreate Services preselection in packaging popup
-
-## [1.6.0] - 2020-01-15
+## 1.8.0 - 2020-06-22
 
 ### Added
 
-- add parcel outlet routing service
-- make code compatible with PHP 7.2
+- The shipping product "Merchandise Shipment" (Warenpost) can now be booked.
+- The automatic shipment creation configuration allows to set a default shipping product.
+
+### Removed
+
+- Austria is no longer supported as shipping origin.
+
+
+## 1.7.0 - 2020-05-08
+
+### Changed
+
+- Service defaults for automatic shipment creation are now configured via _Shipment Defaults_.
+
+### Removed
+
+- The value-added service _Preferred Time_ is no longer offered in checkout.
+
+### Fixed
+
+- Configured service defaults are now preselected in packaging popup.
+
+
+## 1.6.0 - 2020-01-15
+
+### Added
+
+- The value-added service _Parcel Outlet Routing_ can now be booked with shipping labels.
+- PHP 7.2 support
 
 ### Changed
 
@@ -42,7 +56,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- Remove AT Shipping
+- New orders for shipping origin Austria can no longer be placed. Processing of orders is still possible.
 
 ### Fixed
 
@@ -51,7 +65,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - read return shipment contact data from correct scope
 - Fix sidebar service selection
 
-## [1.5.1] - 2018-11-28
+
+## 1.5.1 - 2018-11-28
 
 ### Changed
 
@@ -65,7 +80,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Translation configuration
 
 
-## [1.5.0] - 2018-09-05
+## 1.5.0 - 2018-09-05
 
 ### Added
 
@@ -85,7 +100,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - No provision of Preferred Day for orders containing backordered items
 
 
-## [1.4.0] - 2018-07-12
+## 1.4.0 - 2018-07-12
 
 ### Added
 
@@ -97,14 +112,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Limit max number of shipments to 50 per request to prevent invalid XML error
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
 ### Known issues
 
 - If more than one shipment method exists, the DHL services are not displayed immediately.
@@ -112,7 +119,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   be fixed in future versions.
 
 
-## [1.3.1] - 2018-04-25
+## 1.3.1 - 2018-04-25
 
 ### Added
 
@@ -133,7 +140,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Magento will no longer crash when changing the display currency in checkout
 - Added some missing german translation strings
 
-## [1.3.0] - 2018-01-19
+
+## 1.3.0 - 2018-01-19
 
 ### Added
 
@@ -143,7 +151,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Code style improvements for Magento Marketplace
 
-## [1.2.0] - 2017-12-15
+
+## 1.2.0 - 2017-12-15
 
 ### Added
 
@@ -160,7 +169,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Consider Sundays in preferred day service options calculation
 - Log webservice errors during cron autocreate
 
-## [1.1.1] - 2017-09-27
+
+## 1.1.1 - 2017-09-27
 
 ### Fixed
 
@@ -169,7 +179,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Apply correct unit of measure for item weight in export declarations
 - Display service validation errors in checkout that remained hidden under certain circumstances
 
-## [1.1.0] - 2017-05-10
+
+## 1.1.0 - 2017-05-10
 
 ### Added
 
@@ -182,6 +193,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fix label creation for partial shipments
 - Make participation number required
 - DB prefix will now be recognized
+
 
 ## 1.0.0 - 2016-10-17
 

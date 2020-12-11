@@ -8,7 +8,7 @@ Facts
 -----
 - extension key: Dhl_Versenden
 - [extension on GitLab](https://git.netresearch.de/dhl/versenden-m1)
-- [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.5.1/archive.tar.gz)
+- [direct download link](https://git.netresearch.de/dhl/versenden-m1/repository/1.9.0/archive.tar.gz)
 
 Description
 -----------
