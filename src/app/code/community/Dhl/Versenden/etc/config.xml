@@ -370,12 +370,6 @@
                 <service_cutoff_time>13,00,00</service_cutoff_time>
             </dhlversenden>
         </carriers>
-        <checkout>
-            <dhl_versenden>
-                <checkout_tracking_enabled>1</checkout_tracking_enabled>
-                <checkout_tracking_interval>30</checkout_tracking_interval>
-            </dhl_versenden>
-        </checkout>
     </default>
     <phpunit>
         <suite>

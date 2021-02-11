@@ -406,24 +406,6 @@ Grenze für kostenlosen Versand festgelegt werden soll, empfehlen wir dazu eine
 Warenkorbpreisregel einzurichten. Durch Nutzung dieser Versandart bleiben die Aufpreise
 für Zusatzservices erhalten.
 
-Trackingpixel für Zusatzservices
---------------------------------
-
-Sollten Sie die Wunschzustellung-Services in Ihrem Shop-Frontend anzeigen wollen, beachten Sie bitte
-folgenden Hinweis:
-
-Die Extension stellt zu Reportingzwecken ein Tracking-Pixel im Checkout dar. Darüber werden
-die URL, auf der die Extensions zum Einsatz kommt, sowie die Summe der Extension-Aufrufe an
-DHL zurückgemeldet. Es werden keine personenbezogenen oder personenbeziehbare Daten erhoben oder
-verarbeitet. Das Tracking-Pixel wird einmal in 30 Tagen dargestellt.
-
-Diese Funktion kann hier deaktiviet werden:
-
-::
-
-  System → Konfiguration → Zur Kasse → DHL Wunschzustellung Tracking → Nein
-
-
 Ablaufbeschreibung und Features
 ===============================
 

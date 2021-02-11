@@ -66,9 +66,4 @@
             </action>
         </reference>
     </amazonpayments_checkout_index>
-    <checkout_onepage_success>
-        <reference name="content">
-                <block type="dhl_versenden/checkout_onepage_success" name="dhl_versenden_tracking_pixel" template="dhl_versenden/checkout/success-tracking.phtml" />
-        </reference>
-    </checkout_onepage_success>
 </layout>

@@ -392,23 +392,6 @@ If you want to use the shipping method *Table Rates* and set a threshold for fre
 shipping, we recommend setting up a Shopping Cart Price Rule for this. By using this
 shipping method the additional fees for DHL services will be included.
 
-Tracking pixel for additional services
---------------------------------------
-
-In case you'd like to offer preferred delivery options in your shop frontend, please note the following hint:
-
-The extensions displays a tracking pixel in the checkout for reporting purposes. It
-reports the URL on which the extension is used, as well as the number of extension
-calls to DHL. No personal data is created and / or collected. The tracking pixel will
-be displayed once every 30 days.
-
-This function can be disabled here:
-
-::
-
-  System → Configuration → Checkout → DHL Preferred Delivery Tracking → No
-
-
 Workflow and features
 =====================
 
