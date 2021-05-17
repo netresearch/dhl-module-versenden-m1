@@ -159,13 +159,16 @@ class Dhl_Versenden_Model_Config_Service extends Dhl_Versenden_Model_Config
     {
         $name        = Mage::helper('dhl_versenden/data')->__("Visual Check of Age");
         $isAvailable = true;
-        $isSelected  = $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_VISUALCHECKOFAGE, $store);
+        $value  = $this->getStoreConfig(self::CONFIG_XML_PATH_SHIPMENT_DEFAULT_VISUALCHECKOFAGE, $store);
         $options     = array(
             Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
             Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
         );
 
-        return new Service\VisualCheckOfAge($name, $isAvailable, $isSelected, $options);
+        $service = new Service\VisualCheckOfAge($name, $isAvailable, (bool) $value, $options);
+        $service->setValue($value);
+
+        return $service;
     }
 
     /**
