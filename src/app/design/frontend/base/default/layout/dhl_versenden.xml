@@ -21,15 +21,24 @@
             </action>
             <action method="addItem">
                 <type>skin_js</type>
-                <name helper="dhl_versenden/service/setDetailValidation"/>
+                <script>js/dhl_versenden/validationDetail.js</script>
+                <params/>
+                <if/>
+                <cond helper="dhl_versenden/service/getServiceDetailsValidationCondition"/>
             </action>
             <action method="addItem">
                 <type>skin_js</type>
-                <name helper="dhl_versenden/service/setServiceObserver"/>
+                <script>js/dhl_versenden/validationSpecial.js</script>
+                <params/>
+                <if/>
+                <cond helper="dhl_versenden/service/getInputSpecialCharsValidationCondition"/>
             </action>
             <action method="addItem">
                 <type>skin_js</type>
-                <name helper="dhl_versenden/service/setSpecialValidation"/>
+                <script>js/dhl_versenden/excludeService.js</script>
+                <params/>
+                <if/>
+                <cond helper="dhl_versenden/service/getServiceCombinationValidationCondition"/>
             </action>
             <action method="addItem" ifconfig="carriers/dhlversenden/active">
                 <type>skin_css</type>

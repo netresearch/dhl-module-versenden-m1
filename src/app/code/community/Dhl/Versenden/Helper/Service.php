@@ -6,46 +6,46 @@
 
 class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
 {
+    const PREFERRED_SERVICE_ANY_ENABLED = 'is_dhl_preferred_neighbor_or_location_enabled';
+    const PREFERRED_SERVICE_ALL_ENABLED = 'is_dhl_preferred_neighbor_and_location_enabled';
+
     /**
+     * Obtain condition flag for use in layout.
+     *
      * @return string
      */
-    public function setDetailValidation()
+    public function getServiceDetailsValidationCondition()
     {
-        if ($this->isLoctionOrneighbourEnabled()) {
-            return 'js/dhl_versenden/validationDetail.js';
-        }
-
-        return '';
+        return self::PREFERRED_SERVICE_ANY_ENABLED;
     }
 
     /**
+     * Obtain condition flag for use in layout.
+     *
      * @return string
      */
-    public function setSpecialValidation()
+    public function getInputSpecialCharsValidationCondition()
     {
-        if ($this->isLoctionOrneighbourEnabled()) {
-            return 'js/dhl_versenden/validationSpecial.js';
-        }
-
-        return '';
+        return self::PREFERRED_SERVICE_ANY_ENABLED;
     }
 
     /**
+     * Obtain condition flag for use in layout.
+     *
      * @return string
      */
-    public function setServiceObserver()
+    public function getServiceCombinationValidationCondition()
     {
-        if ($this->isLocationAndNeighbourEnabled()) {
-            return 'js/dhl_versenden/excludeService.js';
-        }
-
-        return '';
+        return self::PREFERRED_SERVICE_ALL_ENABLED;
     }
 
     /**
+     * Check if either preferred location or preferred neighbour are enabled in config.
+     *
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
-    public function isLoctionOrneighbourEnabled()
+    public function isLocationOrNeighbourEnabled()
     {
         /** @var Dhl_Versenden_Model_Config_Service $config */
         $config = Mage::getModel('dhl_versenden/config_service');
@@ -60,7 +60,10 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Check if both, preferred location and preferred neighbour are enabled in config.
+     *
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isLocationAndNeighbourEnabled()
     {

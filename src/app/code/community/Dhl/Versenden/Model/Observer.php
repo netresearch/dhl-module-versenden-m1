@@ -227,6 +227,34 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
     }
 
     /**
+     * Set service configuration flags to the head block in checkout.
+     *
+     * Some JS validation scripts in checkout are included dynamically,
+     * depending on whether or not preferred services are enabled in config.
+     * Adding scripts dynamically is realised via flags at the head block,
+     * which get evaluated during block rendering.
+     *
+     * - event: controller_action_layout_render_before_checkout_onepage_index
+     *
+     * @see \Mage_Page_Block_Html_Head::getCssJsHtml
+     */
+    public function setShippingServiceFlags()
+    {
+        /** @var Dhl_Versenden_Helper_Service $serviceHelper */
+        $serviceHelper = Mage::helper('dhl_versenden/service');
+
+        if ($serviceHelper->isLocationAndNeighbourEnabled()) {
+            $headBlock = Mage::app()->getLayout()->getBlock('head');
+            $headBlock->setData(Dhl_Versenden_Helper_Service::PREFERRED_SERVICE_ALL_ENABLED, true);
+        }
+
+        if ($serviceHelper->isLocationOrNeighbourEnabled()) {
+            $headBlock = Mage::app()->getLayout()->getBlock('head');
+            $headBlock->setData(Dhl_Versenden_Helper_Service::PREFERRED_SERVICE_ANY_ENABLED, true);
+        }
+    }
+
+    /**
      * Add Service fee fo shipping costs.
      *
      * @param Varien_Event_Observer $observer
