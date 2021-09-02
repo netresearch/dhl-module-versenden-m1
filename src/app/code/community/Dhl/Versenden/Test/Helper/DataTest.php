@@ -60,22 +60,44 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         // shipper EU, receiver EU
         $shipperCountry = 'DE';
         $recipientCountry = 'ES';
-        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+        $recipientPostalCode = '28970';
+        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+
+        // shipper EU, receiver EU, area with special customs regulations
+        $shipperCountry = 'DE';
+        $recipientCountry = 'ES';
+        $recipientPostalCode = '35005';
+        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, receiver not EU
         $shipperCountry = 'DE';
         $recipientCountry = 'NZ';
-        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+        $recipientPostalCode = '1071';
+        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+
+        // shipper EU, receiver not EU
+        $shipperCountry = 'DE';
+        $recipientCountry = 'UK';
+        $recipientPostalCode = 'W1U 6BF';
+        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+
+        // shipper EU, receiver not EU, area with special customs regulations
+        $shipperCountry = 'DE';
+        $recipientCountry = 'UK';
+        $recipientPostalCode = 'BT6 0BZ';
+        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper not EU, receiver not EU, yet same country
         $shipperCountry = 'NZ';
         $recipientCountry = 'NZ';
-        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+        $recipientPostalCode = '1071';
+        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper not EU, receiver not EU, different countries
         $shipperCountry = 'AU';
         $recipientCountry = 'NZ';
-        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry));
+        $recipientPostalCode = '1071';
+        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
     }
 
     /**

@@ -32,8 +32,13 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
     {
         $shipperCountry = Mage::getModel('dhl_versenden/config')->getShipperCountry($this->getShipment()->getStoreId());
         $recipientCountry = $this->getShipment()->getOrder()->getShippingAddress()->getCountryId();
+        $recipientPostalCode = $this->getShipment()->getShippingAddress()->getPostcode();
 
-        return $this->helper('dhl_versenden/data')->isCollectCustomsData($shipperCountry, $recipientCountry);
+        return $this->helper('dhl_versenden/data')->isCollectCustomsData(
+            $shipperCountry,
+            $recipientCountry,
+            $recipientPostalCode
+        );
     }
 
     /**

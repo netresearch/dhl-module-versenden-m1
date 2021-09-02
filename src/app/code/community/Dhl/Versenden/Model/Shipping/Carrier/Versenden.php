@@ -108,18 +108,26 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
     {
         $contentTypes = array();
 
+        $shipment = Mage::registry('current_shipment');
+        if (!$shipment) {
+            $recipientPostalCode = '';
+        } else {
+            $recipientPostalCode = (string) $shipment->getOrder()->getShippingAddress()->getPostcode();
+        }
+
         $isInternational = Mage::helper('dhl_versenden/data')->isCollectCustomsData(
             $params->getData('country_shipper'),
-            $params->getData('country_recipient')
+            $params->getData('country_recipient'),
+            $recipientPostalCode
         );
 
         if ($isInternational) {
             $contentTypes = array(
                 self::EXPORT_TYPE_COMMERCIAL_SAMPLE => Mage::helper('dhl_versenden/data')->__('Commercial Sample'),
                 self::EXPORT_TYPE_DOCUMENT => Mage::helper('dhl_versenden/data')->__('Document'),
-                self::EXPORT_TYPE_OTHER => Mage::helper('dhl_versenden/data')->__('Other'),
                 self::EXPORT_TYPE_PRESENT => Mage::helper('dhl_versenden/data')->__('Present'),
                 self::EXPORT_TYPE_RETURN_OF_GOODS => Mage::helper('dhl_versenden/data')->__('Return Of Goods'),
+                self::EXPORT_TYPE_OTHER => Mage::helper('dhl_versenden/data')->__('Other'),
             );
         }
 

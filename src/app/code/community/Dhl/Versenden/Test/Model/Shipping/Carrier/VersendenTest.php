@@ -114,9 +114,9 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
         $contentTypes = array(
             Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_COMMERCIAL_SAMPLE,
             Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_DOCUMENT,
-            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_OTHER,
             Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_PRESENT,
             Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_RETURN_OF_GOODS,
+            Dhl_Versenden_Model_Shipping_Carrier_Versenden::EXPORT_TYPE_OTHER,
         );
 
         $helperMock = $this->getHelperMock('dhl_versenden/data', array('isCollectCustomsData'));
