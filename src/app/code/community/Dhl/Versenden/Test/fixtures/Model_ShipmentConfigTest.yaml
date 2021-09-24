@@ -19,6 +19,8 @@ config:
   default/dhl_versenden/dev/autoload_enabled: "0"
   default/shipping/origin/country_id: "DE"
 
+  default/general/country/eu_countries: "AT,BE,BG,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE"
+
   stores/store_one/carriers/dhlversenden/shipment_dhlmethods:         "flatrate_flatrate,tablerate_bestway"
 
   stores/store_two/carriers/dhlversenden/shipment_printonlyifcodeable: "0"

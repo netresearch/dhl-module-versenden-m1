@@ -52,6 +52,7 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
+     * @loadFixture Model_ShipmentConfigTest
      */
     public function isCollectCustomsData()
     {
@@ -69,6 +70,12 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $recipientPostalCode = '35005';
         $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
+        // shipper EU, domestic shipment, postal code that looks like the one from a dutiable area of another country.
+        $shipperCountry = 'DE';
+        $recipientCountry = 'DE';
+        $recipientPostalCode = '35005';
+        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+
         // shipper EU, receiver not EU
         $shipperCountry = 'DE';
         $recipientCountry = 'NZ';
@@ -77,13 +84,13 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 
         // shipper EU, receiver not EU
         $shipperCountry = 'DE';
-        $recipientCountry = 'UK';
+        $recipientCountry = 'GB';
         $recipientPostalCode = 'W1U 6BF';
         $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, receiver not EU, area with special customs regulations
         $shipperCountry = 'DE';
-        $recipientCountry = 'UK';
+        $recipientCountry = 'GB';
         $recipientPostalCode = 'BT6 0BZ';
         $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 

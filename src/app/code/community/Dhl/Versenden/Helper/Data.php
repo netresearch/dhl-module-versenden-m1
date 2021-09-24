@@ -49,27 +49,41 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode)
     {
-        $dutiableRoutes = [
-            '^27498$', // DE - Helgoland
-            '^78266$', // DE - Büsingen
-            '^51\d{3}$', // ES - Ceuta
-            '^52\d{3}$', // ES - Melilla
-            '^3[58]\d{3}$', // ES - Canary Islands
-            '^22060$' // IT - Campione d'Italia
-        ];
+        $dutiableRoutes = array(
+            'DE' => array(
+                '^27498$', // Helgoland
+                '^78266$', // Büsingen
+            ),
+            'ES' => array(
+                '^51\d{3}$', // Ceuta
+                '^52\d{3}$', // Melilla
+                '^3[58]\d{3}$', // Canary Islands
+            ),
+            'IT' => array(
+                '^22060$', // Campione d'Italia
+            ),
+        );
 
-        $nonDutiableRoutes = ['^[bB][tT][1-9][0-9]?\s[\w^_]{3}$']; // Northern Ireland
+        $nonDutiableRoutes = array(
+            'GB' => array(
+                '^[bB][tT][1-9][0-9]?\s[\w^_]{3}$', // Northern Ireland
+            ),
+        );
 
-        $pattern = implode('|', $nonDutiableRoutes);
-        if ($pattern && preg_match("/$pattern/", $recipientPostalCode)) {
-            // given postal code matches a non-dutiable destination area
-            return false;
+        if (isset($nonDutiableRoutes[$recipientCountry])) {
+            $pattern = implode('|', $nonDutiableRoutes[$recipientCountry]);
+            if ($pattern && preg_match("/$pattern/", $recipientPostalCode)) {
+                // given postal code matches a non-dutiable destination area
+                return false;
+            }
         }
 
-        $pattern = implode('|', $dutiableRoutes);
-        if ($pattern && preg_match("/$pattern/", $recipientPostalCode)) {
-            // given postal code matches a dutiable destination area
-            return true;
+        if (isset($dutiableRoutes[$recipientCountry])) {
+            $pattern = implode('|', $dutiableRoutes[$recipientCountry]);
+            if ($pattern && preg_match("/$pattern/", $recipientPostalCode)) {
+                // given postal code matches a dutiable destination area
+                return true;
+            }
         }
 
         // are shipper and receiver located in different countries?
