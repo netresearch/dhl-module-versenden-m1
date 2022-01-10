@@ -27,7 +27,7 @@ eav:
      store_id: 1
      attribute_set_id: 4
      description: "TR TR TR"
-     country_of_manufacture: "TR"
+     country_of_manufacture: "Turkey"
    - entity_id: 200
      type_id: "simple"
      sku: "at"
