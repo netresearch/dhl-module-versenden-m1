@@ -1,4 +1,5 @@
 "DHL Paket: V01PAK","DHL Paket: V01PAK"
+"DHL Warenpost International: V66WPI","DHL Warenpost International: V66WPI"
 "DHL Warenpost National: V62WP","DHL Warenpost National: V62WP"
 "DHL Paket International: V53WPAK","DHL Paket International: V53WPAK"
 "Retoure DHL Paket: V01PAK","Retoure DHL Paket: V01PAK"
@@ -9,6 +10,7 @@
 "[AT] Retoure V87PARCEL (deleted)","[AT] Retoure V87PARCEL (entfernt)"
 "DHL Versenden","DHL Versenden"
 "DHL Business Customer Shipping","DHL Geschäftskundenversand"
+"DHL Warenpost International","DHL Warenpost International"
 "DHL Warenpost National","DHL Warenpost National"
 "General Settings","Allgemeine Einstellungen"
 "Module","Modul"

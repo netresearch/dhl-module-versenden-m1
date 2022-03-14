@@ -38,6 +38,7 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure
             Product::PROCEDURE_PAKET_NATIONAL => $helper->__('DHL Paket: V01PAK'),
             Product::PROCEDURE_WARENPOST_NATIONAL => $helper->__('DHL Warenpost National: V62WP'),
             Product::PROCEDURE_WELTPAKET => $helper->__('DHL Paket International: V53WPAK'),
+            Product::PROCEDURE_WARENPOST_INTERNATIONAL => $helper->__('DHL Warenpost International: V66WPI'),
             Product::PROCEDURE_RETURNSHIPMENT_NATIONAL => $helper->__('Retoure DHL Paket: V01PAK'),
 
             // Legacy DHL AT procedures

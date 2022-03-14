@@ -41,30 +41,28 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
      */
     public function getProducts($shipperCountry, $recipientCountry)
     {
+        $translator = Mage::helper('dhl_versenden/data');
         $products = array(
-            Product::CODE_PAKET_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Paket National'),
-            Product::CODE_WARENPOST_NATIONAL => Mage::helper('dhl_versenden/data')->__('DHL Warenpost National'),
-            Product::CODE_WELTPAKET => Mage::helper('dhl_versenden/data')->__('DHL Weltpaket'),
-            Product::CODE_EUROPAKET => Mage::helper('dhl_versenden/data')->__('DHL Europaket'),
-            Product::CODE_KURIER_TAGGLEICH => Mage::helper('dhl_versenden/data')->__('DHL Kurier Taggleich'),
-            Product::CODE_KURIER_WUNSCHZEIT => Mage::helper('dhl_versenden/data')->__('DHL Kurier Wunschzeit'),
+            Product::CODE_PAKET_NATIONAL => $translator->__('DHL Paket National'),
+            Product::CODE_WARENPOST_NATIONAL => $translator->__('DHL Warenpost National'),
+            Product::CODE_WELTPAKET => $translator->__('DHL Weltpaket'),
+            Product::CODE_EUROPAKET => $translator->__('DHL Europaket'),
+            Product::CODE_WARENPOST_INTERNATIONAL => $translator->__('DHL Warenpost International'),
+            Product::CODE_KURIER_TAGGLEICH => $translator->__('DHL Kurier Taggleich'),
+            Product::CODE_KURIER_WUNSCHZEIT => $translator->__('DHL Kurier Wunschzeit'),
         );
 
         if (!$shipperCountry) {
             // all translated products
             $productsCodes = Product::getCodes();
-            $productsCodes = array_combine($productsCodes, $productsCodes);
-            $shipmentCodes = array_intersect_key($products, $productsCodes);
         } else {
             // translated products for given shipper / recipient combination
             $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST));
-
             $productsCodes = Product::getCodesByCountry($shipperCountry, $recipientCountry, $euCountries);
-            $productsCodes = array_combine($productsCodes, $productsCodes);
-            $shipmentCodes = array_intersect_key($products, $productsCodes);
         }
 
-        return $shipmentCodes;
+        $productsCodes = array_combine($productsCodes, $productsCodes);
+        return array_intersect_key($products, $productsCodes);
     }
 
     /**
