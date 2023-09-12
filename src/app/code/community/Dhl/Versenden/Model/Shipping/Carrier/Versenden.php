@@ -259,6 +259,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         $trackData = array(
             'carrier' => $this->_code,
             'carrier_title' => $this->getConfigData('title'),
+            'progressdetail' => array(),
             'tracking' => $tracking,
             'url' => 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=' . $tracking
         );

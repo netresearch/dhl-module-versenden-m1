@@ -25,7 +25,7 @@
                    template="sales/order/shipment/packaging/popup.phtml">
                 <action method="setTemplate">
                     <template helper="dhl_versenden/data/getPackagingPopupTemplate">
-                        <name>dhl_versenden/sales/packaging_popup.phtml</name>
+                        <template>dhl_versenden/sales/packaging_popup.phtml</template>
                         <block>shipment_packaging</block>
                     </template>
                 </action>
@@ -46,7 +46,7 @@
                    template="sales/order/shipment/packaging/packed.phtml">
                 <action method="setTemplate">
                     <template helper="dhl_versenden/data/getPackagingPackedTemplate">
-                        <name>dhl_versenden/sales/packaging_packed.phtml</name>
+                        <template>dhl_versenden/sales/packaging_packed.phtml</template>
                         <block>shipment_packed</block>
                     </template>
                 </action>
