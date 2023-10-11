@@ -28,7 +28,6 @@
         'Dhl\Versenden\Bcs\Soap\ServiceconfigurationIC' => __DIR__ .'/ServiceconfigurationIC.php',
         'Dhl\Versenden\Bcs\Soap\Ident' => __DIR__ .'/Ident.php',
         'Dhl\Versenden\Bcs\Soap\ServiceconfigurationDetailsOptional' => __DIR__ .'/ServiceconfigurationDetailsOptional.php',
-        'Dhl\Versenden\Bcs\Soap\ShipmentNotificationType' => __DIR__ .'/ShipmentNotificationType.php',
         'Dhl\Versenden\Bcs\Soap\BankType' => __DIR__ .'/BankType.php',
         'Dhl\Versenden\Bcs\Soap\ShipperType' => __DIR__ .'/ShipperType.php',
         'Dhl\Versenden\Bcs\Soap\ShipperTypeType' => __DIR__ .'/ShipperTypeType.php',

@@ -32,7 +32,6 @@ class GVAPI_2_0_de extends \SoapClient
       'ServiceconfigurationIC' => 'Dhl\\Versenden\\Bcs\\Soap\\ServiceconfigurationIC',
       'Ident' => 'Dhl\\Versenden\\Bcs\\Soap\\Ident',
       'ServiceconfigurationDetailsOptional' => 'Dhl\\Versenden\\Bcs\\Soap\\ServiceconfigurationDetailsOptional',
-      'ShipmentNotificationType' => 'Dhl\\Versenden\\Bcs\\Soap\\ShipmentNotificationType',
       'BankType' => 'Dhl\\Versenden\\Bcs\\Soap\\BankType',
       'ShipperType' => 'Dhl\\Versenden\\Bcs\\Soap\\ShipperType',
       'ShipperTypeType' => 'Dhl\\Versenden\\Bcs\\Soap\\ShipperTypeType',

@@ -42,11 +42,6 @@ class CreateShipmentRequestType implements RequestType
             $shipmentDetailsType->setReturnShipmentAccountNumber($shipmentOrder->getReturnShipmentAccountNumber());
         }
 
-        if ($shipmentOrder->getServiceSelection()->getParcelAnnouncement()) {
-            $notificationType = new VersendenApi\ShipmentNotificationType($shipmentOrder->getReceiver()->getEmail());
-            $shipmentDetailsType->setNotification($notificationType);
-        }
-
         if ($shipmentOrder->getServiceSelection()->getCod()) {
             $bankDataType = BankType::prepare($shipmentOrder->getShipper()->getBankData());
             $shipmentDetailsType->setBankData($bankDataType);

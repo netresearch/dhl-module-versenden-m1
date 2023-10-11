@@ -16,11 +16,6 @@ class ShipmentDetailsTypeType extends ShipmentDetailsType
     protected $Service = null;
 
     /**
-     * @var ShipmentNotificationType $Notification
-     */
-    protected $Notification = null;
-
-    /**
      * @var BankType $BankData
      */
     protected $BankData = null;
@@ -70,24 +65,6 @@ class ShipmentDetailsTypeType extends ShipmentDetailsType
     public function setService($Service)
     {
       $this->Service = $Service;
-      return $this;
-    }
-
-    /**
-     * @return ShipmentNotificationType
-     */
-    public function getNotification()
-    {
-      return $this->Notification;
-    }
-
-    /**
-     * @param ShipmentNotificationType $Notification
-     * @return \Dhl\Versenden\Bcs\Soap\ShipmentDetailsTypeType
-     */
-    public function setNotification($Notification)
-    {
-      $this->Notification = $Notification;
       return $this;
     }
 
