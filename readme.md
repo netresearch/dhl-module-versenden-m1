@@ -8,7 +8,7 @@ Facts
 -----
 - extension key: Dhl_Versenden
 - [extension on GitHub](https://github.com/netresearch/dhl-module-versenden-m1)
-- [direct download link](https://github.com/netresearch/dhl-module-versenden-m1/archive/refs/tags/1.11.0.tar.gz)
+- [direct download link](https://github.com/netresearch/dhl-module-versenden-m1/archive/refs/tags/1.13.0.tar.gz)
 
 Description
 -----------
@@ -72,4 +72,4 @@ Licence
 
 Copyright
 ---------
-(c) 2022 DHL Paket GmbH
+(c) 2023 DHL Paket GmbH
