@@ -123,7 +123,7 @@ class Dhl_Versenden_Model_Services_Processor
         $result = false;
         foreach ($this->quote->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Quote_Item|Mage_Sales_Model_Order_Item $item */
-            $stockItem = $item->getProduct()->getData('stock_item');
+            $stockItem = $item->getProduct()->getStockItem();
             $qty = $item->getParentItemId() ? (float)$item->getParentItem()->getQty() : (float)$item->getQty();
             if ($item instanceof Mage_Sales_Model_Quote_Item) {
                 $children = $item->getChildren();
