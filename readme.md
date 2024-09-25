@@ -8,7 +8,7 @@ Facts
 -----
 - extension key: Dhl_Versenden
 - [extension on GitHub](https://github.com/netresearch/dhl-module-versenden-m1)
-- [direct download link](https://github.com/netresearch/dhl-module-versenden-m1/archive/refs/tags/1.13.0.tar.gz)
+- [direct download link](https://github.com/netresearch/dhl-module-versenden-m1/archive/refs/tags/1.13.1.tar.gz)
 
 Description
 -----------
@@ -23,11 +23,11 @@ Features:
 
 Requirements
 ------------
-- PHP >= 5.4.0
+- PHP >= 7.4.0
 
 Compatibility
 -------------
-- Magento CE >= 1.7
+- Open Magento - Magento LTS >= 19.x
 
 Installation Instructions
 -------------------------
