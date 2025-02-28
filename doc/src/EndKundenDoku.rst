@@ -51,17 +51,14 @@ Magento®
 
 Folgende Magento®-Versionen werden vom Modul unterstützt:
 
-- Community Edition 1.9
-- Community Edition 1.8
-- Community Edition 1.7
+- Open Magento - Magento LTS >= 19.x
 
 PHP
 ---
 
 Folgende PHP-Versionen werden vom Modul unterstützt:
 
-- PHP 8.0+
-- PHP 7.0+
+- PHP >= 7.4.0
 
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.

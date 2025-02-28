@@ -50,17 +50,14 @@ Magento®
 
 The following Magento® versions are supported:
 
-- Community Edition 1.9
-- Community Edition 1.8
-- Community Edition 1.7
+- Open Magento - Magento LTS >= 19.x
 
 PHP
 ---
 
 These PHP versions are supported:
 
-- PHP 8.0+
-- PHP 7.0+
+- PHP >= 7.4.0
 
 To connect to the API (webservice), the PHP SOAP extension must be installed
 and enabled on the web server.
