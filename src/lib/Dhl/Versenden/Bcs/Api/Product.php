@@ -9,7 +9,7 @@ namespace Dhl\Versenden\Bcs\Api;
 class Product
 {
     const CODE_PAKET_NATIONAL           = 'V01PAK';
-    const CODE_WARENPOST_NATIONAL       = 'V62WP';
+    const CODE_KLEINPAKET               = 'V62KP';
     const CODE_WELTPAKET                = 'V53WPAK';
     const CODE_EUROPAKET                = 'V54EPAK';
     const CODE_WARENPOST_INTERNATIONAL  = 'V66WPI';
@@ -17,7 +17,7 @@ class Product
     const CODE_KURIER_WUNSCHZEIT        = 'V06WZ';
 
     const PROCEDURE_PAKET_NATIONAL          = '01';
-    const PROCEDURE_WARENPOST_NATIONAL      = '62';
+    const PROCEDURE_KLEINPAKET              = '62';
     const PROCEDURE_WELTPAKET               = '53';
     const PROCEDURE_EUROPAKET               = '54';
     const PROCEDURE_WARENPOST_INTERNATIONAL = '66';
@@ -34,7 +34,7 @@ class Product
     {
         return [
             self::CODE_PAKET_NATIONAL,
-            self::CODE_WARENPOST_NATIONAL,
+            self::CODE_KLEINPAKET,
             self::CODE_WELTPAKET,
             self::CODE_EUROPAKET,
             self::CODE_WARENPOST_INTERNATIONAL,
@@ -53,7 +53,7 @@ class Product
     {
         $procedures = array(
             self::CODE_PAKET_NATIONAL => self::PROCEDURE_PAKET_NATIONAL,
-            self::CODE_WARENPOST_NATIONAL => self::PROCEDURE_WARENPOST_NATIONAL,
+            self::CODE_KLEINPAKET => self::PROCEDURE_KLEINPAKET,
             self::CODE_WELTPAKET => self::PROCEDURE_WELTPAKET,
             self::CODE_EUROPAKET => self::PROCEDURE_EUROPAKET,
             self::CODE_WARENPOST_INTERNATIONAL => self::PROCEDURE_WARENPOST_INTERNATIONAL,
@@ -78,7 +78,7 @@ class Product
     {
         $procedures = array(
             self::CODE_PAKET_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
-            self::CODE_WARENPOST_NATIONAL => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
+            self::CODE_KLEINPAKET => self::PROCEDURE_RETURNSHIPMENT_NATIONAL,
         );
 
         if (!isset($procedures[$code])) {
@@ -120,7 +120,7 @@ class Product
     {
         return [
             self::CODE_PAKET_NATIONAL,
-            self::CODE_WARENPOST_NATIONAL,
+            self::CODE_KLEINPAKET,
         ];
     }
 

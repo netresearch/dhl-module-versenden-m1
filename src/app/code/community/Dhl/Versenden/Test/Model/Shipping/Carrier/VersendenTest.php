@@ -45,7 +45,7 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest
     public function getProductsGermanShipper()
     {
         $paketNational = \Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_NATIONAL;
-        $paketMerchandise = \Dhl\Versenden\Bcs\Api\Product::CODE_WARENPOST_NATIONAL;
+        $paketMerchandise = \Dhl\Versenden\Bcs\Api\Product::CODE_KLEINPAKET;
         $paketInternational = \Dhl\Versenden\Bcs\Api\Product::CODE_WELTPAKET;
 
         $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();

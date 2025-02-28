@@ -15,7 +15,7 @@ class Dhl_Versenden_Test_Provider_ShipmentOrder
         $shipperAccountEkp = '1234567890';
         $shipperAccountParticipation = array(
             \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_PAKET_NATIONAL => '01',
-            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_WARENPOST_NATIONAL => '01',
+            \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_KLEINPAKET => '01',
             \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_WELTPAKET => '01',
             \Dhl\Versenden\Bcs\Api\Product::PROCEDURE_RETURNSHIPMENT_NATIONAL => '01',
         );

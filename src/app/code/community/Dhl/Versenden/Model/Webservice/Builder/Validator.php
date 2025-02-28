@@ -41,10 +41,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
             && empty($cod)
             && empty($preferredDay)
             && empty($visualCheckOfAge);
-        $isMerchandiseShipment = ($shippingProduct == Product::CODE_WARENPOST_NATIONAL);
+        $isMerchandiseShipment = ($shippingProduct == Product::CODE_KLEINPAKET);
 
         if (!$canUseMerchandiseShipment && $isMerchandiseShipment) {
-            $message = 'Warenpost cannot be booked with the services '
+            $message = 'Kleinpaket cannot be booked with the services '
                 . 'Additional Insurance, Bulky Goods, Cash on Delivery, Delivery Day, Visual Check of Age.';
             throw new ValidationException($message);
         }

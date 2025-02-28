@@ -60,11 +60,8 @@ PHP
 
 Folgende PHP-Versionen werden vom Modul unterstützt:
 
-- PHP 7.2
-- PHP 7.1
-- PHP 7.0
-- PHP 5.6
-- PHP 5.5
+- PHP 8.0+
+- PHP 7.0+
 
 Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
 Webserver installiert und aktiviert sein.
@@ -346,7 +343,7 @@ Die Einstellung *Versandprodukt (Inland)* legt das Standard-Versandprodukt für 
 automatische Sendungserstellung nationaler Sendungen fest. Hier stehen folgende Produkte zur Verfügung:
 
 - Paket National für Sendungen bis 31,5 kg
-- Warenpost National (Merchandise Shipment) für kleinere/leichtere Sendungen
+- Kleinpaket (Merchandise Shipment) für kleinere/leichtere Sendungen
 
 Standardwerte für Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -533,7 +530,7 @@ Versandprodukt
 
 Für nationale Sendungen stehen folgende Versandprodukte zur Verfügung:
 * Paket National für Sendungen bis 31,5 kg
-* Warenpost National (Merchandise Shipment) für kleinere/leichtere Sendungen
+* Kleinpaket (Merchandise Shipment) für kleinere/leichtere Sendungen
 
 Service-Auswahl
 ~~~~~~~~~~~~~~~

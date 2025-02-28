@@ -60,7 +60,7 @@ class Filter
                 PreferredDay::CODE,
                 PreferredTime::CODE
             ],
-            Product::CODE_WARENPOST_NATIONAL => [
+            Product::CODE_KLEINPAKET => [
                 ParcelAnnouncement::CODE,
                 ParcelOutletRouting::CODE,
                 PreferredLocation::CODE,

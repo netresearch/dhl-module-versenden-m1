@@ -44,7 +44,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden
         $translator = Mage::helper('dhl_versenden/data');
         $products = array(
             Product::CODE_PAKET_NATIONAL => $translator->__('DHL Paket National'),
-            Product::CODE_WARENPOST_NATIONAL => $translator->__('DHL Warenpost National'),
+            Product::CODE_KLEINPAKET => $translator->__('DHL Kleinpaket'),
             Product::CODE_WELTPAKET => $translator->__('DHL Weltpaket'),
             Product::CODE_EUROPAKET => $translator->__('DHL Europaket'),
             Product::CODE_WARENPOST_INTERNATIONAL => $translator->__('DHL Warenpost International'),

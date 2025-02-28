@@ -59,11 +59,8 @@ PHP
 
 These PHP versions are supported:
 
-- PHP 7.2
-- PHP 7.1
-- PHP 7.0
-- PHP 5.6
-- PHP 5.5
+- PHP 8.0+
+- PHP 7.0+
 
 To connect to the API (webservice), the PHP SOAP extension must be installed
 and enabled on the web server.
@@ -332,7 +329,7 @@ The setting *Shipping Product (Domestic)* defines the domestic default shipping 
 The following products are available:
 
 - National Shipment (Paket National) for parcels up to 31.5 kg
-- Merchandise Shipment (Warenpost) for smaller/low weight goods
+- Merchandise Shipment (Kleinpaket) for smaller/low weight goods
 
 Shipment Defaults
 ~~~~~~~~~~~~~~~~~
@@ -512,7 +509,7 @@ Shipping Product
 
 For domestic orders, the following products are available:
 * National Shipment (Paket National) for parcels up to 31.5 kg
-* Merchandise Shipment (Warenpost) for smaller/low weight goods
+* Merchandise Shipment (Kleinpaket) for smaller/low weight goods
 
 Service selection
 ~~~~~~~~~~~~~~~~~

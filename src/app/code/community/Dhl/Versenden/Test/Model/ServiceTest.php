@@ -300,7 +300,7 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filter()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_WARENPOST_NATIONAL);
+        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_KLEINPAKET);
         $isPostalFacility     = false;
         $onlyCustomerServices = false;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
