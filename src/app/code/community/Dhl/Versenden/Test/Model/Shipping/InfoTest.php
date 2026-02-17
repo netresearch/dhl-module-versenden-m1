@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
-use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
+use Dhl\Versenden\ParcelDe\Service;
 
 class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Case
 {
@@ -17,18 +16,18 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
      */
     public function loadDhlVersendenInfo($jsonInfo)
     {
-        $shippingInfo = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($jsonInfo);
-        $this->assertInstanceOf(
-            \Dhl\Versenden\Bcs\Api\Info::class,
-            $shippingInfo
+        $shippingInfo = \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($jsonInfo);
+        static::assertInstanceOf(
+            \Dhl\Versenden\ParcelDe\Info::class,
+            $shippingInfo,
         );
-        $this->assertInstanceOf(
-            \Dhl\Versenden\Bcs\Api\Info\Services::class,
-            $shippingInfo->getServices()
+        static::assertInstanceOf(
+            \Dhl\Versenden\ParcelDe\Info\Services::class,
+            $shippingInfo->getServices(),
         );
-        $this->assertInstanceOf(
-            \Dhl\Versenden\Bcs\Api\Info\Receiver::class,
-            $shippingInfo->getReceiver()
+        static::assertInstanceOf(
+            \Dhl\Versenden\ParcelDe\Info\Receiver::class,
+            $shippingInfo->getReceiver(),
         );
     }
 
@@ -54,7 +53,7 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
 
 
         // create and serialize shipping info
-        $shippingInfo = new \Dhl\Versenden\Bcs\Api\Info();
+        $shippingInfo = new \Dhl\Versenden\ParcelDe\Info();
         $shippingInfo->getServices()->preferredLocation = $preferredLocation;
 
         $shippingInfo->getReceiver()->streetName = $streetName;
@@ -74,31 +73,31 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $shippingInfo->getReceiver()->getParcelShop()->streetNumber = $streetNumber;
         $shippingInfo->getReceiver()->getParcelShop()->countryISOCode = $countryCode;
 
-        $json = \Dhl\Versenden\Bcs\Api\Info\Serializer::serialize($shippingInfo);
+        $json = \Dhl\Versenden\ParcelDe\Info\Serializer::serialize($shippingInfo);
 
 
         // create shipping info from serialized string
-        $unserialized = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($json);
+        $unserialized = \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($json);
 
-        $this->assertEquals($preferredLocation, $unserialized->getServices()->preferredLocation);
-        $this->assertNull($unserialized->getServices()->preferredNeighbour);
+        static::assertEquals($preferredLocation, $unserialized->getServices()->preferredLocation);
+        static::assertNull($unserialized->getServices()->preferredNeighbour);
 
-        $this->assertEquals($streetNumber, $unserialized->getReceiver()->streetNumber);
-        $this->assertEquals($streetName, $unserialized->getReceiver()->streetName);
-        $this->assertEquals($countryCode, $unserialized->getReceiver()->countryISOCode);
+        static::assertEquals($streetNumber, $unserialized->getReceiver()->streetNumber);
+        static::assertEquals($streetName, $unserialized->getReceiver()->streetName);
+        static::assertEquals($countryCode, $unserialized->getReceiver()->countryISOCode);
 
-        $this->assertEquals($packstationNumber, $unserialized->getReceiver()->getPackstation()->packstationNumber);
-        $this->assertEquals($postNumber, $unserialized->getReceiver()->getPackstation()->postNumber);
-        $this->assertEquals($countryCode, $unserialized->getReceiver()->getPackstation()->countryISOCode);
+        static::assertEquals($packstationNumber, $unserialized->getReceiver()->getPackstation()->packstationNumber);
+        static::assertEquals($postNumber, $unserialized->getReceiver()->getPackstation()->postNumber);
+        static::assertEquals($countryCode, $unserialized->getReceiver()->getPackstation()->countryISOCode);
 
-        $this->assertEquals($postfilialNumber, $unserialized->getReceiver()->getPostfiliale()->postfilialNumber);
-        $this->assertEquals($postNumber, $unserialized->getReceiver()->getPostfiliale()->postNumber);
-        $this->assertEquals($countryCode, $unserialized->getReceiver()->getPostfiliale()->countryISOCode);
+        static::assertEquals($postfilialNumber, $unserialized->getReceiver()->getPostfiliale()->postfilialNumber);
+        static::assertEquals($postNumber, $unserialized->getReceiver()->getPostfiliale()->postNumber);
+        static::assertEquals($countryCode, $unserialized->getReceiver()->getPostfiliale()->countryISOCode);
 
-        $this->assertEquals($parcelShopNumber, $unserialized->getReceiver()->getParcelShop()->parcelShopNumber);
-        $this->assertEquals($streetName, $unserialized->getReceiver()->getParcelShop()->streetName);
-        $this->assertEquals($streetNumber, $unserialized->getReceiver()->getParcelShop()->streetNumber);
-        $this->assertEquals($countryCode, $unserialized->getReceiver()->getParcelShop()->countryISOCode);
+        static::assertEquals($parcelShopNumber, $unserialized->getReceiver()->getParcelShop()->parcelShopNumber);
+        static::assertEquals($streetName, $unserialized->getReceiver()->getParcelShop()->streetName);
+        static::assertEquals($streetNumber, $unserialized->getReceiver()->getParcelShop()->streetNumber);
+        static::assertEquals($countryCode, $unserialized->getReceiver()->getParcelShop()->countryISOCode);
     }
 
     /**
@@ -108,13 +107,13 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
     {
         // set service #1
         $preferredLocation = 'Foo';
-        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
+        $versendenInfo = new \Dhl\Versenden\ParcelDe\Info();
         $versendenInfo->getServices()->preferredLocation = $preferredLocation;
 
         // check if service is included
         $services = $versendenInfo->getServices()->toArray();
-        $this->assertArrayHasKey('preferred_location', $services);
-        $this->assertEquals($preferredLocation, $services['preferred_location']);
+        static::assertArrayHasKey('preferred_location', $services);
+        static::assertEquals($preferredLocation, $services['preferred_location']);
 
         // add service #2
         $preferredNeighbour = 'Bar';
@@ -122,23 +121,23 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $versendenInfo->getServices()->fromArray($services);
 
         // check if services are included
-        $this->assertEquals($preferredNeighbour, $versendenInfo->getServices()->preferredNeighbour);
-        $this->assertEquals($preferredLocation, $versendenInfo->getServices()->preferredLocation);
+        static::assertEquals($preferredNeighbour, $versendenInfo->getServices()->preferredNeighbour);
+        static::assertEquals($preferredLocation, $versendenInfo->getServices()->preferredLocation);
 
         // add packstation
         $stationId = '808';
         $streetNumber = '303';
-        $postalFacility = array(
+        $postalFacility = [
             'packstation_number' => $stationId,
-            'post_number' => '12345678'
-        );
-        $receiver = array(
+            'post_number' => '12345678',
+        ];
+        $receiver = [
             'packstation' => $postalFacility,
-        );
+        ];
         $versendenInfo->getReceiver()->fromArray($receiver);
 
         // check if packstation is included
-        $this->assertSame($stationId, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        static::assertSame($stationId, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
 
         // add address data
         $receiver = $versendenInfo->getReceiver()->toArray();
@@ -146,8 +145,8 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $receiver['street_number'] = $streetNumber;
         $versendenInfo->getReceiver()->fromArray($receiver);
 
-        $this->assertSame($stationId, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
-        $this->assertSame($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertSame($stationId, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        static::assertSame($streetNumber, $versendenInfo->getReceiver()->streetNumber);
     }
 
     /**
@@ -155,16 +154,16 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
      */
     public function wrongSchemaVersion()
     {
-        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
+        $versendenInfo = new \Dhl\Versenden\ParcelDe\Info();
         $schemaVersion = 'Foo';
         $preferredLocation = 'Bar';
 
         $versendenInfo->schemaVersion = $schemaVersion;
         $versendenInfo->getServices()->preferredLocation = $preferredLocation;
 
-        $json = \Dhl\Versenden\Bcs\Api\Info\Serializer::serialize($versendenInfo);
-        $unserialized = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($json);
-        $this->assertNull($unserialized);
+        $json = \Dhl\Versenden\ParcelDe\Info\Serializer::serialize($versendenInfo);
+        $unserialized = \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($json);
+        static::assertNull($unserialized);
     }
 
     /**
@@ -178,30 +177,30 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $streetName = 'Street Name';
         $streetNumber = '127';
         $streetSupplement = 'Address Addition';
-        $street = array("$streetName $streetNumber", $streetSupplement);
+        $street = ["$streetName $streetNumber", $streetSupplement];
 
         $address = Mage::getModel('sales/quote_address');
         $address->setCountryId($countryId);
         $address->setStreet($street);
 
         $preferredLocation = 'Garage';
-        $selectedServices = array(
+        $selectedServices = [
             Service\PreferredLocation::CODE => Service\PreferredLocation::CODE,
-        );
-        $serviceDetails = array(
+        ];
+        $serviceDetails = [
             Service\PreferredLocation::CODE => $preferredLocation,
-        );
-        $serviceInfo = array(
+        ];
+        $serviceInfo = [
             'shipment_service' => $selectedServices,
             'service_setting' => $serviceDetails,
-        );
+        ];
 
         $builder = new Dhl_Versenden_Model_Info_Builder();
         $versendenInfo = $builder->infoFromSales($address, $serviceInfo, 'store_one');
-        $this->assertEquals($preferredLocation, $versendenInfo->getServices()->preferredLocation);
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
+        static::assertEquals($preferredLocation, $versendenInfo->getServices()->preferredLocation);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
     }
 
     /**
@@ -215,28 +214,28 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $streetName = 'PackStation';
         $streetNumber = '127';
         $streetSupplement = 'Address Addition';
-        $street = array("$streetName $streetNumber", $streetSupplement);
+        $street = ["$streetName $streetNumber", $streetSupplement];
 
         $address = Mage::getModel('sales/quote_address');
         $address->setCountryId($countryId);
         $address->setStreet($street);
 
-        $selectedServices = array();
-        $serviceDetails = array();
-        $serviceInfo = array(
+        $selectedServices = [];
+        $serviceDetails = [];
+        $serviceInfo = [
             'shipment_service' => $selectedServices,
             'service_setting' => $serviceDetails,
-        );
+        ];
 
         $builder = new Dhl_Versenden_Model_Info_Builder();
         $versendenInfo = $builder->infoFromSales($address, $serviceInfo, 'store_one');
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
 
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
-        $this->assertNull($versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber);
-        $this->assertNull($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        static::assertNull($versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber);
+        static::assertNull($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber);
     }
 
     /**
@@ -250,46 +249,28 @@ class Dhl_Versenden_Test_Model_Shipping_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $streetName = 'Postfiliale';
         $streetNumber = '127';
         $streetSupplement = 'Address Addition';
-        $street = array("$streetName $streetNumber", $streetSupplement);
+        $street = ["$streetName $streetNumber", $streetSupplement];
 
         $address = Mage::getModel('sales/quote_address');
         $address->setCountryId($countryId);
         $address->setStreet($street);
 
-        $selectedServices = array();
-        $serviceDetails = array();
-        $serviceInfo = array(
+        $selectedServices = [];
+        $serviceDetails = [];
+        $serviceInfo = [
             'shipment_service' => $selectedServices,
             'service_setting' => $serviceDetails,
-        );
+        ];
 
         $builder = new Dhl_Versenden_Model_Info_Builder();
         $versendenInfo = $builder->infoFromSales($address, $serviceInfo, 'store_one');
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEquals($streetSupplement, $versendenInfo->getReceiver()->addressAddition);
 
-        $this->assertNull($versendenInfo->getReceiver()->getPackstation()->packstationNumber);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber);
-        $this->assertNull($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber);
+        static::assertNull($versendenInfo->getReceiver()->getPackstation()->packstationNumber);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber);
+        static::assertNull($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber);
     }
 
-    /**
-     * @test
-     * @dataProvider Dhl_Versenden_Test_Provider_ShipmentOrder::provider()
-     * @loadFixture Model_ConfigTest
-     * @loadFixture Model_ShipperConfigTest
-     *
-     * @param \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder $shipmentOrder
-     * @param \Dhl_Versenden_Test_Expectation_ShipmentOrder $expectation
-     */
-    public function buildFromRequestData($shipmentOrder, $expectation)
-    {
-        $builder = new Dhl_Versenden_Model_Info_Builder();
-        $versendenInfo = $builder->infoFromRequestData($shipmentOrder);
-
-        $this->assertEquals($expectation->getReceiverStreetName(), $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($expectation->getReceiverStreetNumber(), $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEquals($expectation->getReceiverAddressAddition(), $versendenInfo->getReceiver()->addressAddition);
-    }
 }

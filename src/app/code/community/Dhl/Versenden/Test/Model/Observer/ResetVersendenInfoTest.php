@@ -4,11 +4,8 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Observer_ResetVersendenInfoTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_ResetVersendenInfoTest extends EcomDev_PHPUnit_Test_Case
 {
-
-
     /**
      * @test
      * @loadFixture Model_ObserverTest
@@ -17,14 +14,14 @@ class Dhl_Versenden_Test_Model_Observer_ResetVersendenInfoTest
     {
         $coreSessionMock = $this
             ->getMockBuilder('Mage_Core_Model_Session')
-            ->setMethods(array('start'))
+            ->setMethods(['start'])
             ->getMock();
         $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
 
         $quote       = Mage::getModel('sales/quote')->load(300);
-        $sessionMock = $this->getModelMock('checkout/session', array('init', 'getQuote'));
+        $sessionMock = $this->getModelMock('checkout/session', ['init', 'getQuote']);
         $sessionMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getQuote')
             ->willReturn($quote);
         $this->replaceByMock('model', 'checkout/session', $sessionMock);
@@ -33,8 +30,8 @@ class Dhl_Versenden_Test_Model_Observer_ResetVersendenInfoTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->resetVersendenInfo($observer);
 
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $quote->getShippingAddress()->getData('dhl_versenden_info');
-        $this->assertNull($versendenInfo);
+        static::assertNull($versendenInfo);
     }
 }

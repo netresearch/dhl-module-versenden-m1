@@ -6,28 +6,28 @@
 
 class Dhl_Versenden_Model_Label_Status extends Mage_Core_Model_Abstract
 {
-    const FIELD_ORDER_ID = 'order_id';
-    const FIELD_STATUS_CODE = 'status_code';
+    public const FIELD_ORDER_ID = 'order_id';
+    public const FIELD_STATUS_CODE = 'status_code';
 
     /**
      * Other carrier, not a DHL shipment
      */
-    const CODE_OTHER = 0;
+    public const CODE_OTHER = 0;
 
     /**
      * Label not yet requested
      */
-    const CODE_PENDING = 10;
+    public const CODE_PENDING = 10;
 
     /**
      * Labels retrieved, all items shipped
      */
-    const CODE_PROCESSED = 20;
+    public const CODE_PROCESSED = 20;
 
     /**
      * Label request failed
      */
-    const CODE_FAILED = 30;
+    public const CODE_FAILED = 30;
 
     /**
      * object initialization
@@ -73,26 +73,23 @@ class Dhl_Versenden_Model_Label_Status extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Update status after label creation attempt.
+     * Update status after label creation attempt (REST API).
      *
      * @param Mage_Sales_Model_Order $order
-     * @param \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\CreateShipment\Label|null $createdItem
+     * @param object|null $createdItem REST SDK shipment object from successful creation
      * @return void
      */
     public function setLabelCreated(
         Mage_Sales_Model_Order $order,
-        \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\CreateShipment\Label $createdItem = null
+        $createdItem = null
     ) {
         $this->setOrderId($order->getId());
 
-        if (!$createdItem) {
-            // no request sent, nothing created
-            $this->setStatusCode(self::CODE_FAILED);
-        } elseif ($createdItem->getStatus()->isError()) {
-            // request sent, label creation returned errors
-            $this->setStatusCode(self::CODE_FAILED);
-        } else {
+        // Simple logic: object = success, null = failed
+        if ($createdItem && is_object($createdItem)) {
             $this->setStatusCode(self::CODE_PROCESSED);
+        } else {
+            $this->setStatusCode(self::CODE_FAILED);
         }
     }
 
@@ -100,12 +97,12 @@ class Dhl_Versenden_Model_Label_Status extends Mage_Core_Model_Abstract
      * Update status after label deletion attempt.
      *
      * @param Mage_Sales_Model_Order $order
-     * @param \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\Status\Item $deletedItem
+     * @param mixed $deletedItem
      * @return void
      */
     public function setLabelDeleted(
         Mage_Sales_Model_Order $order,
-        \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\Status\Item $deletedItem
+        $deletedItem
     ) {
         $this->setOrderId($order->getId());
 

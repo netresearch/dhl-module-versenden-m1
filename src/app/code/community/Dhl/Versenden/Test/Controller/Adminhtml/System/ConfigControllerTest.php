@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Controller_Adminhtml_System_ConfigControllerTest
-    extends Dhl_Versenden_Test_Case_AdminController
+class Dhl_Versenden_Test_Controller_Adminhtml_System_ConfigControllerTest extends Dhl_Versenden_Test_Case_AdminController
 {
     /**
      * Dispatch admin route, assert blocks being loaded.

@@ -6,7 +6,7 @@
 
 class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 {
-    const PACKAGING_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
+    public const PACKAGING_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_packaging';
 
     protected function mockPackagingBlock()
     {
@@ -14,9 +14,9 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $shipment = new Varien_Object();
         $shipment->setData('order', $order);
 
-        $blockMock = $this->getBlockMock(self::PACKAGING_BLOCK_ALIAS, array('getShipment', 'getTemplate'));
+        $blockMock = $this->getBlockMock(self::PACKAGING_BLOCK_ALIAS, ['getShipment', 'getTemplate']);
         $blockMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getShipment')
             ->willReturn($shipment);
         Mage::getSingleton('core/layout')->setBlock(self::PACKAGING_BLOCK_ALIAS, $blockMock);
@@ -28,7 +28,7 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
     public function getModuleVersion()
     {
         $helper = Mage::helper('dhl_versenden/data');
-        $this->assertRegExp('/\d\.\d{1,2}\.\d{1,2}/', $helper->getModuleVersion());
+        static::assertMatchesRegularExpression('/\d\.\d{1,2}\.\d{1,2}/', $helper->getModuleVersion());
     }
 
     /**
@@ -40,14 +40,14 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
 
         $gmtDate = '2015-01-01 12:00:00';
         $cetDate = '2015-01-01 13:00:00';
-        $this->assertSame($cetDate, $helper->utcToCet(strtotime($gmtDate)));
+        static::assertSame($cetDate, $helper->utcToCet(strtotime($gmtDate)));
 
 
         $gmtDate = '2015-06-15 12:00:00';
         $cetDate = '2015-06-15 14:00:00';
-        $this->assertSame($cetDate, $helper->utcToCet(strtotime($gmtDate)));
+        static::assertSame($cetDate, $helper->utcToCet(strtotime($gmtDate)));
 
-        $this->assertInternalType('string', $helper->utcToCet());
+        static::assertIsString($helper->utcToCet());
     }
 
     /**
@@ -62,49 +62,49 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $shipperCountry = 'DE';
         $recipientCountry = 'ES';
         $recipientPostalCode = '28970';
-        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, receiver EU, area with special customs regulations
         $shipperCountry = 'DE';
         $recipientCountry = 'ES';
         $recipientPostalCode = '35005';
-        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, domestic shipment, postal code that looks like the one from a dutiable area of another country.
         $shipperCountry = 'DE';
         $recipientCountry = 'DE';
         $recipientPostalCode = '35005';
-        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, receiver not EU
         $shipperCountry = 'DE';
         $recipientCountry = 'NZ';
         $recipientPostalCode = '1071';
-        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, receiver not EU
         $shipperCountry = 'DE';
         $recipientCountry = 'GB';
         $recipientPostalCode = 'W1U 6BF';
-        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper EU, receiver not EU, area with special customs regulations
         $shipperCountry = 'DE';
         $recipientCountry = 'GB';
         $recipientPostalCode = 'BT6 0BZ';
-        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper not EU, receiver not EU, yet same country
         $shipperCountry = 'NZ';
         $recipientCountry = 'NZ';
         $recipientPostalCode = '1071';
-        $this->assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertFalse($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
 
         // shipper not EU, receiver not EU, different countries
         $shipperCountry = 'AU';
         $recipientCountry = 'NZ';
         $recipientPostalCode = '1071';
-        $this->assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
+        static::assertTrue($helper->isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode));
     }
 
     /**
@@ -125,10 +125,10 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $helper = new Dhl_Versenden_Helper_Data();
 
         $template = $helper->getPackagingPopupTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
-        $this->assertEquals($customTemplate, $template);
+        static::assertEquals($customTemplate, $template);
 
         $template = $helper->getPackagingPackedTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
-        $this->assertEquals($customTemplate, $template);
+        static::assertEquals($customTemplate, $template);
     }
 
     /**
@@ -146,7 +146,7 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $block = Mage::getSingleton('core/layout')->getBlock(self::PACKAGING_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod($shippingMethod);
         $block
-            ->expects($this->exactly(2))
+            ->expects(static::exactly(2))
             ->method('getTemplate')
             ->willReturn($defaultTemplate);
 
@@ -154,10 +154,10 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
         $helper = new Dhl_Versenden_Helper_Data();
 
         $template = $helper->getPackagingPopupTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
-        $this->assertEquals($defaultTemplate, $template);
+        static::assertEquals($defaultTemplate, $template);
 
         $template = $helper->getPackagingPackedTemplate($customTemplate, self::PACKAGING_BLOCK_ALIAS);
-        $this->assertEquals($defaultTemplate, $template);
+        static::assertEquals($defaultTemplate, $template);
     }
 
     /**
@@ -167,31 +167,43 @@ class Dhl_Versenden_Test_Helper_DataTest extends EcomDev_PHPUnit_Test_Case
     {
         $helper = new Dhl_Versenden_Helper_Data();
 
+        // Track items manually instead of relying on collection count
+        $items = [];
+
         $history = $this->getMockBuilder(Mage_Sales_Model_Resource_Order_Status_History_Collection::class)
-            ->setMethods(array('save'))
+            ->setMethods(['addItem', 'save'])
             ->getMock();
 
+        $history
+            ->method('addItem')
+            ->willReturnCallback(function ($item) use (&$items) {
+                $items[] = $item;
+            });
+
         $order = $this->getMockBuilder(Mage_Sales_Model_Order::class)
-            ->setMethods(array('getStatusHistoryCollection'))
+            ->setMethods(['getStatusHistoryCollection', 'getStatus'])
             ->getMock();
         $order
-            ->expects($this->exactly(2))
+            ->expects(static::exactly(2))
             ->method('getStatusHistoryCollection')
             ->willReturn($history);
+        $order
+            ->expects(static::exactly(2))
+            ->method('getStatus')
+            ->willReturn('processing');
 
         $comment = 'status comment';
 
         /** @var Mage_Sales_Model_Order $order */
-        /** @var Mage_Sales_Model_Resource_Order_Status_History_Collection $history */
-        $this->assertCount(0, $history);
+        static::assertCount(0, $items);
         $helper->addStatusHistoryComment($order, $comment);
-        $this->assertCount(1, $history);
+        static::assertCount(1, $items);
         $helper->addStatusHistoryComment($order, $comment);
-        $this->assertCount(2, $history);
+        static::assertCount(2, $items);
 
         /** @var Mage_Sales_Model_Order_Status_History $item */
-        foreach ($history as $item) {
-            $this->assertEquals($comment, $item->getComment());
+        foreach ($items as $item) {
+            static::assertEquals($comment, $item->getComment());
         }
     }
 }

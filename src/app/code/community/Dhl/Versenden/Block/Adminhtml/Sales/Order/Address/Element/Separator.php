@@ -4,14 +4,14 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator
-    extends Varien_Data_Form_Element_Abstract
+class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator extends Varien_Data_Form_Element_Abstract
 {
     /**
-     * @param string $idSuffix
+     * @param string $_idSuffix
      * @return string
      */
-    public function getLabelHtml($idSuffix = '')
+    // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+    public function getLabelHtml($_idSuffix = '')
     {
         $value = $this->getData('value');
         if ($value) {
@@ -29,7 +29,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator
     public function getElementHtml()
     {
         $html = '';
-        $html.= $this->getAfterElementHtml();
+        $html .= $this->getAfterElementHtml();
 
         return $html;
     }

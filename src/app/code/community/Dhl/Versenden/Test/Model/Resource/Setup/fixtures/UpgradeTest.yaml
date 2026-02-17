@@ -1,0 +1,6 @@
+config:
+  default/carriers/dhlversenden/webservice_auth_username: test_username
+  default/carriers/dhlversenden/webservice_auth_password: test_password
+  default/carriers/dhlversenden/sandbox_endpoint: test_sandbox_endpoint
+  default/carriers/dhlversenden/production_endpoint: test_production_endpoint
+  default/carriers/dhlversenden/account_number: valid_account_number

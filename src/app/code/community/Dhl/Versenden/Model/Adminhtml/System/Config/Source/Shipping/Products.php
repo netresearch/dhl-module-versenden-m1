@@ -11,11 +11,11 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Shipping_Products
      */
     public function toOptionArray()
     {
-        $optionArray = array();
+        $optionArray = [];
         $options = Mage::getSingleton('dhl_versenden/shipping_carrier_versenden')->getProducts('DE', 'DE');
 
         foreach ($options as $value => $label) {
-            $optionArray[]= array('value' => $value, 'label' => $label);
+            $optionArray[] = ['value' => $value, 'label' => $label];
         }
 
         return $optionArray;

@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_CodPaymentTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
@@ -20,14 +19,14 @@ class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
 
         $sessionMock = $this->getModelMock(
             'checkout/session',
-            array('getQuote'),
+            ['getQuote'],
             false,
-            array(),
+            [],
             '',
-            false
+            false,
         );
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getQuote')
             ->willReturn(null);
         $this->replaceByMock('singleton', 'checkout/session', $sessionMock);
@@ -59,9 +58,9 @@ class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
         $observer->setData('quote', $quote);
         $observer->setData('method_instance', $methodInstance);
 
-        $configMock = $this->getModelMock('shipping/config', array('getCarrierInstance'));
+        $configMock = $this->getModelMock('shipping/config', ['getCarrierInstance']);
         $configMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('getCarrierInstance');
         $this->replaceByMock('model', 'shipping/config', $configMock);
 
@@ -92,9 +91,9 @@ class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
         $observer->setData('quote', $quote);
         $observer->setData('method_instance', $methodInstance);
 
-        $configMock = $this->getModelMock('shipping/config', array('getCarrierInstance'));
+        $configMock = $this->getModelMock('shipping/config', ['getCarrierInstance']);
         $configMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('getCarrierInstance');
         $this->replaceByMock('model', 'shipping/config', $configMock);
 
@@ -130,14 +129,17 @@ class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->disableCodPayment($observer);
 
-        $this->assertEquals($isAvailable, $observer->getData('result')->isAvailable);
+        static::assertEquals($isAvailable, $observer->getData('result')->isAvailable);
     }
 
     /**
+     * COD is available for international V53WPAK shipments (confirmed by DHL billing
+     * matrix and Postman test suite), so NZ destination should allow COD.
+     *
      * @test
      * @loadFixture Model_ShipmentConfigTest
      */
-    public function disableCodPaymentCodNotAllowed()
+    public function disableCodPaymentCodAllowedForInternational()
     {
         $isAvailable = 'foo';
         $methodInstance = new Mage_Payment_Model_Method_Cashondelivery();
@@ -161,6 +163,7 @@ class Dhl_Versenden_Test_Model_Observer_CodPaymentTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->disableCodPayment($observer);
 
-        $this->assertFalse($observer->getData('result')->isAvailable);
+        // V53WPAK (available for DE→NZ) now includes COD in its product-service matrix
+        static::assertEquals($isAvailable, $observer->getData('result')->isAvailable);
     }
 }

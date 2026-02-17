@@ -6,7 +6,7 @@
 
 class Dhl_Versenden_Helper_Autoloader
 {
-    protected $_prefixes = array();
+    protected $_prefixes = [];
 
     /**
      * Adds a base directory for a namespace prefix.
@@ -36,7 +36,7 @@ class Dhl_Versenden_Helper_Autoloader
      */
     public function register()
     {
-        spl_autoload_register(array($this, 'loadClass'), true, true);
+        spl_autoload_register([$this, 'loadClass'], true, true);
     }
 
     /**
@@ -47,7 +47,7 @@ class Dhl_Versenden_Helper_Autoloader
      */
     public function loadClass($class)
     {
-        foreach($this->_prefixes as $prefix => $baseDir) {
+        foreach ($this->_prefixes as $prefix => $baseDir) {
             $len = strlen($prefix);
             if (strncmp($prefix, $class, $len) !== 0) {
                 // class does not match current namespace prefix, go on.

@@ -12,7 +12,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
     /**
      * Dhl_Versenden_Model_Shipping_Autocreate constructor.
      */
-    public function __construct($args = array())
+    public function __construct($args = [])
     {
         if (!isset($args['logger']) || !$args['logger'] instanceof Dhl_Versenden_Model_Log) {
             Mage::throwException('missing or invalid argument: logger');
@@ -27,7 +27,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
      */
     protected function prepareShipmentRequests(Mage_Sales_Model_Resource_Order_Collection $collection)
     {
-        $shipmentRequests = array();
+        $shipmentRequests = [];
 
         $shipmentConfig = Mage::getModel('dhl_versenden/config_shipment');
         $shipperConfig  = Mage::getModel('dhl_versenden/config_shipper');
@@ -43,13 +43,13 @@ class Dhl_Versenden_Model_Shipping_Autocreate
                     $order,
                     $shipmentConfig,
                     $shipperConfig,
-                    $serviceConfig
+                    $serviceConfig,
                 );
                 $request = $builder->createShipmentRequest($shipment);
 
                 $shipmentRequests[$order->getId()] = $request;
             } catch (Exception $e) {
-                $this->logger->error($e->getMessage(), array('exception' => $e));
+                $this->logger->error($e->getMessage(), ['exception' => $e]);
             }
         }
 
@@ -66,73 +66,122 @@ class Dhl_Versenden_Model_Shipping_Autocreate
             return 0;
         }
 
-        $ordersShipped = 0;
-        $shipments = array();
-
         $shipmentRequests = $this->prepareShipmentRequests($collection);
-        $gateway = Mage::getModel('dhl_versenden/webservice_gateway_soap');
-        $result = $gateway->createShipmentOrder($shipmentRequests);
 
-        $carrier     = Mage::getModel('dhl_versenden/shipping_carrier_versenden');
-        $pdfLib      = new \Dhl\Versenden\Bcs\Api\Pdf\Adapter\Zend();
-        $transaction = Mage::getModel('core/resource_transaction');
+        // Filter out requests with validation errors
+        $validRequests = [];
+        $requestMap = [];
 
-        /** @var Mage_Shipping_Model_Shipment_Request $shipmentRequest */
-        foreach ($shipmentRequests as $orderId => $shipmentRequest) {
-            $shipment = $shipmentRequest->getOrderShipment();
-
-            // handle request validation errors, no label request was sent
-            if ($shipmentRequest->hasData('request_data_exception')) {
-                Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
-                    $shipment->getOrder(),
-                    $shipmentRequest->getData('request_data_exception')
-                );
-                $incId = $shipment->getOrder()->getIncrementId();
-                $message = __('Autocreation Error');
-                $message .= "\n";
-                $message .= ' # '. $incId . ' : ' . $shipmentRequest->getData('request_data_exception');
-                $this->logger->error($message);
+        foreach ($shipmentRequests as $orderId => $request) {
+            if ($request->hasData('request_data_exception')) {
                 continue;
             }
-
-            // handle webservice errors, label response includes item status
-            $shipmentStatus = $result->getCreatedItems()->getItem($orderId)->getStatus();
-            if ($shipmentStatus->isError()) {
-                Mage::helper('dhl_versenden/data')->addStatusHistoryComment(
-                    $shipmentRequest->getOrderShipment()->getOrder(),
-                    sprintf('%s %s', $shipmentStatus->getStatusText(), $shipmentStatus->getStatusMessage())
-                );
-                continue;
-            }
-
-            $labels = $result->getCreatedItems()->getItem($orderId)->getAllLabels($pdfLib);
-            $shipment->setShippingLabel($labels);
-            $track = Mage::getModel('sales/order_shipment_track')
-                ->setNumber($result->getShipmentNumber($orderId))
-                ->setCarrierCode($carrier->getCarrierCode())
-                ->setTitle($carrier->getConfigData('title'));
-            $shipment->addTrack($track);
-            $shipment->getOrder()->setIsInProcess(true);
-            $transaction
-                ->addObject($shipment)
-                ->addObject($shipment->getOrder());
-
-            $ordersShipped++;
-            $shipments[] = $shipment;
+            $validRequests[] = $request;
+            $requestMap[] = $orderId;
         }
 
-        $transaction->save();
+        // Call REST client
+        $client = Mage::getModel('dhl_versenden/webservice_client_shipment');
 
-        /** @var Mage_Sales_Model_Order_Shipment $shipment */
+        $firstRequest = reset($validRequests);
+        $storeId = $firstRequest ? $firstRequest->getOrderShipment()->getStoreId() : null;
+
+        $factory = Mage::getModel('dhl_versenden/webservice_builder_factory');
+        $orderConfig = $factory->createSettingsBuilder()->build($storeId);
+
+        try {
+            $createdShipments = $client->createShipments($validRequests, $orderConfig);
+        } catch (\Dhl\Sdk\ParcelDe\Shipping\Exception\ServiceException $e) {
+            $this->logger->error('Bulk shipment creation failed: ' . $e->getMessage());
+            return 0;
+        }
+
+        // Process results individually
+        $carrier = Mage::getModel('dhl_versenden/shipping_carrier_versenden');
+        $pdfAdapter = new \Dhl\Versenden\ParcelDe\Pdf\Adapter\Zend();
+
+        $shipments = [];
+        foreach ($createdShipments as $index => $apiResult) {
+            $orderId = $requestMap[$index];
+            $request = $shipmentRequests[$orderId];
+
+            $shipment = $this->processShipmentResult($request, $apiResult, $carrier, $pdfAdapter);
+            if ($shipment !== null) {
+                $shipments[] = $shipment;
+            }
+        }
+
+        $this->sendCustomerNotifications($shipments);
+
+        return count($shipments);
+    }
+
+    /**
+     * Process a single shipment result from the API.
+     *
+     * @param Mage_Shipping_Model_Shipment_Request $request
+     * @param \Dhl\Sdk\ParcelDe\Shipping\Api\Data\ShipmentInterface|null $apiResult
+     * @param Dhl_Versenden_Model_Shipping_Carrier_Versenden $carrier
+     * @param \Dhl\Versenden\ParcelDe\Pdf\Adapter\Zend $pdfAdapter
+     * @return Mage_Sales_Model_Order_Shipment|null
+     */
+    protected function processShipmentResult($request, $apiResult, $carrier, $pdfAdapter)
+    {
+        $shipment = $request->getOrderShipment();
+        $order = $shipment->getOrder();
+
+        if ($request->hasData('request_data_exception')) {
+            $this->logError($order, $request->getData('request_data_exception'));
+            return null;
+        }
+
+        if ($apiResult === null) {
+            $this->logError($order, 'Shipment creation failed (no label returned)');
+            return null;
+        }
+
+        // Process labels and tracking
+        $labelPages = array_map('base64_decode', array_filter($apiResult->getLabels()));
+        $shipment->setShippingLabel($pdfAdapter->merge($labelPages));
+
+        $track = Mage::getModel('sales/order_shipment_track')
+            ->setNumber($apiResult->getShipmentNumber())
+            ->setCarrierCode($carrier->getCarrierCode())
+            ->setTitle($carrier->getConfigData('title'));
+        $shipment->addTrack($track);
+        $order->setIsInProcess(true);
+
+        // Save individually - one failure doesn't affect others
+        try {
+            $shipment->save();
+            $order->save();
+            return $shipment;
+        } catch (Exception $e) {
+            $this->logError($order, "DB save failed (orphaned label {$apiResult->getShipmentNumber()}): " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order $order
+     * @param string $message
+     */
+    protected function logError($order, $message)
+    {
+        Mage::helper('dhl_versenden/data')->addStatusHistoryComment($order, $message);
+        $this->logger->error("Autocreation Error\n # {$order->getIncrementId()} : {$message}");
+    }
+
+    /**
+     * @param Mage_Sales_Model_Order_Shipment[] $shipments
+     */
+    protected function sendCustomerNotifications(array $shipments)
+    {
+        $config = Mage::getModel('dhl_versenden/config');
         foreach ($shipments as $shipment) {
-            /** @var DHL_Versenden_Model_Config $config */
-            $config = Mage::getModel('dhl_versenden/config');
-            $notifyCustomer = $config->isAutoCreateNotifyCustomer($shipment->getStoreId());
-            if ($notifyCustomer && $shipment->getIncrementId()) {
+            if ($config->isAutoCreateNotifyCustomer($shipment->getStoreId()) && $shipment->getIncrementId()) {
                 $shipment->sendEmail(true)->setEmailSent(true);
             }
         }
-
-        return $ordersShipped;
     }
 }

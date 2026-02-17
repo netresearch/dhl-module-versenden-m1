@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Controller_Adminhtml_Sales_Order_ShipmentControllerTest
-    extends Dhl_Versenden_Test_Case_AdminController
+class Dhl_Versenden_Test_Controller_Adminhtml_Sales_Order_ShipmentControllerTest extends Dhl_Versenden_Test_Case_AdminController
 {
     /**
      * @test
@@ -18,15 +17,15 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_Order_ShipmentControllerTest
 
         $blockMock = $this->getBlockMock(
             'dhl_versenden/adminhtml_sales_order_shipment_packaging_grid',
-            array('renderView', 'displayCustomsValue')
+            ['renderView', 'displayCustomsValue'],
         );
         $blockMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('renderView')
             ->willReturn($grid);
         $this->replaceByMock('block', 'dhl_versenden/adminhtml_sales_order_shipment_packaging_grid', $blockMock);
 
         $this->dispatch('adminhtml/sales_order_shipment/getShippingItemsGrid');
-        $this->assertResponseBody($this->equalTo($grid));
+        $this->assertResponseBody(static::equalTo($grid));
     }
 }

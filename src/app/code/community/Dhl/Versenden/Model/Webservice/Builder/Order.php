@@ -4,7 +4,6 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Webservice\RequestData;
 
 class Dhl_Versenden_Model_Webservice_Builder_Order
 {
@@ -31,15 +30,15 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
      */
     public function __construct($args)
     {
-        $argDef = array(
+        $argDef = [
             'shipper_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Shipper',
             'receiver_builder' => 'Dhl_Versenden_Model_Webservice_Builder_Receiver',
             'service_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Service',
             'package_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Package',
             'customs_builder'  => 'Dhl_Versenden_Model_Webservice_Builder_Customs',
             'settings_builder' => 'Dhl_Versenden_Model_Webservice_Builder_Settings',
-            'info_builder'     => 'Dhl_Versenden_Model_Info_Builder'
-        );
+            'info_builder'     => 'Dhl_Versenden_Model_Info_Builder',
+        ];
 
         $missingArguments = array_diff_key($argDef, $args);
         if (!empty($missingArguments)) {
@@ -47,10 +46,12 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             Mage::throwException($message);
         }
 
-        $invalidArgumentFilter = function ($key) use ($args, $argDef) {
-            return !$args[$key] instanceof $argDef[$key];
-        };
-        $invalidArguments = array_filter(array_keys($argDef), $invalidArgumentFilter);
+        $invalidArguments = [];
+        foreach (array_keys($argDef) as $key) {
+            if (!is_a($args[$key], $argDef[$key])) {
+                $invalidArguments[] = $key;
+            }
+        }
 
         if (!empty($invalidArguments)) {
             $message = sprintf('invalid arguments: %s', implode(', ', $invalidArguments));
@@ -64,138 +65,72 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
         $this->_customsBuilder = $args['customs_builder'];
         $this->_settingsBuilder = $args['settings_builder'];
         $this->_infoBuilder = $args['info_builder'];
-
-        return $this;
     }
 
     /**
-     * @param int $sequenceNumber
-     * @param string $shipmentDate
+     * Build shipment order request by populating the SDK builder.
+     *
+     * This method orchestrates all sub-builders to populate the SDK builder with shipment data.
+     * It follows the same pattern as getShipmentOrder() but uses the REST SDK builder pattern.
+     *
+     * @param \Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder
      * @param Mage_Sales_Model_Order_Shipment $shipment
      * @param string[] $packageInfo
-     * @param string[] $serviceInfo
+     * @param array<string, mixed> $serviceInfo
      * @param string[] $customsInfo
-     * @param string $gkApiProduct
-     * @return RequestData\ShipmentOrder
+     * @param string $gkApiProduct DHL product code (e.g., 'V01PAK')
+     * @return void
      */
-    public function getShipmentOrder(
-        $sequenceNumber,
-        $shipmentDate,
+    public function build(
+        \Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder,
         Mage_Sales_Model_Order_Shipment $shipment,
         array $packageInfo,
         array $serviceInfo,
         array $customsInfo,
         $gkApiProduct
     ) {
-        $shipper = $this->_shipperBuilder
-            ->setShipment($shipment)
-            ->getShipper($shipment->getStoreId());
+        // 1. Build shipper data (with dynamic billing number based on product code)
+        $includeReturnShipment = !empty($serviceInfo['shipment_service'][\Dhl\Versenden\ParcelDe\Service\ReturnShipment::CODE]);
+        $this->_shipperBuilder->setShipment($shipment);
+        $this->_shipperBuilder->build($sdkBuilder, $shipment->getStoreId(), $gkApiProduct, $includeReturnShipment);
 
-        $versendenInfo = $shipment->getShippingAddress()->getData('dhl_versenden_info');
+        // 2. Build receiver data (email conditional on parcelAnnouncement or CDP —
+        //    DHL sends parcel notifications when a recipient email is present,
+        //    and CDP delivery requires email for drop-point notifications)
+        $isCdpDelivery = !empty($serviceInfo['shipment_service'][\Dhl\Versenden\ParcelDe\Service\ClosestDropPoint::CODE])
+            || ($serviceInfo['service_setting'][\Dhl\Versenden\ParcelDe\Service\DeliveryType::CODE] ?? '') === \Dhl\Versenden\ParcelDe\Service\DeliveryType::CDP;
+        $includeRecipientEmail = !empty($serviceInfo['shipment_service'][\Dhl\Versenden\ParcelDe\Service\ParcelAnnouncement::CODE])
+            || $isCdpDelivery;
+        $this->_receiverBuilder->build($sdkBuilder, $shipment->getShippingAddress(), $includeRecipientEmail);
 
-        /** @var Dhl_Versenden_Model_Config $config */
-        $config = Mage::getModel('dhl_versenden/config');
+        // 3. Build service selection
+        $this->_serviceBuilder->build($sdkBuilder, $shipment->getOrder(), $serviceInfo);
 
-        $serviceSelection = $this->_serviceBuilder->getServiceSelection($shipment->getOrder(), $serviceInfo);
+        // 4. Build package details
+        $this->_packageBuilder->build($sdkBuilder, $packageInfo);
 
-        if (!$versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
-            // build receiver from shipping address
-            $receiver = $this->_receiverBuilder->getReceiver($shipment->getShippingAddress());
-        } else {
-            // read receiver from prepared address (split, eventually updated)
-            $versendenReceiver = $versendenInfo->getReceiver();
-            $packstation = isset($versendenReceiver->getPackstation()->packstationNumber)
-                ? new RequestData\ShipmentOrder\Receiver\Packstation(
-                    $versendenReceiver->getPackstation()->zip,
-                    $versendenReceiver->getPackstation()->city,
-                    $versendenReceiver->getPackstation()->country,
-                    $versendenReceiver->getPackstation()->countryISOCode,
-                    $versendenReceiver->getPackstation()->state,
-                    $versendenReceiver->getPackstation()->packstationNumber,
-                    $versendenReceiver->getPackstation()->postNumber
-                )
-                : null;
-            $postfiliale = isset($versendenReceiver->getPostfiliale()->postfilialNumber)
-                ? new RequestData\ShipmentOrder\Receiver\Postfiliale(
-                    $versendenReceiver->getPostfiliale()->zip,
-                    $versendenReceiver->getPostfiliale()->city,
-                    $versendenReceiver->getPostfiliale()->country,
-                    $versendenReceiver->getPostfiliale()->countryISOCode,
-                    $versendenReceiver->getPostfiliale()->state,
-                    $versendenReceiver->getPostfiliale()->postfilialNumber,
-                    $versendenReceiver->getPostfiliale()->postNumber
-                )
-                : null;
-            $parcelShop = isset($versendenReceiver->getParcelShop()->parcelShopNumber)
-                ? new RequestData\ShipmentOrder\Receiver\ParcelShop(
-                    $versendenReceiver->getParcelShop()->zip,
-                    $versendenReceiver->getParcelShop()->city,
-                    $versendenReceiver->getParcelShop()->country,
-                    $versendenReceiver->getParcelShop()->countryISOCode,
-                    $versendenReceiver->getParcelShop()->state,
-                    $versendenReceiver->getParcelShop()->parcelShopNumber,
-                    $versendenReceiver->getParcelShop()->streetName,
-                    $versendenReceiver->getParcelShop()->streetNumber
-                )
-                : null;
-            $receiver = new RequestData\ShipmentOrder\Receiver(
-                $versendenReceiver->name1,
-                $versendenReceiver->name2,
-                $versendenReceiver->name3,
-                $versendenReceiver->streetName,
-                $versendenReceiver->streetNumber,
-                $versendenReceiver->addressAddition,
-                $versendenReceiver->dispatchingInformation,
-                $versendenReceiver->zip,
-                $versendenReceiver->city,
-                $versendenReceiver->country,
-                $versendenReceiver->countryISOCode,
-                $versendenReceiver->state,
-                $config->isSendReceiverPhone($shipment->getStoreId())
-                    ? $versendenReceiver->phone
-                    : '',
-                $serviceSelection->getParcelAnnouncement()
-                    ? $versendenReceiver->email
-                    : '',
-                $versendenReceiver->contactPerson,
-                $packstation,
-                $postfiliale,
-                $parcelShop
-            );
-        }
-
-        $packages = $this->_packageBuilder->getPackages($packageInfo);
-
+        // 5. Build customs data (for international shipments)
         /** @var Mage_Sales_Model_Resource_Order_Invoice_Collection $invoiceCollection */
         $invoiceCollection = $shipment->getOrder()->getInvoiceCollection();
         /** @var Mage_Sales_Model_Order_Invoice $invoice */
         $invoice = $invoiceCollection->getFirstItem();
 
-        $exportDocuments = $this->_customsBuilder->getExportDocuments(
+        $this->_customsBuilder->build(
+            $sdkBuilder,
             $invoice->getIncrementId(),
             $customsInfo,
-            $packageInfo
+            $packageInfo,
         );
 
-        $globalSettings = $this->_settingsBuilder->getSettings($shipment->getStoreId());
-
-        $shipmentOrder = new RequestData\ShipmentOrder(
-            $sequenceNumber,
-            $shipment->getOrder()->getIncrementId(),
-            $shipper,
-            $receiver,
-            $serviceSelection,
-            $packages,
-            $exportDocuments,
+        // 6. Set shipment details (product code, date, reference)
+        $shipmentDate = new \DateTime(Mage::helper('dhl_versenden/data')->utcToCet(null, 'Y-m-d'));
+        $sdkBuilder->setShipmentDetails(
             $gkApiProduct,
             $shipmentDate,
-            $globalSettings->getLabelType()
+            $shipment->getOrder()->getIncrementId(),
         );
 
-        // update dhl_versenden_info with current address and service selection
-        $versendenInfo = $this->_infoBuilder->infoFromRequestData($shipmentOrder);
-        $shipment->getShippingAddress()->setData('dhl_versenden_info', $versendenInfo);
-
-        return $shipmentOrder;
+        // Note: Settings builder handles OrderConfiguration separately in the REST client
+        // It's not part of the per-shipment builder pattern
     }
 }

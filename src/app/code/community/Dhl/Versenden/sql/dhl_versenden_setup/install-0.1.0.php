@@ -7,5 +7,5 @@
 $installer = Mage::getResourceModel('sales/setup', 'sales_setup');
 
 $attributeCode = 'dhl_versenden_info';
-$installer->addAttribute('quote_address', $attributeCode, array('type' => 'text'));
-$installer->addAttribute('order_address', $attributeCode, array('type' => 'text'));
+$installer->addAttribute('quote_address', $attributeCode, ['type' => 'text']);
+$installer->addAttribute('order_address', $attributeCode, ['type' => 'text']);

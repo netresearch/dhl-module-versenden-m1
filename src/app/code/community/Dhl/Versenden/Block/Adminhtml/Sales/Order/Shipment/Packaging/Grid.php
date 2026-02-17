@@ -4,13 +4,12 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
-    extends Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging_Grid
+class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid extends Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging_Grid
 {
     /**
      * @var string[]
      */
-    protected $_countriesOfManufacture = array();
+    protected $_countriesOfManufacture = [];
 
     /**
      * Update template if additional customs data needs to be collected.
@@ -37,7 +36,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
         return $this->helper('dhl_versenden/data')->isCollectCustomsData(
             $shipperCountry,
             $recipientCountry,
-            $recipientPostalCode
+            $recipientPostalCode,
         );
     }
 
@@ -67,15 +66,15 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid
             $productIds = array_map(
                 function (Mage_Sales_Model_Order_Shipment_Item $item) {
                     return $item->getProductId();
-                }, $items
+                },
+                $items,
             );
 
             $productCollection = Mage::getResourceModel('catalog/product_collection');
             $productCollection
                 ->addStoreFilter($this->getShipment()->getStoreId())
-                ->addFieldToFilter('entity_id', array('in' => $productIds))
+                ->addFieldToFilter('entity_id', ['in' => $productIds])
                 ->addAttributeToSelect('country_of_manufacture', true);
-            ;
 
             while ($product = $productCollection->fetchItem()) {
                 $this->_countriesOfManufacture[$product->getId()] = $product->getData('country_of_manufacture');

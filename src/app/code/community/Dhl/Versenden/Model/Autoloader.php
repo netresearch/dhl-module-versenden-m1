@@ -31,16 +31,16 @@ class Dhl_Versenden_Model_Autoloader
         /** @var Dhl_Versenden_Helper_Autoloader $autoloader */
         $autoloader = Mage::helper('dhl_versenden/autoloader');
         $autoloader->addNamespace(
-            "Psr\\", // prefix
-            sprintf('%s/Dhl/Versenden/Psr/', Mage::getBaseDir('lib'))
+            'Psr\\', // prefix
+            sprintf('%s/Dhl/Versenden/Psr/', Mage::getBaseDir('lib')),
         );
         $autoloader->addNamespace(
-            "Dhl\\Versenden\\Bcs\\", // prefix
-            sprintf('%s/Dhl/Versenden/Bcs/', Mage::getBaseDir('lib'))
+            'Dhl\\Versenden\\Cig\\', // prefix
+            sprintf('%s/Dhl/Versenden/Cig/', Mage::getBaseDir('lib')),
         );
         $autoloader->addNamespace(
-            "Dhl\\Versenden\\Cig\\", // prefix
-            sprintf('%s/Dhl/Versenden/Cig/', Mage::getBaseDir('lib'))
+            'Dhl\\Versenden\\ParcelDe\\', // prefix
+            sprintf('%s/Dhl/Versenden/ParcelDe/', Mage::getBaseDir('lib')),
         );
 
         $autoloader->register();

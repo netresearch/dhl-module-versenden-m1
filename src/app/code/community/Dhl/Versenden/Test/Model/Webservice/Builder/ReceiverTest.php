@@ -4,70 +4,73 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
-     * @expectedException Mage_Core_Exception
      */
     public function constructorArgCountryDirectoryMissing()
     {
+        $this->expectException(Mage_Core_Exception::class);
+
         new Dhl_Versenden_Model_Webservice_Builder_Receiver(
-            array(
-                'helper' => Mage::helper('dhl_versenden/data')
-            )
+            [
+                'helper' => Mage::helper('dhl_versenden/data'),
+            ],
         );
     }
 
     /**
      * @test
-     * @expectedException Mage_Core_Exception
      */
     public function constructorArgCountryDirectoryWrongType()
     {
+        $this->expectException(Mage_Core_Exception::class);
+
         new Dhl_Versenden_Model_Webservice_Builder_Receiver(
-            array(
+            [
                 'country_directory' => new stdClass(),
-                'helper' => Mage::helper('dhl_versenden/data')
-            )
+                'helper' => Mage::helper('dhl_versenden/data'),
+            ],
         );
     }
 
     /**
      * @test
-     * @expectedException Mage_Core_Exception
      */
     public function constructorArgHelperMissing()
     {
-        $args = array(
+        $this->expectException(Mage_Core_Exception::class);
+
+        $args = [
             'country_directory' => Mage::getModel('directory/country'),
-        );
+        ];
         new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
     }
 
     /**
      * @test
-     * @expectedException Mage_Core_Exception
      */
     public function constructorArgHelperWrongType()
     {
-        $args = array(
+        $this->expectException(Mage_Core_Exception::class);
+
+        $args = [
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => new stdClass()
-        );
+            'helper' => new stdClass(),
+        ];
         new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
     }
 
     /**
      * @test
      */
-    public function getReceiver()
+    public function build()
     {
-        $args = array(
+        $args = [
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/address')
-        );
+            'helper' => Mage::helper('dhl_versenden/address'),
+        ];
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
@@ -79,7 +82,8 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $streetFull = "$streetName $streetNumber";
         $postCode = '12345';
         $city = 'Foo';
-        $country = 'DE';
+        $country = 'DE'; // ISO-2 input (what address stores)
+        $countryISO3 = 'DEU'; // ISO-3 output (what SDK receives after transformation)
         $telephone = '54321';
         $email = 'a@b.c';
 
@@ -87,7 +91,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
         $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
-            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->setMethods(['getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',])
             ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
@@ -100,31 +104,42 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getTelephone')->willReturn($telephone);
         $address->method('getEmail')->willReturn($email);
 
-        $receiver = $builder->getReceiver($address);
-        $this::assertSame($name, $receiver->getName1(), 'First name does not match');
-        $this::assertSame($company, $receiver->getName2(), 'Last name does not match');
-        $this::assertSame($streetName, $receiver->getStreetName(), 'Street name does not match');
-        $this::assertSame($streetNumber, $receiver->getStreetNumber(), 'Street number does not match');
-        $this::assertSame($postCode, $receiver->getZip(), 'ZIP code does not match');
-        $this::assertSame($city, $receiver->getCity(), 'City does not match');
-        $this::assertSame($country, $receiver->getCountryISOCode(), 'Country ISO does not match');
-        /** Phone number is only set when Config::SENDRECEIVERPHONE is true. */
-        $this::assertEmpty($receiver->getPhone(), 'Phone should not be set by default');
-        $this::assertSame($email, $receiver->getEmail(), 'Email does not match');
-        $this::assertNull($receiver->getPackstation(), 'Packstation is not null');
-        $this::assertNull($receiver->getPostfiliale(), 'Postfiliale is not null');
-        $this::assertNull($receiver->getParcelShop(), 'Parcel shop is not null');
+        /** @var \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder|PHPUnit_Framework_MockObject_MockObject $sdkBuilder */
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->setMethods(['setRecipientAddress'])
+            ->getMock();
+
+        $sdkBuilder->expects(static::once())
+            ->method('setRecipientAddress')
+            ->with(
+                $name,
+                $countryISO3,
+                $postCode,
+                $city,
+                $streetName,
+                $streetNumber,
+                $company,
+                null,
+                $email,
+                '',
+                null,
+                null,
+                null,
+                [],
+            );
+
+        $builder->build($sdkBuilder, $address);
     }
 
     /**
      * @test
      */
-    public function packStationAddressToReceiver()
+    public function packStationAddressToBuild()
     {
-        $args = array(
+        $args = [
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/address')
-        );
+            'helper' => Mage::helper('dhl_versenden/address'),
+        ];
 
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
@@ -136,7 +151,8 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $streetFull = "$streetName $streetNumber";
         $postCode = '12345';
         $city = 'Foo';
-        $country = 'DE';
+        $country = 'DE'; // ISO-2 input (what address stores)
+        $countryISO3 = 'DEU'; // ISO-3 output (what SDK receives after transformation)
         $telephone = '54321';
         $email = 'a@b.c';
         $postNumber = '123456';
@@ -145,7 +161,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
         $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
-            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->setMethods(['getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',])
             ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
@@ -158,25 +174,35 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getTelephone')->willReturn($telephone);
         $address->method('getEmail')->willReturn($email);
 
-        $receiver = $builder->getReceiver($address);
-        $this::assertSame($name, $receiver->getName1());
-        $this::assertNotNull($receiver->getPackstation());
-        $this::assertSame($streetNumber, $receiver->getPackstation()->getPackstationNumber());
-        $this::assertSame($postNumber, $receiver->getPackstation()->getPostNumber());
-        $this::assertSame($postCode, $receiver->getPackstation()->getZip());
-        $this::assertSame($city, $receiver->getPackstation()->getCity());
-        $this::assertNull($receiver->getPostfiliale());
-        $this::assertNull($receiver->getParcelShop());
+        /** @var \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder|PHPUnit_Framework_MockObject_MockObject $sdkBuilder */
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->setMethods(['setPackstation'])
+            ->getMock();
+
+        $sdkBuilder->expects(static::once())
+            ->method('setPackstation')
+            ->with(
+                $name,
+                $postNumber,
+                $streetNumber,
+                $countryISO3,
+                $postCode,
+                $city,
+                null,
+                null,
+            );
+
+        $builder->build($sdkBuilder, $address);
     }
     /**
      * @test
      */
-    public function postOfficeAddressToReceiver()
+    public function postOfficeAddressToBuild()
     {
-        $args = array(
+        $args = [
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/address')
-        );
+            'helper' => Mage::helper('dhl_versenden/address'),
+        ];
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
@@ -187,7 +213,8 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $streetFull = "$streetName $streetNumber";
         $postCode = '12345';
         $city = 'Foo';
-        $country = 'DE';
+        $country = 'DE'; // ISO-2 input (what address stores)
+        $countryISO3 = 'DEU'; // ISO-3 output (what SDK receives after transformation)
         $telephone = '54321';
         $email = 'a@b.c';
         $postNumber = '654321';
@@ -196,7 +223,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
         $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
-            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->setMethods(['getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',])
             ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
@@ -209,26 +236,37 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getTelephone')->willReturn($telephone);
         $address->method('getEmail')->willReturn($email);
 
-        $receiver = $builder->getReceiver($address);
-        $this::assertSame($name, $receiver->getName1());
-        $this::assertNotNull($receiver->getPostfiliale());
-        $this::assertSame($streetNumber, $receiver->getPostfiliale()->getPostfilialNumber());
-        $this::assertSame($postNumber, $receiver->getPostfiliale()->getPostNumber());
-        $this::assertSame($postCode, $receiver->getPostfiliale()->getZip());
-        $this::assertSame($city, $receiver->getPostfiliale()->getCity());
-        $this::assertNull($receiver->getPackstation());
-        $this::assertNull($receiver->getParcelShop());
+        /** @var \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder|PHPUnit_Framework_MockObject_MockObject $sdkBuilder */
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->setMethods(['setPostfiliale'])
+            ->getMock();
+
+        $sdkBuilder->expects(static::once())
+            ->method('setPostfiliale')
+            ->with(
+                $name,
+                $streetNumber,
+                $countryISO3,
+                $postCode,
+                $city,
+                null,
+                $postNumber,
+                null,
+                null,
+            );
+
+        $builder->build($sdkBuilder, $address);
     }
 
     /**
      * @test
      */
-    public function parcelShopAddressToReceiver()
+    public function parcelShopAddressToBuild()
     {
-        $args = array(
+        $args = [
             'country_directory' => Mage::getModel('directory/country'),
-            'helper' => Mage::helper('dhl_versenden/address')
-        );
+            'helper' => Mage::helper('dhl_versenden/address'),
+        ];
         $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
 
         $firstName = 'Foo';
@@ -239,7 +277,8 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $streetFull = "$streetName $streetNumber";
         $postCode = '12345';
         $city = 'Foo';
-        $country = 'DE';
+        $country = 'DE'; // ISO-2 input (what address stores)
+        $countryISO3 = 'DEU'; // ISO-3 output (what SDK receives after transformation)
         $telephone = '54321';
         $email = 'a@b.c';
         $postNumber = '654321';
@@ -248,7 +287,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $order->setStoreId(0);
         /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
         $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
-            ->setMethods(array('getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',))
+            ->setMethods(['getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',])
             ->getMock();
         $address->method('getOrder')->willReturn($order);
         $address->method('getFirstname')->willReturn($firstName);
@@ -261,11 +300,180 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_ReceiverTest
         $address->method('getTelephone')->willReturn($telephone);
         $address->method('getEmail')->willReturn($email);
 
-        // parcel shops are not handled by this extension
-        $receiver = $builder->getReceiver($address);
-        $this::assertSame($name, $receiver->getName1());
-        $this::assertNull($receiver->getParcelShop());
-        $this::assertNull($receiver->getPackstation());
-        $this::assertNull($receiver->getPostfiliale());
+        /** @var \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder|PHPUnit_Framework_MockObject_MockObject $sdkBuilder */
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->setMethods(['setRecipientAddress'])
+            ->getMock();
+
+        // parcel shops fall back to regular recipient address
+        $sdkBuilder->expects(static::once())
+            ->method('setRecipientAddress')
+            ->with(
+                $name,
+                $countryISO3,
+                $postCode,
+                $city,
+                $streetName,
+                $streetNumber,
+                $postNumber,
+                null,
+                $email,
+                '',
+                null,
+                null,
+                null,
+                [],
+            );
+
+        $builder->build($sdkBuilder, $address);
+    }
+
+    /**
+     * Test that email is omitted when parcel announcement is disabled.
+     *
+     * @test
+     */
+    public function buildOmitsEmailWhenNotIncluded()
+    {
+        $args = [
+            'country_directory' => Mage::getModel('directory/country'),
+            'helper' => Mage::helper('dhl_versenden/address'),
+        ];
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
+
+        $firstName = 'Foo';
+        $lastName = 'Bar';
+        $name = "$firstName $lastName";
+        $company = 'Foo Inc.';
+        $streetName = 'Xx';
+        $streetNumber = '111';
+        $streetFull = "$streetName $streetNumber";
+        $postCode = '12345';
+        $city = 'Foo';
+        $country = 'DE';
+        $countryISO3 = 'DEU';
+        $telephone = '54321';
+        $email = 'a@b.c';
+
+        $order = new Mage_Sales_Model_Order();
+        $order->setStoreId(0);
+        /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->setMethods(['getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',])
+            ->getMock();
+        $address->method('getOrder')->willReturn($order);
+        $address->method('getFirstname')->willReturn($firstName);
+        $address->method('getLastname')->willReturn($lastName);
+        $address->method('getCompany')->willReturn($company);
+        $address->method('getStreetFull')->willReturn($streetFull);
+        $address->method('getPostcode')->willReturn($postCode);
+        $address->method('getCity')->willReturn($city);
+        $address->method('getCountryId')->willReturn($country);
+        $address->method('getTelephone')->willReturn($telephone);
+        $address->method('getEmail')->willReturn($email);
+
+        /** @var \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder|PHPUnit_Framework_MockObject_MockObject $sdkBuilder */
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->setMethods(['setRecipientAddress'])
+            ->getMock();
+
+        // Email should be null when includeRecipientEmail is false
+        $sdkBuilder->expects(static::once())
+            ->method('setRecipientAddress')
+            ->with(
+                $name,
+                $countryISO3,
+                $postCode,
+                $city,
+                $streetName,
+                $streetNumber,
+                $company,
+                null,
+                null, // email omitted
+                '',
+                null,
+                null,
+                null,
+                [],
+            );
+
+        $builder->build($sdkBuilder, $address, false);
+    }
+
+    /**
+     * Test that phone number is included when config allows it.
+     *
+     * @test
+     */
+    public function buildIncludesPhoneWhenConfigEnabled()
+    {
+        // Mock config to return true for isSendReceiverPhone
+        $configMock = $this->getModelMock('dhl_versenden/config', ['isSendReceiverPhone']);
+        $configMock->method('isSendReceiverPhone')->willReturn(true);
+        $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
+
+        $args = [
+            'country_directory' => Mage::getModel('directory/country'),
+            'helper' => Mage::helper('dhl_versenden/address'),
+        ];
+        $builder = new Dhl_Versenden_Model_Webservice_Builder_Receiver($args);
+
+        $firstName = 'Foo';
+        $lastName = 'Bar';
+        $name = "$firstName $lastName";
+        $company = 'Foo Inc.';
+        $streetName = 'Xx';
+        $streetNumber = '111';
+        $streetFull = "$streetName $streetNumber";
+        $postCode = '12345';
+        $city = 'Foo';
+        $country = 'DE';
+        $countryISO3 = 'DEU';
+        $telephone = '54321';
+        $email = 'a@b.c';
+
+        $order = new Mage_Sales_Model_Order();
+        $order->setStoreId(0);
+        /** @var Mage_Sales_Model_Quote_Address|PHPUnit_Framework_MockObject_MockObject $address */
+        $address = $this->getMockBuilder('Mage_Sales_Model_Quote_Address')
+            ->setMethods(['getOrder', 'getFirstname', 'getLastname', 'getCompany', 'getStreetFull', 'getPostcode', 'getCity', 'getCountryId', 'getTelephone', 'getEmail',])
+            ->getMock();
+        $address->method('getOrder')->willReturn($order);
+        $address->method('getFirstname')->willReturn($firstName);
+        $address->method('getLastname')->willReturn($lastName);
+        $address->method('getCompany')->willReturn($company);
+        $address->method('getStreetFull')->willReturn($streetFull);
+        $address->method('getPostcode')->willReturn($postCode);
+        $address->method('getCity')->willReturn($city);
+        $address->method('getCountryId')->willReturn($country);
+        $address->method('getTelephone')->willReturn($telephone);
+        $address->method('getEmail')->willReturn($email);
+
+        /** @var \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder|PHPUnit_Framework_MockObject_MockObject $sdkBuilder */
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->setMethods(['setRecipientAddress'])
+            ->getMock();
+
+        // Phone should be included when config allows
+        $sdkBuilder->expects(static::once())
+            ->method('setRecipientAddress')
+            ->with(
+                $name,
+                $countryISO3,
+                $postCode,
+                $city,
+                $streetName,
+                $streetNumber,
+                $company,
+                null,
+                $email,
+                $telephone, // Phone should be passed
+                null,
+                null,
+                null,
+                [],
+            );
+
+        $builder->build($sdkBuilder, $address);
     }
 }

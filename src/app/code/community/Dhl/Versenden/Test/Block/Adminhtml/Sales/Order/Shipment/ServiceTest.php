@@ -4,35 +4,30 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
-    extends EcomDev_PHPUnit_Test_Case
+use Dhl\Versenden\ParcelDe\Service;
+
+class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest extends EcomDev_PHPUnit_Test_Case
 {
-    const EDIT_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
-    const VIEW_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_view';
+    public const EDIT_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
+    public const VIEW_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_view';
 
     protected function mockEditBlock()
     {
-        $shippingAddress = Mage::getModel('sales/order_address');
-        $shippingAddress->setCountryId('DE');
-
-        $order = Mage::getModel('sales/order');
-        $order->setShippingAddress($shippingAddress);
-        $order->setShippingMethod('dhlversenden_flatrate');
-
-        $shipment = Mage::getModel('sales/order_shipment');
-        $shipment->setStoreId(1);
-        $shipment->setOrder($order);
-
-        $editBlockMock = $this->getBlockMock(self::EDIT_BLOCK_ALIAS, array('getShipment', 'fetchView'));
-        $editBlockMock
-            ->expects($this->any())
-            ->method('getShipment')
-            ->willReturn($shipment);
+        $editBlockMock = $this->getBlockMock(self::EDIT_BLOCK_ALIAS, ['fetchView']);
         $this->replaceByMock('block', self::EDIT_BLOCK_ALIAS, $editBlockMock);
     }
 
     protected function mockViewBlock()
     {
+        $viewBlockMock = $this->getBlockMock(self::VIEW_BLOCK_ALIAS, []);
+        $this->replaceByMock('block', self::VIEW_BLOCK_ALIAS, $viewBlockMock);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Create shipment with order relationship
         $shippingAddress = Mage::getModel('sales/order_address');
         $shippingAddress->setCountryId('DE');
 
@@ -44,24 +39,50 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
         $shipment->setStoreId(1);
         $shipment->setOrder($order);
 
-        $editBlockMock = $this->getBlockMock(self::VIEW_BLOCK_ALIAS, array('getShipment'));
-        $editBlockMock
-            ->expects($this->any())
-            ->method('getShipment')
-            ->willReturn($shipment);
-        $this->replaceByMock('block', self::VIEW_BLOCK_ALIAS, $editBlockMock);
+        // CRITICAL: Register BEFORE creating block mocks
+        Mage::register('current_shipment', $shipment);
+
+        // Mock service config to return properly populated service collection
+        // This is required because Edit.php::getServices() calls serviceConfig->getAvailableServices()
+        $services = [
+            new Service\BulkyGoods('', true, false),
+            new Service\PreferredLocation('', true, false, ''),
+            new Service\PreferredNeighbour('', true, false, ''),
+            new Service\PreferredDay('', true, false, ''),
+            new Service\ParcelAnnouncement('', true, false),
+            new Service\VisualCheckOfAge('', true, false, ''),
+            new Service\ReturnShipment('', true, false),
+            new Service\AdditionalInsurance('', true, false, ''),
+            new Service\Cod('', true, false, ''),
+            new Service\ParcelOutletRouting('', true, false, ''),
+            new Service\ClosestDropPoint('Closest Drop Point', true, false),
+            new Service\DeliveryType('Delivery Type', true, false, [
+                Service\DeliveryType::ECONOMY => 'Economy',
+                Service\DeliveryType::PREMIUM => 'Premium',
+                Service\DeliveryType::CDP => 'Closest Drop Point',
+            ]),
+        ];
+        $serviceCollection = new Service\Collection($services);
+
+        $serviceConfigMock = $this->getModelMock('dhl_versenden/config_service', ['getAvailableServices']);
+        $serviceConfigMock
+            ->expects(static::any())
+            ->method('getAvailableServices')
+            ->willReturn($serviceCollection);
+        $this->replaceByMock('model', 'dhl_versenden/config_service', $serviceConfigMock);
+
+        // Now create mocks - constructor can safely access registry
+        $this->mockEditBlock();
+        $this->mockViewBlock();
     }
 
-    protected function setUp()
+    protected function tearDown(): void
     {
-        parent::setUp();
-
-        /**
-         * Loading self::EDIT_BLOCK_ALIAS currently crashes because the registry contains no "current_shipment" object.
-         * Please fix if you know how.
-         */
-        // $this->mockEditBlock();
-        // $this->mockViewBlock();
+        // Clean up registry
+        if (Mage::registry('current_shipment')) {
+            Mage::unregister('current_shipment');
+        }
+        parent::tearDown();
     }
 
     /**
@@ -70,17 +91,15 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
      */
     public function renderViewWrongShippingMethod()
     {
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
-
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
         $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('flatrate_flatrate');
         $block
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('fetchView');
 
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
-        $this->assertEmpty($block->renderView());
+        static::assertEmpty($block->renderView());
     }
 
     /**
@@ -91,17 +110,15 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
     {
         $blockHtml = 'foo';
 
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
-
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
         $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
         $block
-            ->expects($this->exactly(1))
+            ->expects(static::exactly(1))
             ->method('fetchView')
             ->willReturn($blockHtml);
 
-        $this->assertEquals($blockHtml, $block->renderView());
+        static::assertEquals($blockHtml, $block->renderView());
     }
 
     /**
@@ -112,29 +129,27 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
     {
         $preferredLocation = 'Garage';
 
-        $info = new \Dhl\Versenden\Bcs\Api\Info();
+        $info = new \Dhl\Versenden\ParcelDe\Info();
         $info->getServices()->bulkyGoods = true;
         $info->getServices()->preferredLocation = $preferredLocation;
-
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
 
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
         $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
         $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
 
-        /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection $services */
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf('\Dhl\Versenden\Bcs\Api\Shipment\Service\Collection', $services);
-        $this->assertContainsOnly('\Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic', $services);
+        static::assertInstanceOf('\Dhl\Versenden\ParcelDe\Service\Collection', $services);
+        static::assertContainsOnly('\Dhl\Versenden\ParcelDe\Service\Type\Generic', $services);
 
         // bulkyGoods disabled via config
-        $code = \Dhl\Versenden\Bcs\Api\Shipment\Service\BulkyGoods::CODE;
-        $this->assertTrue($services->getItem($code)->isEnabled());
+        $code = \Dhl\Versenden\ParcelDe\Service\BulkyGoods::CODE;
+        static::assertTrue($services->getItem($code)->isEnabled());
 
         // preferredLocation enabled via config and preselected via dhl_versenden_info
-        $code = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE;
-        $this->assertEquals('Garage', $services->getItem($code)->getValue());
+        $code = \Dhl\Versenden\ParcelDe\Service\PreferredLocation::CODE;
+        static::assertEquals('Garage', $services->getItem($code)->getValue());
     }
 
     /**
@@ -142,120 +157,200 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest
      */
     public function allServicesForEdit()
     {
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
-
         /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
         $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
 
-        /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection $services */
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf('\Dhl\Versenden\Bcs\Api\Shipment\Service\Collection', $services);
-        $this->assertContainsOnly('\Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic', $services);
+        static::assertInstanceOf('\Dhl\Versenden\ParcelDe\Service\Collection', $services);
+        static::assertContainsOnly('\Dhl\Versenden\ParcelDe\Service\Type\Generic', $services);
 
-        /** @var Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service */
+        /** @var Dhl\Versenden\ParcelDe\Service\Type\Generic $service */
         foreach ($services as $service) {
-            if ($service->getCode() === \Dhl\Versenden\Bcs\Api\Shipment\Service\PrintOnlyIfCodeable::CODE) {
-                // PrintOnlyIfCodeable is enabled via config
-                $this->assertTrue($service->isSelected());
+            if ($service->getCode() === \Dhl\Versenden\ParcelDe\Service\ParcelAnnouncement::CODE) {
+                // ParcelAnnouncement is auto-selected for non-customer service (Edit.php:123)
+                static::assertTrue($service->isSelected());
             } else {
-                $this->assertFalse($service->isSelected());
+                static::assertFalse($service->isSelected());
             }
         }
+
+        // COD is removed for orders without COD payment method
+        static::assertNull(
+            $services->getItem(Service\Cod::CODE),
+            'COD must not appear in packaging popup for non-COD orders'
+        );
     }
 
     /**
+     * COD must be auto-selected and present when the order uses a COD payment method.
+     *
      * @test
      * @loadFixture Model_ConfigTest
      */
-    public function selectedServicesForView()
+    public function codServiceSelectedForCodPayment()
     {
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
+        Mage::app()->getStore()->setConfig(
+            'carriers/dhlversenden/shipment_dhlcodmethods',
+            'cashondelivery'
+        );
 
-        $preferredLocation = 'Garage';
+        $payment = Mage::getModel('sales/order_payment');
+        $payment->setMethod('cashondelivery');
 
-        $info = new \Dhl\Versenden\Bcs\Api\Info();
-        $info->getServices()->bulkyGoods = true;
-        $info->getServices()->preferredLocation = $preferredLocation;
-
-        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View $block */
-        $block = Mage::app()->getLayout()->createBlock(self::VIEW_BLOCK_ALIAS);
+        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
-        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
+        $block->getShipment()->getOrder()->setPayment($payment);
 
-        /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection $services */
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $services */
         $services = $block->getServices();
-        $this->assertInstanceOf('\Dhl\Versenden\Bcs\Api\Shipment\Service\Collection', $services);
-        $this->assertContainsOnly('\Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic', $services);
 
-        // bulkyGoods disabled via config but preselected via dhl_versenden_info
-        $code = \Dhl\Versenden\Bcs\Api\Shipment\Service\BulkyGoods::CODE;
-        $this->assertTrue($services->getItem($code)->getValue());
-
-        // preferredLocation enabled via config and preselected via dhl_versenden_info
-        $code = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE;
-        $this->assertEquals('Garage', $services->getItem($code)->getValue());
+        $codService = $services->getItem(Service\Cod::CODE);
+        static::assertNotNull($codService, 'COD must appear in packaging popup for COD payment orders');
+        static::assertTrue($codService->isSelected(), 'COD must be auto-selected for COD payment orders');
     }
 
     /**
+     * COD must be rendered read-only in the packaging popup since it is
+     * determined by the payment method, not by admin choice.
+     *
      * @test
-     * @loadFixture Model_ConfigTest
      */
-    public function allServicesForView()
+    public function codRendererIsReadOnly()
     {
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
 
-        /** @var EcomDev_PHPUnit_Mock_Proxy|Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View $block */
-        $block = Mage::app()->getLayout()->createBlock(self::VIEW_BLOCK_ALIAS);
-        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+        $codService = new Service\Cod('Cash on Delivery', true, false, '');
+        $codService->setValue('1');
+        $codService->setDefaultValue('');
 
-        /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection $services */
-        $services = $block->getServices();
-        $this->assertInstanceOf('\Dhl\Versenden\Bcs\Api\Shipment\Service\Collection', $services);
-        $this->assertContainsOnly('\Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic', $services);
-
-        /** @var Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service */
-        foreach ($services as $service) {
-            if ($service->getCode() === \Dhl\Versenden\Bcs\Api\Shipment\Service\PrintOnlyIfCodeable::CODE) {
-                // PrintOnlyIfCodeable is enabled via config
-                $this->assertTrue($service->isSelected());
-            } else {
-                $this->assertFalse($service->isSelected());
-            }
-        }
+        $renderer = $block->getRenderer($codService);
+        // Read-only renderer shows a disabled, checked, locked checkbox with name/value
+        $selectorHtml = $renderer->getSelectorHtml();
+        static::assertStringContainsString('disabled="disabled"', $selectorHtml);
+        static::assertStringContainsString('checked="checked"', $selectorHtml);
+        static::assertStringContainsString('data-locked="1"', $selectorHtml);
+        static::assertStringContainsString('id="shipment_service_cod"', $selectorHtml);
+        static::assertStringContainsString('name="shipment_service[cod]"', $selectorHtml);
+        static::assertStringContainsString('value="cod"', $selectorHtml);
+        static::assertEmpty($renderer->getValueHtml(), 'Read-only renderer must not show value text');
     }
 
     /**
+     * ParcelAnnouncement must be rendered read-only in the packaging popup,
+     * matching M2 where it has disabled=true in shipping_settings.xml.
+     *
+     * @test
+     */
+    public function parcelAnnouncementRendererIsReadOnly()
+    {
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+
+        $paService = new Service\ParcelAnnouncement('Parcel Announcement', true, false);
+        $paService->setValue('1');
+
+        $renderer = $block->getRenderer($paService);
+        static::assertTrue($renderer->isReadOnly());
+
+        $selectorHtml = $renderer->getSelectorHtml();
+        static::assertStringContainsString('disabled="disabled"', $selectorHtml);
+        static::assertStringContainsString('checked="checked"', $selectorHtml);
+        static::assertStringContainsString('data-locked="1"', $selectorHtml);
+        static::assertStringContainsString('id="shipment_service_parcelAnnouncement"', $selectorHtml);
+        static::assertStringContainsString('name="shipment_service[parcelAnnouncement]"', $selectorHtml);
+        static::assertStringContainsString('value="parcelAnnouncement"', $selectorHtml);
+        static::assertEmpty($renderer->getValueHtml(), 'Read-only renderer must not show value text');
+    }
+
+    /**
+     * Non-COD services must still use an editable renderer.
+     *
      * @test
      */
     public function getRendererForEdit()
     {
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
-
         $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service_edit');
 
         $location = 'Melmac';
-        $service = new \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation('', true, true, '');
+        $service = new \Dhl\Versenden\ParcelDe\Service\PreferredLocation('', true, true, '');
         $service->setValue($location);
 
         $renderer = $block->getRenderer($service);
-        $this->assertNotEquals($location, $renderer->getValueHtml());
+        static::assertNotEquals($location, $renderer->getValueHtml());
+    }
+
+    // =========================================================================
+    // ClosestDropPoint → DeliveryType CDP locking
+    // =========================================================================
+
+    /**
+     * When customer selected ClosestDropPoint during checkout, the admin
+     * packaging popup must lock DeliveryType to CDP only and remove
+     * ClosestDropPoint from the visible services.
+     *
+     * @test
+     */
+    public function closestDropPointLocksDeliveryTypeToCdp()
+    {
+        $info = new \Dhl\Versenden\ParcelDe\Info();
+        $info->getServices()->closestDropPoint = true;
+
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+        $block->getShipment()->getOrder()->getShippingAddress()->setData('dhl_versenden_info', $info);
+
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $services */
+        $services = $block->getServices();
+
+        // ClosestDropPoint must be removed from admin
+        static::assertNull(
+            $services->getItem(Service\ClosestDropPoint::CODE),
+            'ClosestDropPoint must not appear in admin packaging popup'
+        );
+
+        // DeliveryType must be locked to CDP only
+        $deliveryType = $services->getItem(Service\DeliveryType::CODE);
+        static::assertNotNull($deliveryType, 'DeliveryType must remain in admin packaging popup');
+        static::assertCount(1, $deliveryType->getOptions(), 'DeliveryType must have only CDP option');
+        static::assertArrayHasKey(
+            Service\DeliveryType::CDP,
+            $deliveryType->getOptions(),
+            'DeliveryType must contain CDP option'
+        );
+        static::assertEquals(
+            Service\DeliveryType::CDP,
+            $deliveryType->getValue(),
+            'DeliveryType must be pre-selected to CDP'
+        );
     }
 
     /**
+     * ClosestDropPoint must always be removed from admin packaging popup,
+     * even when no versendenInfo is present (no checkout data).
+     *
      * @test
      */
-    public function getRendererForView()
+    public function closestDropPointRemovedFromAdminWithoutSelection()
     {
-        $this->markTestIncomplete('This currently crashes because the registry contains no "current_shipment" object. Please fix if you know how.');
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
 
-        $block = Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_shipment_service_view');
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $services */
+        $services = $block->getServices();
 
-        $location = 'Melmac';
-        $service = new \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation('', true, true, '');
-        $service->setValue($location);
+        // ClosestDropPoint must be removed
+        static::assertNull(
+            $services->getItem(Service\ClosestDropPoint::CODE),
+            'ClosestDropPoint must not appear in admin packaging popup even without checkout data'
+        );
 
-        $renderer = $block->getRenderer($service);
-        $this->assertEquals($location, $renderer->getValueHtml());
+        // DeliveryType should remain with all options (no locking)
+        $deliveryType = $services->getItem(Service\DeliveryType::CODE);
+        static::assertNotNull($deliveryType, 'DeliveryType must remain in admin packaging popup');
+        static::assertCount(3, $deliveryType->getOptions(), 'DeliveryType must keep all three options when no CDP selection');
     }
 }

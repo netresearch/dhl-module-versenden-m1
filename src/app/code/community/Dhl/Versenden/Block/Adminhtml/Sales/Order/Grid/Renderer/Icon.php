@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_Sales_Order_Grid_Renderer_Icon
-    extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
+class Dhl_Versenden_Block_Adminhtml_Sales_Order_Grid_Renderer_Icon extends Mage_Adminhtml_Block_Widget_Grid_Column_Renderer_Abstract
 {
     /**
      * @param Varien_Object $row

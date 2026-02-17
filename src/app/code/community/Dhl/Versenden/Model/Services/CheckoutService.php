@@ -6,12 +6,12 @@
 
 class Dhl_Versenden_Model_Services_CheckoutService
 {
-    const TIMEFORMAT = 'Y-m-d H:i:s';
+    public const TIMEFORMAT = 'Y-m-d H:i:s';
 
-    const API_RESPONSE_CACHE_IDENT = 'pmApiResponse';
+    public const API_RESPONSE_CACHE_IDENT = 'pmApiResponse';
 
     /**
-     * @var Dhl_Versenden_Model_Webservice_Gateway_Rest
+     * @var Dhl_Versenden_Model_Webservice_Client_ParcelManagement
      */
     protected $client;
 
@@ -41,16 +41,6 @@ class Dhl_Versenden_Model_Services_CheckoutService
     protected $quote;
 
     /**
-     * @var string[]
-     */
-    protected $services = array(
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredDay::CODE,
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE,
-        \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE
-
-    );
-
-    /**
      * @var null|\Dhl\Versenden\Cig\Model\AvailableServicesMap
      */
     protected $serviceResponse = null;
@@ -60,13 +50,13 @@ class Dhl_Versenden_Model_Services_CheckoutService
      *
      * @param mixed[] $params
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (array_key_exists('quote', $params)) {
             $this->quote = $params['quote'];
         }
 
-        $this->client = Mage::getModel('dhl_versenden/webservice_gateway_rest');
+        $this->client = Mage::getModel('dhl_versenden/webservice_client_parcelManagement');
         $this->startDateModel = Mage::getModel('dhl_versenden/services_startdate');
         $this->config = Mage::getModel('dhl_versenden/config');
         $this->serviceConfig = Mage::getModel('dhl_versenden/config_service');
@@ -149,12 +139,12 @@ class Dhl_Versenden_Model_Services_CheckoutService
     }
 
     /**
-     * @return \Dhl\Versenden\Cig\Model\PreferredTimeAvailable
+     * @return \Dhl\Versenden\Cig\Model\ServiceAvailable
      * @throws Exception
      */
-    public function getPreferredTime()
+    public function getNoNeighbourDelivery()
     {
-        return $this->getRecipientZipAvailableServices()->getPreferredTime();
+        return $this->getRecipientZipAvailableServices()->getNoNeighbourDelivery();
     }
 
     /**
@@ -163,8 +153,8 @@ class Dhl_Versenden_Model_Services_CheckoutService
      */
     public function getService($service)
     {
-        $method = 'get'.ucfirst($service);
-        if (is_callable(array($this, $method), false)) {
+        $method = 'get' . ucfirst($service);
+        if (is_callable([$this, $method], false)) {
             return $this->{$method}();
         }
 

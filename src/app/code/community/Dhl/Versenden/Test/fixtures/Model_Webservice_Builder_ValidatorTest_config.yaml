@@ -1,0 +1,17 @@
+# Configuration fixture for Validator testing
+# Payment methods and DHL Versenden config
+
+config:
+  # Cash on Delivery payment method configuration
+  default/payment/cashondelivery/active: "1"
+  default/payment/cashondelivery/title: "Cash on Delivery"
+
+  # Check/Money Order payment method configuration
+  default/payment/checkmo/active: "1"
+  default/payment/checkmo/title: "Check / Money order"
+
+  # DHL Versenden: Define which payment methods are COD
+  default/carriers/dhlversenden/shipment_dhlcodpaymentmethods: "cashondelivery"
+
+  # DHL Versenden: Module active
+  default/carriers/dhlversenden/active: "1"

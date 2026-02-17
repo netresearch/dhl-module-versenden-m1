@@ -62,3 +62,30 @@ config:
   default/carriers/dhlversenden/service_preferredday_handling_fee: 5
   default/carriers/dhlversenden/service_preferredday_handling_fee_text: This will cost $1
 
+  # Auto-create shipment configuration
+  default/carriers/dhlversenden/shipment_autocreate_enabled: "1"
+  default/carriers/dhlversenden/shipment_autocreate_order_status: "processing,pending"
+  default/carriers/dhlversenden/shipment_autocreate_shipping_product: "V01PAK"
+  default/carriers/dhlversenden/shipment_autocreate_notify_customer: "1"
+  default/carriers/dhlversenden/shipment_sendreceiverphone: "1"
+  default/carriers/dhlversenden/drop_off_days: "0,6"
+
+  # CDP (Closest Drop Point) service configuration
+  default/carriers/dhlversenden/service_closestdroppoint_enabled: "1"
+  default/carriers/dhlversenden/service_closestdroppoint_handling_fee: "1.50"
+  default/carriers/dhlversenden/service_closestdroppoint_handling_fee_text: "Choosing drop-off delivery will adjust shipping costs by $1 including VAT."
+
+  # NoNeighbourDelivery service configuration
+  default/carriers/dhlversenden/service_noneighbourdelivery_enabled: "1"
+  default/carriers/dhlversenden/service_noneighbourdelivery_handling_fee: "0.29"
+  default/carriers/dhlversenden/service_noneighbourdelivery_handling_fee_text: "This service will incur additional shipping costs of $1 including VAT."
+
+  # GoGreen service configuration
+  default/carriers/dhlversenden/service_gogreen_enabled: "1"
+  default/carriers/dhlversenden/service_gogreen_handling_fee: "0.50"
+  default/carriers/dhlversenden/service_gogreen_handling_fee_text: "This service will incur additional shipping costs of $1 including VAT."
+
+  # Parcel management endpoints
+  default/carriers/dhlversenden/parcelmanagement_endpoint: "https://api.dhl.com/parcelmanagement"
+  default/carriers/dhlversenden/parcelmanagement_sandbox_endpoint: "https://api-sandbox.dhl.com/parcelmanagement"
+

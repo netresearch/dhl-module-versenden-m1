@@ -4,7 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-use Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility;
+use Dhl\Versenden\ParcelDe\Info\Receiver\PostalFacility;
 
 class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_AbstractObserver
 {
@@ -67,21 +67,26 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             return;
         }
 
+        // PHP 8.1: stripos() requires non-null string
+        if ($station === null || $station === '') {
+            return;
+        }
+
         if (stripos($station, 'Packstation') === 0) {
             $facility->setData(
-                array(
+                [
                     'shop_type'   => PostalFacility::TYPE_PACKSTATION,
                     'shop_number' => preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station),
                     'post_number' => $postNumber,
-                )
+                ],
             );
         } elseif (stripos($station, 'Postfiliale') === 0) {
             $facility->setData(
-                array(
+                [
                     'shop_type'   => PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => preg_filter('/^.*([\d]{3})($|\n.*)/', '$1', $station),
                     'post_number' => $postNumber,
-                )
+                ],
             );
         }
     }
@@ -132,20 +137,20 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         // obtain possible dhl products (national, weltpaket, …) and check if the filter allows cod for them
         $shipperCountry = Mage::getStoreConfig(
             Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID,
-            $quote->getStoreId()
+            $quote->getStoreId(),
         );
         $recipientCountry = $quote->getShippingAddress()->getCountryId();
         $euCountries = Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $quote->getStoreId());
         $euCountries = explode(',', $euCountries);
 
-        $availableProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
+        $availableProducts = \Dhl\Versenden\ParcelDe\Product::getCodesByCountry(
             $shipperCountry,
             $recipientCountry,
-            $euCountries
+            $euCountries,
         );
 
-        $filter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter($availableProducts, false, false);
-        $codService = $filter->filterService(new \Dhl\Versenden\Bcs\Api\Shipment\Service\Cod('cod', true, true));
+        $filter = new \Dhl\Versenden\ParcelDe\Service\Filter($availableProducts, false, false);
+        $codService = $filter->filterService(new \Dhl\Versenden\ParcelDe\Service\Cod('cod', true, true, ''));
         if ($codService === null) {
             $checkResult->isAvailable = false;
         }
@@ -174,11 +179,28 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             return;
         }
 
-        $gateway         = Mage::getModel('dhl_versenden/webservice_gateway_soap');
-        $shipmentNumbers = array($track->getData('track_number'));
-        $response        = $gateway->deleteShipmentOrder($shipmentNumbers);
-        if ($response->getStatus()->isError()) {
-            Mage::throwException($response->getStatus()->getStatusText());
+        try {
+            // REST CLIENT - replaces SOAP gateway
+            /** @var Dhl_Versenden_Model_Webservice_Client_Shipment $client */
+            $client = Mage::getModel('dhl_versenden/webservice_client_shipment');
+
+            $shipmentNumber = $track->getData('track_number');
+            $canceledNumbers = $client->cancelShipments([$shipmentNumber]);
+
+            // Success - log it (event dispatch handled by client, not observer)
+            Mage::log(
+                sprintf('Canceled DHL shipment: %s', $shipmentNumber),
+                Zend_Log::INFO,
+                'dhl_versenden.log',
+            );
+
+        } catch (\Dhl\Sdk\ParcelDe\Shipping\Exception\DetailedServiceException $e) {
+            // Detailed error (e.g., shipment not found, already cancelled)
+            Mage::throwException($e->getMessage());
+
+        } catch (\Dhl\Sdk\ParcelDe\Shipping\Exception\ServiceException $e) {
+            // Generic API error
+            Mage::throwException('Shipment deletion failed: ' . $e->getMessage());
         }
 
         $track->getShipment()->setShippingLabel(null);
@@ -212,7 +234,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         }
 
         $info = $address->getData('dhl_versenden_info');
-        if (!$info instanceof \Dhl\Versenden\Bcs\Api\Info) {
+        if (!$info instanceof \Dhl\Versenden\ParcelDe\Info) {
             return;
         }
 
@@ -269,7 +291,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         $shippingAddress = $quote->getShippingAddress();
         $shippingMethod  = $shippingAddress->getShippingMethod();
 
-        /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $dhlVersendenInfo */
         $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
 
         /** @var Dhl_Versenden_Model_Config_Shipment $config */
@@ -283,18 +305,23 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             return;
         }
 
-        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
-            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
+        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\ParcelDe\Info) {
+            $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
             $dhlVersendenInfo = $serializer->unserialize($dhlVersendenInfo);
         }
 
         $services = $dhlVersendenInfo->getServices();
-        if ($services->preferredTime || $services->preferredDay) {
-            $combined = $services->preferredTime && $services->preferredDay;
+        $hasFeeService = $services->preferredDay
+            || $services->closestDropPoint || $services->noNeighbourDelivery || $services->goGreen;
+        if ($hasFeeService) {
             $store = Mage::app()->getStore($quote->getStoreId());
             /** @var Dhl_Versenden_Model_Config_Service $config */
             $config = Mage::getModel('dhl_versenden/config_service');
             $prefDayHandlingFee = $services->preferredDay ? $config->getPrefDayFee($store->getId()) : 0;
+            $cdpFee = $services->closestDropPoint ? $config->getCdpFee($store->getId()) : 0;
+            $noNeighbourFee = $services->noNeighbourDelivery ? $config->getNoNeighbourDeliveryFee($store->getId()) : 0;
+            $goGreenFee = $services->goGreen ? $config->getGoGreenFee($store->getId()) : 0;
+            $totalServiceFee = $prefDayHandlingFee + $cdpFee + $noNeighbourFee + $goGreenFee;
 
             list($carrierCode, $method) = explode('_', $shippingMethod, 2);
 
@@ -303,12 +330,12 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             $initialFee = (float) $store->getConfig("carriers/{$carrierCode}/handling_fee");
 
             if ($initialFeeType === Mage_Shipping_Model_Carrier_Abstract::HANDLING_TYPE_FIXED) {
-                $handlingFee = $prefDayHandlingFee + $initialFee ;
+                $handlingFee = $totalServiceFee + $initialFee;
             } elseif ($initialFeeType === Mage_Shipping_Model_Carrier_Abstract::HANDLING_TYPE_PERCENT) {
                 $initialFixedFee = ($initialFee / 100) * $initialPrice;
-                $handlingFee =  $initialFixedFee + $prefDayHandlingFee;
+                $handlingFee = $initialFixedFee + $totalServiceFee;
             } else {
-                $handlingFee =  $prefDayHandlingFee;
+                $handlingFee = $totalServiceFee;
             }
 
             /**
@@ -364,10 +391,10 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             return;
         }
 
-        $itemData = array(
+        $itemData = [
             'label' => Mage::helper('dhl_versenden/data')->__('Create Shipping Labels'),
             'url' => $block->getUrl('adminhtml/sales_order_autocreate/massCreateShipmentLabel'),
-        );
+        ];
 
         $block->addItem('dhlversenden_label_create', $itemData);
     }

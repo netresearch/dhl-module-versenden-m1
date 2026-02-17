@@ -84,14 +84,10 @@ DhlServiceContainer.prototype = {
     },
 
     /**
-     * Perform action when user checked delivery day or preferred time.
+     * Perform action when user checked delivery day.
      */
     registerCalendarChange: function () {
-        var currentClass = this;
-        var idRadioElement = ['shipment_service_preferredDay','shipment_service_preferredTime'];
-        idRadioElement.each( function (id) {
-            currentClass.getSeviceListener(id);
-        });
+        this.getSeviceListener('shipment_service_preferredDay');
     },
 
     /**
@@ -107,7 +103,7 @@ DhlServiceContainer.prototype = {
                         $$('[id^=' + idRadioElement + '_]').each(function (checked) {
                             checked.removeClassName(classNameRadioChecked);
                         });
-                        $(idRadioElement).checked = true;
+                        $(idRadioElement).checked = (this.value !== '');
                         this.addClassName(classNameRadioChecked);
                     }
                 });

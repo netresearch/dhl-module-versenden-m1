@@ -6,33 +6,33 @@
 
 class Dhl_Versenden_Model_Config
 {
-    const CONFIG_SECTION = 'carriers';
-    const CONFIG_GROUP = 'dhlversenden';
+    public const CONFIG_SECTION = 'carriers';
+    public const CONFIG_GROUP = 'dhlversenden';
 
-    const CONFIG_XML_PATH_AUTOLOAD_ENABLED = 'dhl_versenden/dev/autoload_enabled';
+    public const CONFIG_XML_PATH_AUTOLOAD_ENABLED = 'dhl_versenden/dev/autoload_enabled';
 
-    const CONFIG_XML_PATH_CARRIER_TITLE    = 'title';
-    const CONFIG_XML_PATH_SANDBOX_MODE     = 'sandbox_mode';
-    const CONFIG_XML_PATH_LOGGING_ENABLED  = 'logging_enabled';
-    const CONFIG_XML_PATH_LOG_LEVEL        = 'log_level';
+    public const CONFIG_XML_PATH_CARRIER_TITLE    = 'title';
+    public const CONFIG_XML_PATH_APP_TOKEN        = 'app_token';
+    public const CONFIG_XML_PATH_SANDBOX_MODE     = 'sandbox_mode';
+    public const CONFIG_XML_PATH_LOGGING_ENABLED  = 'logging_enabled';
+    public const CONFIG_XML_PATH_LOG_LEVEL        = 'log_level';
 
-    const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'webservice_auth_username';
-    const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'webservice_auth_password';
+    public const CONFIG_XML_PATH_WS_AUTH_USERNAME = 'webservice_auth_username';
+    public const CONFIG_XML_PATH_WS_AUTH_PASSWORD = 'webservice_auth_password';
 
-    const CONFIG_XML_PATH_SANDBOX_ENDPOINT      = 'sandbox_endpoint';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'sandbox_auth_username';
-    const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'sandbox_auth_password';
+    public const CONFIG_XML_PATH_SANDBOX_AUTH_USERNAME = 'sandbox_auth_username';
+    public const CONFIG_XML_PATH_SANDBOX_AUTH_PASSWORD = 'sandbox_auth_password';
 
-    const CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT = 'parcelmanagement_endpoint';
-    const CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT = 'parcelmanagement_sandbox_endpoint';
+    public const CONFIG_XML_PATH_PARCELMANAGEMENT_ENPOINT = 'parcelmanagement_endpoint';
+    public const CONFIG_XML_PATH_PARCELMANAGEMENT_SANDBOX_ENDPOINT = 'parcelmanagement_sandbox_endpoint';
 
-    const CONFIG_XML_PATH_SENDRECEIVERPHONE     = 'shipment_sendreceiverphone';
+    public const CONFIG_XML_PATH_SENDRECEIVERPHONE     = 'shipment_sendreceiverphone';
 
-    const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
-    const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
-    const CONFIG_XML_PATH_AUTOCREATE_SHIPPING_PRODUCT = 'shipment_autocreate_shipping_product';
-    const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
-    const CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS = 'drop_off_days';
+    public const CONFIG_XML_PATH_AUTOCREATE_ENABLED      = 'shipment_autocreate_enabled';
+    public const CONFIG_XML_PATH_AUTOCREATE_ORDER_STATUS = 'shipment_autocreate_order_status';
+    public const CONFIG_XML_PATH_AUTOCREATE_SHIPPING_PRODUCT = 'shipment_autocreate_shipping_product';
+    public const CONFIG_XML_PATH_AUTOCREATE_NOTIFY_CUSTOMER = 'shipment_autocreate_notify_customer';
+    public const CONFIG_XML_PATH_EXCLUDED_DROP_OFF_DAYS = 'drop_off_days';
 
     /**
      * Wrap store config access.
@@ -121,20 +121,6 @@ class Dhl_Versenden_Model_Config
     }
 
     /**
-     * Obtain the webservice endpoint address (location).
-     *
-     * @return string Null in production mode: use default from WSDL.
-     */
-    public function getEndpoint()
-    {
-        if ($this->isSandboxModeEnabled()) {
-            return $this->getStoreConfig(self::CONFIG_XML_PATH_SANDBOX_ENDPOINT);
-        }
-
-        return null;
-    }
-
-    /**
      * Obtain username for CIG authentication.
      *
      * @return string
@@ -172,7 +158,7 @@ class Dhl_Versenden_Model_Config
     {
         $shipperCountry = Mage::getStoreConfig(
             Mage_Shipping_Model_Shipping::XML_PATH_STORE_COUNTRY_ID,
-            $store
+            $store,
         );
 
         return $shipperCountry;

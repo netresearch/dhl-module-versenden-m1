@@ -4,17 +4,17 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
+use Dhl\Versenden\ParcelDe\Config\Data\Shipper\Contact;
 
-class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ValidationException
      */
     public function requiredValue()
     {
+        $this->expectException(\Dhl\Versenden\ParcelDe\Config\ValidationException::class);
+
         // name is required
         $name = '';
 
@@ -24,7 +24,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
         $city = 'Foo City';
         $countryIsoCode = 'XX';
 
-        new Receiver(
+        new Contact(
             $name,
             '',
             '',
@@ -39,16 +39,17 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
             '',
             '',
             '',
-            ''
+            '',
         );
     }
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ValidationException
      */
     public function tooShort()
     {
+        $this->expectException(\Dhl\Versenden\ParcelDe\Config\ValidationException::class);
+
         $name = 'Foo Name';
         $streetName = 'Foo Street Name';
         $streetNumber = 'Foo 1';
@@ -58,7 +59,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
         // country too short
         $countryIsoCode = 'X';
 
-        new Receiver(
+        new Contact(
             $name,
             '',
             '',
@@ -73,16 +74,17 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
             '',
             '',
             '',
-            ''
+            '',
         );
     }
 
     /**
      * @test
-     * @expectedException \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ValidationException
      */
     public function tooLong()
     {
+        $this->expectException(\Dhl\Versenden\ParcelDe\Config\ValidationException::class);
+
         $name = 'Foo Name';
         $streetName = 'Foo Street Name';
 
@@ -93,7 +95,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
         $city = 'Foo City';
         $countryIsoCode = 'XX';
 
-        new Receiver(
+        new Contact(
             $name,
             '',
             '',
@@ -108,7 +110,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
             '',
             '',
             '',
-            ''
+            '',
         );
     }
 
@@ -124,7 +126,7 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
         $city = 'Foo City';
         $countryIsoCode = 'XX';
 
-        $receiver = new Receiver(
+        $contact = new Contact(
             $name,
             '',
             '',
@@ -139,14 +141,14 @@ class Dhl_Versenden_Test_Model_Webservice_RequestData_ValidationTest
             '',
             '',
             '',
-            ''
+            '',
         );
 
-        $this->assertEquals($name, $receiver->getName1());
-        $this->assertEquals($streetName, $receiver->getStreetName());
-        $this->assertEquals($streetNumber, $receiver->getStreetNumber());
-        $this->assertEquals($postalCode, $receiver->getZip());
-        $this->assertEquals($city, $receiver->getCity());
-        $this->assertEquals($countryIsoCode, $receiver->getCountryISOCode());
+        static::assertEquals($name, $contact->getName1());
+        static::assertEquals($streetName, $contact->getStreetName());
+        static::assertEquals($streetNumber, $contact->getStreetNumber());
+        static::assertEquals($postalCode, $contact->getZip());
+        static::assertEquals($city, $contact->getCity());
+        static::assertEquals($countryIsoCode, $contact->getCountryISOCode());
     }
 }

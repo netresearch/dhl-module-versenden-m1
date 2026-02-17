@@ -14,7 +14,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
     public function getModuleVersion()
     {
         $moduleName = $this->_getModuleName();
-        return (string)Mage::getConfig()->getModuleConfig($moduleName)->version;
+        return (string) Mage::getConfig()->getModuleConfig($moduleName)->version;
     }
 
     /**
@@ -33,7 +33,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         $date = new DateTime("@$timestamp");
         $timezoneCet = new DateTimeZone('Europe/Berlin');
 
-        $intervalSpec = sprintf("PT%dS", $timezoneCet->getOffset($date));
+        $intervalSpec = sprintf('PT%dS', $timezoneCet->getOffset($date));
         $date->add(new DateInterval($intervalSpec));
 
         return $date->format($format);
@@ -49,30 +49,30 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isCollectCustomsData($shipperCountry, $recipientCountry, $recipientPostalCode)
     {
-        $dutiableRoutes = array(
-            'DE' => array(
+        $dutiableRoutes = [
+            'DE' => [
                 '^27498$', // Helgoland
                 '^78266$', // Büsingen
-            ),
-            'ES' => array(
+            ],
+            'ES' => [
                 '^51\d{3}$', // Ceuta
                 '^52\d{3}$', // Melilla
                 '^3[58]\d{3}$', // Canary Islands
-            ),
-            'IT' => array(
+            ],
+            'IT' => [
                 '^22060$', // Campione d'Italia
-            ),
-        );
+            ],
+        ];
 
-        $nonDutiableRoutes = array(
-            'GB' => array(
+        $nonDutiableRoutes = [
+            'GB' => [
                 '^[bB][tT][1-9][0-9]?\s[\w^_]{3}$', // Northern Ireland
-            ),
-        );
+            ],
+        ];
 
         if (isset($nonDutiableRoutes[$recipientCountry])) {
             $pattern = implode('|', $nonDutiableRoutes[$recipientCountry]);
-            if ($pattern && preg_match("/$pattern/", $recipientPostalCode)) {
+            if ($pattern && preg_match("/$pattern/", (string) $recipientPostalCode)) {
                 // given postal code matches a non-dutiable destination area
                 return false;
             }
@@ -80,7 +80,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
 
         if (isset($dutiableRoutes[$recipientCountry])) {
             $pattern = implode('|', $dutiableRoutes[$recipientCountry]);
-            if ($pattern && preg_match("/$pattern/", $recipientPostalCode)) {
+            if ($pattern && preg_match("/$pattern/", (string) $recipientPostalCode)) {
                 // given postal code matches a dutiable destination area
                 return true;
             }
@@ -151,10 +151,11 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
         $facility = new Varien_Object();
 
         Mage::dispatchEvent(
-            'dhl_versenden_fetch_postal_facility', array(
+            'dhl_versenden_fetch_postal_facility',
+            [
                 'customer_address'   => $address,
                 'postal_facility' => $facility,
-            )
+            ],
         );
 
         return ($facility->getData('shop_type') !== null);

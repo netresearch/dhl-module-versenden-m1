@@ -142,8 +142,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     protected $shipmentSettingsProduct;
 
     protected $serviceSettingsPreferredDay;
-    /** @var bool|string false or time */
-    protected $serviceSettingsPreferredTime;
     /** @var bool|string false or location */
     protected $serviceSettingsPreferredLocation;
     /** @var bool|string false or neighbour address */
@@ -238,7 +236,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param float $shipmentSettingsWeight
      * @param string $shipmentSettingsProduct
      * @param $serviceSettingsPreferredDay
-     * @param bool|string $serviceSettingsPreferredTime
      * @param bool|string $serviceSettingsPreferredLocation
      * @param bool|string $serviceSettingsPreferredNeighbour
      * @param int $serviceSettingsParcelAnnouncement
@@ -253,47 +250,84 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
      * @param string $labelResponseType
      */
     public function __construct(
-        $shipperAccountUser, $shipperAccountSignature, $shipperAccountEkp,
+        $shipperAccountUser,
+        $shipperAccountSignature,
+        $shipperAccountEkp,
         $shipperAccountParticipations,
-
-        $shipperBankDataAccountOwner, $shipperBankDataBankName, $shipperBankDataIban,
-        $shipperBankDataBic, $shipperBankDataNote1, $shipperBankDataNote2,
+        $shipperBankDataAccountOwner,
+        $shipperBankDataBankName,
+        $shipperBankDataIban,
+        $shipperBankDataBic,
+        $shipperBankDataNote1,
+        $shipperBankDataNote2,
         $shipperBankDataAccountReference,
-
-        $shipperContactName1, $shipperContactName2, $shipperContactName3,
-        $shipperContactStreetName, $shipperContactStreetNumber, $shipperContactAddressAddition,
-        $shipperContactDispatchingInformation, $shipperContactZip,
-        $shipperContactCity, $shipperContactCountry, $shipperContactCountryISOCode,
-        $shipperContactState, $shipperContactPhone, $shipperContactEmail,
-        $shipperContactContactPerson, $shipperReturnReceiverName1,
-
-        $shipperReturnReceiverName2, $shipperReturnReceiverName3,
-        $shipperReturnReceiverStreetName, $shipperReturnReceiverStreetNumber,
+        $shipperContactName1,
+        $shipperContactName2,
+        $shipperContactName3,
+        $shipperContactStreetName,
+        $shipperContactStreetNumber,
+        $shipperContactAddressAddition,
+        $shipperContactDispatchingInformation,
+        $shipperContactZip,
+        $shipperContactCity,
+        $shipperContactCountry,
+        $shipperContactCountryISOCode,
+        $shipperContactState,
+        $shipperContactPhone,
+        $shipperContactEmail,
+        $shipperContactContactPerson,
+        $shipperReturnReceiverName1,
+        $shipperReturnReceiverName2,
+        $shipperReturnReceiverName3,
+        $shipperReturnReceiverStreetName,
+        $shipperReturnReceiverStreetNumber,
         $shipperReturnReceiverAddressAddition,
-        $shipperReturnReceiverDispatchingInformation, $shipperReturnReceiverZip,
-        $shipperReturnReceiverCity, $shipperReturnReceiverCountry,
-        $shipperReturnReceiverCountryISOCode, $shipperReturnReceiverState,
-        $shipperReturnReceiverPhone, $shipperReturnReceiverEmail,
+        $shipperReturnReceiverDispatchingInformation,
+        $shipperReturnReceiverZip,
+        $shipperReturnReceiverCity,
+        $shipperReturnReceiverCountry,
+        $shipperReturnReceiverCountryISOCode,
+        $shipperReturnReceiverState,
+        $shipperReturnReceiverPhone,
+        $shipperReturnReceiverEmail,
         $shipperReturnReceiverContactPerson,
-
-        $receiverName1, $receiverName2, $receiverName3, $receiverStreetName,
-        $receiverStreetNumber, $receiverAddressAddition,
-        $receiverDispatchingInformation, $receiverZip, $receiverCity,
-        $receiverCountry, $receiverCountryISOCode, $receiverState,
-        $receiverPhone, $receiverEmail, $receiverContactPerson, $packstationZip,
-        $packstationCity, $packstationPackstationNumber, $packstationPostNumber,
-
+        $receiverName1,
+        $receiverName2,
+        $receiverName3,
+        $receiverStreetName,
+        $receiverStreetNumber,
+        $receiverAddressAddition,
+        $receiverDispatchingInformation,
+        $receiverZip,
+        $receiverCity,
+        $receiverCountry,
+        $receiverCountryISOCode,
+        $receiverState,
+        $receiverPhone,
+        $receiverEmail,
+        $receiverContactPerson,
+        $packstationZip,
+        $packstationCity,
+        $packstationPackstationNumber,
+        $packstationPostNumber,
         $globalSettingsLabelType,
-
-        $shipmentSettingsDate, $shipmentSettingsReference, $shipmentSettingsWeight, $shipmentSettingsProduct,
-
-        $serviceSettingsPreferredDay, $serviceSettingsPreferredTime,
-        $serviceSettingsPreferredLocation, $serviceSettingsPreferredNeighbour,
-        $serviceSettingsParcelAnnouncement, $serviceSettingsVisualCheckOfAge,
-        $serviceSettingsReturnShipment, $serviceSettingsInsurance, $serviceSettingsBulkyGoods,
-        $serviceSettingsParcelOutletRouting, $serviceSettingsCod, $serviceSettingsPrintOnlyIfCodeable,
-
-        $sequenceNumber, $labelResponseType
+        $shipmentSettingsDate,
+        $shipmentSettingsReference,
+        $shipmentSettingsWeight,
+        $shipmentSettingsProduct,
+        $serviceSettingsPreferredDay,
+        $serviceSettingsPreferredLocation,
+        $serviceSettingsPreferredNeighbour,
+        $serviceSettingsParcelAnnouncement,
+        $serviceSettingsVisualCheckOfAge,
+        $serviceSettingsReturnShipment,
+        $serviceSettingsInsurance,
+        $serviceSettingsBulkyGoods,
+        $serviceSettingsParcelOutletRouting,
+        $serviceSettingsCod,
+        $serviceSettingsPrintOnlyIfCodeable,
+        $sequenceNumber,
+        $labelResponseType
     ) {
         $this->shipperAccountUser = $shipperAccountUser;
         $this->shipperAccountSignature = $shipperAccountSignature;
@@ -361,7 +395,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
         $this->shipmentSettingsWeight = $shipmentSettingsWeight;
         $this->shipmentSettingsProduct = $shipmentSettingsProduct;
         $this->serviceSettingsPreferredDay = $serviceSettingsPreferredDay;
-        $this->serviceSettingsPreferredTime = $serviceSettingsPreferredTime;
         $this->serviceSettingsPreferredLocation = $serviceSettingsPreferredLocation;
         $this->serviceSettingsPreferredNeighbour = $serviceSettingsPreferredNeighbour;
         $this->serviceSettingsParcelAnnouncement = $serviceSettingsParcelAnnouncement;
@@ -914,14 +947,6 @@ class Dhl_Versenden_Test_Expectation_ShipmentOrder
     public function getServiceSettingsPreferredDay()
     {
         return $this->serviceSettingsPreferredDay;
-    }
-
-    /**
-     * @return bool|string
-     */
-    public function getServiceSettingsPreferredTime()
-    {
-        return $this->serviceSettingsPreferredTime;
     }
 
     /**

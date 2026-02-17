@@ -6,8 +6,7 @@
 
 require_once Mage::getModuleDir('controllers', 'Mage_Adminhtml') . '/Sales/OrderController.php';
 
-class Dhl_Versenden_Adminhtml_Sales_OrderController
-    extends Mage_Adminhtml_Sales_OrderController
+class Dhl_Versenden_Adminhtml_Sales_OrderController extends Mage_Adminhtml_Sales_OrderController
 {
     /**
      * Update Versenden Info using order address and additional POST data from form.
@@ -17,19 +16,19 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
      */
     protected function _addVersendenData(Mage_Sales_Model_Order_Address $address, array $data)
     {
-        /** @var \Dhl\Versenden\Bcs\Api\Info $origInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $origInfo */
         $origInfo = $address->getData('dhl_versenden_info');
-        if (!$origInfo instanceof Dhl\Versenden\Bcs\Api\Info) {
+        if (!$origInfo instanceof Dhl\Versenden\ParcelDe\Info) {
             return;
         }
 
         $services = $origInfo->getServices()->toArray();
 
         $infoBuilder = Mage::getModel('dhl_versenden/info_builder');
-        $serviceInfo = array(
-            'shipment_service' => array(),
-            'service_setting' => array()
-        );
+        $serviceInfo = [
+            'shipment_service' => [],
+            'service_setting' => [],
+        ];
 
         // rebuild Versenden Info from address
         $versendenInfo = $infoBuilder->infoFromSales($address, $serviceInfo, $address->getOrder()->getStoreId());
@@ -40,7 +39,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         // update street using POST data.
         $versendenData = (isset($data['versenden_info']) && $data['versenden_info'])
             ? $data['versenden_info']
-            : array();
+            : [];
         if (isset($versendenData['street_name']) && isset($versendenData['street_number'])
             && isset($versendenData['address_addition'])) {
             $versendenInfo->getReceiver()->streetName = $versendenData['street_name'];
@@ -50,7 +49,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
 
         $packstationData = (isset($versendenData['packstation']) && $versendenData['packstation'])
             ? $versendenData['packstation']
-            : array();
+            : [];
         if (isset($packstationData['packstation_number']) && $packstationData['packstation_number']
             && isset($packstationData['post_number']) && $packstationData['post_number']) {
             // update postal facility using POST data.
@@ -64,20 +63,20 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         } else {
             // otherwise clear
             $versendenInfo->getReceiver()->getPackstation()->fromArray(
-                array(
+                [
                     'zip' => null,
                     'city' => null,
                     'country' => null,
                     'country_iso_code' => null,
                     'packstation_number' => null,
                     'post_number' => null,
-                )
+                ],
             );
         }
 
         $postfilialeData = (isset($versendenData['postfiliale']) && $versendenData['postfiliale'])
             ? $versendenData['postfiliale']
-            : array();
+            : [];
         if (isset($postfilialeData['postfilial_number']) && $postfilialeData['postfilial_number']
             && isset($postfilialeData['post_number']) && $postfilialeData['post_number']) {
             // update postal facility using POST data.
@@ -91,20 +90,20 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         } else {
             // otherwise clear
             $versendenInfo->getReceiver()->getPostfiliale()->fromArray(
-                array(
+                [
                     'zip' => null,
                     'city' => null,
                     'country' => null,
                     'country_iso_code' => null,
                     'postfilial_number' => null,
                     'post_number' => null,
-                )
+                ],
             );
         }
 
         $parcelShopData = (isset($versendenData['parcel_shop']) && $versendenData['parcel_shop'])
             ? $versendenData['parcel_shop']
-            : array();
+            : [];
         if (isset($parcelShopData['parcel_shop_number']) && $parcelShopData['parcel_shop_number']
             && isset($parcelShopData['street_name']) && $parcelShopData['street_name']
             && isset($parcelShopData['street_number']) && $parcelShopData['street_number']) {
@@ -120,7 +119,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         } else {
             // otherwise clear
             $versendenInfo->getReceiver()->getParcelShop()->fromArray(
-                array(
+                [
                     'zip' => null,
                     'city' => null,
                     'country' => null,
@@ -128,7 +127,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
                     'parcel_shop_number' => null,
                     'street_name' => null,
                     'street_number' => null,
-                )
+                ],
             );
         }
 
@@ -143,7 +142,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
     protected function _dispatchVersendenData(Mage_Sales_Model_Order_Address $address)
     {
         $versendenInfo = $address->getData('dhl_versenden_info');
-        if (!$versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
+        if (!$versendenInfo instanceof \Dhl\Versenden\ParcelDe\Info) {
             return;
         }
 
@@ -151,39 +150,39 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
         if ($versendenInfo->getReceiver()->getPackstation()->packstationNumber) {
             $packstation = $versendenInfo->getReceiver()->getPackstation();
             $facility->setData(
-                array(
-                    'shop_type'   => \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_PACKSTATION,
+                [
+                    'shop_type'   => \Dhl\Versenden\ParcelDe\Info\Receiver\PostalFacility::TYPE_PACKSTATION,
                     'shop_number' => $packstation->packstationNumber,
                     'post_number' => $packstation->postNumber,
-                )
+                ],
             );
         }
 
         if ($versendenInfo->getReceiver()->getPostfiliale()->postfilialNumber) {
             $postfiliale = $versendenInfo->getReceiver()->getPostfiliale();
             $facility->setData(
-                array(
-                    'shop_type'   => \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
+                [
+                    'shop_type'   => \Dhl\Versenden\ParcelDe\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => $postfiliale->postfilialNumber,
                     'post_number' => $postfiliale->postNumber,
-                )
+                ],
             );
         }
 
         if ($versendenInfo->getReceiver()->getParcelShop()->parcelShopNumber) {
             $parcelShop = $versendenInfo->getReceiver()->getParcelShop();
             $facility->setData(
-                array(
-                    'shop_type'   => \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
+                [
+                    'shop_type'   => \Dhl\Versenden\ParcelDe\Info\Receiver\PostalFacility::TYPE_POSTFILIALE,
                     'shop_number' => $parcelShop->parcelShopNumber,
-                )
+                ],
             );
         }
 
-        $eventData = array(
+        $eventData = [
             'customer_address' => $address,
             'postal_facility' => $facility,
-        );
+        ];
         Mage::dispatchEvent('dhl_versenden_announce_postal_facility', $eventData);
     }
 
@@ -207,7 +206,7 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
                 $this->_dispatchVersendenData($address);
 
                 $this->_getSession()->addSuccess(Mage::helper('sales')->__('The order address has been updated.'));
-                $this->_redirect('*/*/view', array('order_id'=>$address->getParentId()));
+                $this->_redirect('*/*/view', ['order_id' => $address->getParentId()]);
                 return;
             } catch (Mage_Core_Exception $e) {
                 $this->_getSession()->addError($e->getMessage());
@@ -215,12 +214,12 @@ class Dhl_Versenden_Adminhtml_Sales_OrderController
                 $this->_getSession()->addException(
                     $e,
                     Mage::helper('sales')->__(
-                        'An error occurred while updating the order address. The address has not been changed.'
-                    )
+                        'An error occurred while updating the order address. The address has not been changed.',
+                    ),
                 );
             }
 
-            $this->_redirect('*/*/address', array('address_id'=>$address->getId()));
+            $this->_redirect('*/*/address', ['address_id' => $address->getId()]);
         } else {
             $this->_redirect('*/*/');
         }

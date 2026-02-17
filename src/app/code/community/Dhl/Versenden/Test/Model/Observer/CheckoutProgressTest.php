@@ -4,10 +4,9 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest extends EcomDev_PHPUnit_Test_Case
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -31,14 +30,14 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
                     "preferredLocation":"testt",
                     "preferredNeighbour":null
                 }
-            }'
+            }',
         );
         $shippingAddress->setShippingMethod('flatrate_foo');
         $quote->addShippingAddress($shippingAddress);
 
-        $sessionMock = $this->getModelMock('checkout/session', array('init', 'getQuote'));
+        $sessionMock = $this->getModelMock('checkout/session', ['init', 'getQuote']);
         $sessionMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getQuote')
             ->willReturn($quote);
 
@@ -70,7 +69,7 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         $observer->setData('block', $block);
 
         $dhlObserver->appendServicesToShippingMethod($observer);
-        $this->assertContains('Preferred Day', $transport->getData('html'));
+        static::assertStringContainsString('Preferred Day', $transport->getData('html'));
     }
 
     /**
@@ -96,6 +95,6 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutProgressTest
         // Case: wrong block
         $block->getLayout()->getUpdate()->addHandle('checkout_onepage_progress_shipping_address');
         $dhlObserver->appendServicesToShippingMethod($observer);
-        $this->assertEquals($blockHtml, $transport->getData('html'));
+        static::assertEquals($blockHtml, $transport->getData('html'));
     }
 }

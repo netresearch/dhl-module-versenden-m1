@@ -6,14 +6,14 @@
 
 class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
 {
-    const OPTION_A_ADDITION_1   = 'A_Addition_to_address_1';
-    const OPTION_A_STREET_NAME  = 'A_Street_name_1';
-    const OPTION_A_HOUSE_NUMBER = 'A_House_number_1';
-    const OPTION_A_ADDITION_2   = 'A_Addition_to_address_2';
-    const OPTION_B_ADDITION_1   = 'B_Addition_to_address_1';
-    const OPTION_B_STREET_NAME  = 'B_Street_name';
-    const OPTION_B_HOUSE_NUMBER = 'B_House_number';
-    const OPTION_B_ADDITION_2   = 'B_Addition_to_address_2';
+    public const OPTION_A_ADDITION_1   = 'A_Addition_to_address_1';
+    public const OPTION_A_STREET_NAME  = 'A_Street_name_1';
+    public const OPTION_A_HOUSE_NUMBER = 'A_House_number_1';
+    public const OPTION_A_ADDITION_2   = 'A_Addition_to_address_2';
+    public const OPTION_B_ADDITION_1   = 'B_Addition_to_address_1';
+    public const OPTION_B_STREET_NAME  = 'B_Street_name';
+    public const OPTION_B_HOUSE_NUMBER = 'B_House_number';
+    public const OPTION_B_ADDITION_2   = 'B_Addition_to_address_2';
 
 
     /**
@@ -25,11 +25,16 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
      */
     public function splitStreet($street)
     {
-        $result = array(
+        // Normalize newlines to spaces for multi-line address inputs
+        // Magento stores multi-line addresses with \n, but DHL API expects single-line
+        $street = str_replace(["\r\n", "\r", "\n"], ' ', $street);
+        $street = trim(preg_replace('/\s+/', ' ', $street)); // Collapse multiple spaces
+
+        $result = [
             'street_name'   => $street,
             'street_number' => '',
-            'supplement'    => ''
-        );
+            'supplement'    => '',
+        ];
 
         if (preg_match($this->getStreetSplitter(), $street, $matches)) {
             // Pattern A
@@ -42,7 +47,7 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
 
                 if (isset($matches[self::OPTION_A_ADDITION_1]) && isset($matches[self::OPTION_A_ADDITION_2])) {
                     $result['supplement'] = trim(
-                        $matches[self::OPTION_A_ADDITION_1] . ' ' . $matches[self::OPTION_A_ADDITION_2]
+                        $matches[self::OPTION_A_ADDITION_1] . ' ' . $matches[self::OPTION_A_ADDITION_2],
                     );
                 }
 
@@ -57,7 +62,7 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
                 if (isset($matches[self::OPTION_B_ADDITION_1]) && isset($matches[self::OPTION_B_ADDITION_2])) {
                     $result['supplement'] = trim(
                         $matches[self::OPTION_B_ADDITION_1] . ' '
-                        . $matches[self::OPTION_B_ADDITION_2]
+                        . $matches[self::OPTION_B_ADDITION_2],
                     );
                 }
             }
@@ -65,7 +70,7 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
 
         if (stripos($result['street_number'], '/') !== false) {
             list($result['street_number'], $addition) = explode('/', $result['street_number'], 2);
-            $result['supplement'] = $addition.$result['supplement'];
+            $result['supplement'] = $addition . $result['supplement'];
             //remove empty spaces if occur
             $result['street_number'] = str_replace(' ', '', $result['street_number']);
             $result['supplement'] = str_replace(' ', '', $result['supplement']);
@@ -83,7 +88,7 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
      */
     protected function getStreetSplitter()
     {
-        return "/\\A\\s*
+        return '/\\A\\s*
 (?:
   #########################################################################
   # Option A: [<Addition to address 1>] <House number> <Street name>      #
@@ -173,6 +178,6 @@ class Dhl_Versenden_Helper_Address extends Mage_Core_Helper_Abstract
   )?
   # Addition to address 2
 )
-\\s*\\Z/x";
+\\s*\\Z/x';
     }
 }

@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Observer_AutoloaderTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_AutoloaderTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
      * @test
@@ -13,16 +12,16 @@ class Dhl_Versenden_Test_Model_Observer_AutoloaderTest
      */
     public function registerAutoload()
     {
-        $configMock = $this->getModelMock('dhl_versenden/config', array('isAutoloadEnabled'));
+        $configMock = $this->getModelMock('dhl_versenden/config', ['isAutoloadEnabled']);
         $configMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('isAutoloadEnabled')
             ->willReturn(true);
         $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
 
-        $autoloaderMock = $this->getHelperMock('dhl_versenden/autoloader', array('register'));
+        $autoloaderMock = $this->getHelperMock('dhl_versenden/autoloader', ['register']);
         $autoloaderMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('register');
         $this->replaceByMock('helper', 'dhl_versenden/autoloader', $autoloaderMock);
 
@@ -36,16 +35,16 @@ class Dhl_Versenden_Test_Model_Observer_AutoloaderTest
      */
     public function registerAutoloadOff()
     {
-        $configMock = $this->getModelMock('dhl_versenden/config', array('isAutoloadEnabled'));
+        $configMock = $this->getModelMock('dhl_versenden/config', ['isAutoloadEnabled']);
         $configMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('isAutoloadEnabled')
             ->willReturn(false);
         $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
 
-        $autoloaderMock = $this->getHelperMock('dhl_versenden/autoloader', array('register'));
+        $autoloaderMock = $this->getHelperMock('dhl_versenden/autoloader', ['register']);
         $autoloaderMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('register');
         $this->replaceByMock('helper', 'dhl_versenden/autoloader', $autoloaderMock);
 

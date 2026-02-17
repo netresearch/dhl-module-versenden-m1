@@ -4,10 +4,9 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service\Type as Service;
+use Dhl\Versenden\ParcelDe\Service\Type as Service;
 
-abstract class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
-    extends Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging
+abstract class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service extends Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging
 {
     /**
      * Check if services need to be rendered at all.
@@ -25,7 +24,7 @@ abstract class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service
     }
 
     /**
-     * @return \Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic[]
+     * @return \Dhl\Versenden\ParcelDe\Service\Collection
      */
     abstract public function getServices();
 

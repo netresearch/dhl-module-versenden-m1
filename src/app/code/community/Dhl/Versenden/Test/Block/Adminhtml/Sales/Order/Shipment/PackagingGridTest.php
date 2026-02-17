@@ -4,24 +4,23 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest extends EcomDev_PHPUnit_Test_Case
 {
-    const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_packaging_grid';
+    public const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_packaging_grid';
 
     /**
      * Mock getShipment registry access
      * @see Mage_Adminhtml_Block_Sales_Order_Shipment_Packaging_Grid::getShipment()
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $shipment = Mage::getModel('sales/order_shipment')->load(10);
 
-        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getShipment', 'displayCustomsValue'));
+        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, ['getShipment', 'displayCustomsValue']);
         $blockMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getShipment')
             ->willReturn($shipment);
         $this->replaceByMock('block', self::BLOCK_ALIAS, $blockMock);
@@ -49,7 +48,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
         Mage::register('current_shipment', $shipment);
 
         $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid();
-        $this->assertEquals($customTemplate, $block->getTemplate());
+        static::assertEquals($customTemplate, $block->getTemplate());
 
         Mage::unregister('current_shipment');
 
@@ -59,7 +58,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
         Mage::register('current_shipment', $shipment);
 
         $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid();
-        $this->assertEquals($defaultTemplate, $block->getTemplate());
+        static::assertEquals($defaultTemplate, $block->getTemplate());
 
         Mage::unregister('current_shipment');
     }
@@ -71,18 +70,18 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
     {
         $countryDE = 'DE';
         $countryXY = 'XY';
-        $countries = array($countryDE, $countryXY);
+        $countries = [$countryDE, $countryXY];
 
-        $mock = $this->getModelMock('adminhtml/system_config_source_country', array('toOptionArray'));
+        $mock = $this->getModelMock('adminhtml/system_config_source_country', ['toOptionArray']);
         $mock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('toOptionArray')
             ->willReturn($countries);
         $this->replaceByMock('singleton', 'adminhtml/system_config_source_country', $mock);
 
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
-        $this->assertEquals($countries, $block->getCountries());
+        static::assertEquals($countries, $block->getCountries());
     }
 
     /**
@@ -93,7 +92,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest
     {
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
-        $this->assertEquals('TR', $block->getCountryOfManufacture('100'));
-        $this->assertEquals('DE', $block->getCountryOfManufacture('200'));
+        static::assertEquals('TR', $block->getCountryOfManufacture('100'));
+        static::assertEquals('DE', $block->getCountryOfManufacture('200'));
     }
 }

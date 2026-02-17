@@ -7,7 +7,7 @@
 <config>
     <modules>
         <Dhl_Versenden>
-            <version>1.14.0</version>
+            <version>2.0.0</version>
         </Dhl_Versenden>
     </modules>
     <global>
@@ -332,6 +332,9 @@
             <dhlversenden>
                 <model>dhl_versenden/shipping_carrier_versenden</model>
 
+                <!-- DHL REST API App Token for authentication -->
+                <app_token>M1_SHIPPING_1</app_token>
+
                 <title>DHL Versenden</title>
                 <active>1</active>
                 <secret_key backend_model="adminhtml/system_config_backend_encrypted"/>
@@ -342,6 +345,7 @@
                 <shipment_printonlyifcodeable>1</shipment_printonlyifcodeable>
                 <shipment_sendreceiverphone>0</shipment_sendreceiverphone>
                 <shipment_unitofmeasure>KG</shipment_unitofmeasure>
+                <shipment_printformat>A4</shipment_printformat>
                 <shipment_dhlcodmethods>cashondelivery</shipment_dhlcodmethods>
                 <service_preferredday_enabled>0</service_preferredday_enabled>
                 <service_preferredlocation_enabled>0</service_preferredlocation_enabled>
@@ -361,7 +365,6 @@
                 <webservice_auth_username>M1_SHIPPING_1</webservice_auth_username>
                 <webservice_auth_password>3hhwlgGytdblXrkVqNnXEjrdj1mEIs</webservice_auth_password>
 
-                <sandbox_endpoint>https://cig.dhl.de/services/sandbox/soap</sandbox_endpoint>
                 <sandbox_auth_username>magento_1</sandbox_auth_username>
                 <sandbox_auth_password>2de26b775e59279464d1c2f8546432e62413372421c672db36eaacfc2f</sandbox_auth_password>
 
@@ -377,6 +380,13 @@
                 <service_preferredday_handling_fee>0.99</service_preferredday_handling_fee>
                 <service_preferredday_handling_fee_text>Für diesen Service fallen zusätzliche Versandkosten in Höhe von $1 inkl. MwSt. an.</service_preferredday_handling_fee_text>
                 <service_cutoff_time>13,00,00</service_cutoff_time>
+                <service_noneighbourdelivery_handling_fee>0</service_noneighbourdelivery_handling_fee>
+                <service_noneighbourdelivery_handling_fee_text>This service will incur additional shipping costs of $1 including VAT.</service_noneighbourdelivery_handling_fee_text>
+                <service_gogreen_handling_fee>0</service_gogreen_handling_fee>
+                <service_gogreen_handling_fee_text>This service will incur additional shipping costs of $1 including VAT.</service_gogreen_handling_fee_text>
+                <service_closestdroppoint_enabled>0</service_closestdroppoint_enabled>
+                <service_closestdroppoint_handling_fee>0</service_closestdroppoint_handling_fee>
+                <service_closestdroppoint_handling_fee_text>Choosing drop-off delivery will adjust shipping costs by $1 including VAT.</service_closestdroppoint_handling_fee_text>
             </dhlversenden>
         </carriers>
     </default>
@@ -385,6 +395,10 @@
             <modules>
                 <Dhl_Versenden/>
             </modules>
+            <groups>
+                <live_api>LiveApi</live_api>
+                <unit>Unit</unit>
+            </groups>
         </suite>
     </phpunit>
 </config>

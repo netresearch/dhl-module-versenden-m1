@@ -6,8 +6,8 @@
 
 class Dhl_Versenden_Model_Cron
 {
-    const CRON_MESSAGE_LABELS_RETRIEVED = '%d labels were retrieved for %d orders.';
-    const CRON_MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
+    public const CRON_MESSAGE_LABELS_RETRIEVED = '%d labels were retrieved for %d orders.';
+    public const CRON_MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
 
     /** @var Dhl_Versenden_Model_Log */
     protected $_logger;
@@ -27,7 +27,7 @@ class Dhl_Versenden_Model_Cron
         $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
 
         $config = Mage::getModel('dhl_versenden/config');
-        $dhlLogger = Mage::getSingleton('dhl_versenden/log', array('config' => $config));
+        $dhlLogger = Mage::getSingleton('dhl_versenden/log', ['config' => $config]);
         $dhlLogger->setLogger($psrLogger);
         $this->_logger = $dhlLogger;
     }
@@ -43,7 +43,7 @@ class Dhl_Versenden_Model_Cron
             Mage::app()->getStores(),
             function (Mage_Core_Model_Store $store) use ($config) {
                 return $config->isShipmentAutoCreateEnabled($store);
-            }
+            },
         );
 
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST));
@@ -60,9 +60,9 @@ class Dhl_Versenden_Model_Cron
 
             // The DHL API only accepts up to 50 shipments per request, therefore we set this limit.
             $collection->setPageSize(50);
-            
+
             /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
-            $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $this->_logger));
+            $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', ['logger' => $this->_logger]);
             $num = $autocreate->autoCreate($collection);
 
             $scheduleMessage = sprintf(self::CRON_MESSAGE_LABELS_RETRIEVED, $num, $collection->getSize());
@@ -72,7 +72,7 @@ class Dhl_Versenden_Model_Cron
                 $collection->getItems(),
                 function (Mage_Sales_Model_Order $order) {
                     return !$order->hasShipments();
-                }
+                },
             );
 
             if (!empty($failedOrders)) {
@@ -80,7 +80,7 @@ class Dhl_Versenden_Model_Cron
                     function (Mage_Sales_Model_Order $order) {
                         return $order->getIncrementId();
                     },
-                    $failedOrders
+                    $failedOrders,
                 );
 
                 $errorMessage = sprintf(self::CRON_MESSAGE_LABELS_FAILED, implode(', ', $failedIncrements));
@@ -91,7 +91,7 @@ class Dhl_Versenden_Model_Cron
                 $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_SUCCESS);
             }
         } catch (\Exception $e) {
-            $this->_logger->error($e->getMessage(), array('exception' => $e));
+            $this->_logger->error($e->getMessage(), ['exception' => $e]);
             $schedule->setMessages($e->getMessage());
             $schedule->setStatus(Mage_Cron_Model_Schedule::STATUS_ERROR);
         }

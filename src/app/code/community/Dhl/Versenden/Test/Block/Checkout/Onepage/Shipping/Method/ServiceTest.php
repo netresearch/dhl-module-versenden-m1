@@ -4,14 +4,13 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use Dhl\Versenden\ParcelDe\Service;
 
-class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest extends EcomDev_PHPUnit_Test_Case
 {
-    const BLOCK_ALIAS = 'dhl_versenden/checkout_onepage_shipping_method_service';
+    public const BLOCK_ALIAS = 'dhl_versenden/checkout_onepage_shipping_method_service';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->setCurrentStore('store_one');
@@ -22,40 +21,20 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         $quote->setStoreId(Mage::app()->getStore()->getId());
         $quote->setShippingAddress($shippingAddress);
 
-        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getQuote'));
+        // Mock services processor to avoid quote->getStore() null pointer issue
+        $processorMock = $this->getModelMock('dhl_versenden/services_processor', ['processServices']);
+        $processorMock
+            ->expects(static::any())
+            ->method('processServices')
+            ->willReturnArgument(0); // Return services unchanged
+        $this->replaceByMock('model', 'dhl_versenden/services_processor', $processorMock);
+
+        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, ['getQuote']);
         $blockMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getQuote')
             ->willReturn($quote);
         $this->replaceByMock('block', self::BLOCK_ALIAS, $blockMock);
-    }
-
-    /**
-     * @test
-     * @loadFixture Model_ConfigTest
-     */
-    public function getServices()
-    {
-        $serviceOne = new Service\BulkyGoods('', true, false);
-        $serviceTwo = new Service\PreferredNeighbour('', true, false, 'testneighbour');
-        $services   = array($serviceOne, $serviceTwo);
-        $collection = new Service\Collection($services);
-
-        $configMock = $this->getModelMock('dhl_versenden/config_service', array('getEnabledServices'));
-        $configMock
-            ->expects($this->once())
-            ->method('getEnabledServices')
-            ->willReturn($collection);
-        $this->replaceByMock('model', 'dhl_versenden/config_service', $configMock);
-
-        $this->markTestIncomplete('This currently crashes because the session contains no quote object. Please fix if you know how.');
-        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
-        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
-
-        $frontendServices = $block->getServices();
-        $this->assertInstanceOf('Service\Collection', $frontendServices);
-        $this->assertCount(1, $frontendServices);
-        $this->assertContains($serviceTwo, $frontendServices);
     }
 
     /**
@@ -69,10 +48,10 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
 
         $json    = $block->getDhlMethods();
         $methods = Mage::helper('core/data')->jsonDecode($json);
-        $this->assertInternalType('array', $methods);
-        $this->assertCount(2, $methods);
-        $this->assertContains('flatrate_flatrate', $methods);
-        $this->assertContains('tablerate_bestway', $methods);
+        static::assertIsArray($methods);
+        static::assertCount(2, $methods);
+        static::assertContains('flatrate_flatrate', $methods);
+        static::assertContains('tablerate_bestway', $methods);
     }
 
     /**
@@ -84,10 +63,13 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
-        $this->assertNotEmpty($block->getServiceHint(Service\PreferredDay::CODE));
-        $this->assertNotEmpty($block->getServiceHint(Service\PreferredLocation::CODE));
-        $this->assertNotEmpty($block->getServiceHint(Service\PreferredNeighbour::CODE));
-        $this->assertEmpty($block->getServiceHint(Service\ParcelAnnouncement::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\PreferredDay::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\PreferredLocation::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\PreferredNeighbour::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\ParcelAnnouncement::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\NoNeighbourDelivery::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\GoGreenPlus::CODE));
+        static::assertNotEmpty($block->getServiceHint(Service\ClosestDropPoint::CODE));
     }
 
     /**
@@ -101,25 +83,25 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
 
         // No Location Data is used (normal order)
         $isAddressLocation = $block->isShippingAddressDHLLocation();
-        $this->assertEquals(false, $isAddressLocation);
+        static::assertEquals(false, $isAddressLocation);
 
         // Got DHL Location fields from Shipping Address
         $block->getQuote()->getShippingAddress()->setData('dhl_station_type', 'packstation');
         $isAddressLocation = $block->isShippingAddressDHLLocation();
-        $this->assertEquals(true, $isAddressLocation);
+        static::assertEquals(true, $isAddressLocation);
 
         // Got Info Object but with no location data
-        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
+        $versendenInfo = new \Dhl\Versenden\ParcelDe\Info();
         $block->getQuote()->getShippingAddress()->setData('dhl_station_type', null);
         $block->getQuote()->getShippingAddress()->setData('dhl_versenden_info', $versendenInfo);
         $isAddressLocation = $block->isShippingAddressDHLLocation();
-        $this->assertEquals(false, $isAddressLocation);
+        static::assertEquals(false, $isAddressLocation);
 
         // Got Info Object with location data
         $versendenInfo->getReceiver()->getPackstation()->packstationNumber = 1234567;
         $block->getQuote()->getShippingAddress()->setData('dhl_versenden_info', $versendenInfo);
         $isAddressLocation = $block->isShippingAddressDHLLocation();
-        $this->assertEquals(true, $isAddressLocation);
+        static::assertEquals(true, $isAddressLocation);
     }
 
     /**
@@ -131,7 +113,7 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
 
-        $this->assertNotEmpty($block->getServiceFeeText(Service\PreferredDay::CODE));
+        static::assertNotEmpty($block->getServiceFeeText(Service\PreferredDay::CODE));
     }
 
     /**
@@ -147,12 +129,121 @@ class Dhl_Versenden_Test_Block_Checkout_Onepage_Shipping_Method_ServiceTest
         Mage::app()->getLayout()->getUpdate()->resetHandles();
         Mage::app()->getLayout()->getUpdate()->addHandle('checkout_third_party');
         $isOnePageCheckout = $block->isOnePageCheckout();
-        $this->assertEquals(false, $isOnePageCheckout);
+        static::assertEquals(false, $isOnePageCheckout);
 
         // One Page Checkout
         Mage::app()->getLayout()->getUpdate()->resetHandles();
         Mage::app()->getLayout()->getUpdate()->addHandle('checkout_onepage');
         $isOnePageCheckout = $block->isOnePageCheckout();
-        $this->assertEquals(true, $isOnePageCheckout);
+        static::assertEquals(true, $isOnePageCheckout);
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceFeeTextReturnsEmptyForUnknownService()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        // Unknown service code should return empty string
+        static::assertEmpty($block->getServiceFeeText('unknownService'));
+        static::assertEmpty($block->getServiceFeeText(Service\PreferredLocation::CODE));
+    }
+
+    // =========================================================================
+    // DHLGKP-XXX: CDP (Closest Drop Point) Checkout Block Tests
+    // =========================================================================
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceHintForClosestDropPoint()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        static::assertNotEmpty($block->getServiceHint(Service\ClosestDropPoint::CODE));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceHeadlineForClosestDropPoint()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        static::assertNotEmpty($block->getServiceHeadline(Service\ClosestDropPoint::CODE));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceHeadlineForNoNeighbourDelivery()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        static::assertNotEmpty($block->getServiceHeadline(Service\NoNeighbourDelivery::CODE));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceHeadlineForGoGreenPlus()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        static::assertNotEmpty($block->getServiceHeadline(Service\GoGreenPlus::CODE));
+    }
+
+    // =========================================================================
+    // DHLGKP-XXX: NoNeighbourDelivery and GoGreen Surcharge Block Tests
+    // =========================================================================
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceFeeTextForNoNeighbourDelivery()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        // NoNeighbourDelivery fee is 0.29 in fixture, so fee text should be non-empty
+        static::assertNotEmpty($block->getServiceFeeText(Service\NoNeighbourDelivery::CODE));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceFeeTextForGoGreen()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        // GoGreen fee is 0.50 in fixture, so fee text should be non-empty
+        static::assertNotEmpty($block->getServiceFeeText(Service\GoGreenPlus::CODE));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ConfigTest
+     */
+    public function getServiceFeeTextForClosestDropPoint()
+    {
+        /** @var Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service $block */
+        $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
+
+        // CDP fee is 1.50 in fixture, so fee text should be non-empty
+        static::assertNotEmpty($block->getServiceFeeText(Service\ClosestDropPoint::CODE));
     }
 }

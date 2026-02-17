@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Model_Resource_Autocreate_Collection
-    extends Mage_Sales_Model_Resource_Order_Collection
+class Dhl_Versenden_Model_Resource_Autocreate_Collection extends Mage_Sales_Model_Resource_Order_Collection
 {
     /**
      * Event prefix
@@ -29,7 +28,7 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
         // only consider orders with DHL Versenden carrier
         $this->addFieldToFilter(
             'shipping_method',
-            array('like' => Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE . '%')
+            ['like' => Dhl_Versenden_Model_Shipping_Carrier_Versenden::CODE . '%'],
         );
 
         return $this;
@@ -42,11 +41,11 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
     {
         // only consider orders that have no shipments yet
         $this->getSelect()->joinLeft(
-            array('shipment' => $this->getTable('sales/shipment')),
+            ['shipment' => $this->getTable('sales/shipment')],
             'main_table.entity_id = shipment.order_id',
-            array('shipment.order_id')
+            ['shipment.order_id'],
         );
-        $this->addFieldToFilter('shipment.entity_id', array('null' => true));
+        $this->addFieldToFilter('shipment.entity_id', ['null' => true]);
 
         return $this;
     }
@@ -58,7 +57,7 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
     public function addDeliveryCountriesFilter(array $countries)
     {
         $this->_addAddressFields();
-        $this->addFieldToFilter('shipping_o_a.country_id', array('in' => $countries));
+        $this->addFieldToFilter('shipping_o_a.country_id', ['in' => $countries]);
 
         return $this;
     }
@@ -69,7 +68,7 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
      */
     public function addStatusFilter(array $status)
     {
-        $this->addFieldToFilter('status', array('in' => $status));
+        $this->addFieldToFilter('status', ['in' => $status]);
 
         return $this;
     }
@@ -84,10 +83,10 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection
             function ($store) {
                 return Mage::app()->getStore($store)->getId();
             },
-            $stores
+            $stores,
         );
 
-        $this->addFieldToFilter('main_table.store_id', array('in' => $storeIds));
+        $this->addFieldToFilter('main_table.store_id', ['in' => $storeIds]);
 
         return $this;
     }

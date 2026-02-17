@@ -6,7 +6,6 @@
 
 class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Service_Visualcheckofage
 {
-
     /**
      * Options getter
      *
@@ -14,20 +13,20 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Service_Visualcheckofag
      */
     public function toOptionArray()
     {
-        $optionsArray = array(
-            array(
-            'value' => 0,
-            'label' => Mage::helper('dhl_versenden/data')->__('No')
-            ),
-            array(
-                'value' => \Dhl\Versenden\Bcs\Api\Shipment\Service\VisualCheckOfAge::A16,
-                'label' => \Dhl\Versenden\Bcs\Api\Shipment\Service\VisualCheckOfAge::A16,
-            ),
-            array(
-                'value' => \Dhl\Versenden\Bcs\Api\Shipment\Service\VisualCheckOfAge::A18,
-                'label' => \Dhl\Versenden\Bcs\Api\Shipment\Service\VisualCheckOfAge::A18,
-            )
-        );
+        $optionsArray = [
+            [
+                'value' => 0,
+                'label' => Mage::helper('dhl_versenden/data')->__('No'),
+            ],
+            [
+                'value' => \Dhl\Versenden\ParcelDe\Service\VisualCheckOfAge::A16,
+                'label' => \Dhl\Versenden\ParcelDe\Service\VisualCheckOfAge::A16,
+            ],
+            [
+                'value' => \Dhl\Versenden\ParcelDe\Service\VisualCheckOfAge::A18,
+                'label' => \Dhl\Versenden\ParcelDe\Service\VisualCheckOfAge::A18,
+            ],
+        ];
 
         return $optionsArray;
     }

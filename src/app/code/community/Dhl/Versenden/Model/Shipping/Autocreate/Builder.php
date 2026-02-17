@@ -4,7 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use Dhl\Versenden\ParcelDe\Service;
 
 class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 {
@@ -70,7 +70,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setShipper(Mage_Shipping_Model_Shipment_Request $request)
     {
-        /** @var \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper\Contact $contact */
+        /** @var \Dhl\Versenden\ParcelDe\Config\Data\Shipper\Contact $contact */
         $contact = $this->_shipperConfig->getContact($this->_order->getStoreId());
         $request->setShipperContactPersonName($contact->getName1());
         $request->setShipperContactCompanyName($contact->getName2());
@@ -117,14 +117,14 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
      */
     protected function setPackages(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $packageItems = array();
+        $packageItems = [];
         $totalWeight = 0;
         $totalCustomsValue = 0;
 
         /** @var Mage_Sales_Model_Order_Item $item */
         foreach ($this->_order->getAllItems() as $item) {
             if (!$item->isDummy($request->getOrderShipment())) {
-                $packageItem = array();
+                $packageItem = [];
                 $packageItem['qty'] = $item->getQtyShipped();
                 $packageItem['customs_value'] = $item->getBasePrice();
                 $packageItem['price'] = $item->getPrice();
@@ -135,24 +135,24 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 
                 $packageItems[$item->getId()] = $packageItem;
 
-                $totalWeight+= ($item->getQtyShipped() * $item->getWeight());
-                $totalCustomsValue+= ($item->getQtyShipped() * $item->getBasePrice());
+                $totalWeight += ($item->getQtyShipped() * $item->getWeight());
+                $totalCustomsValue += ($item->getQtyShipped() * $item->getBasePrice());
             }
         }
 
-        $packageParams = array(
+        $packageParams = [
             'weight' => $totalWeight,
             'customs_value' => $totalCustomsValue,
             'weight_units' => $this->_shipmentConfig->getSettings($this->_order->getStoreId())->getUnitOfMeasure(),
-        );
+        ];
 
-        $packageData = array(
+        $packageData = [
             // package_1:
-            '1' => array(
+            '1' => [
                 'params' => $packageParams,
-                'items' => $packageItems
-            ),
-        );
+                'items' => $packageItems,
+            ],
+        ];
 
         $request->getOrderShipment()->setData('packages', $packageData);
         $request->setData('packages', $packageData);
@@ -174,32 +174,36 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         $recipientCountry = $shippingAddress->getCountryId();
         $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST, $storeId));
 
-        $shippingProducts = \Dhl\Versenden\Bcs\Api\Product::getCodesByCountry(
+        $shippingProducts = \Dhl\Versenden\ParcelDe\Product::getCodesByCountry(
             $shipperCountry,
             $recipientCountry,
-            $euCountries
+            $euCountries,
         );
         $defaultProduct = $this->_serviceConfig->getAutoCreateShippingProduct($storeId);
 
         if (count($shippingProducts) > 1) {
-            $shippingProducts = array_intersect(array($defaultProduct), $shippingProducts);
+            $shippingProducts = array_intersect([$defaultProduct], $shippingProducts);
         }
 
         $isPostalFacility = Mage::helper('dhl_versenden/data')->isPostalFacility($shippingAddress);
 
-        $serviceFilter = new \Dhl\Versenden\Bcs\Api\Shipment\Service\Filter(
-            $shippingProducts, $isPostalFacility, false
+        $serviceFilter = new \Dhl\Versenden\ParcelDe\Service\Filter(
+            $shippingProducts,
+            $isPostalFacility,
+            false,
+            $shipperCountry,
+            $recipientCountry,
         );
         $filteredServiceCollection = $serviceFilter->filterServiceCollection($services);
 
-        $serviceData = array(
-            'shipment_service' => array(),
-            'service_setting'  => array(),
-        );
+        $serviceData = [
+            'shipment_service' => [],
+            'service_setting'  => [],
+        ];
 
-        /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service */
+        /** @var \Dhl\Versenden\ParcelDe\Service\Type\Generic $service */
         foreach ($filteredServiceCollection as $service) {
-            $serviceData['shipment_service'][$service->getCode()] = $service->isEnabled();
+            $serviceData['shipment_service'][$service->getCode()] = $service->isSelected();
             $serviceData['service_setting'][$service->getCode()] = $service->getValue();
         }
 
@@ -214,21 +218,21 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
         }
 
         // set customer services from checkout (includes parcelAnnouncement if configured as "optional")
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $this->_order->getShippingAddress()->getData('dhl_versenden_info');
-        if ($versendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
+        if ($versendenInfo instanceof \Dhl\Versenden\ParcelDe\Info) {
             $customerServices = $this->_serviceConfig->getAvailableServices(
                 $shipperCountry,
                 $recipientCountry,
                 $isPostalFacility,
                 true,
-                $storeId
+                $storeId,
             );
             /** @var Service\Type\Generic $customerService */
             foreach ($customerServices as $customerService) {
                 $code = $customerService->getCode();
-                $serviceData['shipment_service'][$code] = (bool)$versendenInfo->getServices()->{$code};
-                $serviceData['service_setting'][$code] = (string)$versendenInfo->getServices()->{$code};
+                $serviceData['shipment_service'][$code] = (bool) $versendenInfo->getServices()->{$code};
+                $serviceData['service_setting'][$code] = (string) $versendenInfo->getServices()->{$code};
             }
         }
 
@@ -251,19 +255,19 @@ class Dhl_Versenden_Model_Shipping_Autocreate_Builder
 
         $productCodes = array_keys($products);
         if (count($productCodes) > 1) {
-            $productCodes = array_intersect(array($defaultProduct), $productCodes);
+            $productCodes = array_intersect([$defaultProduct], $productCodes);
         }
 
         $request->setData('gk_api_product', $productCodes[0]);
     }
 
     /**
-     * Add customs info to request: empty, international shipments are note supported.
+     * Add customs info to request: empty, international shipments are not supported.
      *
      * @param Mage_Shipping_Model_Shipment_Request $request
      */
     protected function setCustomsInfo(Mage_Shipping_Model_Shipment_Request $request)
     {
-        $request->setData('customs', array());
+        $request->setData('customs', []);
     }
 }

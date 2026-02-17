@@ -27,25 +27,48 @@ tables:
      status: 'pending'
      store_id: 1
      total_qty_ordered: 2
+     weight: 3.0
+     base_grand_total: 25.00
+     grand_total: 25.00
 
    - entity_id: 11
      shipping_method: 'dhlversenden_fox'
      status: 'processing'
      store_id: 1
      total_qty_ordered: 2
+     weight: 4.0
+     base_grand_total: 35.00
+     grand_total: 35.00
 
    - entity_id: 17
      shipping_method: 'xyz_foo'
      store_id: 2
+     weight: 0.5
+     base_grand_total: 15.00
+     grand_total: 15.00
 
   sales/order_item:
    - item_id: 10
      order_id: 10
      qty_ordered: 2
+     qty_shipped: 0
+     weight: 1.5
+     row_weight: 3.0
+     price: 10.00
+     base_price: 10.00
+     name: 'Test Product 1'
+     product_id: 100
 
    - item_id: 11
      order_id: 11
      qty_ordered: 2
+     qty_shipped: 0
+     weight: 2.0
+     row_weight: 4.0
+     price: 15.00
+     base_price: 15.00
+     name: 'Test Product 2'
+     product_id: 101
 
   sales/order_payment:
    - entity_id: 10

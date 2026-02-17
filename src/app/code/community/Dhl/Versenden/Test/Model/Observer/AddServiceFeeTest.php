@@ -4,16 +4,14 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Observer_AddServiceFeeTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_AddServiceFeeTest extends EcomDev_PHPUnit_Test_Case
 {
-
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $coreSessionMock = $this
             ->getMockBuilder('Mage_Core_Model_Session')
-            ->setMethods(array('start'))
+            ->setMethods(['start'])
             ->getMock();
         $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
         $this->setCurrentStore('store_one');
@@ -31,7 +29,7 @@ class Dhl_Versenden_Test_Model_Observer_AddServiceFeeTest
         $observer->setData('quote', $quote);
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->addServiceFee($observer);
-        $this->assertNull($quote->getShippingAddress()->getData('dhl_versenden_info'));
+        static::assertNull($quote->getShippingAddress()->getData('dhl_versenden_info'));
     }
 
     /**
@@ -46,6 +44,25 @@ class Dhl_Versenden_Test_Model_Observer_AddServiceFeeTest
         $observer->setData('quote', $quote);
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->addServiceFee($observer);
-        $this->assertNull($quote->getShippingAddress()->getData('dhl_versenden_info'));
+        static::assertNull($quote->getShippingAddress()->getData('dhl_versenden_info'));
+    }
+
+    /**
+     * @test
+     * @loadFixture Model_ObserverTest
+     */
+    public function addServiceFeeAppliesPreferredDayFee()
+    {
+        $quote = Mage::getModel('sales/quote')->load(400);
+        $observer = new Varien_Event_Observer();
+        $observer->setData('quote', $quote);
+
+        $dhlObserver = new Dhl_Versenden_Model_Observer();
+        $dhlObserver->addServiceFee($observer);
+
+        $store = Mage::app()->getStore($quote->getStoreId());
+        static::assertEquals('F', $store->getConfig('carriers/flatrate/handling_type'));
+        static::assertEquals(1.2, (float) $store->getConfig('carriers/flatrate/handling_fee'));
+        static::assertTrue((bool) $quote->getShippingAddress()->getCollectShippingRates());
     }
 }

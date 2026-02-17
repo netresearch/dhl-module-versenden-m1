@@ -15,11 +15,11 @@ class Dhl_Versenden_Test_Model_Resource_Autocreate_CollectionTest extends EcomDe
         $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
         $collection->addShippingMethodFilter();
 
-        $this->assertNotEmpty($collection);
+        static::assertNotEmpty($collection);
 
         /** @var Mage_Sales_Model_Order $order */
         foreach ($collection as $order) {
-            $this->assertStringStartsWith('dhlversenden_', $order->getShippingMethod());
+            static::assertStringStartsWith('dhlversenden_', $order->getShippingMethod());
         }
     }
 
@@ -34,9 +34,9 @@ class Dhl_Versenden_Test_Model_Resource_Autocreate_CollectionTest extends EcomDe
 
         $orderIds = $collection->getAllIds();
 
-        $this->assertContains('10', $orderIds);
-        $this->assertNotContains('11', $orderIds);
-        $this->assertContains('17', $orderIds);
+        static::assertContains('10', $orderIds);
+        static::assertNotContains('11', $orderIds);
+        static::assertContains('17', $orderIds);
     }
 
     /**
@@ -51,8 +51,8 @@ class Dhl_Versenden_Test_Model_Resource_Autocreate_CollectionTest extends EcomDe
         $collection = $collection->addDeliveryCountriesFilter($euCountries);
 
         $orderIds = $collection->getAllIds();
-        $this->assertContains('10', $orderIds);
-        $this->assertNotContains('11', $orderIds);
+        static::assertContains('10', $orderIds);
+        static::assertNotContains('11', $orderIds);
     }
 
     /**
@@ -61,24 +61,24 @@ class Dhl_Versenden_Test_Model_Resource_Autocreate_CollectionTest extends EcomDe
      */
     public function addStatusFilter()
     {
-        $statusArray = array('pending');
+        $statusArray = ['pending'];
 
         $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
         $collection->addStatusFilter($statusArray);
 
         $orderIds = $collection->getAllIds();
-        $this->assertContains('10', $orderIds);
-        $this->assertNotContains('11', $orderIds);
+        static::assertContains('10', $orderIds);
+        static::assertNotContains('11', $orderIds);
 
 
-        $statusArray = array('pending', 'processing');
+        $statusArray = ['pending', 'processing'];
 
         $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
         $collection->addStatusFilter($statusArray);
 
         $orderIds = $collection->getAllIds();
-        $this->assertContains('10', $orderIds);
-        $this->assertContains('11', $orderIds);
+        static::assertContains('10', $orderIds);
+        static::assertContains('11', $orderIds);
     }
 
     /**
@@ -88,20 +88,20 @@ class Dhl_Versenden_Test_Model_Resource_Autocreate_CollectionTest extends EcomDe
     public function addStoreFilter()
     {
         $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
-        $collection->addStoreFilter(array('store_one'));
+        $collection->addStoreFilter(['store_one']);
 
         $orderIds = $collection->getAllIds();
-        $this->assertContains('10', $orderIds);
-        $this->assertContains('11', $orderIds);
-        $this->assertNotContains('17', $orderIds);
+        static::assertContains('10', $orderIds);
+        static::assertContains('11', $orderIds);
+        static::assertNotContains('17', $orderIds);
 
 
         $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
-        $collection->addStoreFilter(array('store_one', 'store_two'));
+        $collection->addStoreFilter(['store_one', 'store_two']);
 
         $orderIds = $collection->getAllIds();
-        $this->assertContains('10', $orderIds);
-        $this->assertContains('11', $orderIds);
-        $this->assertContains('17', $orderIds);
+        static::assertContains('10', $orderIds);
+        static::assertContains('11', $orderIds);
+        static::assertContains('17', $orderIds);
     }
 }

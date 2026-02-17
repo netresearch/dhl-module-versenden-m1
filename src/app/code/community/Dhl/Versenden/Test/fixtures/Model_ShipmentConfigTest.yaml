@@ -21,6 +21,31 @@ config:
 
   default/general/country/eu_countries: "AT,BE,BG,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE"
 
+  # Account config (required for REST client and builders)
+  default/carriers/dhlversenden/account_ekp: "4711xx4711"
+  default/carriers/dhlversenden/account_user: "303TEST"
+  default/carriers/dhlversenden/account_signature: "magento"
+  default/carriers/dhlversenden/sandbox_mode: "1"
+  default/carriers/dhlversenden/app_token: "test-app-token-12345"
+
+  # Contact config (required for shipper builder)
+  default/carriers/dhlversenden/contact_name1: "Test Company"
+  default/carriers/dhlversenden/contact_streetname: "Test Street"
+  default/carriers/dhlversenden/contact_streetnumber: "1"
+  default/carriers/dhlversenden/contact_zip: "12345"
+  default/carriers/dhlversenden/contact_city: "Test City"
+  default/carriers/dhlversenden/contact_countryid: "DE"
+  default/carriers/dhlversenden/contact_email: "test@example.com"
+
+  # Bank data config (required for customs builder validation)
+  default/carriers/dhlversenden/bankdata_owner: "Test Bank Owner"
+  default/carriers/dhlversenden/bankdata_bankname: "Test Bank"
+  default/carriers/dhlversenden/bankdata_iban: "DE89370400440532013000"
+  default/carriers/dhlversenden/bankdata_bic: "COBADEFFXXX"
+  default/carriers/dhlversenden/bankdata_note1: "Test Payment Note"
+  default/carriers/dhlversenden/bankdata_note2: "Test Payment Note 2"
+  default/carriers/dhlversenden/bankdata_accountreference: "Test Reference"
+
   stores/store_one/carriers/dhlversenden/shipment_dhlmethods:         "flatrate_flatrate,tablerate_bestway"
 
   stores/store_two/carriers/dhlversenden/shipment_printonlyifcodeable: "0"
@@ -28,3 +53,254 @@ config:
   stores/store_two/carriers/dhlversenden/shipment_defaultweight:       "200"
   stores/store_two/carriers/dhlversenden/shipment_dhlcodmethods:       ""
   stores/store_two/carriers/dhlversenden/shipment_dhlmethods:          "flatrate_flatrate,tablerate_bestway"
+
+tables:
+  sales/order:
+    # Order 1: Basic domestic (Germany)
+    - entity_id: 1
+      increment_id: '100000001'
+      shipping_method: 'flatrate_flatrate'
+      status: 'processing'
+      store_id: 1
+      base_grand_total: 100.00
+      total_qty_ordered: 1
+
+    # Order 2: International (Austria) for Test 3
+    - entity_id: 2
+      increment_id: '100000002'
+      shipping_method: 'flatrate_flatrate'
+      status: 'processing'
+      store_id: 1
+      base_grand_total: 150.00
+      total_qty_ordered: 1
+
+    # Order 3: Packstation delivery for Test 7
+    - entity_id: 3
+      increment_id: '100000003'
+      shipping_method: 'flatrate_flatrate'
+      status: 'processing'
+      store_id: 1
+      base_grand_total: 120.00
+      total_qty_ordered: 1
+
+    # Order 4: Invalid address for Test 6
+    - entity_id: 4
+      increment_id: '100000004'
+      shipping_method: 'flatrate_flatrate'
+      status: 'processing'
+      store_id: 1
+      base_grand_total: 80.00
+      total_qty_ordered: 1
+
+  sales/order_payment:
+    - entity_id: 1
+      parent_id: 1
+      method: 'checkmo'
+
+    - entity_id: 2
+      parent_id: 2
+      method: 'checkmo'
+
+    - entity_id: 3
+      parent_id: 3
+      method: 'checkmo'
+
+    - entity_id: 4
+      parent_id: 4
+      method: 'checkmo'
+
+  sales/order_address:
+    # Order 1 addresses (domestic Germany)
+    - entity_id: 1
+      parent_id: 1
+      firstname: "Max"
+      lastname: "Mustermann"
+      company: "Test Company"
+      street: "Teststrasse 1"
+      city: "Berlin"
+      postcode: "10115"
+      country_id: "DE"
+      email: "test@example.com"
+      telephone: "030123456"
+      address_type: "shipping"
+      region_id: 88
+      region: "Berlin"
+
+    - entity_id: 2
+      parent_id: 1
+      firstname: "Max"
+      lastname: "Mustermann"
+      street: "Teststrasse 1"
+      city: "Berlin"
+      postcode: "10115"
+      country_id: "DE"
+      email: "test@example.com"
+      telephone: "030123456"
+      address_type: "billing"
+      region_id: 88
+      region: "Berlin"
+
+    # Order 2 addresses (international Austria)
+    - entity_id: 3
+      parent_id: 2
+      firstname: "John"
+      lastname: "Doe"
+      company: ""
+      street: "Stephansplatz 1"
+      city: "Wien"
+      postcode: "1010"
+      country_id: "AT"
+      email: "john@example.com"
+      telephone: "+4311234567"
+      address_type: "shipping"
+      region_id: null
+      region: ""
+
+    - entity_id: 4
+      parent_id: 2
+      firstname: "John"
+      lastname: "Doe"
+      street: "Stephansplatz 1"
+      city: "Wien"
+      postcode: "1010"
+      country_id: "AT"
+      email: "john@example.com"
+      telephone: "+4311234567"
+      address_type: "billing"
+      region_id: null
+      region: ""
+
+    # Order 3 addresses (Packstation)
+    - entity_id: 5
+      parent_id: 3
+      firstname: "Maria"
+      lastname: "Schmidt"
+      company: "Packstation 101"
+      street: "Packstation 101"
+      city: "Bonn"
+      postcode: "53113"
+      country_id: "DE"
+      email: "maria@example.com"
+      telephone: "0228123456"
+      address_type: "shipping"
+      region_id: 88
+      region: "Nordrhein-Westfalen"
+
+    - entity_id: 6
+      parent_id: 3
+      firstname: "Maria"
+      lastname: "Schmidt"
+      street: "Hauptstrasse 10"
+      city: "Bonn"
+      postcode: "53113"
+      country_id: "DE"
+      email: "maria@example.com"
+      telephone: "0228123456"
+      address_type: "billing"
+      region_id: 88
+      region: "Nordrhein-Westfalen"
+
+    # Order 4 addresses (invalid for error testing)
+    - entity_id: 7
+      parent_id: 4
+      firstname: "Invalid"
+      lastname: "Postal"
+      company: ""
+      street: "Invalid Street 1"
+      city: "Invalid"
+      postcode: "00000"
+      country_id: "DE"
+      email: "invalid@example.com"
+      telephone: "000000000"
+      address_type: "shipping"
+      region_id: 88
+      region: "Berlin"
+
+    - entity_id: 8
+      parent_id: 4
+      firstname: "Invalid"
+      lastname: "Postal"
+      street: "Invalid Street 1"
+      city: "Invalid"
+      postcode: "00000"
+      country_id: "DE"
+      email: "invalid@example.com"
+      telephone: "000000000"
+      address_type: "billing"
+      region_id: 88
+      region: "Berlin"
+
+  sales/order_item:
+    - item_id: 1
+      order_id: 1
+      product_id: 1
+      qty_ordered: 1
+
+    - item_id: 2
+      order_id: 2
+      product_id: 1
+      qty_ordered: 1
+
+    - item_id: 3
+      order_id: 3
+      product_id: 1
+      qty_ordered: 1
+
+    - item_id: 4
+      order_id: 4
+      product_id: 1
+      qty_ordered: 1
+
+  sales/shipment:
+    - entity_id: 1
+      order_id: 1
+      store_id: 1
+      shipping_address_id: 1
+      billing_address_id: 2
+      total_qty: 1
+
+    - entity_id: 2
+      order_id: 2
+      store_id: 1
+      shipping_address_id: 3
+      billing_address_id: 4
+      total_qty: 1
+
+    - entity_id: 3
+      order_id: 3
+      store_id: 1
+      shipping_address_id: 5
+      billing_address_id: 6
+      total_qty: 1
+
+    - entity_id: 4
+      order_id: 4
+      store_id: 1
+      shipping_address_id: 7
+      billing_address_id: 8
+      total_qty: 1
+
+  sales/shipment_item:
+    - entity_id: 1
+      parent_id: 1
+      product_id: 1
+      order_item_id: 1
+      qty: 1
+
+    - entity_id: 2
+      parent_id: 2
+      product_id: 1
+      order_item_id: 2
+      qty: 1
+
+    - entity_id: 3
+      parent_id: 3
+      product_id: 1
+      order_item_id: 3
+      qty: 1
+
+    - entity_id: 4
+      parent_id: 4
+      product_id: 1
+      order_item_id: 4
+      qty: 1

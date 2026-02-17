@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ruleset name="DHL Versenden M1">
+    <description>Code style for DHL Versenden Magento 1 module - mirrors OpenMage standards</description>
+
+    <!-- PHP Version Compatibility -->
+    <config name="testVersion" value="8.1-8.5"/>
+    <rule ref="PHPCompatibility"/>
+
+    <exclude-pattern>*/Bcs/Soap/*</exclude-pattern>
+    <exclude-pattern>*/Cig/*</exclude-pattern>
+    <exclude-pattern>*/Test/*</exclude-pattern>
+    <exclude-pattern>*/sql/*</exclude-pattern>
+    <exclude-pattern>*/data/*</exclude-pattern>
+
+    <rule ref="Ecg"/>
+    <rule ref="Ecg.Classes.ObjectInstantiation">
+        <exclude name="Ecg.Classes.ObjectInstantiation.DirectInstantiation"/>
+    </rule>
+    <rule ref="Ecg.Performance">
+        <exclude name="Ecg.Performance.CollectionCount.Found"/>
+        <exclude name="Ecg.Performance.GetFirstItem.Found"/>
+        <exclude name="Ecg.Performance.FetchAll.Found"/>
+        <exclude name="Ecg.Performance.Loop.DataLoad"/>
+        <exclude name="Ecg.Performance.Loop.ModelLSD"/>
+        <exclude name="Ecg.Performance.Loop.ArraySize"/>
+    </rule>
+    <rule ref="Ecg.PHP">
+        <exclude name="Ecg.PHP.PrivateClassMember.PrivateClassMemberError"/>
+    </rule>
+    <rule ref="Ecg.Security">
+        <exclude name="Ecg.Security.ForbiddenFunction.Found"/>
+    </rule>
+
+    <!-- Cyclomatic complexity: Builder classes map many services/fields to SDK calls.
+         High branch count is inherent to the mapping, not poor structure. -->
+    <rule ref="Generic.Metrics.CyclomaticComplexity.MaxExceeded">
+        <exclude-pattern>*/Builder/Service.php</exclude-pattern>
+        <exclude-pattern>*/Builder/Customs.php</exclude-pattern>
+    </rule>
+    <rule ref="Generic.Metrics.CyclomaticComplexity.TooHigh">
+        <exclude-pattern>*/Builder/Service.php</exclude-pattern>
+        <exclude-pattern>*/Builder/Customs.php</exclude-pattern>
+        <exclude-pattern>*/Shipping/Autocreate.php</exclude-pattern>
+        <exclude-pattern>*/Model/Observer.php</exclude-pattern>
+        <exclude-pattern>*/Service/Filter.php</exclude-pattern>
+    </rule>
+
+    <!-- Magento observer pattern requires $observer param even if unused -->
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass">
+        <exclude-pattern>*/Model/Observer.php</exclude-pattern>
+    </rule>
+
+    <!-- Autoloader legitimately needs require_once -->
+    <rule ref="Ecg.Security.IncludeFile.IncludeFileDetected">
+        <exclude-pattern>*/Helper/Autoloader.php</exclude-pattern>
+    </rule>
+</ruleset>

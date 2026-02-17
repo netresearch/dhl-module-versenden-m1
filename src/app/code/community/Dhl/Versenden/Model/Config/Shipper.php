@@ -4,60 +4,60 @@
  * See LICENSE.md for license details.
  */
 
-use Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Shipper as Shipper;
+use Dhl\Versenden\ParcelDe\Config\Data\Shipper as Shipper;
 
 class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
 {
-    const CONFIG_XML_FIELD_USER            = 'account_user';
-    const CONFIG_XML_FIELD_SIGNATURE       = 'account_signature';
-    const CONFIG_XML_FIELD_EKP             = 'account_ekp';
-    const CONFIG_XML_FIELD_PARTICIPATION   = 'account_participation';
+    public const CONFIG_XML_FIELD_USER            = 'account_user';
+    public const CONFIG_XML_FIELD_SIGNATURE       = 'account_signature';
+    public const CONFIG_XML_FIELD_EKP             = 'account_ekp';
+    public const CONFIG_XML_FIELD_PARTICIPATION   = 'account_participation';
 
-    const CONFIG_XML_FIELD_SANDBOX_USER            = 'sandbox_account_user';
-    const CONFIG_XML_FIELD_SANDBOX_SIGNATURE       = 'sandbox_account_signature';
-    const CONFIG_XML_FIELD_SANDBOX_EKP             = 'sandbox_account_ekp';
-    const CONFIG_XML_FIELD_SANDBOX_PARTICIPATION   = 'sandbox_account_participation';
+    public const CONFIG_XML_FIELD_SANDBOX_USER            = 'sandbox_account_user';
+    public const CONFIG_XML_FIELD_SANDBOX_SIGNATURE       = 'sandbox_account_signature';
+    public const CONFIG_XML_FIELD_SANDBOX_EKP             = 'sandbox_account_ekp';
+    public const CONFIG_XML_FIELD_SANDBOX_PARTICIPATION   = 'sandbox_account_participation';
 
-    const CONFIG_XML_FIELD_BANKDATA_OWNER      = 'bankdata_owner';
-    const CONFIG_XML_FIELD_BANKDATA_BANKNAME   = 'bankdata_bankname';
-    const CONFIG_XML_FIELD_BANKDATA_IBAN       = 'bankdata_iban';
-    const CONFIG_XML_FIELD_BANKDATA_BIC        = 'bankdata_bic';
-    const CONFIG_XML_FIELD_BANKDATA_NOTE1      = 'bankdata_note1';
-    const CONFIG_XML_FIELD_BANKDATA_NOTE2      = 'bankdata_note2';
-    const CONFIG_XML_FIELD_BANKDATA_ACCOUNTREF = 'bankdata_accountreference';
-
-
-    const CONFIG_XML_FIELD_CONTACT_NAME1 = 'contact_name1';
-    const CONFIG_XML_FIELD_CONTACT_NAME2 = 'contact_name2';
-    const CONFIG_XML_FIELD_CONTACT_NAME3 = 'contact_name3';
-    const CONFIG_XML_FIELD_CONTACT_STREETNAME = 'contact_streetname';
-    const CONFIG_XML_FIELD_CONTACT_STREETNUMBER = 'contact_streetnumber';
-    const CONFIG_XML_FIELD_CONTACT_ADDITION = 'contact_addition';
-    const CONFIG_XML_FIELD_CONTACT_DISPATCHINFO = 'contact_dispatchinfo';
-    const CONFIG_XML_FIELD_CONTACT_ZIP = 'contact_zip';
-    const CONFIG_XML_FIELD_CONTACT_CITY = 'contact_city';
-    const CONFIG_XML_FIELD_CONTACT_COUNTRYID = 'contact_countryid';
-    const CONFIG_XML_FIELD_CONTACT_REGION = 'contact_region';
-    const CONFIG_XML_FIELD_CONTACT_PHONE = 'contact_phone';
-    const CONFIG_XML_FIELD_CONTACT_EMAIL = 'contact_email';
-    const CONFIG_XML_FIELD_CONTACT_PERSON = 'contact_person';
+    public const CONFIG_XML_FIELD_BANKDATA_OWNER      = 'bankdata_owner';
+    public const CONFIG_XML_FIELD_BANKDATA_BANKNAME   = 'bankdata_bankname';
+    public const CONFIG_XML_FIELD_BANKDATA_IBAN       = 'bankdata_iban';
+    public const CONFIG_XML_FIELD_BANKDATA_BIC        = 'bankdata_bic';
+    public const CONFIG_XML_FIELD_BANKDATA_NOTE1      = 'bankdata_note1';
+    public const CONFIG_XML_FIELD_BANKDATA_NOTE2      = 'bankdata_note2';
+    public const CONFIG_XML_FIELD_BANKDATA_ACCOUNTREF = 'bankdata_accountreference';
 
 
-    const CONFIG_XML_FIELD_RETURN_USE_SHIPPER = 'returnshipment_use_shipper';
-    const CONFIG_XML_FIELD_RETURN_NAME1 = 'returnshipment_name1';
-    const CONFIG_XML_FIELD_RETURN_NAME2 = 'returnshipment_name2';
-    const CONFIG_XML_FIELD_RETURN_NAME3 = 'returnshipment_name3';
-    const CONFIG_XML_FIELD_RETURN_STREETNAME = 'returnshipment_streetname';
-    const CONFIG_XML_FIELD_RETURN_STREETNUMBER = 'returnshipment_streetnumber';
-    const CONFIG_XML_FIELD_RETURN_ADDITION = 'returnshipment_addition';
-    const CONFIG_XML_FIELD_RETURN_DISPATCHINFO = 'returnshipment_dispatchinfo';
-    const CONFIG_XML_FIELD_RETURN_ZIP = 'returnshipment_zip';
-    const CONFIG_XML_FIELD_RETURN_CITY = 'returnshipment_city';
-    const CONFIG_XML_FIELD_RETURN_COUNTRYID = 'returnshipment_countryid';
-    const CONFIG_XML_FIELD_RETURN_REGION = 'returnshipment_region';
-    const CONFIG_XML_FIELD_RETURN_PHONE = 'returnshipment_phone';
-    const CONFIG_XML_FIELD_RETURN_EMAIL = 'returnshipment_email';
-    const CONFIG_XML_FIELD_RETURN_PERSON = 'returnshipment_person';
+    public const CONFIG_XML_FIELD_CONTACT_NAME1 = 'contact_name1';
+    public const CONFIG_XML_FIELD_CONTACT_NAME2 = 'contact_name2';
+    public const CONFIG_XML_FIELD_CONTACT_NAME3 = 'contact_name3';
+    public const CONFIG_XML_FIELD_CONTACT_STREETNAME = 'contact_streetname';
+    public const CONFIG_XML_FIELD_CONTACT_STREETNUMBER = 'contact_streetnumber';
+    public const CONFIG_XML_FIELD_CONTACT_ADDITION = 'contact_addition';
+    public const CONFIG_XML_FIELD_CONTACT_DISPATCHINFO = 'contact_dispatchinfo';
+    public const CONFIG_XML_FIELD_CONTACT_ZIP = 'contact_zip';
+    public const CONFIG_XML_FIELD_CONTACT_CITY = 'contact_city';
+    public const CONFIG_XML_FIELD_CONTACT_COUNTRYID = 'contact_countryid';
+    public const CONFIG_XML_FIELD_CONTACT_REGION = 'contact_region';
+    public const CONFIG_XML_FIELD_CONTACT_PHONE = 'contact_phone';
+    public const CONFIG_XML_FIELD_CONTACT_EMAIL = 'contact_email';
+    public const CONFIG_XML_FIELD_CONTACT_PERSON = 'contact_person';
+
+
+    public const CONFIG_XML_FIELD_RETURN_USE_SHIPPER = 'returnshipment_use_shipper';
+    public const CONFIG_XML_FIELD_RETURN_NAME1 = 'returnshipment_name1';
+    public const CONFIG_XML_FIELD_RETURN_NAME2 = 'returnshipment_name2';
+    public const CONFIG_XML_FIELD_RETURN_NAME3 = 'returnshipment_name3';
+    public const CONFIG_XML_FIELD_RETURN_STREETNAME = 'returnshipment_streetname';
+    public const CONFIG_XML_FIELD_RETURN_STREETNUMBER = 'returnshipment_streetnumber';
+    public const CONFIG_XML_FIELD_RETURN_ADDITION = 'returnshipment_addition';
+    public const CONFIG_XML_FIELD_RETURN_DISPATCHINFO = 'returnshipment_dispatchinfo';
+    public const CONFIG_XML_FIELD_RETURN_ZIP = 'returnshipment_zip';
+    public const CONFIG_XML_FIELD_RETURN_CITY = 'returnshipment_city';
+    public const CONFIG_XML_FIELD_RETURN_COUNTRYID = 'returnshipment_countryid';
+    public const CONFIG_XML_FIELD_RETURN_REGION = 'returnshipment_region';
+    public const CONFIG_XML_FIELD_RETURN_PHONE = 'returnshipment_phone';
+    public const CONFIG_XML_FIELD_RETURN_EMAIL = 'returnshipment_email';
+    public const CONFIG_XML_FIELD_RETURN_PERSON = 'returnshipment_person';
 
     /**
      * @param mixed $store
@@ -68,10 +68,12 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         return $this->getStoreConfigFlag(self::CONFIG_XML_FIELD_RETURN_USE_SHIPPER, $store);
     }
 
+    // phpcs:disable Generic.Commenting.Todo.TaskFound
     /**
      * TODO(nr): do not create RequestData objects while reading from config.
      * instead, read plain values and convert prior to actual webservice call.
      */
+    // phpcs:enable Generic.Commenting.Todo.TaskFound
 
     /**
      * @return Shipper\Account
@@ -92,7 +94,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $participations = $this->getStoreConfig(self::CONFIG_XML_FIELD_PARTICIPATION);
         }
 
-        $participation = array();
+        $participation = [];
         foreach ($participations as $participationEntry) {
             $participation[$participationEntry['procedure']] = $participationEntry['participation'];
         }
@@ -101,7 +103,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $user,
             $signature,
             $ekp,
-            $participation
+            $participation,
         );
     }
 
@@ -110,7 +112,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
      * @param array $bankRefMap
      * @return Shipper\BankData
      */
-    public function getBankData($store = null, $bankRefMap = array())
+    public function getBankData($store = null, $bankRefMap = [])
     {
         $accountOwner = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_OWNER, $store);
         $bankName     = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_BANKNAME, $store);
@@ -120,10 +122,10 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $noteTwo      = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_NOTE2, $store);
         $accountRef   = $this->getStoreConfig(self::CONFIG_XML_FIELD_BANKDATA_ACCOUNTREF, $store);
 
-        foreach ($bankRefMap as $key => $replace){
-            $noteOne = str_replace($key, $replace, $noteOne);
-            $noteTwo = str_replace($key, $replace, $noteTwo);
-            $accountRef = str_replace($key, $replace, $accountRef);
+        foreach ($bankRefMap as $key => $replace) {
+            $noteOne = str_replace($key, (string) $replace, (string) $noteOne);
+            $noteTwo = str_replace($key, (string) $replace, (string) $noteTwo);
+            $accountRef = str_replace($key, (string) $replace, (string) $accountRef);
         }
 
         return new Shipper\BankData(
@@ -133,7 +135,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $bic,
             $noteOne,
             $noteTwo,
-            $accountRef
+            $accountRef,
         );
     }
 
@@ -178,7 +180,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $state,
             $phone,
             $email,
-            $contactPerson
+            $contactPerson,
         );
     }
 
@@ -227,7 +229,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $state,
             $phone,
             $email,
-            $contactPerson
+            $contactPerson,
         );
     }
 
@@ -241,7 +243,7 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
             $this->getAccountSettings(),
             $this->getBankData($store),
             $this->getContact($store),
-            $this->getReturnReceiver($store)
+            $this->getReturnReceiver($store),
         );
     }
 
@@ -273,5 +275,15 @@ class Dhl_Versenden_Model_Config_Shipper extends Dhl_Versenden_Model_Config
         $accountSettings = $this->getAccountSettings();
 
         return $accountSettings->getUser() . ':' . $accountSettings->getSignature();
+    }
+
+    /**
+     * Get DHL REST API App Token
+     *
+     * @return string
+     */
+    public function getAppToken()
+    {
+        return $this->getStoreConfig(self::CONFIG_XML_PATH_APP_TOKEN);
     }
 }

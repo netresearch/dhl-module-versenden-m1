@@ -39,10 +39,10 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Grid extends Mage_Adminhtml_Bloc
         }
 
         $collection->join(
-            array('status' => 'dhl_versenden/label_status'),
+            ['status' => 'dhl_versenden/label_status'],
             'main_table.entity_id = status.order_id',
-            array('status_code')
+            ['status_code'],
         );
-        $collection->addFieldToFilter('status_code', array('eq' => $value));
+        $collection->addFieldToFilter('status_code', ['eq' => $value]);
     }
 }

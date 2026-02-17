@@ -67,10 +67,10 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
         $serviceBlock = Mage::app()->getLayout()->createBlock(
             'dhl_versenden/checkout_onepage_shipping_method_service',
             'dhl_versenden_service',
-            array(
+            [
                 'template'    => 'dhl_versenden/checkout/shipping_services.phtml',
                 'module_name' => 'Dhl_Versenden',
-            )
+            ],
         );
 
         $transport = $observer->getTransport();
@@ -102,7 +102,7 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
             ->createBlock(
                 'dhl_versenden/config_service',
                 'dhl_services',
-                array('template' => 'dhl_versenden/config/services.phtml')
+                ['template' => 'dhl_versenden/config/services.phtml'],
             );
 
         $html = str_replace('</dd>', $block->toHtml() . '</dd>', $transportHtml);
@@ -131,10 +131,10 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
 
         /** @var Mage_Core_Controller_Request_Http $request */
         $request       = $observer->getRequest();
-        $serviceInfo   = array(
-            'shipment_service' => $request->getPost('shipment_service', array()),
-            'service_setting'  => $request->getPost('service_setting', array()),
-        );
+        $serviceInfo   = [
+            'shipment_service' => $request->getPost('shipment_service', []),
+            'service_setting'  => $request->getPost('service_setting', []),
+        ];
 
         // Set the billing address mail address as fallback if the shipping address has none
         if (!$shippingAddress->getData('email')) {
@@ -156,11 +156,17 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
         $requests = $observer->getEvent()->getData('shipment_requests');
         foreach ($requests as $request) {
             $services = $request->getData('services');
+
+            // Skip validation if no services or service settings provided
+            if (!$services || !isset($services['service_setting'])) {
+                continue;
+            }
+
             $serviceSettings = $services['service_setting'];
-            $keys = array(
-                \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE,
-                \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE
-            );
+            $keys = [
+                \Dhl\Versenden\ParcelDe\Service\PreferredLocation::CODE,
+                \Dhl\Versenden\ParcelDe\Service\PreferredNeighbour::CODE,
+            ];
             foreach ($keys as $key) {
                 if (array_key_exists($key, $serviceSettings)) {
                     $this->checkValue($serviceSettings[$key], $key);
@@ -176,9 +182,9 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
      */
     public function checkValue($value, $key)
     {
-        $pattern = '/\bPaketbox|\bPackstation|\bPostfach|\bPostfiliale|\bFiliale|\bPostfiliale Direkt|'.'
-                    \bFiliale Direkt|\bPaketkasten|\bDHL|\bP-A-C-K-S-T-A-T-I-O-N|\bPaketstation|\bPack Station|'.'
-                    \bP.A.C.K.S.T.A.T.I.O.N.|\bPakcstation|\bPaackstation|\bPakstation|\bBackstation|\bBakstation|'.'
+        $pattern = '/\bPaketbox|\bPackstation|\bPostfach|\bPostfiliale|\bFiliale|\bPostfiliale Direkt|' . '
+                    \bFiliale Direkt|\bPaketkasten|\bDHL|\bP-A-C-K-S-T-A-T-I-O-N|\bPaketstation|\bPack Station|' . '
+                    \bP.A.C.K.S.T.A.T.I.O.N.|\bPakcstation|\bPaackstation|\bPakstation|\bBackstation|\bBakstation|' . '
                     \bP A C K S T A T I O N|\bWunschfiliale|\bDeutsche Post/';
         $patternSpec = "/[+[\]\'\;,.\/{}|\":<>?~\\\\]/";
         preg_match($pattern, $value, $matchWords);

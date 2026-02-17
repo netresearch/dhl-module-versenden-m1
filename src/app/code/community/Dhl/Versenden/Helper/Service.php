@@ -6,8 +6,8 @@
 
 class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
 {
-    const PREFERRED_SERVICE_ANY_ENABLED = 'is_dhl_preferred_neighbor_or_location_enabled';
-    const PREFERRED_SERVICE_ALL_ENABLED = 'is_dhl_preferred_neighbor_and_location_enabled';
+    public const PREFERRED_SERVICE_ANY_ENABLED = 'is_dhl_preferred_neighbor_or_location_enabled';
+    public const PREFERRED_SERVICE_ALL_ENABLED = 'is_dhl_preferred_neighbor_and_location_enabled';
 
     /**
      * Obtain condition flag for use in layout.
@@ -50,8 +50,8 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
         /** @var Dhl_Versenden_Model_Config_Service $config */
         $config = Mage::getModel('dhl_versenden/config_service');
         $services = $config->getEnabledServices(Mage::app()->getStore()->getStoreId())->getItems();
-        $location = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE;
-        $neighbour = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE;
+        $location = \Dhl\Versenden\ParcelDe\Service\PreferredLocation::CODE;
+        $neighbour = \Dhl\Versenden\ParcelDe\Service\PreferredNeighbour::CODE;
         if (array_key_exists($location, $services) || array_key_exists($neighbour, $services)) {
             return true;
         }
@@ -70,8 +70,8 @@ class Dhl_Versenden_Helper_Service extends Mage_Core_Helper_Abstract
         /** @var Dhl_Versenden_Model_Config_Service $config */
         $config = Mage::getModel('dhl_versenden/config_service');
         $services = $config->getEnabledServices(Mage::app()->getStore()->getStoreId())->getItems();
-        $location = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredLocation::CODE;
-        $neighbour = \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredNeighbour::CODE;
+        $location = \Dhl\Versenden\ParcelDe\Service\PreferredLocation::CODE;
+        $neighbour = \Dhl\Versenden\ParcelDe\Service\PreferredNeighbour::CODE;
         if (array_key_exists($location, $services) && array_key_exists($neighbour, $services)) {
             return true;
         }

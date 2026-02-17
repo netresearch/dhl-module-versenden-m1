@@ -4,10 +4,9 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest extends EcomDev_PHPUnit_Test_Case
 {
-    const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_customs';
+    public const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_customs';
 
     protected function mockCustomsBlock()
     {
@@ -21,9 +20,9 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         $shipment->setStoreId(1);
         $shipment->setOrder($order);
 
-        $editBlockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getShipment', 'fetchView'));
+        $editBlockMock = $this->getBlockMock(self::BLOCK_ALIAS, ['getShipment', 'fetchView']);
         $editBlockMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getShipment')
             ->willReturn($shipment);
         $this->replaceByMock('block', self::BLOCK_ALIAS, $editBlockMock);
@@ -37,7 +36,7 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         $shipment = 'foo';
         Mage::register('current_shipment', $shipment);
         $block = new Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs();
-        $this->assertSame($shipment, $block->getShipment());
+        static::assertSame($shipment, $block->getShipment());
         Mage::unregister('current_shipment');
     }
 
@@ -48,32 +47,32 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
     {
         $fooTerm = 'foo';
         $barTerm = 'bar';
-        $carrierTerms = array(
+        $carrierTerms = [
             $fooTerm => $fooTerm,
             $barTerm => $barTerm,
-        );
+        ];
 
-        $carrierMock = $this->getModelMock('dhl_versenden/shipping_carrier_versenden', array('getCode'));
+        $carrierMock = $this->getModelMock('dhl_versenden/shipping_carrier_versenden', ['getCode']);
         $carrierMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getCode')
-            ->with($this->equalTo('terms_of_trade'))
+            ->with(static::equalTo('terms_of_trade'))
             ->willReturn($carrierTerms);
         $this->replaceByMock('singleton', 'dhl_versenden/shipping_carrier_versenden', $carrierMock);
 
         /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs_Edit $block */
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
         $blockTerms = $block->getTermsOfTrade();
-        $this->assertInternalType('array', $blockTerms);
-        $this->assertCount(1 + count($carrierTerms), $blockTerms);
+        static::assertIsArray($blockTerms);
+        static::assertCount(1 + count($carrierTerms), $blockTerms);
 
 
         foreach ($blockTerms as $blockTerm) {
-            $this->assertArrayHasKey('value', $blockTerm);
-            $this->assertArrayHasKey('label', $blockTerm);
+            static::assertArrayHasKey('value', $blockTerm);
+            static::assertArrayHasKey('label', $blockTerm);
 
             if ($blockTerm['value']) {
-                $this->assertContains($blockTerm['value'], $carrierTerms);
+                static::assertContains($blockTerm['value'], $carrierTerms);
             }
         }
     }
@@ -92,6 +91,6 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_CustomsTest
         $block = Mage::app()->getLayout()->createBlock(self::BLOCK_ALIAS);
         $block->getShipment()->getOrder()->setBaseCurrencyCode($currencyCode);
 
-        $this->assertEquals($currencyCode, $block->getCustomValueCurrencyCode());
+        static::assertEquals($currencyCode, $block->getCustomValueCurrencyCode());
     }
 }

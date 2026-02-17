@@ -1,0 +1,51 @@
+scope:
+  store:
+    # Store 1: Both location AND neighbour enabled
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: store_both_enabled
+      name: Store Both Enabled
+      is_active: 1
+    # Store 2: Only location enabled
+    - store_id: 2
+      website_id: 1
+      group_id: 1
+      code: store_location_only
+      name: Store Location Only
+      is_active: 1
+    # Store 3: Only neighbour enabled
+    - store_id: 3
+      website_id: 1
+      group_id: 1
+      code: store_neighbour_only
+      name: Store Neighbour Only
+      is_active: 1
+    # Store 4: Neither enabled
+    - store_id: 4
+      website_id: 1
+      group_id: 1
+      code: store_neither
+      name: Store Neither
+      is_active: 1
+
+config:
+  # Base config - DHL active
+  default/carriers/dhlversenden/active: "1"
+  default/shipping/origin/country_id: "DE"
+
+  # Store 1: Both services enabled
+  stores/store_both_enabled/carriers/dhlversenden/service_preferredlocation_enabled: "1"
+  stores/store_both_enabled/carriers/dhlversenden/service_preferredneighbour_enabled: "1"
+
+  # Store 2: Only location enabled
+  stores/store_location_only/carriers/dhlversenden/service_preferredlocation_enabled: "1"
+  stores/store_location_only/carriers/dhlversenden/service_preferredneighbour_enabled: "0"
+
+  # Store 3: Only neighbour enabled
+  stores/store_neighbour_only/carriers/dhlversenden/service_preferredlocation_enabled: "0"
+  stores/store_neighbour_only/carriers/dhlversenden/service_preferredneighbour_enabled: "1"
+
+  # Store 4: Neither enabled
+  stores/store_neither/carriers/dhlversenden/service_preferredlocation_enabled: "0"
+  stores/store_neither/carriers/dhlversenden/service_preferredneighbour_enabled: "0"

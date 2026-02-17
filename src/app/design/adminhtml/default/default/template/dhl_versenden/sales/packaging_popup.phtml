@@ -23,7 +23,9 @@ document.observe("dom:loaded", function() {
         var serviceContainer = $('packaging-dhlversenden-services');
         if (serviceContainer) {
             serviceContainer.select('input[type=checkbox]', 'input[type=text]', 'select', 'input[type=radio]:checked').each(function (elm) {
-                this[elm.name] = elm.getValue();
+                if (!elm.disabled || elm.readAttribute('data-locked')) {
+                    this[elm.name] = elm.getValue();
+                }
             }, requestData);
         }
 
@@ -83,6 +85,10 @@ document.observe("dom:loaded", function() {
             packaging.confirmPackaging();
         }
     };
+
+    // Initialize service compatibility engine
+    var dhlCompatibilityRules = <?php echo $this->getCompatibilityRulesJson() ?>;
+    new DhlServiceCompatibility(dhlCompatibilityRules);
 });
 //]]>
 </script>
@@ -146,6 +152,7 @@ document.observe("dom:loaded", function() {
                             </select>
                         </td>
                         <?php $customsValueValidation = $this->displayCustomsValue() ? 'validate-zero-or-greater' : '' ?>
+                        <?php $dimensionRequired = $this->displayCustomsValue() ? 'required-entry ' : '' ?>
                         <td <?php echo $customsValueStyle ?>>
                             <input id="package_customs_value"
                                    type="text"
@@ -171,13 +178,13 @@ document.observe("dom:loaded", function() {
                             </select>
                         </td>
                         <td>
-                            <input type="text" class="input-text validate-greater-than-zero" name="container_length" />
+                            <input type="text" class="input-text <?php echo $dimensionRequired ?>validate-greater-than-zero" name="container_length" />
                         </td>
                         <td>
-                            <input type="text" class="input-text validate-greater-than-zero" name="container_width" />
+                            <input type="text" class="input-text <?php echo $dimensionRequired ?>validate-greater-than-zero" name="container_width" />
                         </td>
                         <td>
-                            <input type="text" class="input-text validate-greater-than-zero" name="container_height" />
+                            <input type="text" class="input-text <?php echo $dimensionRequired ?>validate-greater-than-zero" name="container_height" />
                         </td>
                         <td>
                             <select name="container_dimension_units"

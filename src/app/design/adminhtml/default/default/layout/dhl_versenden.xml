@@ -16,6 +16,9 @@
             <action method="addJs">
                 <script>dhl_versenden/validationSpecial.js</script>
             </action>
+            <action method="addJs">
+                <script>dhl_versenden/serviceCompatibility.js</script>
+            </action>
         </reference>
 
         <reference name="form">

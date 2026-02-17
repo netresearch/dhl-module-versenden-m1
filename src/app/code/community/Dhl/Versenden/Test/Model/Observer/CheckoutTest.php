@@ -8,13 +8,14 @@ use Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service as ServiceBlock
 
 class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Test_Case
 {
-    public function setUp()
+    public function setUp(): void
     {
         $mockQuote = $this->getModelMockBuilder('sales/quote')
             ->disableOriginalConstructor()
             ->getMock();
         $mockSession = $this->getModelMockBuilder('customer/session')
             ->disableOriginalConstructor()
+            ->addMethods(['getQuote'])
             ->getMock();
         $mockSession->method('getQuote')->willReturn($mockQuote);
         $this->replaceByMock('singleton', 'customer/session', $mockSession);
@@ -32,11 +33,11 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $blockType = 'dhl_versenden/checkout_onepage_shipping_method_service';
 
         /** @var ServiceBlock|PHPUnit_Framework_MockObject_MockObject $blockMock */
-        $blockMock = $this->getBlockMock($blockType, array('renderView'), false, array(), '', false);
+        $blockMock = $this->getBlockMock($blockType, ['renderView'], false, [], '', false);
         $blockMock->setTemplate('dhl_versenden/checkout/shipping_services.phtml');
 
         $blockMock
-            ->expects($render ? $this->any() : $this->never())
+            ->expects($render ? static::any() : static::never())
             ->method('renderView')
             ->willReturn($serviceBlockHtml);
 
@@ -73,8 +74,8 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observer);
 
-        $this->assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
-        $this->assertStringEndsWith($serviceBlockHtml, $transport->getHtml());
+        static::assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
+        static::assertStringEndsWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**
@@ -107,8 +108,8 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observer);
 
-        $this->assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
-        $this->assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
+        static::assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
+        static::assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**
@@ -141,8 +142,8 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observer);
 
-        $this->assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
-        $this->assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
+        static::assertStringStartsWith($shippingMethodsBlockHtml, $transport->getHtml());
+        static::assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
     }
     /**
      * Make sure that the Wunschpaket services block is *not* appended if
@@ -175,8 +176,8 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->appendServices($observer);
 
-        $this->assertStringStartsWith($shippingMethodsAdditionalBlockHtml, $transport->getHtml());
-        $this->assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
+        static::assertStringStartsWith($shippingMethodsAdditionalBlockHtml, $transport->getHtml());
+        static::assertStringEndsNotWith($serviceBlockHtml, $transport->getHtml());
     }
 
     /**
@@ -193,28 +194,31 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
 
         // two settings, only one actually enabled
         $requestMock = $this->getMockBuilder('Mage_Core_Controller_Request_Http')
-            ->setMethods(array('getPost'))
+            ->setMethods(['getPost'])
             ->getMock();
         $requestMock
-            ->expects($this->exactly(2))
+            ->expects(static::exactly(2))
             ->method('getPost')
-            ->withConsecutive($this->equalTo('shipment_service'), $this->equalTo('service_setting'))
+            ->withConsecutive(
+                [static::equalTo('shipment_service')],
+                [static::equalTo('service_setting')],
+            )
             ->willReturnMap(
-                array(
-                    array('shipment_service', array(), array(
-                        $parcelAnnouncement => $parcelAnnouncement
-                    )),
-                    array('service_setting', array(), array(
-                    ))
-                )
+                [
+                    ['shipment_service', [], [
+                        $parcelAnnouncement => $parcelAnnouncement,
+                    ]],
+                    ['service_setting', [], [
+                    ]],
+                ],
             );
 
         /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
         $observerMock = $this->getMockBuilder('Varien_Event_Observer')
-            ->setMethods(array('getRequest'))
+            ->setMethods(['getRequest'])
             ->getMock();
         $observerMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getRequest')
             ->willReturn($requestMock);
 
@@ -229,13 +233,13 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $dhlObserver = new Dhl_Versenden_Model_Observer_Services();
         $dhlObserver->saveShippingSettings($observerMock);
 
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $quote->getShippingAddress()->getData('dhl_versenden_info');
-        $this->assertInstanceOf('\Dhl\Versenden\Bcs\Api\Info', $versendenInfo);
-        $this->assertTrue($versendenInfo->getServices()->parcelAnnouncement);
-        $this->assertNull($versendenInfo->getServices()->preferredNeighbour);
-        $this->assertEquals($addressCompany, $versendenInfo->getReceiver()->name2);
-        $this->assertNotEmpty($versendenInfo->getReceiver()->email);
+        static::assertInstanceOf('\Dhl\Versenden\ParcelDe\Info', $versendenInfo);
+        static::assertTrue($versendenInfo->getServices()->parcelAnnouncement);
+        static::assertNull($versendenInfo->getServices()->preferredNeighbour);
+        static::assertEquals($addressCompany, $versendenInfo->getReceiver()->name2);
+        static::assertNotEmpty($versendenInfo->getReceiver()->email);
     }
 
     /**
@@ -251,10 +255,10 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
 
         /** @var Varien_Event_Observer|PHPUnit_Framework_MockObject_MockObject $observerMock */
         $observerMock = $this->getMockBuilder('Varien_Event_Observer')
-            ->setMethods(array('getRequest'))
+            ->setMethods(['getRequest'])
             ->getMock();
         $observerMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('getRequest');
         $observerMock->setQuote($quote);
 
@@ -276,9 +280,9 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $order->setShippingMethod("{$fooCarrier}_{$method}");
         $observer->setOrder($order);
 
-        $configMock = $this->getModelMock('dhl_versenden/config_shipment', array('canProcessMethod'));
+        $configMock = $this->getModelMock('dhl_versenden/config_shipment', ['canProcessMethod']);
         $configMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('canProcessMethod')
             ->willReturnOnConsecutiveCalls(false, true);
         $this->replaceByMock('model', 'dhl_versenden/config_shipment', $configMock);
@@ -286,9 +290,9 @@ class Dhl_Versenden_Test_Model_Observer_CheckoutTest extends EcomDev_PHPUnit_Tes
         $dhlObserver = new Dhl_Versenden_Model_Observer();
 
         $dhlObserver->updateCarrier($observer);
-        $this->assertEquals("{$fooCarrier}_{$method}", $observer->getOrder()->getShippingMethod());
+        static::assertEquals("{$fooCarrier}_{$method}", $observer->getOrder()->getShippingMethod());
 
         $dhlObserver->updateCarrier($observer);
-        $this->assertEquals("{$dhlCarrier}_{$method}", $observer->getOrder()->getShippingMethod());
+        static::assertEquals("{$dhlCarrier}_{$method}", $observer->getOrder()->getShippingMethod());
     }
 }

@@ -4,46 +4,63 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
-use \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection;
-use \Mage_Checkout_Block_Onepage_Abstract as Onepage_Abstract;
+use Dhl\Versenden\ParcelDe\Service;
+use Dhl\Versenden\ParcelDe\Service\Collection;
+use Mage_Checkout_Block_Onepage_Abstract as Onepage_Abstract;
 
 /**
  * See LICENSE.md for license details.
  */
 class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepage_Abstract
 {
+    private const HEADLINES = [
+        Service\NoNeighbourDelivery::CODE => 'No Neighbour Delivery: Discreet Dispatch',
+        Service\GoGreenPlus::CODE         => 'GoGreen Plus: Climate Neutral Shipping',
+        Service\ParcelAnnouncement::CODE  => 'Parcel Announcement: Shipment status notifications',
+        Service\ClosestDropPoint::CODE    => 'Closest Drop Point: Delivery to your nearest drop-off point',
+    ];
+
+    private const HINTS = [
+        Service\PreferredDay::CODE        => 'Choose one of the displayed days as your delivery day for your parcel delivery. Other days are not possible due to delivery processes.',
+        Service\PreferredLocation::CODE   => 'Choose a weather-protected and non-visible place on your property where we can deposit the parcel in your absence.',
+        Service\PreferredNeighbour::CODE  => 'Determine a person in your immediate neighborhood whom we can hand out your parcel. This person should live in the same building, directly opposite or next door.',
+        Service\NoNeighbourDelivery::CODE => 'Your parcel will only be delivered to you personally. No delivery to neighbors will take place.',
+        Service\GoGreenPlus::CODE         => 'Ship your parcel climate-neutrally with GoGreen Plus. DHL offsets the CO2 emissions generated during transport.',
+        Service\ParcelAnnouncement::CODE  => 'DHL will notify the recipient about the shipment status via email.',
+        Service\ClosestDropPoint::CODE    => 'Your parcel will be delivered to the nearest drop-off point. You will be notified about the exact location.',
+    ];
+
     /**
      * @var Dhl_Versenden_Model_Config
      */
-    private $config;
+    protected $config;
 
     /**
      * @var Dhl_Versenden_Model_Config_Service
      */
-    private $serviceConfig;
+    protected $serviceConfig;
 
     /**
      * @var Dhl_Versenden_Model_Config_Shipment
      */
-    private $shipmentConfig;
+    protected $shipmentConfig;
 
     /**
      * @var Dhl_Versenden_Helper_Data
      */
-    private $helper;
+    protected $helper;
 
     /**
      * @var Dhl_Versenden_Model_Services_Processor
      */
-    private $serviceProcessor;
+    protected $serviceProcessor;
 
     /**
      * Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service constructor.
      *
      * @param array $args
      */
-    public function __construct(array $args = array())
+    public function __construct(array $args = [])
     {
         $this->config = Mage::getModel('dhl_versenden/config');
         $this->serviceConfig = Mage::getModel('dhl_versenden/config_service');
@@ -51,7 +68,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
         $this->helper = $this->helper('dhl_versenden/data');
         $this->serviceProcessor = Mage::getModel(
             'dhl_versenden/services_processor',
-            array('quote' => $this->getQuote())
+            ['quote' => $this->getQuote()],
         );
 
         parent::__construct($args);
@@ -76,7 +93,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
             $recipientCountry,
             $isPostalFacility,
             true,
-            $storeId
+            $storeId,
         );
 
         return $this->serviceProcessor->processServices($availableServices);
@@ -117,6 +134,19 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     }
 
     /**
+     * Obtain checkout headline for service grouping display.
+     *
+     * @param string $serviceCode
+     * @return string
+     */
+    public function getServiceHeadline($serviceCode)
+    {
+        $msg = self::HEADLINES[$serviceCode] ?? '';
+
+        return $msg ? $this->__($msg) : '';
+    }
+
+    /**
      * Obtain Frontend Service hint based on service code.
      *
      * @param string $serviceCode
@@ -124,22 +154,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
      */
     public function getServiceHint($serviceCode)
     {
-        switch ($serviceCode) {
-            case Service\PreferredDay::CODE:
-                $msg = 'Choose one of the displayed days as your delivery day for your parcel delivery.'
-                    . ' Other days are not possible due to delivery processes.';
-                break;
-            case Service\PreferredLocation::CODE:
-                $msg = 'Choose a weather-protected and non-visible place on your property'
-                    . ' where we can deposit the parcel in your absence.';
-                break;
-            case Service\PreferredNeighbour::CODE:
-                $msg = 'Determine a person in your immediate neighborhood whom we can hand out your parcel.'
-                    . ' This person should live in the same building, directly opposite or next door.';
-                break;
-            default:
-                $msg = '';
-        }
+        $msg = self::HINTS[$serviceCode] ?? '';
 
         return $msg ? $this->__($msg) : '';
     }
@@ -154,17 +169,44 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
      */
     public function getServiceFeeText($serviceCode)
     {
-        /** @var DHL_Versenden_Model_Config_Service $serviceConfig */
-        $serviceConfig = Mage::getModel('dhl_versenden/config_service');
         switch ($serviceCode) {
             case Service\PreferredDay::CODE:
-                $msg = $serviceConfig->getPrefDayHandlingFeeText($this->getQuote()->getStoreId());
+                $msg = $this->serviceConfig->getPrefDayHandlingFeeText($this->getQuote()->getStoreId());
+                break;
+            case Service\ClosestDropPoint::CODE:
+                $msg = $this->serviceConfig->getCdpHandlingFeeText($this->getQuote()->getStoreId());
+                break;
+            case Service\NoNeighbourDelivery::CODE:
+                $msg = $this->serviceConfig->getNoNeighbourDeliveryHandlingFeeText($this->getQuote()->getStoreId());
+                break;
+            case Service\GoGreenPlus::CODE:
+                $msg = $this->serviceConfig->getGoGreenHandlingFeeText($this->getQuote()->getStoreId());
                 break;
             default:
                 $msg = '';
         }
 
-        return $msg ? $this->__($msg): '';
+        return $msg ? $this->__($msg) : '';
+    }
+
+    /**
+     * Inject a tooltip icon into a label HTML element.
+     *
+     * @param string $html  Label HTML containing a closing </label> tag
+     * @param string $tooltip  Tooltip text (empty string = no injection)
+     * @return string
+     */
+    public function injectTooltip($html, $tooltip)
+    {
+        if ($tooltip === '') {
+            return $html;
+        }
+
+        return str_replace(
+            '</label>',
+            sprintf('<i class="tooltip-inner" data-tooltip="%s">?</i></label>', $tooltip),
+            $html,
+        );
     }
 
     /**
@@ -184,28 +226,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
 
 
     /**
-     * @param string $html
-     * @param string $serviceCode
-     * @return string
-     */
-    public function addNoneOption($html, $serviceCode)
-    {
-        $span = $serviceCode === Service\PreferredDay::CODE ? '<span>-</span>' : '';
-        $title = $serviceCode === Service\PreferredDay::CODE ? 'no day' : 'no time';
-        $noneOption = '<div>'.
-            '<input type="radio" name="service_setting['.$serviceCode.']" '.
-            'id="shipment_service_'.$serviceCode.'_none" value="" checked="checked">'.
-            '<label for="shipment_service_'.$serviceCode.'_none" '.
-            'title="'.$this->helper('dhl_versenden/data')->__($title).'">'.
-            $span.
-            '<span>'.$this->helper('dhl_versenden/data')->__($title).'</span></label>'.
-            '</div>';
-
-        return $noneOption.$html;
-    }
-
-    /**
-     * @param \Dhl\Versenden\Bcs\Api\Info $versendenInfo
+     * @param \Dhl\Versenden\ParcelDe\Info $versendenInfo
      *
      * @return boolean
      */

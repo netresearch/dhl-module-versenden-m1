@@ -192,6 +192,16 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_unitofmeasure>
+                        <shipment_printformat>
+                            <label>Label Print Format</label>
+                            <tooltip>Select the format for shipping label printing. Different formats support different label sizes and printer types.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_printformat</source_model>
+                            <sort_order>325</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_printformat>
                         <shipment_dhlmethods>
                             <label>Shipping Methods for DHL Versenden</label>
                             <tooltip>Select shipping methods for rate calculation in checkout.</tooltip>
@@ -242,6 +252,114 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </service_preferredneighbour_enabled>
+                        <service_noneighbourdelivery_enabled>
+                            <label>Enable No Neighbour Delivery</label>
+                            <tooltip>Allow customers to request that their parcel is not delivered to a neighbour during checkout. Only available for domestic DE shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>441</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </service_noneighbourdelivery_enabled>
+                        <service_noneighbourdelivery_handling_fee>
+                            <label>Adjustment charge for No Neighbour Delivery</label>
+                            <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
+                            <comment>The given charge will be applied to the shipping costs at checkout. A negative amount reduces the shipping cost. Set to '0' to offer the service for free.</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number required-entry</validate>
+                            <sort_order>442</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <service_noneighbourdelivery_enabled>1</service_noneighbourdelivery_enabled>
+                            </depends>
+                        </service_noneighbourdelivery_handling_fee>
+                        <service_noneighbourdelivery_handling_fee_text>
+                            <label>No Neighbour Delivery handling fee text</label>
+                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>443</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <service_noneighbourdelivery_enabled>1</service_noneighbourdelivery_enabled>
+                            </depends>
+                        </service_noneighbourdelivery_handling_fee_text>
+                        <service_gogreen_enabled>
+                            <label>Enable GoGreen Plus</label>
+                            <tooltip>Allow customers to request climate-neutral shipping during checkout. Only available for domestic DE shipments. Note: If default commissioning is enabled in the DHL business customer portal, this service is applied automatically regardless of this setting.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>444</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </service_gogreen_enabled>
+                        <service_gogreen_handling_fee>
+                            <label>Adjustment charge for GoGreen Plus</label>
+                            <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
+                            <comment>The given charge will be applied to the shipping costs at checkout. A negative amount reduces the shipping cost. Set to '0' to offer the service for free.</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number required-entry</validate>
+                            <sort_order>445</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <service_gogreen_enabled>1</service_gogreen_enabled>
+                            </depends>
+                        </service_gogreen_handling_fee>
+                        <service_gogreen_handling_fee_text>
+                            <label>GoGreen Plus handling fee text</label>
+                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>446</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <service_gogreen_enabled>1</service_gogreen_enabled>
+                            </depends>
+                        </service_gogreen_handling_fee_text>
+                        <service_closestdroppoint_enabled>
+                            <label>Enable Closest Drop Point</label>
+                            <tooltip>Allow customers to request delivery to the nearest drop-off point during checkout. Available for shipments to supported European countries.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>447</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </service_closestdroppoint_enabled>
+                        <service_closestdroppoint_handling_fee>
+                            <label>Adjustment charge for Closest Drop Point</label>
+                            <tooltip>Insert gross value for surcharge. Insert 0 to offer service for free.</tooltip>
+                            <comment>The given charge will be applied to the shipping costs at checkout. A negative amount reduces the shipping cost. Set to '0' to offer the service for free.</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>validate-number required-entry</validate>
+                            <sort_order>448</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <service_closestdroppoint_enabled>1</service_closestdroppoint_enabled>
+                            </depends>
+                        </service_closestdroppoint_handling_fee>
+                        <service_closestdroppoint_handling_fee_text>
+                            <label>Closest Drop Point handling fee text</label>
+                            <tooltip><![CDATA[Use <em>$1</em> as placeholder to insert value and currency in string.]]></tooltip>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>449</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <service_closestdroppoint_enabled>1</service_closestdroppoint_enabled>
+                            </depends>
+                        </service_closestdroppoint_handling_fee_text>
                         <service_parcelannouncement_enabled>
                             <label>Automatic Parcel Announcement</label>
                             <tooltip><![CDATA[When service is applied, the buyer's email address will be transmitted to DHL.]]></tooltip>
@@ -410,6 +528,76 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </shipment_autocreate_service_bulkygoods>
+                        <shipment_autocreate_service_noneighbourdelivery>
+                            <label>No Neighbour Delivery</label>
+                            <tooltip>Book the service No Neighbour Delivery with automated shipment orders. Only available for domestic DE shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>641</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_noneighbourdelivery>
+                        <shipment_autocreate_service_namedpersononly>
+                            <label>Named Person Only</label>
+                            <tooltip>Book the service Named Person Only with automated shipment orders. Only available for domestic DE shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>642</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_namedpersononly>
+                        <shipment_autocreate_service_signedforbyrecipient>
+                            <label>Signed For By Recipient</label>
+                            <tooltip>Book the service Signed For By Recipient with automated shipment orders. Only available for domestic DE shipments.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>643</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_signedforbyrecipient>
+                        <shipment_autocreate_service_endorsement>
+                            <label>Endorsement</label>
+                            <tooltip>Select the default endorsement action for international shipments. RETURN sends undeliverable parcels back, ABANDON disposes them.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_service_endorsement</source_model>
+                            <sort_order>645</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_endorsement>
+                        <shipment_autocreate_service_deliverytype>
+                            <label>Delivery Type</label>
+                            <tooltip>Select the default delivery type for international shipments. Economy or Premium.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>dhl_versenden/adminhtml_system_config_source_service_deliverytype</source_model>
+                            <sort_order>646</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_deliverytype>
+                        <shipment_autocreate_service_postaldeliverydutypaid>
+                            <label>Postal Delivery Duty Paid (PDDP)</label>
+                            <tooltip>Book the PDDP service for international shipments. Available for CH, GB, NO, US destinations.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>647</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_postaldeliverydutypaid>
+                        <shipment_autocreate_service_deliverylocation>
+                            <label>Delivery Location (Post Number)</label>
+                            <tooltip>Book the Delivery Location service with automated shipment orders.</tooltip>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>649</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </shipment_autocreate_service_deliverylocation>
                         <shipment_autocreate_service_parceloutletrouting>
                             <label>Parcel Outlet Routing</label>
                             <tooltip>Book the service Parcel Outlet Routing with automated shipment orders.</tooltip>

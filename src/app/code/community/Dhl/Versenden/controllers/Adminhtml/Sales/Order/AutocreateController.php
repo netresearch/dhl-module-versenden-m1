@@ -6,9 +6,9 @@
 
 class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Adminhtml_Controller_Action
 {
-    const MESSAGE_NO_APPLICABLE_ORDERS = 'Orders could not be processed with DHL Versenden.';
-    const MESSAGE_LABELS_CREATED = '%d labels were created for %d orders.';
-    const MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
+    public const MESSAGE_NO_APPLICABLE_ORDERS = 'Orders could not be processed with DHL Versenden.';
+    public const MESSAGE_LABELS_CREATED = '%d labels were created for %d orders.';
+    public const MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
 
     /**
      * MassAction for Label Creation
@@ -18,7 +18,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
         $orderIds = $this->getRequest()->getParam('order_ids');
         /** @var Dhl_Versenden_Model_Resource_Autocreate_Collection $collection */
         $collection = Mage::getResourceModel('dhl_versenden/autocreate_collection');
-        $collection->addFieldToFilter('entity_id', array('in' => $orderIds));
+        $collection->addFieldToFilter('entity_id', ['in' => $orderIds]);
         $collection->addShippingMethodFilter();
         $collection->addShipmentFilter();
 
@@ -32,11 +32,11 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
         $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
         $config = Mage::getModel('dhl_versenden/config');
         /** @var Dhl_Versenden_Model_Log $dhlLogger */
-        $dhlLogger = Mage::getSingleton('dhl_versenden/log', array('config' => $config));
+        $dhlLogger = Mage::getSingleton('dhl_versenden/log', ['config' => $config]);
         $dhlLogger->setLogger($psrLogger);
 
         /** @var Dhl_Versenden_Model_Shipping_Autocreate $autocreate */
-        $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', array('logger' => $dhlLogger));
+        $autocreate = Mage::getSingleton('dhl_versenden/shipping_autocreate', ['logger' => $dhlLogger]);
 
         try {
             $num = $autocreate->autoCreate($collection);

@@ -1,0 +1,110 @@
+<?php
+
+/**
+ * See LICENSE.md for license details.
+ */
+
+namespace Dhl\Versenden\ParcelDe\Service;
+
+use Dhl\Versenden\ParcelDe\Service\Type\Generic as Service;
+
+class Collection implements \IteratorAggregate, \Countable
+{
+    /** @var Service[] */
+    protected $services = [];
+
+    /**
+     * Collection constructor.
+     * @param Service[] $services
+     */
+    public function __construct(array $services = [])
+    {
+        $this->setItems($services);
+    }
+
+    /**
+     * Retrieve an external iterator
+     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @return \Traversable An instance of an object implementing <b>Iterator</b> or
+     * <b>Traversable</b>
+     * @since 5.0.0
+     */
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->services);
+    }
+
+    /**
+     * Count elements of an object
+     * @link http://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * </p>
+     * <p>
+     * The return value is cast to an integer.
+     * @since 5.1.0
+     */
+    public function count(): int
+    {
+        return count($this->services);
+    }
+
+    /**
+     * Set all services to the collection.
+     *
+     * @param Service[] $services
+     * @return $this
+     */
+    public function setItems(array $services)
+    {
+        $this->services = [];
+        foreach ($services as $service) {
+            $this->addItem($service);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Service[]
+     */
+    public function getItems()
+    {
+        return $this->services;
+    }
+
+    /**
+     * Add a service to the collection.
+     *
+     * @param Service $service
+     * @return $this
+     */
+    public function addItem(Service $service)
+    {
+        $this->services[$service->getCode()] = $service;
+
+        return $this;
+    }
+
+    /**
+     * @param $serviceCode
+     * @return Service|null
+     */
+    public function getItem($serviceCode)
+    {
+        if (!isset($this->services[$serviceCode])) {
+            return null;
+        }
+
+        return $this->services[$serviceCode];
+    }
+
+    /**
+     * @param $serviceCode
+     * @return $this
+     */
+    public function removeItem($serviceCode)
+    {
+        unset($this->services[$serviceCode]);
+        return $this;
+    }
+}

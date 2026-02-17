@@ -41,28 +41,41 @@
     position: relative;
 }
 
-#checkout-dhlversenden-services dt.service-boolean label {
-    background-color: #f4f4f4;
-    min-width: 250px;
-    padding: 6px 10px 6px 40px;
-    font-size: 13px;
-    font-weight: normal;
+#checkout-dhlversenden-services dt.service-boolean {
+    display: flex;
+    align-items: center;
 }
 
-#checkout-dhlversenden-services dt.service-boolean label:hover {
-    background-color: #ececec;
+#checkout-dhlversenden-services dt.service-boolean label.service-headline {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#checkout-dhlversenden-services dd.service-boolean.goGreen,
+#checkout-dhlversenden-services dd.service-boolean.noNeighbourDelivery,
+#checkout-dhlversenden-services dd.service-boolean.closestDropPoint,
+#checkout-dhlversenden-services dd.service-boolean.parcelAnnouncement {
+    display: flex;
+    align-items: center;
+    padding-top: 5px;
+}
+
+#checkout-dhlversenden-services dd.service-boolean input[type="checkbox"] {
+    min-width: 0;
+    margin: 0 8px 0 0;
+}
+
+#checkout-dhlversenden-services dt.service-boolean label {
+    padding: 0;
+    margin-bottom: 0;
+    font-size: 13px;
+    font-weight: normal;
+    cursor: pointer;
 }
 
 #checkout-dhlversenden-services dt.service-boolean input {
-    float: left;
-    margin-right: -40px;
-    margin-top: 10px;
-    margin-left: 15px;
-    position: relative;
-}
-
-#checkout-dhlversenden-services dt.parcelAnnouncement label {
-    position: static;
+    margin: 0 8px 0 0;
+    cursor: pointer;
 }
 
 #checkout-dhlversenden-services dd {
@@ -84,13 +97,11 @@
 /*}*/
 
 #checkout-dhlversenden-services dd.service-radio input,
-#checkout-dhlversenden-services input#shipment_service_preferredDay,
-#checkout-dhlversenden-services input#shipment_service_preferredTime {
+#checkout-dhlversenden-services input#shipment_service_preferredDay {
     display: none;
 }
 
-#checkout-dhlversenden-services dd.preferredDay > div,
-#checkout-dhlversenden-services dd.preferredTime > div {
+#checkout-dhlversenden-services dd.preferredDay > div {
     display: inline-block;
     width: 16%;
     max-width: 60px;
@@ -98,25 +109,16 @@
     margin-right: .6666666%;
 }
 
-#checkout-dhlversenden-services dd.preferredDay > div label,
-#checkout-dhlversenden-services dd.preferredTime > div label {
+#checkout-dhlversenden-services dd.preferredDay > div label {
     display: block;
     text-align: center;
     cursor: pointer;
-}
-
-#checkout-dhlversenden-services dd.preferredDay > div input:not(:disabled):not(:checked) + label:hover,
-#checkout-dhlversenden-services dd.preferredTime > div input:not(:disabled):not(:checked) + label:hover {
-    background-color: #e3e3e3;
-}
-
-#checkout-dhlversenden-services dd.preferredDay > div label {
     border-top: 10px solid #ccc;
     padding: 8px 0;
 }
 
-#checkout-dhlversenden-services dd.preferredTime > div label {
-    padding: 4px 0;
+#checkout-dhlversenden-services dd.preferredDay > div input:not(:disabled):not(:checked) + label:hover {
+    background-color: #e3e3e3;
 }
 
 #checkout-dhlversenden-services dd.preferredDay > div span {
@@ -128,8 +130,7 @@
     cursor: inherit;
 }
 
-#checkout-dhlversenden-services dd.preferredDay > div input:checked + label,
-#checkout-dhlversenden-services dd.preferredTime > div input:checked + label {
+#checkout-dhlversenden-services dd.preferredDay > div input:checked + label {
     font-weight: bold;
     background-color: #fc0;
 }
@@ -150,6 +151,7 @@
     color: #545454;
     background: #dadada;
     font-style: normal;
+    font-weight: bold;
 }
 
 #checkout-dhlversenden-services .tooltip-inner:after {

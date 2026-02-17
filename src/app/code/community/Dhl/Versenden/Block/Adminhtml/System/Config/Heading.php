@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_System_Config_Heading
-    extends Mage_Adminhtml_Block_System_Config_Form_Field
+class Dhl_Versenden_Block_Adminhtml_System_Config_Heading extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
     /**
      * Render element html

@@ -4,17 +4,22 @@
  * See LICENSE.md for license details.
  */
 
+use Dhl\Versenden\ParcelDe\Service;
+
 class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
 {
     /**
      * @var string[]
      */
-    protected $_nameArray = array(
-        'preferredDay'       => 'Delivery day',
-        'preferredLocation'  => 'Drop-off location',
-        'preferredNeighbour' => 'Preferred neighbor',
-        'parcelAnnouncement' => 'Parcel announcement',
-    );
+    protected $_nameArray = [
+        Service\PreferredDay::CODE          => Service\PreferredDay::LABEL,
+        Service\PreferredLocation::CODE     => Service\PreferredLocation::LABEL,
+        Service\PreferredNeighbour::CODE    => Service\PreferredNeighbour::LABEL,
+        Service\ParcelAnnouncement::CODE    => Service\ParcelAnnouncement::LABEL,
+        Service\NoNeighbourDelivery::CODE   => Service\NoNeighbourDelivery::LABEL,
+        Service\GoGreenPlus::CODE           => Service\GoGreenPlus::LABEL,
+        Service\ClosestDropPoint::CODE      => Service\ClosestDropPoint::LABEL,
+    ];
 
     /**
      * @var Mage_Core_Model_Date
@@ -41,7 +46,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      *
      * @param mixed[] $args
      */
-    public function __construct(array $args = array())
+    public function __construct(array $args = [])
     {
         $this->coreDate = Mage::getSingleton('core/date');
         $this->helper = Mage::helper('dhl_versenden/data');
@@ -68,9 +73,9 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
      */
     public function renderDate($value)
     {
-        $formatedDate = $this->coreDate->date("d.m.Y", $value);
+        $formatedDate = $this->coreDate->date('d.m.Y', $value);
         if (strpos(Mage::app()->getLocale()->getLocaleCode(), 'de_') === false) {
-            $formatedDate = $this->coreDate->date("d/m/Y", $value);
+            $formatedDate = $this->coreDate->date('d/m/Y', $value);
         }
 
         return $formatedDate;
@@ -97,18 +102,33 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
     {
         $services = $this->getServices();
         $fee = 0;
-        $text = '';
-        $isCombined = false;
+        $count = 0;
 
         if ($services->preferredDay) {
-            $fee = $this->serviceConfig->getPrefDayFee();
+            $fee += $this->serviceConfig->getPrefDayFee();
+            $count++;
+        }
+
+        if ($services->noNeighbourDelivery) {
+            $fee += $this->serviceConfig->getNoNeighbourDeliveryFee();
+            $count++;
+        }
+
+        if ($services->goGreen) {
+            $fee += $this->serviceConfig->getGoGreenFee();
+            $count++;
+        }
+
+        if ($services->closestDropPoint) {
+            $fee += $this->serviceConfig->getCdpFee();
+            $count++;
         }
 
         if ($fee > 0) {
-            $text = $this->getFeetext($isCombined, $fee);
+            return $this->getFeetext($count > 1, $fee);
         }
 
-        return $text;
+        return '';
     }
 
     /**
@@ -129,7 +149,7 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
     }
 
     /**
-     * @return array|\Dhl\Versenden\Bcs\Api\Info\Services
+     * @return array|\Dhl\Versenden\ParcelDe\Info\Services
      */
     protected function loadServices()
     {
@@ -139,20 +159,20 @@ class Dhl_Versenden_Block_Config_Service extends Mage_Core_Block_Template
         $shippingMethod = $shippingAddress->getShippingMethod();
 
         if (!$this->shipmentConfig->canProcessMethod($shippingMethod, $quote->getStoreId())) {
-            return array();
+            return [];
         }
 
-        /** @var \Dhl\Versenden\Bcs\Api\Info $dhlVersendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $dhlVersendenInfo */
         $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
-        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\Bcs\Api\Info) {
-            $dhlVersendenInfo = \Dhl\Versenden\Bcs\Api\Info\Serializer::unserialize($dhlVersendenInfo);
+        if (!$dhlVersendenInfo instanceof \Dhl\Versenden\ParcelDe\Info) {
+            $dhlVersendenInfo = \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($dhlVersendenInfo);
         }
 
         return $dhlVersendenInfo->getServices();
     }
 
     /**
-     * @return Dhl\Versenden\Bcs\Api\Info\Services|array
+     * @return Dhl\Versenden\ParcelDe\Info\Services|array
      */
     public function getServices()
     {

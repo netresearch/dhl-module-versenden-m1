@@ -1,0 +1,40 @@
+# Shipments fixture - Full and partial shipments
+
+scope:
+  store:
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: default
+      name: Default Store View
+      is_active: 1
+
+tables:
+  sales/shipment:
+    # Full shipment (5 of 5 items) with COD - VALID
+    - entity_id: 1
+      order_id: 1
+      store_id: 1
+      total_qty: 5
+      shipping_address_id: 1
+
+    # Partial shipment (2 of 5 items) with COD - INVALID
+    - entity_id: 2
+      order_id: 2
+      store_id: 1
+      total_qty: 2
+      shipping_address_id: 2
+
+    # Partial shipment (2 of 5 items) for insurance test - INVALID when insurance added
+    - entity_id: 3
+      order_id: 3
+      store_id: 1
+      total_qty: 2
+      shipping_address_id: 3
+
+    # Partial shipment (2 of 5 items) without COD/Insurance - VALID
+    - entity_id: 4
+      order_id: 4
+      store_id: 1
+      total_qty: 2
+      shipping_address_id: 4

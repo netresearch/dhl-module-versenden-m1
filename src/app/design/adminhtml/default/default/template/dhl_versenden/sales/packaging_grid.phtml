@@ -81,8 +81,8 @@
                         </td>
                         <td class="tariff-number">
                             <input name="customs_tariff_number"
-                                   type="text" class="input-text required-entry validate-length maximum-length-10"
-                                   title="<?php echo $this->escapeHtml($this->__('Tariff Number')) ?>" maxlength="10" />
+                                   type="text" class="input-text required-entry validate-length minimum-length-6 maximum-length-11"
+                                   title="<?php echo $this->escapeHtml($this->__('Tariff Number')) ?>" maxlength="11" />
                         </td>
                         <td class="a-center weight ">
                             <?php echo $this->escapeHtml($item->getWeight()); ?>

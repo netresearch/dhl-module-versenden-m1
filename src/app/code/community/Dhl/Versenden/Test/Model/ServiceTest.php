@@ -4,8 +4,8 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Shipment\Service\Collection as ServiceCollection;
-use \Dhl\Versenden\Bcs\Api\Shipment\Service;
+use Dhl\Versenden\ParcelDe\Service\Collection as ServiceCollection;
+use Dhl\Versenden\ParcelDe\Service;
 
 class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 {
@@ -14,12 +14,12 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     protected function getCustomerServices()
     {
-        return array(
-            new Service\PreferredDay('', true, false, array('')),
+        return [
+            new Service\PreferredDay('', true, false, ['']),
             new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false),
             new Service\PreferredLocation('', true, false, ''),
             new Service\PreferredNeighbour('', true, false, ''),
-        );
+        ];
     }
 
     /**
@@ -27,20 +27,20 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
      */
     protected function getMerchantServices()
     {
-        return array(
+        return [
             new Service\BulkyGoods('', true, false),
-            new Service\Insurance('', true, false),
+            new Service\AdditionalInsurance('', true, false, ''),
             new Service\ReturnShipment('', true, false),
             new Service\VisualCheckOfAge(
                 '',
                 true,
                 false,
-                array(
+                [
                     Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
                     Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
-                )
+                ],
             ),
-        );
+        ];
     }
 
     /**
@@ -63,15 +63,15 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         array_walk(
             $customerServices,
-            function(Service\Type\Generic $service) {
+            function (Service\Type\Generic $service) {
                 $this->assertTrue($service->isCustomerService());
-            }
+            },
         );
         array_walk(
             $merchantServices,
-            function(Service\Type\Generic $service) {
+            function (Service\Type\Generic $service) {
                 $this->assertFalse($service->isCustomerService());
-            }
+            },
         );
     }
 
@@ -85,13 +85,13 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $services = $this->getServices();
         array_walk(
             $services,
-            function(Service\Type\Generic $service) {
+            function (Service\Type\Generic $service) {
                 if ($service instanceof Service\Type\Select) {
                     $serviceOptions = $service->getOptions();
-                    $this->assertInternalType('array', $serviceOptions);
+                    $this->assertIsArray($serviceOptions);
                     $this->assertNotEmpty($serviceOptions, get_class($service));
                 }
-            }
+            },
         );
     }
 
@@ -104,32 +104,32 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $customerServices = $this->getCustomerServices();
         $collection->setItems($customerServices);
 
-        $getClassNames = function($object) {
+        $getClassNames = function ($object) {
             return get_class($object);
         };
 
         // in === out
         $serviceClassNames    = array_map($getClassNames, $customerServices);
         $collectionClassNames = array_map($getClassNames, $collection->getItems());
-        $this->assertEmpty(array_diff($serviceClassNames, $collectionClassNames));
+        static::assertEmpty(array_diff($serviceClassNames, $collectionClassNames));
 
         // counter
-        $this->assertEquals(
+        static::assertEquals(
             count($customerServices),
-            count($collection)
+            count($collection),
         );
 
         // iterator
         foreach ($collection as $item) {
-            $this->assertInstanceOf(Service\Type\Generic::class, $item);
+            static::assertInstanceOf(Service\Type\Generic::class, $item);
         }
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             Service\PreferredLocation::class,
-            $collection->getItem('preferredLocation')
+            $collection->getItem('preferredLocation'),
         );
 
-        $this->assertNull($collection->getItem('foo'));
+        static::assertNull($collection->getItem('foo'));
     }
 
     /**
@@ -139,9 +139,9 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         $boolService = new Service\ReturnShipment('', true, false);
 
-        $this->assertContains('type="checkbox"', $boolService->getSelectorHtml());
-        $this->assertContains('label for', $boolService->getLabelHtml());
-        $this->assertEquals('', $boolService->getValueHtml());
+        static::assertStringContainsString('type="checkbox"', $boolService->getSelectorHtml());
+        static::assertStringContainsString('label for', $boolService->getLabelHtml());
+        static::assertEquals('', $boolService->getValueHtml());
     }
 
     /**
@@ -153,15 +153,16 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
             '',
             true,
             false,
-            array(
+            [
                 Service\VisualCheckOfAge::A16 => Service\VisualCheckOfAge::A16,
                 Service\VisualCheckOfAge::A18 => Service\VisualCheckOfAge::A18,
-            )
+            ],
         );
 
-        $this->assertContains('type="checkbox"', $selectService->getSelectorHtml());
-        $this->assertContains('label for', $selectService->getLabelHtml());
-        $this->assertContains('select', $selectService->getValueHtml());
+        // Select types have a checkbox to enable/disable the dropdown
+        static::assertStringContainsString('type="checkbox"', $selectService->getSelectorHtml());
+        static::assertStringContainsString('label for', $selectService->getLabelHtml());
+        static::assertStringContainsString('select', $selectService->getValueHtml());
     }
 
     /**
@@ -171,9 +172,9 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     {
         $textService = new Service\PreferredNeighbour('', true, false, '');
 
-        $this->assertContains('type="checkbox"', $textService->getSelectorHtml());
-        $this->assertContains('label for', $textService->getLabelHtml());
-        $this->assertContains('type="text', $textService->getValueHtml());
+        static::assertStringContainsString('type="checkbox"', $textService->getSelectorHtml());
+        static::assertStringContainsString('label for', $textService->getLabelHtml());
+        static::assertStringContainsString('type="text', $textService->getValueHtml());
     }
 
     /**
@@ -185,9 +186,9 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $boolService = new Service\ParcelAnnouncement('', Service\ParcelAnnouncement::DISPLAY_MODE_OPTIONAL, false);
         $renderer    = new Service\Type\Renderer($boolService);
 
-        $this->assertEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
-        $this->assertEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
-        $this->assertEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        static::assertEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
+        static::assertEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        static::assertEquals($boolService->getValueHtml(), $renderer->getValueHtml());
 
         // assert readonly values, service not selected
         $yesValue = 'Foo';
@@ -196,21 +197,32 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $renderer->setSelectedYes($yesValue);
         $renderer->setSelectedNo($noValue);
 
-        $this->assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
-        $this->assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
-        $this->assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
-        $this->assertEquals($noValue, $renderer->getValueHtml());
+        $readOnlyHtml = $renderer->getSelectorHtml();
+        static::assertNotEquals($boolService->getSelectorHtml(), $readOnlyHtml);
+        static::assertStringContainsString('disabled="disabled"', $readOnlyHtml);
+        static::assertStringContainsString('data-locked="1"', $readOnlyHtml);
+        static::assertStringContainsString('name="shipment_service[parcelAnnouncement]"', $readOnlyHtml);
+        static::assertStringContainsString('value="parcelAnnouncement"', $readOnlyHtml);
+        static::assertStringNotContainsString('checked="checked"', $readOnlyHtml);
+        // Read-only label uses same <label> format as Boolean services
+        static::assertEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        static::assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        static::assertEquals($noValue, $renderer->getValueHtml());
 
-        // assert readonly values, service not selected
-        $boolService = new Service\Insurance('', true, true);
+        // assert readonly values, service selected
+        $boolService = new Service\ReturnShipment('', true, true);
         $renderer    = new Service\Type\Renderer($boolService, true);
         $renderer->setSelectedYes($yesValue);
         $renderer->setSelectedNo($noValue);
 
-        $this->assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
-        $this->assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
-        $this->assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
-        $this->assertEquals($yesValue, $renderer->getValueHtml());
+        $selectedHtml = $renderer->getSelectorHtml();
+        static::assertNotEquals($boolService->getSelectorHtml(), $selectedHtml);
+        static::assertStringContainsString('checked="checked"', $selectedHtml);
+        static::assertStringContainsString('name="shipment_service[returnShipment]"', $selectedHtml);
+        static::assertStringContainsString('value="returnShipment"', $selectedHtml);
+        static::assertEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        static::assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        static::assertEquals($yesValue, $renderer->getValueHtml());
 
         // assert readonly values, service with details
         $neighbour   = 'Alf';
@@ -218,10 +230,10 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $textService->setValue($neighbour);
         $renderer = new Service\Type\Renderer($textService, true);
 
-        $this->assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
-        $this->assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
-        $this->assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
-        $this->assertEquals($neighbour, $renderer->getValueHtml());
+        static::assertNotEquals($boolService->getSelectorHtml(), $renderer->getSelectorHtml());
+        static::assertNotEquals($boolService->getLabelHtml(), $renderer->getLabelHtml());
+        static::assertNotEquals($boolService->getValueHtml(), $renderer->getValueHtml());
+        static::assertEquals($neighbour, $renderer->getValueHtml());
     }
 
     /**
@@ -236,39 +248,40 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
 
         $service = new Service\BulkyGoods($name, $isEnabled, $isSelected);
 
-        $this->assertEquals(Service\BulkyGoods::CODE, $service->getCode());
-        $this->assertEquals('boolean', $service->getFrontendInputType());
-        $this->assertEquals($name, $service->getName());
-        $this->assertSame($isEnabled, $service->isEnabled());
-        $this->assertSame($isSelected, $service->isSelected());
-        $this->assertSame($isSelected, $service->getValue());
-        $this->assertFalse($service->isCustomerService());
+        static::assertEquals(Service\BulkyGoods::CODE, $service->getCode());
+        static::assertEquals('boolean', $service->getFrontendInputType());
+        static::assertEquals($name, $service->getName());
+        static::assertSame($isEnabled, $service->isEnabled());
+        static::assertSame($isSelected, $service->isSelected());
+        static::assertSame($isSelected, $service->getValue());
+        static::assertFalse($service->isCustomerService());
 
-        $this->assertContains($service->getCode(), $service->getSelectorHtml());
-        $this->assertContains($service->getCode(), $service->getLabelHtml());
-        $this->assertEmpty($service->getValueHtml());
+        static::assertStringContainsString($service->getCode(), $service->getSelectorHtml());
+        static::assertStringContainsString($service->getCode(), $service->getLabelHtml());
+        static::assertEmpty($service->getValueHtml());
 
         // select
         $name       = 'Option Foo';
         $isEnabled  = true;
         $isSelected = true;
         $value      = 'bar';
-        $options    = array('foo' => 'fox', 'bar' => 'baz');
+        $options    = ['foo' => 'fox', 'bar' => 'baz'];
 
         $service = new Service\VisualCheckOfAge($name, $isEnabled, $isSelected, $options);
         $service->setValue($value);
 
-        $this->assertEquals(Service\VisualCheckOfAge::CODE, $service->getCode());
-        $this->assertEquals('select', $service->getFrontendInputType());
-        $this->assertEquals($name, $service->getName());
-        $this->assertSame($isEnabled, $service->isEnabled());
-        $this->assertSame($isSelected, $service->isSelected());
-        $this->assertSame($value, $service->getValue());
-        $this->assertFalse($service->isCustomerService());
+        static::assertEquals(Service\VisualCheckOfAge::CODE, $service->getCode());
+        static::assertEquals('select', $service->getFrontendInputType());
+        static::assertEquals($name, $service->getName());
+        static::assertSame($isEnabled, $service->isEnabled());
+        static::assertSame($isSelected, $service->isSelected());
+        static::assertSame($value, $service->getValue());
+        static::assertFalse($service->isCustomerService());
 
-        $this->assertContains($service->getCode(), $service->getSelectorHtml());
-        $this->assertContains($service->getCode(), $service->getLabelHtml());
-        $this->assertContains('selected', $service->getValueHtml());
+        // Select types have a checkbox to enable/disable the dropdown
+        static::assertStringContainsString('type="checkbox"', $service->getSelectorHtml());
+        static::assertStringContainsString($service->getCode(), $service->getLabelHtml());
+        static::assertStringContainsString('selected', $service->getValueHtml());
 
         // text
         $name        = 'Text Foo';
@@ -280,17 +293,17 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
         $service = new Service\PreferredLocation($name, $isEnabled, $isSelected, $placeholder);
         $service->setValue($value);
 
-        $this->assertEquals(Service\PreferredLocation::CODE, $service->getCode());
-        $this->assertEquals('text', $service->getFrontendInputType());
-        $this->assertEquals($name, $service->getName());
-        $this->assertSame($isEnabled, $service->isEnabled());
-        $this->assertSame($isSelected, $service->isSelected());
-        $this->assertSame($value, $service->getValue());
-        $this->assertTrue($service->isCustomerService());
+        static::assertEquals(Service\PreferredLocation::CODE, $service->getCode());
+        static::assertEquals('text', $service->getFrontendInputType());
+        static::assertEquals($name, $service->getName());
+        static::assertSame($isEnabled, $service->isEnabled());
+        static::assertSame($isSelected, $service->isSelected());
+        static::assertSame($value, $service->getValue());
+        static::assertTrue($service->isCustomerService());
 
-        $this->assertContains($service->getCode(), $service->getSelectorHtml());
-        $this->assertContains($service->getCode(), $service->getLabelHtml());
-        $this->assertContains($value, $service->getValueHtml());
+        static::assertStringContainsString($service->getCode(), $service->getSelectorHtml());
+        static::assertStringContainsString($service->getCode(), $service->getLabelHtml());
+        static::assertStringContainsString($value, $service->getValueHtml());
     }
 
     /**
@@ -300,26 +313,30 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filter()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_KLEINPAKET);
+        $shippingProducts     = [\Dhl\Versenden\ParcelDe\Product::CODE_KLEINPAKET];
         $isPostalFacility     = false;
         $onlyCustomerServices = false;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
 
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
-        $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
-        $this->assertCount(3, $filteredCollection);
-        $this->assertInstanceOf(
+        static::assertInstanceOf(Service\Collection::class, $filteredCollection);
+        static::assertCount(4, $filteredCollection);
+        static::assertInstanceOf(
             Service\ParcelAnnouncement::class,
-            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE),
         );
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             Service\PreferredLocation::class,
-            $filteredCollection->getItem(Service\PreferredLocation::CODE)
+            $filteredCollection->getItem(Service\PreferredLocation::CODE),
         );
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             Service\PreferredNeighbour::class,
-            $filteredCollection->getItem(Service\PreferredNeighbour::CODE)
+            $filteredCollection->getItem(Service\PreferredNeighbour::CODE),
+        );
+        static::assertInstanceOf(
+            Service\ReturnShipment::class,
+            $filteredCollection->getItem(Service\ReturnShipment::CODE),
         );
     }
 
@@ -329,26 +346,26 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filterPostalFacility()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_PAKET_NATIONAL);
+        $shippingProducts     = [\Dhl\Versenden\ParcelDe\Product::CODE_PAKET_NATIONAL];
         $isPostalFacility     = true;
         $onlyCustomerServices = false;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
 
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
-        $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
-        $this->assertCount(3, $filteredCollection);
-        $this->assertInstanceOf(
-            Service\Insurance::class,
-            $filteredCollection->getItem(Service\Insurance::CODE)
+        static::assertInstanceOf(Service\Collection::class, $filteredCollection);
+        static::assertCount(3, $filteredCollection);
+        static::assertInstanceOf(
+            Service\AdditionalInsurance::class,
+            $filteredCollection->getItem(Service\AdditionalInsurance::CODE),
         );
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             Service\ParcelAnnouncement::class,
-            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE),
         );
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             Service\ReturnShipment::class,
-            $filteredCollection->getItem(Service\ReturnShipment::CODE)
+            $filteredCollection->getItem(Service\ReturnShipment::CODE),
         );
     }
 
@@ -358,18 +375,18 @@ class Dhl_Versenden_Test_Model_ServiceTest extends EcomDev_PHPUnit_Test_Case
     public function filterCustomerServices()
     {
         $enabledServices      = new Service\Collection($this->getServices());
-        $shippingProducts     = array(\Dhl\Versenden\Bcs\Api\Product::CODE_KURIER_WUNSCHZEIT);
+        $shippingProducts     = [\Dhl\Versenden\ParcelDe\Product::CODE_KURIER_WUNSCHZEIT];
         $isPostalFacility     = false;
         $onlyCustomerServices = true;
         $filter               = new Service\Filter($shippingProducts, $isPostalFacility, $onlyCustomerServices);
 
         $filteredCollection = $filter->filterServiceCollection($enabledServices);
 
-        $this->assertInstanceOf(Service\Collection::class, $filteredCollection);
-        $this->assertCount(1, $filteredCollection);
-        $this->assertInstanceOf(
+        static::assertInstanceOf(Service\Collection::class, $filteredCollection);
+        static::assertCount(1, $filteredCollection);
+        static::assertInstanceOf(
             Service\ParcelAnnouncement::class,
-            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE)
+            $filteredCollection->getItem(Service\ParcelAnnouncement::CODE),
         );
     }
 }

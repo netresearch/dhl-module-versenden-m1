@@ -40,11 +40,11 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
     {
         /** @var Mage_Shipping_Model_Shipment_Request[] $shipmentRequests */
         $shipmentRequests = $observer->getData('request_data');
-        /** @var \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\CreateShipment|null $result */
+        /** @var mixed $result */
         $result = $observer->getData('result');
 
         // create orderId to sequenceNumber mapping
-        $sequenceNumbers = array();
+        $sequenceNumbers = [];
         foreach ($shipmentRequests as $sequenceNumber => $shipmentRequest) {
             $order = $shipmentRequest->getOrderShipment()->getOrder();
             $sequenceNumbers[$order->getId()] = $sequenceNumber;
@@ -53,17 +53,19 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
         // query current status
         $orderIds = array_keys($sequenceNumbers);
         $statusCollection = Mage::getResourceModel('dhl_versenden/label_status_collection');
-        $statusCollection->addFieldToFilter('order_id', array('in' => $orderIds));
+        $statusCollection->addFieldToFilter('order_id', ['in' => $orderIds]);
 
         // update status
         /** @var Dhl_Versenden_Model_Label_Status $labelStatus */
         foreach ($statusCollection as $labelStatus) {
             $sequenceNumber = $sequenceNumbers[$labelStatus->getOrderId()];
             $shipmentRequest = $shipmentRequests[$sequenceNumber];
-            if ($result instanceof \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\CreateShipment) {
-                $labelResponse = $result->getCreatedItems()->getItem($sequenceNumber);
-            } else {
-                $labelResponse = null;
+
+            // Extract REST response for this shipment
+            // REST client returns array of shipment objects, indexed by sequence number
+            $labelResponse = null;
+            if (is_array($result) && isset($result[$sequenceNumber])) {
+                $labelResponse = $result[$sequenceNumber];
             }
 
             $labelStatus->setLabelCreated($shipmentRequest->getOrderShipment()->getOrder(), $labelResponse);
@@ -83,16 +85,16 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
     {
         /** @var string[] $trackNumbers */
         $trackNumbers = $observer->getData('request_data');
-        /** @var \Dhl\Versenden\Bcs\Api\Webservice\ResponseData\DeleteShipment $result */
+        /** @var mixed $result */
         $result = $observer->getData('result');
 
         // load current label status collection
         // order ids are retrieved via track collection
         $trackCollection = Mage::getResourceModel('sales/order_shipment_track_collection');
-        $trackCollection->addFieldToFilter('track_number', array('in' => $trackNumbers));
+        $trackCollection->addFieldToFilter('track_number', ['in' => $trackNumbers]);
 
         // create orderId to shipmentNumber mapping
-        $shipmentNumbers = array();
+        $shipmentNumbers = [];
         /** @var Mage_Sales_Model_Order_Shipment_Track $track */
         foreach ($trackCollection as $track) {
             $shipmentNumbers[$track->getOrderId()] = $track->getNumber();
@@ -101,7 +103,7 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
         // query current status
         $orderIds = array_keys($shipmentNumbers);
         $statusCollection = Mage::getResourceModel('dhl_versenden/label_status_collection');
-        $statusCollection->addFieldToFilter('order_id', array('in' => $orderIds));
+        $statusCollection->addFieldToFilter('order_id', ['in' => $orderIds]);
 
         // update status
         /** @var Dhl_Versenden_Model_Label_Status $labelStatus */
@@ -129,9 +131,9 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
         $collection = $observer->getData('order_grid_collection');
         if (!array_key_exists('status', $collection->getSelect()->getPart('from'))) {
             $collection->getSelect()->joinLeft(
-                array('status' => $collection->getTable('dhl_versenden/label_status')),
+                ['status' => $collection->getTable('dhl_versenden/label_status')],
                 'main_table.entity_id = status.order_id',
-                array('status_code')
+                ['status_code'],
             );
         }
     }
@@ -150,26 +152,26 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
             return;
         }
 
-        $columnOptions = array(
+        $columnOptions = [
             Dhl_Versenden_Model_Label_Status::CODE_PENDING => $block->__('Pending'),
             Dhl_Versenden_Model_Label_Status::CODE_PROCESSED => $block->__('Processed'),
-            Dhl_Versenden_Model_Label_Status::CODE_FAILED => $block->__('Failed')
-        );
+            Dhl_Versenden_Model_Label_Status::CODE_FAILED => $block->__('Failed'),
+        ];
 
         $filterBlock = $block->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_grid');
 
         // Add a new column right after the "Ship to Name" column
         $block->addColumnAfter(
             'status_code',
-            array(
+            [
                 'header'    => $block->__('DHL Label Status'),
                 'index'     => 'status_code',
                 'renderer'  => 'dhl_versenden/adminhtml_sales_order_grid_renderer_icon',
                 'type'      => 'options',
                 'options'   => $columnOptions,
-                'filter_condition_callback' => array($filterBlock, 'filterStatus')
-            ),
-            'status'
+                'filter_condition_callback' => [$filterBlock, 'filterStatus'],
+            ],
+            'status',
         );
     }
 
@@ -189,11 +191,11 @@ class Dhl_Versenden_Model_Observer_Labelstatus extends Dhl_Versenden_Model_Obser
         }
 
         $collection->join(
-            array('status' => 'dhl_versenden/label_status'),
+            ['status' => 'dhl_versenden/label_status'],
             'main_table.entity_id = status.order_id',
-            array('status_code')
+            ['status_code'],
         );
-        $collection->addFieldToFilter('status_code', array('eq'=> $value));
+        $collection->addFieldToFilter('status_code', ['eq' => $value]);
 
         return $this;
     }

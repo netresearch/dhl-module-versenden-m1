@@ -17,14 +17,14 @@ class Dhl_Versenden_Test_Model_Logger_FileTest extends EcomDev_PHPUnit_Test_Case
         $filename = 'foo.log';
 
         $writer = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Writer::class)
-            ->setMethods(array('log', 'logException'))
+            ->setMethods(['log', 'logException'])
             ->getMock();
         $writer
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('log')
             ->with($message, $zendLevel, $filename);
         $writer
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('logException');
 
         $fileLogger = new Dhl_Versenden_Model_Logger_Mage($writer, $filename);
@@ -37,25 +37,26 @@ class Dhl_Versenden_Test_Model_Logger_FileTest extends EcomDev_PHPUnit_Test_Case
     public function interpolate()
     {
         $template = '{foo} XX {bar}';
-        $message  = 'fox XX baz';
-        $context = array(
+        $context = [
             'foo' => 'fox',
             'bar' => 'baz',
-        );
+        ];
+        // Logger appends remaining context as JSON after interpolation
+        $expectedMessage = 'fox XX baz {"foo":"fox","bar":"baz"}';
         $filename = 'dhl_versenden.log';
 
         $zendLevel = Zend_Log::DEBUG;
         $psrLevel = \Psr\Log\LogLevel::DEBUG;
 
         $writer = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Writer::class)
-            ->setMethods(array('log', 'logException'))
+            ->setMethods(['log', 'logException'])
             ->getMock();
         $writer
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('log')
-            ->with($message, $zendLevel, $filename);
+            ->with($expectedMessage, $zendLevel, $filename, true);
         $writer
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('logException');
 
         $fileLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
@@ -69,21 +70,21 @@ class Dhl_Versenden_Test_Model_Logger_FileTest extends EcomDev_PHPUnit_Test_Case
     {
         $message  = 'foo';
         $exception = new SoapFault('1000', $message);
-        $context = array('exception' => $exception,);
+        $context = ['exception' => $exception,];
         $filename = 'dhl_versenden.log';
 
         $zendLevel = Zend_Log::DEBUG;
         $psrLevel = \Psr\Log\LogLevel::DEBUG;
 
         $writer = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Writer::class)
-            ->setMethods(array('log', 'logException'))
+            ->setMethods(['log', 'logException'])
             ->getMock();
         $writer
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('log')
             ->with($message, $zendLevel, $filename);
         $writer
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('logException')
             ->with($exception);
 

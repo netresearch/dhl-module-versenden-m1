@@ -1,0 +1,18 @@
+scope:
+  store:
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: default
+      name: Default
+      is_active: 1
+
+config:
+  default/shipping/origin/country_id: "DE"
+
+  # NoNeighbourDelivery: checkout toggle OFF, shipment default ON
+  default/carriers/dhlversenden/service_noneighbourdelivery_enabled: "0"
+  default/carriers/dhlversenden/shipment_autocreate_service_noneighbourdelivery: "1"
+
+  # GoGreen: checkout toggle OFF (no autocreate default — customer-facing only)
+  default/carriers/dhlversenden/service_gogreen_enabled: "0"

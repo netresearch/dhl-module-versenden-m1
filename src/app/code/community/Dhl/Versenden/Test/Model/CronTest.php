@@ -6,11 +6,11 @@
 
 class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $writerMock = $this->getModelMock('dhl_versenden/logger_writer', array('log', 'logException'));
+        $writerMock = $this->getModelMock('dhl_versenden/logger_writer', ['log', 'logException']);
         $this->replaceByMock('singleton', 'dhl_versenden/logger_writer', $writerMock);
     }
 
@@ -22,7 +22,7 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
      */
     public function shipmentAutoCreateFailure()
     {
-        $historyMock = $this->getResourceModelMock('sales/order_status_history', array('save'));
+        $historyMock = $this->getResourceModelMock('sales/order_status_history', ['save']);
         $this->replaceByMock('resource_model', 'sales/order_status_history', $historyMock);
 
         $schedule = Mage::getModel('cron/schedule');
@@ -30,7 +30,7 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
         $cron = Mage::getModel('dhl_versenden/cron');
         $cron->shipmentAutoCreate($schedule);
 
-        $this->assertEquals(Mage_Cron_Model_Schedule::STATUS_ERROR, $schedule->getStatus());
+        static::assertEquals(Mage_Cron_Model_Schedule::STATUS_ERROR, $schedule->getStatus());
     }
 
     /**
@@ -40,21 +40,72 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
      */
     public function shipmentAutoCreateSuccess()
     {
-        $this->markTestIncomplete('Test must create a shipment in order to be recognized as success.');
-
         $numVersendenOrders = 1;
         $numSuccess = 1;
 
+        // Create a mock order with shipment to satisfy hasShipments() check
+        $shipment = Mage::getModel('sales/order_shipment');
+        $orderMock = $this->getModelMock('sales/order', ['hasShipments']);
+        $orderMock
+            ->expects(static::any())
+            ->method('hasShipments')
+            ->willReturn(true); // This makes the order pass the "failed orders" check
+
+        // Mock the autocreate collection to return the order with shipment
+        $collectionMock = $this->getResourceModelMock('dhl_versenden/autocreate_collection', [
+            'addShippingMethodFilter',
+            'addShipmentFilter',
+            'addDeliveryCountriesFilter',
+            'addStatusFilter',
+            'addStoreFilter',
+            'setPageSize',
+            'getSize',
+            'getItems',
+        ]);
+        $collectionMock
+            ->expects(static::any())
+            ->method('addShippingMethodFilter')
+            ->willReturnSelf();
+        $collectionMock
+            ->expects(static::any())
+            ->method('addShipmentFilter')
+            ->willReturnSelf();
+        $collectionMock
+            ->expects(static::any())
+            ->method('addDeliveryCountriesFilter')
+            ->willReturnSelf();
+        $collectionMock
+            ->expects(static::any())
+            ->method('addStatusFilter')
+            ->willReturnSelf();
+        $collectionMock
+            ->expects(static::any())
+            ->method('addStoreFilter')
+            ->willReturnSelf();
+        $collectionMock
+            ->expects(static::any())
+            ->method('setPageSize')
+            ->willReturnSelf();
+        $collectionMock
+            ->expects(static::any())
+            ->method('getSize')
+            ->willReturn($numVersendenOrders);
+        $collectionMock
+            ->expects(static::any())
+            ->method('getItems')
+            ->willReturn([$orderMock]);
+        $this->replaceByMock('resource_model', 'dhl_versenden/autocreate_collection', $collectionMock);
+
         $autocreateMock = $this->getModelMock(
             'dhl_versenden/shipping_autocreate',
-            array('autoCreate'),
+            ['autoCreate'],
             false,
-            array(),
+            [],
             '',
-            false
+            false,
         );
         $autocreateMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('autoCreate')
             ->willReturn($numSuccess);
         $this->replaceByMock('model', 'dhl_versenden/shipping_autocreate', $autocreateMock);
@@ -68,7 +119,7 @@ class Dhl_Versenden_Test_Model_CronTest extends EcomDev_PHPUnit_Test_Case
         $format = Dhl_Versenden_Model_Cron::CRON_MESSAGE_LABELS_RETRIEVED;
         $expectedMessage = sprintf($format, $numSuccess, $numVersendenOrders);
 
-        $this->assertEquals(Mage_Cron_Model_Schedule::STATUS_SUCCESS, $schedule->getStatus());
-        $this->assertEquals($expectedMessage, $schedule->getMessages());
+        static::assertEquals(Mage_Cron_Model_Schedule::STATUS_SUCCESS, $schedule->getStatus());
+        static::assertEquals($expectedMessage, $schedule->getMessages());
     }
 }

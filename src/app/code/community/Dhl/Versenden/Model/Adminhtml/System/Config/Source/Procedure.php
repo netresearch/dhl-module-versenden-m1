@@ -4,7 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Product;
+use Dhl\Versenden\ParcelDe\Product;
 
 class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure
 {
@@ -15,11 +15,11 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure
      */
     public function toOptionArray()
     {
-        $optionArray = array();
+        $optionArray = [];
 
         $options = $this->toArray();
         foreach ($options as $value => $label) {
-            $optionArray[]= array('value' => $value, 'label' => $label);
+            $optionArray[] = ['value' => $value, 'label' => $label];
         }
 
         return $optionArray;
@@ -33,7 +33,7 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure
     public function toArray()
     {
         $helper = Mage::helper('dhl_versenden/data');
-        return array(
+        return [
             // DHL Paket procedures
             Product::PROCEDURE_PAKET_NATIONAL => $helper->__('DHL Paket: V01PAK'),
             Product::PROCEDURE_KLEINPAKET => $helper->__('DHL Kleinpaket: V62KP'),
@@ -47,6 +47,6 @@ class Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure
             '87' => $helper->__('[AT] V87PARCEL (deleted)'),
             '83' => $helper->__('[AT] Retoure V86PARCEL (deleted)'),
             '85' => $helper->__('[AT] Retoure V87PARCEL (deleted)'),
-        );
+        ];
     }
 }

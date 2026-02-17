@@ -1,4 +1,5 @@
 src/app/code/community/Dhl/Versenden/ app/code/community/Dhl/Versenden/
+src/app/design/adminhtml/base/default/template/dhl_versenden/ app/design/adminhtml/base/default/template/dhl_versenden/
 src/app/design/adminhtml/default/default/layout/dhl_versenden.xml app/design/adminhtml/default/default/layout/dhl_versenden.xml
 src/app/design/adminhtml/default/default/template/dhl_versenden/ app/design/adminhtml/default/default/template/dhl_versenden/
 src/app/design/frontend/base/default/layout/dhl_versenden.xml app/design/frontend/base/default/layout/dhl_versenden.xml
@@ -7,9 +8,9 @@ src/app/etc/modules/Dhl_Versenden.xml app/etc/modules/Dhl_Versenden.xml
 src/app/locale/de_DE/Dhl_Versenden.csv app/locale/de_DE/Dhl_Versenden.csv
 src/app/locale/en_US/Dhl_Versenden.csv app/locale/en_US/Dhl_Versenden.csv
 
-src/lib/Dhl/Versenden/Bcs/ lib/Dhl/Versenden/Bcs/
 src/lib/Dhl/Versenden/Psr/ lib/Dhl/Versenden/Psr/
 src/lib/Dhl/Versenden/Cig/ lib/Dhl/Versenden/Cig/
+src/lib/Dhl/Versenden/ParcelDe/ lib/Dhl/Versenden/ParcelDe/
 src/lib/Mal/ lib/Mal/
 
 src/skin/frontend/base/default/css/dhl_versenden/ skin/frontend/base/default/css/dhl_versenden/

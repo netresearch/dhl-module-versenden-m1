@@ -36,9 +36,14 @@
                         <?php echo $this->escapeHtml($this->__('Attestation Number')) ?>
                     </span>
                 </th>
-                <th class="no-link last">
+                <th class="no-link">
                     <span class="nobr">
                         <?php echo $this->escapeHtml($this->__('Electronic Export Notification')) ?>
+                    </span>
+                </th>
+                <th class="no-link last">
+                    <span class="nobr">
+                        <?php echo $this->escapeHtml($this->__('Master Reference Number (MRN)')) ?>
                     </span>
                 </th>
             </tr>
@@ -80,7 +85,42 @@
                     <input id="customs_export_notification" name="customs[export_notification]" type="checkbox"
                            class="input-text validate-length maximum-length-35" maxlength="35" />
                 </td>
+                <td class="last">
+                    <input id="customs_master_reference_number" name="customs[master_reference_number]" type="text"
+                           class="input-text validate-length maximum-length-18" maxlength="18"
+                           title="<?php echo $this->escapeHtml($this->__('Optional: From your export declaration')) ?>" />
+                </td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+//<![CDATA[
+document.observe('dom:loaded', function() {
+    var exportNotificationCheckbox = $('customs_export_notification');
+    var mrnField = $('customs_master_reference_number');
+
+    if (exportNotificationCheckbox && mrnField) {
+        // Function to update MRN field state
+        var updateMrnFieldState = function() {
+            if (exportNotificationCheckbox.checked) {
+                mrnField.removeAttribute('disabled');
+                mrnField.removeClassName('disabled');
+            } else {
+                mrnField.setAttribute('disabled', 'disabled');
+                mrnField.addClassName('disabled');
+                mrnField.value = '';
+            }
+        };
+
+        // Enable MRN only when export notification is checked
+        exportNotificationCheckbox.observe('change', updateMrnFieldState);
+        exportNotificationCheckbox.observe('click', updateMrnFieldState);
+
+        // Initial state
+        updateMrnFieldState();
+    }
+});
+//]]>
+</script>

@@ -1,0 +1,187 @@
+scope:
+  store: # Initializes store views
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: store_one
+      name: Store One
+      is_active: 1
+
+config:
+  stores/store_one/carriers/dhlversenden/shipment_autocreate_enabled: 1
+
+tables:
+  sales/order:
+   # Order 20 - Will SUCCEED (based on working order 10)
+   - entity_id: 20
+     increment_id: '100000020'
+     shipping_method: 'dhlversenden_foo'
+     status: 'pending'
+     store_id: 1
+     total_qty_ordered: 2
+     weight: 3.0
+     base_grand_total: 25.00
+     grand_total: 25.00
+
+   # Order 21 - Will FAIL (same config as 20)
+   - entity_id: 21
+     increment_id: '100000021'
+     shipping_method: 'dhlversenden_foo'
+     status: 'pending'
+     store_id: 1
+     total_qty_ordered: 2
+     weight: 3.0
+     base_grand_total: 25.00
+     grand_total: 25.00
+
+   # Order 22 - Will SUCCEED (same config as 20)
+   - entity_id: 22
+     increment_id: '100000022'
+     shipping_method: 'dhlversenden_foo'
+     status: 'pending'
+     store_id: 1
+     total_qty_ordered: 2
+     weight: 3.0
+     base_grand_total: 25.00
+     grand_total: 25.00
+
+  sales/order_item:
+   - item_id: 20
+     order_id: 20
+     qty_ordered: 2
+     qty_shipped: 0
+     weight: 1.5
+     row_weight: 3.0
+     price: 10.00
+     base_price: 10.00
+     name: 'Test Product 20'
+     product_id: 200
+
+   - item_id: 21
+     order_id: 21
+     qty_ordered: 2
+     qty_shipped: 0
+     weight: 1.5
+     row_weight: 3.0
+     price: 10.00
+     base_price: 10.00
+     name: 'Test Product 21'
+     product_id: 201
+
+   - item_id: 22
+     order_id: 22
+     qty_ordered: 2
+     qty_shipped: 0
+     weight: 1.5
+     row_weight: 3.0
+     price: 10.00
+     base_price: 10.00
+     name: 'Test Product 22'
+     product_id: 202
+
+  sales/order_payment:
+   - entity_id: 20
+     parent_id: 20
+     method: 'cashondelivery'
+
+   - entity_id: 21
+     parent_id: 21
+     method: 'cashondelivery'
+
+   - entity_id: 22
+     parent_id: 22
+     method: 'cashondelivery'
+
+  sales/order_address:
+   # Order 20 addresses
+   - entity_id: 200
+     parent_id: 20
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "shipping"
+     prefix: "Mrs."
+
+   - entity_id: 201
+     parent_id: 20
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "billing"
+     prefix: "Mrs."
+
+   # Order 21 addresses
+   - entity_id: 210
+     parent_id: 21
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "shipping"
+     prefix: "Mrs."
+
+   - entity_id: 211
+     parent_id: 21
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "billing"
+     prefix: "Mrs."
+
+   # Order 22 addresses
+   - entity_id: 220
+     parent_id: 22
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "shipping"
+     prefix: "Mrs."
+
+   - entity_id: 221
+     parent_id: 22
+     region_id: 88
+     region: "Nordrhein-Westfalen"
+     postcode: "53113"
+     firstname: "Magento"
+     lastname: "Customer"
+     street: "Charles-de-Gaulle-Straße 20"
+     city: "Bonn"
+     email: "magento.customer@dhl.de"
+     telephone: "0228"
+     country_id: "DE"
+     address_type: "billing"
+     prefix: "Mrs."

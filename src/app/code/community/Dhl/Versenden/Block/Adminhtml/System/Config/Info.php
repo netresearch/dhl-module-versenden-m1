@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_System_Config_Info
-    extends Mage_Adminhtml_Block_System_Config_Form_Field
+class Dhl_Versenden_Block_Adminhtml_System_Config_Info extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
     /**
      * Init template
@@ -38,10 +37,11 @@ class Dhl_Versenden_Block_Adminhtml_System_Config_Info
     /**
      * Render the template
      *
-     * @param Varien_Data_Form_Element_Abstract $element
+     * @param Varien_Data_Form_Element_Abstract $_element
      * @return string
      */
-    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
+    // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $_element)
     {
         return $this->_toHtml();
     }

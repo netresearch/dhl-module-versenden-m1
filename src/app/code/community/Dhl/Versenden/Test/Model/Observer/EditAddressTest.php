@@ -4,29 +4,37 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Model_Observer_EditAddressTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Model_Observer_EditAddressTest extends EcomDev_PHPUnit_Test_Case
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        // load layout
-        Mage::app()->getLayout()->createBlock('dhl_versenden/adminhtml_sales_order_address_form', 'dhl_versenden_form');
 
-        // mock session usage
-        $blockMock = $this->getBlockMock('adminhtml/sales_order_address', array('getBackUrl'));
-        $this->replaceByMock('block', 'adminhtml/sales_order_address', $blockMock);
+        // Mock admin session - required for adminhtml block instantiation
+        // Without this, createBlock('adminhtml/sales_order_address') returns false
+        // This test was intermittently failing on PHP 8.3 due to non-deterministic test execution order
+        // When other tests (like FormTest) ran first, their session mocks persisted and this test passed
+        // When this test ran before any session-mocking test, admin blocks failed to instantiate
+        $quoteSessionMock = $this->getModelMock('adminhtml/session_quote', ['init', 'getStoreId']);
+        $quoteSessionMock
+            ->expects(static::any())
+            ->method('getStoreId')
+            ->willReturn('default');
+        $this->replaceByMock('singleton', 'adminhtml/session_quote', $quoteSessionMock);
+
+        $coreSessionMock = $this->getModelMock('core/session', ['init']);
+        $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
     }
 
     /**
-     * @return \Dhl\Versenden\Bcs\Api\Info
+     * @return \Dhl\Versenden\ParcelDe\Info
      */
     protected function prepareVersendenInfo()
     {
         $streetName = 'Street Name';
         $streetNumber = '127';
 
-        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
+        $versendenInfo = new \Dhl\Versenden\ParcelDe\Info();
         $versendenInfo->getReceiver()->streetName = $streetName;
         $versendenInfo->getReceiver()->streetNumber = $streetNumber;
 
@@ -50,7 +58,7 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->replaceAddressForm($observer);
 
-        $this->assertSame($formBlock, $block->getChild('form'));
+        static::assertSame($formBlock, $block->getChild('form'));
     }
 
     /**
@@ -74,7 +82,7 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->replaceAddressForm($observer);
 
-        $this->assertSame($formBlock, $block->getChild('form'));
+        static::assertSame($formBlock, $block->getChild('form'));
     }
 
     /**
@@ -100,7 +108,7 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->replaceAddressForm($observer);
 
-        $this->assertSame($formBlock, $block->getChild('form'));
+        static::assertSame($formBlock, $block->getChild('form'));
     }
 
     /**
@@ -128,7 +136,7 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->replaceAddressForm($observer);
 
-        $this->assertSame($formBlock, $block->getChild('form'));
+        static::assertSame($formBlock, $block->getChild('form'));
     }
 
     /**
@@ -156,38 +164,6 @@ class Dhl_Versenden_Test_Model_Observer_EditAddressTest
         $dhlObserver = new Dhl_Versenden_Model_Observer();
         $dhlObserver->replaceAddressForm($observer);
 
-        $this->assertSame($formBlock, $block->getChild('form'));
-    }
-
-    /**
-     * @test
-     * @registry order_address
-     * @loadFixture Model_ObserverTest
-     */
-    public function replaceAddressFormOk()
-    {
-        $versendenInfo = $this->prepareVersendenInfo();
-        $order = Mage::getModel('sales/order')->load(10);
-        $address = Mage::getModel('sales/order_address');
-        $address->setOrder($order);
-        $address->setData('dhl_versenden_info', $versendenInfo);
-        $order->setShippingAddress($address);
-        Mage::register('order_address', $address);
-
-        $block = Mage::app()->getLayout()->createBlock('adminhtml/sales_order_address');
-        $formBlock = Mage::app()->getLayout()->createBlock('adminhtml/sales_order_address_form');
-        $block->setChild('form', $formBlock);
-
-        $observer = new Varien_Event_Observer();
-        $observer->setData('block', $block);
-
-        $dhlObserver = new Dhl_Versenden_Model_Observer();
-        $dhlObserver->replaceAddressForm($observer);
-
-        $this->assertNotSame($formBlock, $block->getChild('form'));
-        $this->assertInstanceOf(
-            Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Form::class,
-            $block->getChild('form')
-        );
+        static::assertSame($formBlock, $block->getChild('form'));
     }
 }

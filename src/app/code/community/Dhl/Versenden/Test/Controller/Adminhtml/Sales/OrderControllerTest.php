@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
-    extends Dhl_Versenden_Test_Case_AdminController
+class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest extends Dhl_Versenden_Test_Case_AdminController
 {
     /**
      * @test
@@ -14,8 +13,8 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
      */
     public function addressSaveActionInvalidAddress()
     {
-        $this->getRequest()->setPost(array());
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 99));
+        $this->getRequest()->setPost([]);
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 99]);
         $this->assertRedirectTo('adminhtml/sales_order/index');
     }
 
@@ -29,26 +28,26 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $telephone = '1234567890';
 
         $message = 'Foo.';
-        $addressMock = $this->getModelMock('sales/order_address', array('save'));
+        $addressMock = $this->getModelMock('sales/order_address', ['save']);
         $addressMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('save')
             ->willThrowException(new Mage_Core_Exception($message));
         $this->replaceByMock('model', 'sales/order_address', $addressMock);
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addError'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addError']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addError')
             ->with($message);
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-        );
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 100));
-        $this->assertRedirectTo('adminhtml/sales_order/address', array('address_id' => 100));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 100]);
+        $this->assertRedirectTo('adminhtml/sales_order/address', ['address_id' => 100]);
     }
 
     /**
@@ -61,26 +60,26 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $telephone = '1234567890';
 
         $exception = new Exception('Foo.');
-        $addressMock = $this->getModelMock('sales/order_address', array('save'));
+        $addressMock = $this->getModelMock('sales/order_address', ['save']);
         $addressMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('save')
             ->willThrowException($exception);
         $this->replaceByMock('model', 'sales/order_address', $addressMock);
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addException'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addException']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addException')
-            ->with($exception, $this->stringContains('The address has not been changed.'));
+            ->with($exception, static::stringContains('The address has not been changed.'));
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-        );
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 100));
-        $this->assertRedirectTo('adminhtml/sales_order/address', array('address_id' => 100));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 100]);
+        $this->assertRedirectTo('adminhtml/sales_order/address', ['address_id' => 100]);
     }
 
     /**
@@ -92,22 +91,22 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
     {
         $telephone = '1234567890';
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addSuccess'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addSuccess']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addSuccess')
-            ->with($this->stringContains('The order address has been updated.'));
+            ->with(static::stringContains('The order address has been updated.'));
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-        );
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 170));
-        $this->assertRedirectTo('adminhtml/sales_order/view', array('order_id' => 17));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 170]);
+        $this->assertRedirectTo('adminhtml/sales_order/view', ['order_id' => 17]);
 
         $address = Mage::getModel('sales/order_address')->load(170);
-        $this->assertEmpty($address->getData('dhl_versenden_info'));
+        static::assertEmpty($address->getData('dhl_versenden_info'));
     }
 
     /**
@@ -122,44 +121,44 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $telephone = '1234567890';
         $facilityNumber = '123';
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addSuccess'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addSuccess']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addSuccess')
-            ->with($this->stringContains('The order address has been updated.'));
+            ->with(static::stringContains('The order address has been updated.'));
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-            'versenden_info' => array(
+            'versenden_info' => [
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
                 'address_addition' => '',
-                'packstation' => array(
+                'packstation' => [
                     'packstation_number' => $facilityNumber,
-                ),
-                'postfiliale' => array(
+                ],
+                'postfiliale' => [
                     'postfilial_number' => $facilityNumber,
-                ),
-                'parcelshop' => array(
+                ],
+                'parcelshop' => [
                     'parcelshop_number' => $facilityNumber,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 100));
-        $this->assertRedirectTo('adminhtml/sales_order/view', array('order_id' => 10));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 100]);
+        $this->assertRedirectTo('adminhtml/sales_order/view', ['order_id' => 10]);
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->postfiliale->postfilialNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $versendenInfo);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->postfiliale->postfilialNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
     }
 
     /**
@@ -175,40 +174,40 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $packStationNumber = '123';
         $postNumber = '12345678';
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addSuccess'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addSuccess']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addSuccess')
-            ->with($this->stringContains('The order address has been updated.'));
+            ->with(static::stringContains('The order address has been updated.'));
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-            'versenden_info' => array(
+            'versenden_info' => [
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
                 'address_addition' => '',
-                'packstation' => array(
+                'packstation' => [
                     'packstation_number' => $packStationNumber,
                     'post_number' => $postNumber,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 100));
-        $this->assertRedirectTo('adminhtml/sales_order/view', array('order_id' => 10));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 100]);
+        $this->assertRedirectTo('adminhtml/sales_order/view', ['order_id' => 10]);
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEquals($packStationNumber, $versendenInfo->getReceiver()->packstation->packstationNumber);
-        $this->assertEquals($postNumber, $versendenInfo->getReceiver()->packstation->postNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->postfiliale->postfilialNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $versendenInfo);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEquals($packStationNumber, $versendenInfo->getReceiver()->packstation->packstationNumber);
+        static::assertEquals($postNumber, $versendenInfo->getReceiver()->packstation->postNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->postfiliale->postfilialNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
     }
 
     /**
@@ -224,40 +223,40 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $postfilialNumber = '123';
         $postNumber = '12345678';
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addSuccess'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addSuccess']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addSuccess')
-            ->with($this->stringContains('The order address has been updated.'));
+            ->with(static::stringContains('The order address has been updated.'));
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-            'versenden_info' => array(
+            'versenden_info' => [
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
                 'address_addition' => '',
-                'postfiliale' => array(
+                'postfiliale' => [
                     'postfilial_number' => $postfilialNumber,
                     'post_number' => $postNumber,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 100));
-        $this->assertRedirectTo('adminhtml/sales_order/view', array('order_id' => 10));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 100]);
+        $this->assertRedirectTo('adminhtml/sales_order/view', ['order_id' => 10]);
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
-        $this->assertEquals($postfilialNumber, $versendenInfo->getReceiver()->postfiliale->postfilialNumber);
-        $this->assertEquals($postNumber, $versendenInfo->getReceiver()->postfiliale->postNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $versendenInfo);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
+        static::assertEquals($postfilialNumber, $versendenInfo->getReceiver()->postfiliale->postfilialNumber);
+        static::assertEquals($postNumber, $versendenInfo->getReceiver()->postfiliale->postNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
     }
 
     /**
@@ -272,41 +271,41 @@ class Dhl_Versenden_Test_Controller_Adminhtml_Sales_OrderControllerTest
         $telephone = '1234567890';
         $parcelShopNumber = '123';
 
-        $sessionMock = $this->getModelMock('adminhtml/session', array('addSuccess'));
+        $sessionMock = $this->getModelMock('adminhtml/session', ['addSuccess']);
         $sessionMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('addSuccess')
-            ->with($this->stringContains('The order address has been updated.'));
+            ->with(static::stringContains('The order address has been updated.'));
         $this->replaceByMock('singleton', 'adminhtml/session', $sessionMock);
 
-        $postData = array(
+        $postData = [
             'telephone' => $telephone,
-            'versenden_info' => array(
+            'versenden_info' => [
                 'street_name' => $streetName,
                 'street_number' => $streetNumber,
                 'address_addition' => '',
-                'parcel_shop' => array(
+                'parcel_shop' => [
                     'parcel_shop_number' => $parcelShopNumber,
                     'street_name' => $streetName,
                     'street_number' => $streetNumber,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->getRequest()->setPost($postData);
-        $this->dispatch('adminhtml/sales_order/addressSave', array('address_id' => 100));
-        $this->assertRedirectTo('adminhtml/sales_order/view', array('order_id' => 10));
+        $this->dispatch('adminhtml/sales_order/addressSave', ['address_id' => 100]);
+        $this->assertRedirectTo('adminhtml/sales_order/view', ['order_id' => 10]);
         $this->assertEventDispatched('dhl_versenden_announce_postal_facility');
 
         $address = Mage::getModel('sales/order_address')->load(100);
-        /** @var \Dhl\Versenden\Bcs\Api\Info $versendenInfo */
+        /** @var \Dhl\Versenden\ParcelDe\Info $versendenInfo */
         $versendenInfo = $address->getData('dhl_versenden_info');
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $versendenInfo);
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
-        $this->assertEmpty($versendenInfo->getReceiver()->postfiliale->postfilialNumber);
-        $this->assertEquals($parcelShopNumber, $versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
-        $this->assertEquals($streetName, $versendenInfo->getReceiver()->parcelShop->streetName);
-        $this->assertEquals($streetNumber, $versendenInfo->getReceiver()->parcelShop->streetNumber);
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $versendenInfo);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->streetNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->packstation->packstationNumber);
+        static::assertEmpty($versendenInfo->getReceiver()->postfiliale->postfilialNumber);
+        static::assertEquals($parcelShopNumber, $versendenInfo->getReceiver()->parcelShop->parcelShopNumber);
+        static::assertEquals($streetName, $versendenInfo->getReceiver()->parcelShop->streetName);
+        static::assertEquals($streetNumber, $versendenInfo->getReceiver()->parcelShop->streetNumber);
     }
 }

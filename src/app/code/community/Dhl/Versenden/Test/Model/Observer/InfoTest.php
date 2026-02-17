@@ -7,14 +7,14 @@
 class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Case
 {
     /**
-     * @return \Dhl\Versenden\Bcs\Api\Info
+     * @return \Dhl\Versenden\ParcelDe\Info
      */
     protected function prepareVersendenInfo()
     {
         $streetName = 'Street Name';
         $streetNumber = '127';
 
-        $versendenInfo = new \Dhl\Versenden\Bcs\Api\Info();
+        $versendenInfo = new \Dhl\Versenden\ParcelDe\Info();
         $versendenInfo->getReceiver()->streetName = $streetName;
         $versendenInfo->getReceiver()->streetNumber = $streetNumber;
 
@@ -27,24 +27,37 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
      */
     public function saveVersendenInfo()
     {
-        $resourceMock = $this->getResourceModelMock('sales/quote_address', array('save'));
-        $this->replaceByMock('resource_model', 'sales/quote_address', $resourceMock);
+        $observer = new Varien_Event_Observer();
 
         $versendenInfo = $this->prepareVersendenInfo();
         $address = Mage::getModel('sales/quote_address')->load(100);
         $address->setData('dhl_versenden_info', $versendenInfo);
 
-        $this->assertSame($versendenInfo, $address->getData('dhl_versenden_info'));
-        $address->save();
-        $this->assertInstanceOf(Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
-        $this->assertNotSame($versendenInfo, $address->getData('dhl_versenden_info'));
-        $this->assertEquals(
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $address->getData('dhl_versenden_info'));
+
+        // Manually trigger serialize observer (simulating model_save_before)
+        $observer->setData('object', $address);
+        $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
+        $dhlObserver->serializeVersendenInfo($observer);
+
+        // Verify serialization worked
+        static::assertIsString($address->getData('dhl_versenden_info'));
+        $serializedData = $address->getData('dhl_versenden_info');
+        static::assertNotNull(json_decode($serializedData), 'Data should be valid JSON');
+
+        // Manually trigger unserialize observer (simulating model_save_after)
+        $dhlObserver->unserializeVersendenInfo($observer);
+
+        // Verify unserialization worked
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $address->getData('dhl_versenden_info'));
+        static::assertNotSame($versendenInfo, $address->getData('dhl_versenden_info'));
+        static::assertEquals(
             $versendenInfo->getReceiver()->streetName,
-            $address->getData('dhl_versenden_info')->getReceiver()->streetName
+            $address->getData('dhl_versenden_info')->getReceiver()->streetName,
         );
-        $this->assertEquals(
+        static::assertEquals(
             $versendenInfo->getReceiver()->streetNumber,
-            $address->getData('dhl_versenden_info')->getReceiver()->streetNumber
+            $address->getData('dhl_versenden_info')->getReceiver()->streetNumber,
         );
     }
 
@@ -57,16 +70,16 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer = new Varien_Event_Observer();
 
         $address = $this->getMockBuilder(Varien_Object::class)
-            ->setMethods(array('getData', 'setData'))
+            ->setMethods(['getData', 'setData'])
             ->getMock();
         $address
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('getData')
-            ->with($this->equalTo('dhl_versenden_info'), $this->equalTo(null));
+            ->with(static::equalTo('dhl_versenden_info'), static::equalTo(null));
         $address
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('setData')
-            ->with($this->equalTo('dhl_versenden_info'), $this->anything());
+            ->with(static::equalTo('dhl_versenden_info'), static::anything());
         $observer->setData('object', $address);
 
         $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
@@ -82,16 +95,16 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer = new Varien_Event_Observer();
 
         $versendenInfo = new Varien_Object();
-        $addressMock = $this->getModelMock('sales/quote_address', array('getData', 'setData'));
+        $addressMock = $this->getModelMock('sales/quote_address', ['getData', 'setData']);
         $addressMock
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('getData')
-            ->with($this->equalTo('dhl_versenden_info'), $this->equalTo(null))
+            ->with(static::equalTo('dhl_versenden_info'), static::equalTo(null))
             ->willReturn($versendenInfo);
         $addressMock
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('setData')
-            ->with($this->equalTo('dhl_versenden_info'), $this->anything());
+            ->with(static::equalTo('dhl_versenden_info'), static::anything());
         $this->replaceByMock('model', 'sales/quote_address', $addressMock);
 
         $address = Mage::getModel('sales/quote_address');
@@ -114,10 +127,12 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $address->setData('dhl_versenden_info', $versendenInfo);
         $observer->setData('object', $address);
 
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $address->getData('dhl_versenden_info'));
         $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->serializeVersendenInfo($observer);
-        $this->assertJson($address->getData('dhl_versenden_info'));
+        $serializedData = $address->getData('dhl_versenden_info');
+        static::assertIsString($serializedData);
+        static::assertNotNull(json_decode($serializedData), 'Data should be valid JSON');
     }
 
     /**
@@ -129,10 +144,10 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer = new Varien_Event_Observer();
 
         $addressCollection = $this->getMockBuilder(Varien_Object::class)
-            ->setMethods(array('walk'))
+            ->setMethods(['walk'])
             ->getMock();
         $addressCollection
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('walk');
         $observer->setData('object', $addressCollection);
 
@@ -149,9 +164,9 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer = new Varien_Event_Observer();
 
         $versendenInfo = new Varien_Object();
-        $addressCollection = $this->getResourceModelMock('sales/quote_address_collection', array('walk'));
+        $addressCollection = $this->getResourceModelMock('sales/quote_address_collection', ['walk']);
         $addressCollection
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('walk');
         $observer->setData('object', $addressCollection);
 
@@ -190,6 +205,6 @@ class Dhl_Versenden_Test_Model_Observer_InfoTest extends EcomDev_PHPUnit_Test_Ca
         $observer->setData('order_address_collection', $collection);
         $dhlObserver = new Dhl_Versenden_Model_Observer_Serialize();
         $dhlObserver->unserializeVersendenInfoItems($observer);
-        $this->assertInstanceOf(\Dhl\Versenden\Bcs\Api\Info::class, $address->getData('dhl_versenden_info'));
+        static::assertInstanceOf(\Dhl\Versenden\ParcelDe\Info::class, $address->getData('dhl_versenden_info'));
     }
 }

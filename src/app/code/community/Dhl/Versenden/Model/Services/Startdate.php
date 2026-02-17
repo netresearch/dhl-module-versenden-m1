@@ -9,7 +9,7 @@ class Dhl_Versenden_Model_Services_Startdate
     /**
      * @var Mage_Core_Model_Date
      */
-    private $dateModel;
+    protected $dateModel;
 
     public function __construct()
     {
@@ -18,7 +18,7 @@ class Dhl_Versenden_Model_Services_Startdate
 
     /**
      * @param string $date
-     * @param string $cutOffTime
+     * @param int $cutOffTime Unix timestamp for cutoff time
      * @param string $noDropOffDays
      * @return string
      * @throws Exception
@@ -64,7 +64,7 @@ class Dhl_Versenden_Model_Services_Startdate
 
     /**
      * @param string $date
-     * @param string $cutOffTime
+     * @param int $cutOffTime Unix timestamp for cutoff time
      * @return bool
      */
     protected function isInCutOffTime($date, $cutOffTime)
@@ -79,9 +79,13 @@ class Dhl_Versenden_Model_Services_Startdate
      */
     protected function isDropOffDay($weekday, $noDropOffDays)
     {
+        // Handle null value for PHP 8.1 strict typing (explode requires non-null string)
+        if ($noDropOffDays === null || $noDropOffDays === '') {
+            return true; // No drop-off restrictions if not configured
+        }
+
         $noDropOffDayArray = explode(',', $noDropOffDays);
 
-        return !in_array((string)$weekday, $noDropOffDayArray, true);
+        return !in_array((string) $weekday, $noDropOffDayArray, true);
     }
 }
-

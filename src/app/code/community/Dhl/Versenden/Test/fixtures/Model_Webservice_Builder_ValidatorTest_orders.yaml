@@ -1,0 +1,133 @@
+# Orders fixture - Real Magento data for validator integration testing
+
+scope:
+  store:
+    - store_id: 1
+      website_id: 1
+      group_id: 1
+      code: default
+      name: Default Store View
+      is_active: 1
+
+tables:
+  # Orders with different payment methods
+  sales/order:
+    - entity_id: 1
+      increment_id: '100000001'
+      store_id: 1
+      customer_email: cod.full@test.local
+      customer_firstname: John
+      customer_lastname: Doe
+      total_qty_ordered: 5
+      grand_total: 100.00
+      base_grand_total: 100.00
+      state: processing
+      status: processing
+
+    - entity_id: 2
+      increment_id: '100000002'
+      store_id: 1
+      customer_email: cod.partial@test.local
+      customer_firstname: Jane
+      customer_lastname: Smith
+      total_qty_ordered: 5
+      grand_total: 100.00
+      base_grand_total: 100.00
+      state: processing
+      status: processing
+
+    - entity_id: 3
+      increment_id: '100000003'
+      store_id: 1
+      customer_email: insurance.partial@test.local
+      customer_firstname: Bob
+      customer_lastname: Johnson
+      total_qty_ordered: 5
+      grand_total: 100.00
+      base_grand_total: 100.00
+      state: processing
+      status: processing
+
+    - entity_id: 4
+      increment_id: '100000004'
+      store_id: 1
+      customer_email: regular.partial@test.local
+      customer_firstname: Alice
+      customer_lastname: Williams
+      total_qty_ordered: 5
+      grand_total: 100.00
+      base_grand_total: 100.00
+      state: processing
+      status: processing
+
+  # Payments - COD and regular
+  sales/order_payment:
+    - entity_id: 1
+      parent_id: 1
+      method: cashondelivery
+      base_amount_ordered: 100.00
+      amount_ordered: 100.00
+
+    - entity_id: 2
+      parent_id: 2
+      method: cashondelivery
+      base_amount_ordered: 100.00
+      amount_ordered: 100.00
+
+    - entity_id: 3
+      parent_id: 3
+      method: checkmo
+      base_amount_ordered: 100.00
+      amount_ordered: 100.00
+
+    - entity_id: 4
+      parent_id: 4
+      method: checkmo
+      base_amount_ordered: 100.00
+      amount_ordered: 100.00
+
+  # Shipping addresses
+  sales/order_address:
+    - entity_id: 1
+      parent_id: 1
+      address_type: shipping
+      firstname: John
+      lastname: Doe
+      street: "123 Test Street"
+      city: Berlin
+      postcode: '10115'
+      country_id: DE
+      telephone: '+49301234567'
+
+    - entity_id: 2
+      parent_id: 2
+      address_type: shipping
+      firstname: Jane
+      lastname: Smith
+      street: "456 Test Avenue"
+      city: Munich
+      postcode: '80331'
+      country_id: DE
+      telephone: '+49891234567'
+
+    - entity_id: 3
+      parent_id: 3
+      address_type: shipping
+      firstname: Bob
+      lastname: Johnson
+      street: "789 Test Road"
+      city: Hamburg
+      postcode: '20095'
+      country_id: DE
+      telephone: '+49401234567'
+
+    - entity_id: 4
+      parent_id: 4
+      address_type: shipping
+      firstname: Alice
+      lastname: Williams
+      street: "321 Test Lane"
+      city: Frankfurt
+      postcode: '60311'
+      country_id: DE
+      telephone: '+49691234567'

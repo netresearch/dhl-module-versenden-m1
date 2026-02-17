@@ -13,14 +13,14 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
      */
     protected function mockConfig($debugEnabled, $warningEnabled, $errorEnabled)
     {
-        $configMock = $this->getModelMock('dhl_versenden/config', array('isLoggingEnabled'));
+        $configMock = $this->getModelMock('dhl_versenden/config', ['isLoggingEnabled']);
         $configMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('isLoggingEnabled')
             ->withConsecutive(
-                array(Zend_Log::DEBUG),
-                array(Zend_Log::WARN),
-                array(Zend_Log::ERR)
+                [Zend_Log::DEBUG],
+                [Zend_Log::WARN],
+                [Zend_Log::ERR],
             )
             ->willReturnOnConsecutiveCalls($debugEnabled, $warningEnabled, $errorEnabled);
         $this->replaceByMock('model', 'dhl_versenden/config', $configMock);
@@ -28,21 +28,23 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
 
     /**
      * @test
-     * @expectedException Mage_Core_Exception
      */
     public function configArgMissing()
     {
+        $this->expectException(Mage_Core_Exception::class);
+
         Mage::getModel('dhl_versenden/log');
     }
 
     /**
      * @test
-     * @expectedException Mage_Core_Exception
      */
     public function configArgInvalid()
     {
+        $this->expectException(Mage_Core_Exception::class);
+
         $config = new Varien_Object();
-        Mage::getModel('dhl_versenden/log', array('config' => $config));
+        Mage::getModel('dhl_versenden/log', ['config' => $config]);
     }
 
     /**
@@ -53,21 +55,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(false, false, false);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('debug');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('warning');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -82,21 +84,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(true, false, false);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('debug');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('warning');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -111,21 +113,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(false, true, false);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('debug');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('warning');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -140,21 +142,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(false, false, true);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('debug');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('warning');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -169,21 +171,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(true, true, false);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('debug');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('warning');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -198,21 +200,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(false, true, true);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('debug');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('warning');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -227,21 +229,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(true, false, true);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('debug');
         $fileLogger
-            ->expects($this->never())
+            ->expects(static::never())
             ->method('warning');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');
@@ -256,21 +258,21 @@ class Dhl_Versenden_Test_Model_Logger_LogTest extends EcomDev_PHPUnit_Test_Case
         $this->mockConfig(true, true, true);
 
         $fileLogger = $this->getMockBuilder(Dhl_Versenden_Model_Logger_Mage::class)
-            ->setMethods(array('debug', 'warning', 'error'))
+            ->setMethods(['debug', 'warning', 'error'])
             ->disableOriginalConstructor()
             ->getMock();
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('debug');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('warning');
         $fileLogger
-            ->expects($this->once())
+            ->expects(static::once())
             ->method('error');
 
         $config = Mage::getModel('dhl_versenden/config');
-        $log = Mage::getModel('dhl_versenden/log', array('config' => $config));
+        $log = Mage::getModel('dhl_versenden/log', ['config' => $config]);
         $log->setLogger($fileLogger);
         $log->debug('foo');
         $log->warning('foo');

@@ -20,6 +20,6 @@ class Dhl_Versenden_Test_Helper_AddressTest extends EcomDev_PHPUnit_Test_Case
         $split    = $helper->splitStreet($street);
         $expected = $this->expected('auto')->getData();
 
-        $this->assertEquals($expected, $split);
+        static::assertEquals($expected, $split);
     }
 }

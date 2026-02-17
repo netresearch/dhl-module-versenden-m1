@@ -22,14 +22,14 @@
 DHL Versenden: Paketversand für DHL Geschäftskunden
 ===================================================
 
-Das Modul *DHL Versenden* (Shipping) für Magento® ermöglicht es Händlern mit einem
-DHL Geschäftskundenkonto, Sendungen über die DHL Geschäftskundenversand API
+Das Modul *DHL Versenden* (Shipping) für OpenMage ermöglicht es Händlern mit einem
+DHL Geschäftskundenkonto, Sendungen über die DHL Parcel DE REST API
 anzulegen und Versandscheine (Paketaufkleber) abzurufen. Die Extension
 ermöglicht dabei auch das Hinzubuchen von Zusatzleistungen sowie den Abruf von
 Exportdokumenten für den internationalen Versand.
 
 Diese Dokumentation erklärt die **Installation, Einrichtung und Nutzung des Moduls
-in Magento® 1**.
+in OpenMage**.
 
 .. raw:: pdf
 
@@ -46,21 +46,21 @@ Voraussetzungen
 
 Die nachfolgenden Voraussetzungen müssen für den reibungslosen Betrieb des Moduls erfüllt sein:
 
-Magento®
+OpenMage
 --------
 
-Folgende Magento®-Versionen werden vom Modul unterstützt:
+Folgende OpenMage-Versionen werden vom Modul unterstützt:
 
-- Open Magento - Magento LTS >= 19.x
+- OpenMage LTS >= 20.x
 
 PHP
 ---
 
 Folgende PHP-Versionen werden vom Modul unterstützt:
 
-- PHP >= 7.4.0
+- PHP >= 8.2
 
-Für die Anbindung des DHL Webservice muss die PHP SOAP Erweiterung auf dem
+Für die Anbindung der DHL REST API muss die PHP cURL Erweiterung auf dem
 Webserver installiert und aktiviert sein.
 
 Hinweise zur Verwendung des Moduls
@@ -69,7 +69,7 @@ Hinweise zur Verwendung des Moduls
 Versandursprung und Währung
 ---------------------------
 
-Die Extension *DHL Versenden* für Magento® wendet sich an Händler mit Sitz in
+Die Extension *DHL Versenden* für OpenMage wendet sich an Händler mit Sitz in
 Deutschland. Stellen Sie sicher, dass Ihre Absenderadressen in
 den drei im Abschnitt Modulkonfiguration_ genannten Bereichen korrekt ist.
 
@@ -90,45 +90,26 @@ Sprachunterstützung
 Das Modul unterstützt die Lokalisierungen ``en_US`` und ``de_DE``. Die Übersetzungen
 sind in den CSV-Übersetzungsdateien gepflegt und somit auch durch Dritt-Module anpassbar.
 
-Dritt-Modul Kompabilität
-------------------------
-
-Amazon Pay For Europe
-~~~~~~~~~~~~~~~~~~~~~
-
-Das Modul ist kompatibel mit der Extension *Creativestyle Amazon Pay For Europe* ab
-Version **1.0.16**.
-
-Damit die Adresse korrekt gespeichert wird, muss folgende Einstellung in der Konfiguration des Amazon Pay Moduls vorgenommen werden:
-
-::
-
-    System → Konfiguration → creativestyle → Amazon Pay →  Allgemeine Einstellungen →
-    Login mit Amazon aktivieren → Ja
-
-.. admonition:: Wichtig
-
-   Diese Einstellung **muss aktiviert werden**, da ansonsten die Adressinformationen nicht
-   korrekt gespeichert und später nicht an DHL gesendet werden können. Die Adresse müsste
-   dann von Hand in der Bestellung nachgetragen werden.
-
 Datenschutz
 -----------
 
 Durch das Modul werden personenbezogene Daten an DHL übermittelt, die zur Verarbeitung des Auftrags
 erforderlich sind (Namen, Anschriften, Telefonnumern, E-Mail-Adressen, etc.). Der Umfang der
 übermittelten Daten hängt von der `Modulkonfiguration`_ sowie den gewählten
-`DHL Zusatzleistungen im Checkout`_ ab.
+`DHL Zusatzleistungen im Checkout`_ ab. Insbesondere wird die E-Mail-Adresse des
+Empfängers nur dann an DHL übermittelt, wenn der Service *Automatische Paketankündigung*
+aktiv ist (siehe `DHL Zusatzleistungen im Checkout`_).
 
 Der Händler muss sich vom Kunden das Einverständnis zur Verarbeitung der Daten einholen,
-beispielsweise über die AGB des Shops und / oder eine Einverständniserklärung im Checkout (Magento®
+beispielsweise über die AGB des Shops und / oder eine Einverständniserklärung im Checkout (OpenMage
 Checkout Agreements / Terms and Conditions).
 
-Die an die DHL Geschäftskundenversand API übermittelten Daten können im Log ``var/log/dhl_versenden.log``
+Die an die DHL Parcel DE REST API übermittelten Daten können im Log ``var/log/dhl_versenden.log``
 eingesehen werden (siehe `Allgemeine Einstellungen`_ zur Aktivierung).
 
-Für `DHL Zusatzleistungen im Checkout`_ (Paketsteuerung API) werden im Fehlerfall Daten im Log
-``var/log/dhl_service.log`` gespeichert. Im Normalbetrieb (ohne Fehler) wird nichts geloggt.
+Für `DHL Zusatzleistungen im Checkout`_ (Paketsteuerung API) werden Daten im Log
+``var/log/dhl_service.log`` gespeichert. Der Umfang der protokollierten Daten hängt von der
+konfigurierten Protokollstufe ab (siehe `Allgemeine Einstellungen`_).
 
 .. raw:: pdf
 
@@ -189,7 +170,7 @@ ausgefüllt sind:
   * Bankverbindung
 
 Die Abschnitte *Versandarten → DHL* und *Versandarten → DHL (veraltet)*
-sind Kernbestandteile von Magento® und binden die Schnittstelle von DHL USA an.
+sind Kernbestandteile von OpenMage und binden die Schnittstelle von DHL USA an.
 Sie sind jedoch nicht relevant für den DHL Geschäftskundenversand (Versenden)
 in Deutschland.
 
@@ -206,12 +187,11 @@ Wählen Sie, ob der **Sandbox-Modus** zum Testen der Integration verwendet, oder
 **produktiv** betrieben werden soll.
 
 Außerdem kann hier die **Protokollierung (Logging)** konfiguriert werden. Wenn die Protokollierung
-hier **und** unter *System → Konfiguration → Erweitert → Entwickleroptionen → Log
-Einstellungen* aktiviert ist, wird die Kommunikation mit der Geschäftskundenversand API in der Datei
+aktiviert ist, wird die Kommunikation mit der DHL Parcel DE REST API in der Datei
 ``var/log/dhl_versenden.log`` aufgezeichnet. Dabei haben Sie die Auswahl zwischen
 drei Protokollstufen:
 
-* *Error*: Nur Kommunikationsprobleme zwischen Shop und DHL Webservice werden geloggt. Wenn
+* *Error*: Nur Kommunikationsprobleme zwischen Shop und DHL REST API werden geloggt. Wenn
   kein Problem auftritt, wird nichts in das Log geschrieben.
 * *Warning*: Kommunikationsprobleme sowie inhaltliche Fehler werden geloggt (z.B. Adressvalidierung,
   ungültige Service-Auswahl).
@@ -226,14 +206,15 @@ drei Protokollstufen:
 
    Log-Dateien:
 
-   * ``var/log/dhl_versenden.log`` für Label-Erstellung (Geschäftskundenversand API)
+   * ``var/log/dhl_versenden.log`` für Label-Erstellung (DHL Parcel DE REST API)
    * ``var/log/dhl_service.log`` für DHL Zusatzservices (Paketsteuerung API)
 
 Stammdaten
 ~~~~~~~~~~
 
-Im Konfigurationsbereich *Stammdaten* werden Ihre Zugangsdaten für den DHL Webservice
-hinterlegt, die für den Produktivmodus erforderlich sind. Die Zugangsdaten erhalten
+Im Konfigurationsbereich *Stammdaten* werden Ihre Zugangsdaten für die DHL Parcel DE REST API
+hinterlegt, die für den Produktivmodus erforderlich sind. Für die Authentifizierung wird
+ein DHL Application Key (API-Token) benötigt. Die Zugangsdaten erhalten
 DHL Vertragskunden über den Vertrieb DHL Paket.
 
 Eine detaillierte Anleitung zur Einrichtung der Teilnahmenummern finden Sie in `diesem Artikel
@@ -247,7 +228,7 @@ Versandaufträge
 ~~~~~~~~~~~~~~~
 
 Im Konfigurationsbereich *Versandaufträge* werden Einstellungen vorgenommen, die
-für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich sind.
+für die Erteilung von Versandaufträgen über die DHL REST API erforderlich sind.
 
 * *Nur leitkodierbare Versandaufträge erteilen*: Ist diese Einstellung aktiviert,
   wird DHL nur Sendungen akzeptieren, deren Adressen absolut korrekt sind. Ansonsten
@@ -264,10 +245,12 @@ für die Erteilung von Versandaufträgen über den DHL Webservice erforderlich s
 * *Versandarten für DHL Versenden*: Legen Sie fest, welche Versandarten mit DHL
   verknüpft sein sollen. Für die hier ausgewählten Versandarten werden im Checkout die
   verfügbaren DHL Zusatzleistungen angeboten und DHL-Label erzeugt, wenn der Lieferschein
-  in Magento® angelegt wird.
+  in OpenMage angelegt wird.
 * *Nachnahme-Zahlarten für DHL Versenden*: Legen Sie fest, bei welchen Zahlarten es sich
   um Nachnahme-Zahlarten handelt. Wenn eine dieser Zahlarten verwendet wird, wird ein
   Nachnahme-Label erzeugt.
+* *Druckformat*: Wählen Sie das Druckformat für die Paketaufkleber (z.B. A4, 910-300-700).
+  Standard: A4.
 
 .. raw:: pdf
 
@@ -295,6 +278,10 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   * *Aktivieren auf Kundenwunsch*: Der Kunde kann im Checkout wählen, ob der Service gebucht werden soll.
   * *Nein*: Der Service wird nie hinzugebucht.
 
+  Die E-Mail-Adresse des Empfängers wird nur dann an DHL übermittelt, wenn die
+  Paketankündigung gebucht ist. Ist der Service deaktiviert, werden keine
+  E-Mail-Daten an DHL gesendet (siehe auch `Datenschutz`_).
+
 * *Liefertag*: Der Kunde wählt einen festgelegten Tag für seine Sendung,
   an welchem die Lieferung ankommen soll. Die verfügbaren Liefertage werden dynamisch
   angezeigt, basierend auf der Empfängeradresse.
@@ -304,7 +291,7 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
   als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
   Wenn Sie die Zusatzkosten nicht an den Kunden weiterreichen wollen, tragen Sie hier
   ``0`` ein.
-* *Liefertag  Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
+* *Liefertag Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden
   im Checkout angezeigt, wenn der Zusatzservice ausgewählt wird. Sie können den
   Platzhalter ``$1`` im Text verwenden, welcher im Checkout durch den Zusatzbetrag
   und die Währung ersetzt wird.
@@ -318,6 +305,38 @@ Beachten Sie bitte auch die Hinweise zur `Buchbarkeit von Zusatzservices`_ sowie
    Damit die Zeitschwelle korrekt berechnet wird, muss die Systemzeit auf Ihrem Server richtig
    gesetzt sein. Achten Sie auf eventuelle Verschiebungen durch Sommer- bzw. Winterzeit oder
    abweichende Zeitzonen. Ändern Sie wenn nötig die Annahmeschluss-Zeit, um dies auszugleichen.
+
+* *Keine Nachbarschaftszustellung aktivieren*: Der Kunde kann veranlassen, dass die
+  Sendung nicht an einen Nachbarn zugestellt wird. Wählen Sie *Ja*, um diesen Service
+  im Checkout anzubieten.
+* *Keine Nachbarschaftszustellung Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu
+  den Versandkosten addiert, wenn der Service gebucht wird. Verwenden Sie Punkt statt
+  Komma als Trennzeichen. Der Betrag muss in Brutto angegeben werden (einschl. Steuern).
+  Tragen Sie ``0`` ein, wenn kein Aufpreis erhoben werden soll.
+* *Keine Nachbarschaftszustellung Serviceaufschlag Hinweistext*: Dieser Text wird dem
+  Kunden im Checkout angezeigt, wenn der Service ausgewählt wird. Der Platzhalter ``$1``
+  zeigt den Aufpreis und die Währung an.
+* *GoGreen Plus aktivieren*: Der Kunde kann klimaneutralen Versand buchen. Wählen Sie
+  *Ja*, um diesen Service im Checkout anzubieten.
+
+  .. admonition:: Hinweis
+
+     Bei aktivierter Standardbeauftragung im DHL Geschäftskundenportal wird GoGreen Plus
+     automatisch auf alle Sendungen angewendet, unabhängig von dieser Shop-Einstellung.
+     Dies ist der empfohlene Weg, GoGreen Plus für alle Bestellungen zu aktivieren.
+
+* *GoGreen Plus Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten
+  addiert, wenn der Service gebucht wird.
+* *GoGreen Plus Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden im Checkout
+  angezeigt, wenn der Service ausgewählt wird. Der Platzhalter ``$1`` zeigt den Aufpreis an.
+* *Closest Drop Point (CDP) aktivieren*: Der Kunde kann die Zustellung an den nächsten
+  DHL-Abholort wählen statt an die Hausadresse. Dieser Service ist nur für berechtigte
+  EU-Länder verfügbar (AT, BE, BG, DK, FI, FR, HU, PL, SE). Bei Auswahl von CDP
+  wird die E-Mail-Adresse des Empfängers automatisch in die Sendungsdaten aufgenommen.
+* *CDP Aufpreis (Serviceaufschlag)*: Dieser Betrag wird zu den Versandkosten addiert,
+  wenn der Service gebucht wird.
+* *CDP Serviceaufschlag Hinweistext*: Dieser Text wird dem Kunden im Checkout angezeigt,
+  wenn der Service ausgewählt wird. Der Platzhalter ``$1`` zeigt den Aufpreis an.
 
 .. raw:: pdf
 
@@ -339,13 +358,34 @@ steuern, welche Bestellungen von der automatischen Verarbeitung ausgeschlossen w
 Die Einstellung *Versandprodukt (Inland)* legt das Standard-Versandprodukt für die
 automatische Sendungserstellung nationaler Sendungen fest. Hier stehen folgende Produkte zur Verfügung:
 
-- Paket National für Sendungen bis 31,5 kg
-- Kleinpaket (Merchandise Shipment) für kleinere/leichtere Sendungen
+- V01PAK – DHL Paket (bis 31,5 kg)
+- V62KP – DHL Kleinpaket
+
+Für internationale Ziele wird das Versandprodukt automatisch anhand des Ziellandes bestimmt.
 
 Standardwerte für Sendungen
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Hier legen Sie die *Zusatzservices* fest, die automatisch hinzugebucht werden sollen.
+Folgende Standardwerte können konfiguriert werden:
+
+* Alterssichtprüfung (A16 / A18)
+* Retourenbeileger
+* Transportversicherung
+* Sperrgut
+* Keine Nachbarschaftszustellung
+* Persönliche Übergabe
+* Empfängerunterschrift
+* Vorausverfügung (Zurück / Preisgabe)
+* Zustellart (Economy / Premium / CDP)
+* PDDP
+* Filial-Routing (mit Benachrichtigungs-E-Mail)
+
+.. admonition:: Hinweis
+
+   Nachnahme wird automatisch anhand der Zahlungsart der Bestellung bestimmt und kann
+   nicht als Standardwert konfiguriert werden. GoGreen Plus ist ein reiner
+   Checkout-Service für Endkunden und steht nicht als Standardwert zur Verfügung.
 
 Kontaktinformationen
 ~~~~~~~~~~~~~~~~~~~~
@@ -392,6 +432,10 @@ Zusatzkosten für Services
 Der Service *Liefertag* ist **standardmäßig aktiviert!** Wird dieser gebucht, wird
 der konfigurierte Service-Aufschlag zu den Versandkosten hinzugefügt.
 
+Auch die Services *Keine Nachbarschaftszustellung*, *GoGreen Plus* und *Closest Drop
+Point (CDP)* können mit einem Serviceaufschlag konfiguriert werden, der bei Buchung im
+Checkout zu den Versandkosten addiert wird (siehe `DHL Zusatzleistungen im Checkout`_).
+
 Bei Nutzung der Versandart *Free Shipping / Versandkostenfrei* werden die eingestellten
 Zusatzkosten generell außer Kraft gesetzt!
 
@@ -420,7 +464,7 @@ die in der Konfiguration aktivierten DHL-Zusatzleistungen angeboten. Beachten Si
 dazu bitte die Infos zur `Buchbarkeit von Zusatzservices`_.
 
 .. image:: images/de/checkout_services.png
-   :scale: 180 %
+   :width: 14cm
 
 Im Checkout-Schritt *Zahlungsinformation* werden Nachnahme-Zahlarten ausgeblendet,
 falls der Nachnahme-Service für die gewählte Lieferadresse nicht zur Verfügung
@@ -489,7 +533,7 @@ Es öffnet sich die Seite *Neuer Versand für Bestellung*. Aktivieren Sie die Ch
 *Paketaufkleber erstellen* an und betätigen Sie den Button *Lieferschein erstellen...*.
 
 .. image:: images/de/button_submit_shipment.png
-   :scale: 75 %
+   :width: 6cm
 
 Es öffnet sich nun ein Popup zur Definition der im Paket enthaltenen Artikel.
 Betätigen Sie den Button *Artikel hinzufügen*, markieren Sie die bestellten
@@ -498,14 +542,14 @@ Produkte und bestätigen Sie Ihre Auswahl durch Klick auf
 
 .. admonition:: Mehrpaket-Sendungen
 
-   Die Aufteilung der Produkte in mehrere Pakete wird vom DHL Webservice
+   Die Aufteilung der Produkte in mehrere Pakete wird von der DHL REST API
    derzeit nicht unterstützt. Erstellen Sie alternativ mehrere Lieferscheine
    (Teillieferung / Partial Shipment) zu einer Bestellung, siehe auch
    `diese Anleitung <http://dhl.support.netresearch.de/support/solutions/articles/12000029043>`_.
 
 Der Button *OK* im Popup ist nun aktiviert. Bei Betätigung wird ein Versandauftrag
 an DHL übermittelt und im Erfolgsfall der resultierende Paketaufkleber abgerufen.
-Im Fehlerfall wird die vom Webservice erhaltene Fehlermeldung eingeblendet und
+Im Fehlerfall wird die von der DHL REST API erhaltene Fehlermeldung eingeblendet und
 die Bestellung kann entsprechend korrigiert werden, siehe auch Fehlerbehandlung_.
 
 Internationale Sendungen
@@ -525,24 +569,71 @@ Gehen Sie ansonsten wie im Abschnitt `Nationale Sendungen`_ beschrieben vor.
 Versandprodukt
 ~~~~~~~~~~~~~~~
 
-Für nationale Sendungen stehen folgende Versandprodukte zur Verfügung:
-* Paket National für Sendungen bis 31,5 kg
-* Kleinpaket (Merchandise Shipment) für kleinere/leichtere Sendungen
+Das Versandprodukt wird automatisch anhand des Ziellandes ausgewählt oder kann im
+Verpackungs-Popup manuell bestimmt werden. Folgende Produkte stehen zur Verfügung:
+
+**Inland (DE → DE):**
+
+* V01PAK – DHL Paket (bis 31,5 kg)
+* V62KP – DHL Kleinpaket
+
+**International (EU + Welt):**
+
+* V53WPAK – DHL Paket International
+* V66WPI – DHL Warenpost International
 
 Service-Auswahl
 ~~~~~~~~~~~~~~~
 
 Neben den im Checkout verfügbaren Zusatzleistungen, die sich an den Käufer richten,
-stehen für den DHL Geschäftskundenversand weitere, an den Händler gerichtete
-Services zur Verfügung. Die für die aktuelle Lieferadresse möglichen Zusatzleistungen
+stehen im Verpackungs-Popup weitere, an den Händler gerichtete Services zur Verfügung.
+Die für das aktuelle Versandprodukt und die Lieferadresse verfügbaren Zusatzleistungen
 werden im Popup zur Definition der im Paket enthaltenen Artikel eingeblendet.
 
 .. image:: images/de/merchant_services.png
-   :scale: 175 %
+   :width: 16cm
 
 Die vom Kunden im Checkout gewählten Services sind entsprechend vorbelegt, ebenso
 wie die *Adressprüfung* (Nur leitkodierbare Versandaufträge erteilen) gemäß der
 Modulkonfiguration_.
+
+.. admonition:: Schreibgeschützte Services
+
+   Im Checkout vom Kunden gewählte Services (z.B. Ablageort, Nachbar, Closest Drop
+   Point) sowie zahlungsartabhängige Services (Nachnahme) werden im Verpackungs-Popup
+   als **deaktivierte Checkboxen** angezeigt. Der Händler kann diese einsehen, aber
+   nicht ändern.
+
+Nicht alle Services sind für alle Versandprodukte verfügbar. Das Verpackungs-Popup
+zeigt automatisch nur die für das gewählte Produkt und die Route anwendbaren Services an.
+
+**Zustellservices:**
+
+* Transportversicherung (Checkbox, Versicherungswert entspricht dem Bestellwert)
+* Retourenbeileger (Checkbox)
+* Sperrgut (Checkbox)
+* Alterssichtprüfung (A16 / A18)
+* Persönliche Übergabe (Checkbox)
+* Keine Nachbarschaftszustellung (Checkbox)
+* GoGreen Plus (Checkbox, nur verfügbar wenn vom Kunden im Checkout gebucht)
+
+**Standort-Services:**
+
+* Filial-Routing (Checkbox + E-Mail-Eingabe, vorbelegt aus der Bestellung)
+* Ablageort / Nachbar (aus dem Checkout, falls gewählt)
+
+**Internationale Services:**
+
+* Vorausverfügung (Zurück / Preisgabe)
+* Zustellart (Economy / Premium / CDP) — wenn der Kunde im Checkout Closest Drop
+  Point (CDP) gewählt hat, wird die Zustellart auf CDP vorbelegt und gesperrt
+* PDDP (Checkbox, automatisch aktiviert für CH, GB, NO, US)
+
+**Zahlungsservices:**
+
+* Nachnahme (automatisch, schreibgeschützt — aktiviert wenn die Bestellung eine
+  Nachnahme-Zahlart gemäß der Konfiguration unter `Versandaufträge`_ verwendet,
+  ansonsten ausgeblendet)
 
 Beachten Sie, dass bei Ablageort oder Nachbar folgende Angaben **nicht** zulässig sind:
 
@@ -572,7 +663,7 @@ vorgesehenen Adressfelder.
 Massenaktion
 ~~~~~~~~~~~~
 
-Inländische und EU-Lieferscheine und Paketaufkleber können über die Massenaktion
+Inländische Lieferscheine und Paketaufkleber können über die Massenaktion
 *Paketaufkleber abrufen* in der Bestellübersicht erzeugt werden:
 
 * Verkäufe → Bestellungen → Massenaktion *Paketaufkleber abrufen*
@@ -585,6 +676,12 @@ Dabei gilt:
 * Weitere Zusatzleistungen, die im Bereich *Automatische Sendungserstellung* in der
   Modulkonfiguration_ eingestellt sind, werden hinzugebucht.
 
+.. admonition:: Hinweis
+
+   Die Massenaktion unterstützt ausschließlich inländische Sendungen (DE → DE).
+   Für EU- und internationale Sendungen müssen Versandaufträge manuell über die
+   Bestelldetailseite erstellt werden.
+
 Übersicht der Versandaufträge
 -----------------------------
 
@@ -596,7 +693,7 @@ DHL-Icons, die den Status der Versandaufträge zeigen.
 * **Graues Icon**: Übertragung an DHL wurde noch nicht ausgeführt.
 
 .. image:: images/de/label_status.png
-   :scale: 100 %
+   :width: 5cm
 
 .. raw:: pdf
 
@@ -613,7 +710,7 @@ Stellen im Admin Panel eingesehen werden:
 * Detail-Ansicht eines Lieferscheins → Button *Paketaufkleber drucken*
 
 Beachten Sie, dass hierüber keine *neuen* Aufträge an DHL übermittelt werden,
-sondern lediglich die bereits in Magento® gespeicherten DHL-Label abgerufen werden.
+sondern lediglich die bereits in OpenMage gespeicherten DHL-Label abgerufen werden.
 
 Zur Erstellung von *neuen* DHL-Aufträgen und Labeln gehen Sie bitte wie unter
 Massenaktion_ beschrieben vor.
@@ -625,6 +722,10 @@ Bei Versand innerhalb Deutschlands (DE → DE) ist es möglich, gemeinsam mit de
 einen Retouren-Beileger zu beauftragen.
 
 Nutzen Sie dafür beim Erstellen des Labels im Popup das Auswahlfeld *Retouren-Beileger*.
+Diese Option ist nur verfügbar, wenn der Service *Retourenbeileger* in den *Standardwerten
+für Sendungen* aktiviert ist. Wenn für die Hinsendung der Service *GoGreen Plus* gebucht
+wurde, wird dieser automatisch auch auf den Retourenbeileger angewendet.
+
 Stellen Sie sicher, dass die Teilnahmenummern für Retouren korrekt konfiguriert sind:
 
 * Retoure DHL Paket (DE → DE)
@@ -632,15 +733,15 @@ Stellen Sie sicher, dass die Teilnahmenummern für Retouren korrekt konfiguriert
 Stornieren eines Versandauftrags
 --------------------------------
 
-Solange ein Versandauftrag nicht manifestiert ist, kann dieser über den DHL
-Webservice storniert werden. Öffnen Sie dazu im Admin-Panel die Detail-Ansicht
+Solange ein Versandauftrag nicht manifestiert ist, kann dieser über die DHL
+REST API storniert werden. Öffnen Sie dazu im Admin-Panel die Detail-Ansicht
 eines Lieferscheins und betätigen Sie den Link *Löschen* in der Box
 *Versand- und Trackinginformationen* neben der Sendungsnummer.
 
 .. image:: images/de/shipping_and_tracking.png
-   :scale: 75 %
+   :width: 10cm
 
-Wenn der Versandauftrag erfolgreich über den DHL Webservice storniert wurde,
+Wenn der Versandauftrag erfolgreich über die DHL REST API storniert wurde,
 werden Sendungsnummer und Paketaufkleber aus dem System entfernt.
 
 .. raw:: pdf
@@ -654,9 +755,10 @@ Der manuelle Prozess zur Erstellung von Versandaufträgen ist insbesondere für
 Händler mit hohem Versandvolumen sehr zeitaufwendig und unkomfortabel. Um den
 Abruf von Paketaufklebern zu erleichtern, können Sie das Erstellen von
 Lieferscheinen und Versandaufträgen automatisieren. Aktivieren Sie dazu in der
-Modulkonfiguration_ die automatische Sendungserstellung und legen Sie fest,
-welche Zusatzleistungen (neben den im Checkout gewählten Services) für alle
-automatisch erzeugten Versandaufträge hinzugebucht werden sollen.
+Modulkonfiguration_ die automatische Sendungserstellung. Bei der
+automatischen Erstellung werden die in den *Standardwerten für Sendungen*
+konfigurierten Zusatzleistungen gebucht. Darüber hinaus werden vom Kunden im
+Checkout gewählte Services übernommen.
 
 .. admonition:: Hinweis
 
@@ -668,10 +770,10 @@ automatisch erzeugten Versandaufträge hinzugebucht werden sollen.
       */15 * * * * /bin/sh /absolute/path/to/magento/cron.sh
 
 Im Abstand von 15 Minuten wird die Extension *DHL Versenden* alle gemäß der
-getroffenen Einstellungen versandbereiten Bestellungen sammeln, Lieferscheine
-erstellen und Versandaufträge an DHL übermitteln. Grundsätzlich ausgenommen von
-der automatischen Sendungserstellung sind Bestellungen, die Exportdokumente
-erfordern.
+getroffenen Einstellungen versandbereiten inländischen Bestellungen sammeln,
+Lieferscheine erstellen und Versandaufträge an DHL übermitteln. EU- und
+internationale Sendungen werden nicht automatisch verarbeitet und erfordern
+eine manuelle Erstellung über die Bestelldetailseite.
 
 Sollten Sie den Zeitplan für die automatische Sendungserstellung anpassen oder
 die Ausführung besser überwachen wollen, installieren Sie die Extension
@@ -689,12 +791,12 @@ Fehlerbehandlung
 Sendungserstellung
 ~~~~~~~~~~~~~~~~~~
 
-Während der Übertragung von Versandaufträgen an den DHL Webservice kann es zu
+Während der Übertragung von Versandaufträgen an die DHL REST API kann es zu
 Fehlern bei der Erstellung eines Paketaufklebers kommen. Die Ursache dafür ist
 in der Regel eine invalide Lieferadresse oder eine für die Lieferadresse nicht
 unterstützte Kombination von Zusatzleistungen.
 
-Bei der manuellen Erstellung von Versandaufträgen bekommen Sie die vom Webservice
+Bei der manuellen Erstellung von Versandaufträgen bekommen Sie die von der REST API
 zurückgemeldete Fehlermeldung direkt angezeigt. Bei der automatischen
 Sendungserstellung werden Fehlermeldungen als Bestellkommentare an der betroffenen
 Bestellung gespeichert. Wenn die Protokollierung in der Modulkonfiguration_
@@ -720,7 +822,7 @@ Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
   in der Box *Versandadresse*.
 
   .. image:: images/de/edit_address_link.png
-     :scale: 60 %
+     :width: 10cm
 
   Im nun angezeigten Formular können Sie im oberen
   Bereich die Standard-Felder der Lieferadresse bearbeiten und im unteren Bereich
@@ -733,12 +835,12 @@ Fehlerhafte Versandaufträge können wie folgt manuell korrigiert werden:
 
 
 .. image:: images/de/edit_address_form.png
-   :scale: 175 %
+   :width: 12cm
 
 Speichern Sie anschließend die Adresse. Wurde die Fehlerursache behoben, so kann
 das manuelle `Erstellen eines Versandauftrags`_ erneut durchgeführt werden.
 
-Wurde ein Versandauftrag über den Webservice erfolgreich erstellt und sollen
+Wurde ein Versandauftrag über die REST API erfolgreich erstellt und sollen
 dennoch nachträgliche Korrekturen vorgenommen werden, so stornieren Sie den
 Versandauftrag wie im Abschnitt `Stornieren eines Versandauftrags`_ beschrieben
 und betätigen Sie anschließend den Button *Paketaufkleber erstellen…* in
@@ -767,7 +869,7 @@ Um das Modul zu **deinstallieren**:
 2. Entfernen Sie die im Abschnitt `Installation`_ genannten Adressattribute.
 3. Entfernen Sie den zum Modul gehörigen Eintrag ``dhl_versenden_setup`` aus der Tabelle ``core_resource``.
 4. Entfernen Sie die zum Modul gehörigen Einträge ``carriers/dhlversenden/*`` aus der Tabelle ``core_config_data``.
-5. Leeren Sie abschließend den Magento-Cache.
+5. Leeren Sie abschließend den Cache.
 
 Das Modul wird **deaktiviert**, wenn der Knoten ``active`` in der Datei
 ``app/etc/modules/Dhl_Versenden.xml`` von ``true`` auf ``false`` abgeändert wird.

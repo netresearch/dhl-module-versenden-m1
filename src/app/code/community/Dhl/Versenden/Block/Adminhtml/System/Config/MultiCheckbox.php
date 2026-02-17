@@ -34,7 +34,7 @@ class Dhl_Versenden_Block_Adminhtml_System_Config_MultiCheckbox extends Mage_Adm
     {
         $value = $element->getData('value');
         if (!is_array($value)) {
-            $value = explode(',', $value);
+            $value = explode(',', (string) $value);
         }
 
         return $value;

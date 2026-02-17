@@ -4,32 +4,31 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Address_FormTest
-    extends EcomDev_PHPUnit_Test_Case
+class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Address_FormTest extends EcomDev_PHPUnit_Test_Case
 {
-    const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_address_form';
+    public const BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_address_form';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
         $storeCode = 'store_one';
 
-        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, array('getStore', 'fetchView'));
+        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, ['getStore', 'fetchView']);
         $blockMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getStore')
             ->willReturn($storeCode);
         $this->replaceByMock('block', self::BLOCK_ALIAS, $blockMock);
 
-        $quoteSessionMock = $this->getModelMock('adminhtml/session_quote', array('init', 'getStoreId'));
+        $quoteSessionMock = $this->getModelMock('adminhtml/session_quote', ['init', 'getStoreId']);
         $quoteSessionMock
-            ->expects($this->any())
+            ->expects(static::any())
             ->method('getStoreId')
             ->willReturn($storeCode);
         $this->replaceByMock('singleton', 'adminhtml/session_quote', $quoteSessionMock);
 
-        $coreSessionMock = $this->getModelMock('core/session', array('init'));
+        $coreSessionMock = $this->getModelMock('core/session', ['init']);
         $this->replaceByMock('singleton', 'core/session', $coreSessionMock);
     }
 
@@ -40,19 +39,19 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Address_FormTest
      */
     public function getForm()
     {
-        $info = new \Dhl\Versenden\Bcs\Api\Info();
+        $info = new \Dhl\Versenden\ParcelDe\Info();
 
         $stationId = '808';
         $postNumber = '12345678';
         $streetNumber = '303';
-        $postalFacility = array(
+        $postalFacility = [
             'packstation_number' => $stationId,
             'post_number' => $postNumber,
-        );
-        $receiver = array(
+        ];
+        $receiver = [
             'street_number' => $streetNumber,
             'packstation' => $postalFacility,
-        );
+        ];
 
         $info->getReceiver()->fromArray($receiver);
 
@@ -68,37 +67,37 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Address_FormTest
 
         /** @var Varien_Data_Form_Element_Abstract $element */
         $element = $fieldset->getElements()->searchById('versenden_info_street');
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator::class,
-            $element
+            $element,
         );
 
         $separatorLabelHtml = '';
         $element->setValue($separatorLabelHtml);
-        $this->assertEquals('<hr/>', $element->getLabelHtml());
+        static::assertEquals('<hr/>', $element->getLabelHtml());
 
         $separatorLabelHtml = 'foo';
         $element->setValue($separatorLabelHtml);
-        $this->assertEquals($separatorLabelHtml, $element->getLabelHtml());
+        static::assertEquals($separatorLabelHtml, $element->getLabelHtml());
 
         $separatorElementHtml = '';
         $element->setData('after_element_html', $separatorElementHtml);
-        $this->assertEmpty($element->getElementHtml());
+        static::assertEmpty($element->getElementHtml());
 
         $separatorElementHtml = 'bar';
         $element->setData('after_element_html', $separatorElementHtml);
-        $this->assertEquals($separatorElementHtml, $element->getElementHtml());
+        static::assertEquals($separatorElementHtml, $element->getElementHtml());
 
         $element = $fieldset->getElements()->searchById('versenden_info_packstation_number');
-        $this->assertInstanceOf(Varien_Data_Form_Element_Abstract::class, $element);
-        $this->assertEquals($stationId, $element->getValue());
+        static::assertInstanceOf(Varien_Data_Form_Element_Abstract::class, $element);
+        static::assertEquals($stationId, $element->getValue());
 
         $element = $fieldset->getElements()->searchById('versenden_info_packstation_post_number');
-        $this->assertInstanceOf(Varien_Data_Form_Element_Abstract::class, $element);
-        $this->assertEquals($postNumber, $element->getValue());
+        static::assertInstanceOf(Varien_Data_Form_Element_Abstract::class, $element);
+        static::assertEquals($postNumber, $element->getValue());
 
         $element = $fieldset->getElements()->searchById('versenden_info_street_number');
-        $this->assertInstanceOf(Varien_Data_Form_Element_Abstract::class, $element);
-        $this->assertEquals($streetNumber, $element->getValue());
+        static::assertInstanceOf(Varien_Data_Form_Element_Abstract::class, $element);
+        static::assertEquals($streetNumber, $element->getValue());
     }
 }

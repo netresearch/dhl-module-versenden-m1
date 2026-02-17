@@ -20,11 +20,11 @@ class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observe
         }
 
         $info = $address->getData('dhl_versenden_info');
-        if (!$info || !$info instanceof \Dhl\Versenden\Bcs\Api\Info) {
+        if (!$info || !$info instanceof \Dhl\Versenden\ParcelDe\Info) {
             return;
         }
 
-        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
+        $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
         $address->setData('dhl_versenden_info', $serializer->serialize($info));
     }
 
@@ -47,7 +47,7 @@ class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observe
             return;
         }
 
-        $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
+        $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
         $address->setData('dhl_versenden_info', $serializer->unserialize($info));
     }
 
@@ -72,7 +72,7 @@ class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observe
                 return;
             }
 
-            $serializer = new \Dhl\Versenden\Bcs\Api\Info\Serializer();
+            $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
             $address->setData('dhl_versenden_info', $serializer->unserialize($info));
         };
 

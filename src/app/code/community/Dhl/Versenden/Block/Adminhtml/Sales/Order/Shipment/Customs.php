@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
-    extends Mage_Core_Block_Template
+class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs extends Mage_Core_Block_Template
 {
     /**
      * Retrieve shipment model instance
@@ -24,12 +23,12 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Customs
     {
         $carrierTerms = Mage::getSingleton('dhl_versenden/shipping_carrier_versenden')->getCode('terms_of_trade');
 
-        $terms = array(
-            array('value' => '', 'label' => $this->helper('adminhtml')->__('--Please Select--')),
-        );
+        $terms = [
+            ['value' => '', 'label' => $this->helper('adminhtml')->__('--Please Select--')],
+        ];
 
         foreach ($carrierTerms as $carrierTerm) {
-            $terms[]= array('value' => $carrierTerm, 'label' => $carrierTerm);
+            $terms[] = ['value' => $carrierTerm, 'label' => $carrierTerm];
         }
 
         return $terms;

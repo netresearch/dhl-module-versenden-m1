@@ -1,28 +1,32 @@
 <?xml version="1.0"?>
+<!-- PHPUnit configuration for industry-standard structure -->
+<!-- Paths are relative to OpenMage root where PHPUnit executes -->
+<!-- Bootstrap: vendor/dhl/module-versenden-m1 is symlink to module source -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/4.8/phpunit.xsd"
-         cacheTokens="true"
-         bootstrap="build/bootstrap.php">
-    <listeners>
-        <listener file="../../app/code/community/EcomDev/PHPUnit/Test/Listener.php" class="EcomDev_PHPUnit_Test_Listener" />
-    </listeners>
-    <testsuites>
-        <testsuite name="Magento Test Suite">
-            <file>../../app/code/community/EcomDev/PHPUnit/Test/Suite.php</file>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src/app/code/community/Dhl/Versenden</directory>
-            <directory suffix=".php">src/lib/Dhl/Versenden</directory>
-            <exclude>
-                <directory suffix=".php">src/app/code/community/Dhl/Versenden/Test</directory>
-                <directory>src/app/code/community/Dhl/*/data</directory>
-                <directory>src/app/code/community/Dhl/*/sql</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-    <logging>
-        <log type="junit" target="var/phpunit/junit.xml"/>
-    </logging>
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+         bootstrap="vendor/dhl/module-versenden-m1/build/bootstrap.php">
+  <coverage>
+    <include>
+      <!-- Module code deployed to app/code/community by composer -->
+      <directory suffix=".php">app/code/community/Dhl/Versenden</directory>
+      <!-- Module library code in vendor (symlinked to module source) -->
+      <directory suffix=".php">vendor/dhl/module-versenden-m1/lib/Dhl/Versenden</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">app/code/community/Dhl/Versenden/Test</directory>
+      <directory>app/code/community/Dhl/*/data</directory>
+      <directory>app/code/community/Dhl/*/sql</directory>
+    </exclude>
+  </coverage>
+  <listeners>
+    <listener file="app/code/community/EcomDev/PHPUnit/Test/Listener.php" class="EcomDev_PHPUnit_Test_Listener"/>
+  </listeners>
+  <testsuites>
+    <testsuite name="DHL Versenden Tests">
+      <directory suffix="Test.php">app/code/community/Dhl/Versenden/Test</directory>
+    </testsuite>
+  </testsuites>
+  <logging>
+    <junit outputFile="var/phpunit/junit.xml"/>
+  </logging>
 </phpunit>

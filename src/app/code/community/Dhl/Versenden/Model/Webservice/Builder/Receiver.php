@@ -4,7 +4,6 @@
  * See LICENSE.md for license details.
  */
 
-use \Dhl\Versenden\Bcs\Api\Webservice\RequestData\ShipmentOrder\Receiver;
 
 class Dhl_Versenden_Model_Webservice_Builder_Receiver
 {
@@ -46,23 +45,28 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
     }
 
     /**
-     * Create receiver from given shipping address
+     * Build receiver data into SDK request builder
      *
+     * @param \Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder
      * @param Mage_Sales_Model_Quote_Address|Mage_Sales_Model_Order_Address $address
-     * @return Receiver
+     * @param bool $includeRecipientEmail Whether to include recipient email (enables DHL parcel notification)
+     * @return void
      */
-    public function getReceiver(Mage_Customer_Model_Address_Abstract $address)
+    public function build(\Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder, Mage_Customer_Model_Address_Abstract $address, bool $includeRecipientEmail = true)
     {
         $this->_countryDirectory->loadByCode($address->getCountryId());
-        $country        = $this->_countryDirectory->getName();
-        $countryISOCode = $this->_countryDirectory->getIso2Code();
+        // Convert country code from ISO-2 to ISO-3 for REST API
+        // The legacy BCS/SOAP receiver uses ISO-2, but REST SDK requires ISO-3
+        $countryISOCode = $this->_countryDirectory->getIso3Code();
         $state          = $address->getRegion();
 
         $street = $this->_helper->splitStreet($address->getStreetFull());
         $streetName      = $street['street_name'];
         $streetNumber    = $street['street_number'];
         $addressAddition = $street['supplement'];
-        $email           = $address->getEmail() ? :  $address->getOrder()->getCustomerEmail();
+        $email = $includeRecipientEmail
+            ? ($address->getEmail() ?: $address->getOrder()->getCustomerEmail())
+            : null;
         $phone           = '';
 
         /** @var Dhl_Versenden_Model_Config $config */
@@ -71,75 +75,63 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         if ($config->isSendReceiverPhone($address->getOrder()->getStoreId())) {
             $phone = $address->getTelephone();
         }
-        
+
         // let 3rd party extensions add postal facility data
         $facility = new Varien_Object();
         Mage::dispatchEvent(
-            'dhl_versenden_fetch_postal_facility', array(
+            'dhl_versenden_fetch_postal_facility',
+            [
                 'customer_address'   => $address,
                 'postal_facility' => $facility,
-            )
+            ],
         );
 
-        $packStation = null;
-        if ($facility->getData('shop_type') === \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_PACKSTATION) {
-            $packStation = new Receiver\Packstation(
+        // Check for postal facility types
+        if ($facility->getData('shop_type') === \Dhl\Versenden\ParcelDe\Info\Receiver\PostalFacility::TYPE_PACKSTATION) {
+            $sdkBuilder->setPackstation(
+                $address->getName(),
+                $facility->getData('post_number'),
+                $facility->getData('shop_number'),
+                $countryISOCode,
                 $address->getPostcode(),
                 $address->getCity(),
-                $country,
-                $countryISOCode,
                 $state,
-                $facility->getData('shop_number'),
-                $facility->getData('post_number')
+                null,
             );
+            return;
         }
 
-        $postFiliale = null;
-        if ($facility->getData('shop_type') === \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_POSTFILIALE) {
-            $postFiliale = new Receiver\Postfiliale(
+        if ($facility->getData('shop_type') === \Dhl\Versenden\ParcelDe\Info\Receiver\PostalFacility::TYPE_POSTFILIALE) {
+            $sdkBuilder->setPostfiliale(
+                $address->getName(),
+                $facility->getData('shop_number'),
+                $countryISOCode,
                 $address->getPostcode(),
                 $address->getCity(),
-                $country,
-                $countryISOCode,
+                null,
+                $facility->getData('post_number'),
                 $state,
-                $facility->getData('shop_number'),
-                $facility->getData('post_number')
+                null,
             );
+            return;
         }
 
-        $parcelShop = null;
-        if ($facility->getData('shop_type') === \Dhl\Versenden\Bcs\Api\Info\Receiver\PostalFacility::TYPE_PAKETSHOP) {
-            $parcelShop = new Receiver\ParcelShop(
-                $address->getPostcode(),
-                $address->getCity(),
-                $country,
-                $countryISOCode,
-                $state,
-                $facility->getData('shop_number'),
-                $streetName,
-                $streetNumber
-            );
-        }
-
-        return new Receiver(
+        // Default: regular recipient address (includes parcel shop fallback)
+        $sdkBuilder->setRecipientAddress(
             $address->getName(),
-            $address->getCompany(),
-            '',
-            $streetName,
-            $streetNumber,
-            $addressAddition,
-            '',
+            $countryISOCode,
             $address->getPostcode(),
             $address->getCity(),
-            $country,
-            $countryISOCode,
-            $address->getRegion(),
-            $phone,
+            $streetName,
+            $streetNumber,
+            $address->getCompany(),
+            null,
             $email,
-            '',
-            $packStation,
-            $postFiliale,
-            $parcelShop
+            $phone,
+            null,
+            $state,
+            null,
+            !empty($addressAddition) ? [$addressAddition] : [],
         );
     }
 }

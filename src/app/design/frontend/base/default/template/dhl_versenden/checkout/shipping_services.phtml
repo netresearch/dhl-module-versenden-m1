@@ -25,42 +25,57 @@
             <?php echo $this->escapeHtml($this->__('Please choose your preferred delivery option:')) ?>
         </p>
         <dl>
-            <?php /** @var \Dhl\Versenden\Bcs\Api\Shipment\Service\Type\Generic $service */ ?>
+            <?php /** @var \Dhl\Versenden\ParcelDe\Service\Type\Generic $service */ ?>
             <?php foreach ($services as $service): ?>
+                <?php
+                    $headline = $this->getServiceHeadline($service->getCode());
+                    $tooltip = $this->getServiceHint($service->getCode());
+                ?>
                 <dt class="service-<?php echo $this->escapeHtml($service->getFrontendInputType() . ' ' . $service::CODE) ?>">
-                    <?php echo $service->getSelectorHtml() ?>
-                    <?php
-                        $tooltip = $this->getServiceHint($service->getCode());
-                        $labelHtml = $service->getLabelHtml();
-                        if ($tooltip !== '') {
-                            $labelHtml = str_replace(
-                                '</label>',
-                                "<i class=\"tooltip-inner\" data-tooltip=\"$tooltip\">?</i></label>",
-                                $labelHtml
+                    <?php if ($headline !== ''): ?>
+                        <?php
+                            $headlineLabel = sprintf(
+                                '<label class="service-headline" for="shipment_service_%s">%s</label>',
+                                $this->escapeHtml($service->getCode()),
+                                $this->escapeHtml($headline)
                             );
-                        }
-                    ?>
-                    <?php /* @noEscape */ echo $labelHtml; ?>
+                        ?>
+                        <?php /* @noEscape */ echo $this->injectTooltip($headlineLabel, $tooltip); ?>
+                    <?php else: ?>
+                        <?php echo $service->getSelectorHtml() ?>
+                        <?php /* @noEscape */ echo $this->injectTooltip($service->getLabelHtml(), $tooltip); ?>
+                    <?php endif; ?>
                 </dt>
+                <?php if ($headline === ''): ?>
                 <dd>
                     <p><?php echo $this->getServiceFeeText($service->getCode()) ?></p>
                 </dd>
+                <?php endif; ?>
                 <dd class="service-<?php echo $this->escapeHtml($service->getFrontendInputType() . ' ' . $service::CODE) ?>">
-                    <?php
-                    if (in_array(
-                        $service->getCode(),
-                        array(
-                            \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredDay::CODE,
-                            \Dhl\Versenden\Bcs\Api\Shipment\Service\PreferredTime::CODE
-                        ),
-                        true
-                    )) {
-                        /* @noEscape */ echo $this->addNoneOption($service->getValueHtml(), $service->getCode());
-                    } else {
-                        /* @noEscape */ echo $service->getValueHtml();
-                    }
-                    ?>
+                    <?php if ($headline !== ''): ?>
+                        <?php echo $service->getSelectorHtml() ?>
+                        <?php /* @noEscape */ echo $service->getLabelHtml(); ?>
+                    <?php endif; ?>
+                    <?php if ($service->getCode() === \Dhl\Versenden\ParcelDe\Service\PreferredDay::CODE): ?>
+                        <div>
+                            <input type="radio"
+                                   name="service_setting[<?php echo $this->escapeHtml($service->getCode()) ?>]"
+                                   id="shipment_service_<?php echo $this->escapeHtml($service->getCode()) ?>_none"
+                                   value="" checked="checked">
+                            <label for="shipment_service_<?php echo $this->escapeHtml($service->getCode()) ?>_none"
+                                   title="<?php echo $this->escapeHtml($this->helper('dhl_versenden/data')->__('no day')) ?>">
+                                <span>-</span>
+                                <span><?php echo $this->escapeHtml($this->helper('dhl_versenden/data')->__('no day')) ?></span>
+                            </label>
+                        </div>
+                    <?php endif; ?>
+                    <?php /* @noEscape */ echo $service->getValueHtml(); ?>
                 </dd>
+                <?php if ($headline !== ''): ?>
+                <dd>
+                    <p><?php echo $this->getServiceFeeText($service->getCode()) ?></p>
+                </dd>
+                <?php endif; ?>
             <?php endforeach; ?>
         </dl>
         <?php endif; ?>
@@ -120,6 +135,12 @@
             var dhlPreferredNeighbour = $('shipment_service_preferredNeighbourDetails');
             if (dhlPreferredLocation && dhlPreferredNeighbour) {
                 observeAndDisable(dhlPreferredLocation, dhlPreferredNeighbour);
+            }
+
+            var dhlPnCheckbox = $('shipment_service_preferredNeighbour');
+            var dhlNndCheckbox = $('shipment_service_noNeighbourDelivery');
+            if (dhlPnCheckbox && dhlNndCheckbox) {
+                observeCheckboxExclusion(dhlPnCheckbox, dhlNndCheckbox, dhlPreferredNeighbour);
             }
 
             //]]>

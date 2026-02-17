@@ -4,21 +4,21 @@
  * See LICENSE.md for license details.
  */
 
-use Dhl\Versenden\Bcs\Api\Shipment\Service;
+use Dhl\Versenden\ParcelDe\Service;
 
 class Dhl_Versenden_Model_Services_Processor
 {
     /**
      * @var Mage_Sales_Model_Quote|Mage_Sales_Model_Order
      */
-    private $quote;
+    protected $quote;
 
     /**
      * Dhl_Versenden_Model_Services_Processor constructor.
      *
      * @param mixed[] $params
      */
-    public function __construct(array $params = array())
+    public function __construct(array $params = [])
     {
         if (isset($params['quote'])) {
             $this->quote = $params['quote'];
@@ -32,14 +32,18 @@ class Dhl_Versenden_Model_Services_Processor
      */
     public function processServices(Service\Collection $availableServices)
     {
-        try {
-            $this->augmentServicesWithApiData($availableServices);
-        } catch (Exception $exception) {
-            Mage::log(
-                'Could not load DHL checkout shipping services: ' . $exception->getMessage(),
-                Zend_Log::ERR,
-                'dhl_service.log'
-            );
+        if ($this->isRecipientDomestic()) {
+            try {
+                $this->augmentServicesWithApiData($availableServices);
+            } catch (Exception $exception) {
+                Mage::log(
+                    'Could not load DHL checkout shipping services: ' . $exception->getMessage(),
+                    Zend_Log::ERR,
+                    'dhl_service.log',
+                );
+                $this->removeOfflineServices($availableServices);
+            }
+        } else {
             $this->removeOfflineServices($availableServices);
         }
         if ($this->hasBackOrderedProducts() && $availableServices->getItem(Service\PreferredDay::CODE)) {
@@ -64,7 +68,7 @@ class Dhl_Versenden_Model_Services_Processor
         /** @var Dhl_Versenden_Model_Services_CheckoutService $apiServices */
         $apiServices = Mage::getSingleton(
             'dhl_versenden/services_checkoutService',
-            array('quote' => $this->quote)
+            ['quote' => $this->quote],
         );
 
         /** Load data from API. */
@@ -78,16 +82,20 @@ class Dhl_Versenden_Model_Services_Processor
                 continue;
             }
 
-            /** Remove services that are not availiable according to the API */
-            if (!$apiServices->getService($code)->getAvailable()) {
+            /** Remove services that are not available according to the API */
+            $apiService = $apiServices->getService($code);
+            if (!$apiService || !$apiService->getAvailable()) {
                 $availableServices->removeItem($serviceName);
                 continue;
             }
 
-            /** Set Prefferred Day or Time options from API */
-            if (in_array($code, array(Service\PreferredDay::CODE, Service\PreferredTime::CODE), true)) {
-                $options = $serviceOptions->getOptions($apiServices->getService($code));
-                $availableServices->getItem($code)->setOptions($options);
+            /** Set Preferred Day options from API */
+            if ($code === Service\PreferredDay::CODE) {
+                $service = $availableServices->getItem($code);
+                if ($service instanceof Service\Type\Radio) {
+                    $options = $serviceOptions->getOptions($apiServices->getService($code));
+                    $service->setOptions($options);
+                }
             }
         }
     }
@@ -100,10 +108,9 @@ class Dhl_Versenden_Model_Services_Processor
      */
     protected function removeOfflineServices(Service\Collection $availableServices)
     {
-        $onlineOnlyServices = array(
+        $onlineOnlyServices = [
             Service\PreferredDay::CODE,
-            Service\PreferredTime::CODE
-        );
+        ];
 
         foreach ($availableServices->getItems() as $key => $service) {
             $code = $service->getCode();
@@ -111,6 +118,21 @@ class Dhl_Versenden_Model_Services_Processor
                 $availableServices->removeItem($key);
             }
         }
+    }
+
+    /**
+     * Check if the recipient address is in Germany (DE).
+     *
+     * The CIG Checkout API only supports German postcodes and the services
+     * it provides (preferred day/location/neighbor) are DE-domestic only.
+     *
+     * @return bool
+     */
+    protected function isRecipientDomestic()
+    {
+        $shippingAddress = $this->quote->getShippingAddress();
+
+        return $shippingAddress && $shippingAddress->getCountryId() === 'DE';
     }
 
     /**
@@ -124,7 +146,7 @@ class Dhl_Versenden_Model_Services_Processor
         foreach ($this->quote->getAllItems() as $item) {
             /** @var Mage_Sales_Model_Quote_Item|Mage_Sales_Model_Order_Item $item */
             $stockItem = $item->getProduct()->getStockItem();
-            $qty = $item->getParentItemId() ? (float)$item->getParentItem()->getQty() : (float)$item->getQty();
+            $qty = $item->getParentItemId() ? (float) $item->getParentItem()->getQty() : (float) $item->getQty();
             if ($item instanceof Mage_Sales_Model_Quote_Item) {
                 $children = $item->getChildren();
             } else {
@@ -132,7 +154,7 @@ class Dhl_Versenden_Model_Services_Processor
             }
 
             if (empty($children) &&
-                ((float)$stockItem->getQty() === 0.0 || $qty >= (float)$stockItem->getQty())
+                ((float) $stockItem->getQty() === 0.0 || $qty >= (float) $stockItem->getQty())
             ) {
                 $result = true;
             }

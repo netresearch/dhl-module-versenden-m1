@@ -4,8 +4,7 @@
  * See LICENSE.md for license details.
  */
 
-class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
-    extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
+class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
 {
     /**
      * @var Mage_Core_Block_Html_Select
@@ -24,7 +23,7 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
             $this->_templateRenderer = $this->getLayout()->createBlock(
                 'dhl_versenden/adminhtml_form_field_procedure_select',
                 '',
-                array('is_render_to_js_template' => true)
+                ['is_render_to_js_template' => true],
             );
 
             /** @var Dhl_Versenden_Model_Adminhtml_System_Config_Source_Procedure $sourceModel */
@@ -43,7 +42,7 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
     {
         $row->setData(
             'option_extra_attr_' . $this->_getTemplateRenderer()->calcOptionHash($row->getData('procedure')),
-            'selected="selected"'
+            'selected="selected"',
         );
 
         parent::_prepareArrayRow($row);
@@ -56,17 +55,19 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation
     protected function _prepareToRender()
     {
         $this->addColumn(
-            'procedure', array(
-            'label' => $this->__('Procedure'),
-            'renderer' => $this->_getTemplateRenderer()
-            )
+            'procedure',
+            [
+                'label' => $this->__('Procedure'),
+                'renderer' => $this->_getTemplateRenderer(),
+            ],
         );
         $this->addColumn(
-            'participation', array(
-            'label' => $this->__('Participation'),
-            'style' => 'width:80px',
-            'class' => 'input-text required-entry'
-            )
+            'participation',
+            [
+                'label' => $this->__('Participation'),
+                'style' => 'width:80px',
+                'class' => 'input-text required-entry',
+            ],
         );
         // hide "Add after" button
         $this->_addAfter = false;

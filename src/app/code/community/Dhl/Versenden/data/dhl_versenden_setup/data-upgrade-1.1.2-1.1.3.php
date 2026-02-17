@@ -16,7 +16,7 @@ foreach ($rows as $row) {
     $encryptedValue = Mage::helper('core/data')->encrypt($row['value']);
     $installer->getConnection()->update(
         $this->getTable('core_config_data'),
-        array('value' => $encryptedValue),
-        array('config_id = ?' => $row['config_id'])
+        ['value' => $encryptedValue],
+        ['config_id = ?' => $row['config_id']],
     );
 }

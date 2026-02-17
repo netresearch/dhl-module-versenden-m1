@@ -22,13 +22,13 @@
 DHL Versenden: Shipping for DHL Business Customers
 ==================================================
 
-The module *DHL Versenden* (Shipping) for Magento® enables merchants with a DHL Business
-Account to create shipments via the DHL Business Customer API (webservice) and
+The module *DHL Versenden* (Shipping) for OpenMage enables merchants with a DHL Business
+Account to create shipments via the DHL Parcel DE REST API and
 retrieve shipping labels. The extension also allows booking additional services
 and creating the customs declaration for international shipping.
 
 This document covers the **installation, configuration, and usage of the module
-in Magento® 1**.
+in OpenMage**.
 
 .. raw:: pdf
 
@@ -45,21 +45,21 @@ Requirements
 
 The following requirements must be met for the smooth operation of the module:
 
-Magento®
+OpenMage
 --------
 
-The following Magento® versions are supported:
+The following OpenMage versions are supported:
 
-- Open Magento - Magento LTS >= 19.x
+- OpenMage LTS >= 20.x
 
 PHP
 ---
 
 These PHP versions are supported:
 
-- PHP >= 7.4.0
+- PHP >= 8.2
 
-To connect to the API (webservice), the PHP SOAP extension must be installed
+To connect to the DHL REST API, the PHP cURL extension must be installed
 and enabled on the web server.
 
 Hints for using the module
@@ -89,43 +89,24 @@ Language support
 The module supports the locales ``en_US`` and ``de_DE``. The translations are stored
 in CSV translation files and can therefore be modified by third-party modules.
 
-Third-Party module compability
-------------------------------
-
-Amazon Pay For Europe
-~~~~~~~~~~~~~~~~~~~~~
-
-The module is compatible with the extension *Creativestyle Amazon Pay For Europe*,
-version **1.0.16** or higher.
-
-To make sure the address is saved correctly, the following setting must be made in the
-configuration of the Amazon Pay Module:
-
-::
-
-    System → Configuration → creativestyle → Amazon Pay → General Settings →
-    Enable Login with Amazon → Yes
-
-.. admonition:: Important
-
-   This setting **must be enabled**, otherwise the address will not be saved correctly and
-   therefore cannot be sent to DHL. The address would have to be edited manually later.
-
 Data protection
 ---------------
 
 The module transmits personal data to DHL which are needed to process the shipment (names,
 addresses, phone numbers, email addresses, etc.). The amount of data depends on the
 `Module configuration`_ as well as the booked `Additional Services In Checkout`_.
+In particular, the recipient's email address is only transmitted to DHL when the
+*Automatic Parcel Announcement* service is active (see `Additional Services In Checkout`_).
 
 The merchant needs the agreement from the customer to process the data, e.g. via the shop's
-terms and conditions and / or an agreement in the checkout (Magento® Checkout Agreements).
+terms and conditions and / or an agreement in the checkout (OpenMage Checkout Agreements).
 
-The data which is transmitted to the DHL Business Customer Shipping API can be seen in the
+The data which is transmitted to the DHL Parcel DE REST API can be seen in the
 log ``var/log/dhl_versenden.log`` (see `General Settings`_ to enable this).
 
 For `Additional Services In Checkout`_ (Parcel Management API), data will be logged in the
-file ``var/log/dhl_service.log``. If no errors occur, nothing is logged.
+file ``var/log/dhl_service.log``. The amount of data logged depends on the configured
+log level (see `General Settings`_).
 
 .. raw:: pdf
 
@@ -185,7 +166,7 @@ and *Origin* are filled in completely:
   * Bank data
 
 The sections *Shipping Methods → DHL* and *Shipping Methods → DHL (deprecated)*
-are core parts of Magento® which connect to the webservice of DHL USA only.
+are core parts of OpenMage which connect to the webservice of DHL USA only.
 They are not relevant for DHL Business Shipping (Versenden) in Germany.
 
 **Do not enable those sections if you are using DHL Versenden (Shipping)!**
@@ -200,12 +181,11 @@ General Settings
 Here you can choose if you want to run the module in **Sandbox Mode** to test the integration,
 or in **production mode**.
 
-You can also configure the **logging**. If the logging is enabled here **and**
-in *System → Configuration → Advanced → Developer → Log Settings*, the communication with
-the Busincess Customer Shipping API will be recorded in the file ``var/log/dhl_versenden.log``.
+You can also configure the **logging**. If the logging is enabled, the communication with
+the DHL Parcel DE REST API will be recorded in the file ``var/log/dhl_versenden.log``.
 You can choose between three log levels:
 
-* *Error*: Only record communication errors between the shop and the DHL webservice.
+* *Error*: Only record communication errors between the shop and the DHL REST API.
 * *Warning*: Record communication errors and also errors related to the message
   content (e.g. address validation failed, invalid services selected).
 * *Debug*: Record all errors, messages, and transferred content (label PDFs). **Recommended
@@ -218,14 +198,15 @@ You can choose between three log levels:
 
    Log files:
 
-   * ``var/log/dhl_versenden.log`` for label creation (Business Customer Shipping API)
+   * ``var/log/dhl_versenden.log`` for label creation (DHL Parcel DE REST API)
    * ``var/log/dhl_service.log`` for additional DHL services (Parcel Management API)
 
 Account Data
 ~~~~~~~~~~~~
 
-The section *Account Data* holds your access credentials for the DHL webservice
-which are required for production mode. Customers with a DHL contract will get
+The section *Account Data* holds your access credentials for the DHL Parcel DE REST API
+which are required for production mode. You will need a DHL application key (API token)
+for authentication. Customers with a DHL contract will get
 this information directly from the DHL team (Vertrieb DHL Paket).
 
 A detailed tutorial for configuring the Participation Numbers (Teilnahmenummern) can
@@ -239,7 +220,7 @@ Shipment Orders
 ~~~~~~~~~~~~~~~
 
 In the section *Shipment Orders*, the configuration for creating shipments via
-the DHL webservice is made.
+the DHL REST API is made.
 
 * *Print only if codeable*: If this is enabled, only shipments with perfectly
   valid addresses will be accepted by DHL. Otherwise, DHL will reject the shipment
@@ -255,10 +236,11 @@ the DHL webservice is made.
 * *Shipping Methods for DHL Versenden*: Select which shipping methods should be
   linked to DHL Versenden. For shipping methods that are selected here, the available
   DHL services will be displayed in the checkout, and DHL labels will be created when
-  creating the Magento® shipment.
+  creating the OpenMage shipment.
 * *Cash On Delivery payment methods for DHL Versenden*: Select which payment methods
   should be treated as Cash On Delivery (COD) payment methods. If one of these payment
   methods is used, a Cash On Delivery label will be created.
+* *Print Format*: Select the label print format (e.g. A4, 910-300-700). Default: A4.
 
 .. raw:: pdf
 
@@ -285,6 +267,10 @@ Please also note the information about `Booking additional services`_ and
   * *Enable on customers choice*: The customer decides in the checkout if the service should be booked.
   * *No*: The service will not be booked.
 
+  The recipient's email address is only transmitted to DHL when parcel
+  announcement is booked. When the service is disabled, no email data is sent
+  to DHL (see also `Data protection`_).
+
 * *Enable delivery day*: The customer chooses a specific day on which the shipment
   should arrive. The available days are displayed dynamically, depending on the recipient's
   address.
@@ -304,6 +290,39 @@ Please also note the information about `Booking additional services`_ and
    To make sure the time threshold works as expected, the server time needs to be set
    correctly. Check for any offsets due to daylight saving time or differing time
    zones. Adjust the cut off time setting to compensate, if needed.
+
+* *Enable No Neighbour Delivery*: The customer can request that the shipment is not
+  delivered to a neighbour. Select *Yes* to offer this service in the checkout.
+* *No Neighbour Delivery handling additional charge (handling fee)*: This amount
+  will be added to the shipping cost if the service is used. Use a decimal point,
+  not comma. The gross amount must be entered here (incl. VAT). Enter ``0`` for
+  no additional charge.
+* *No Neighbour Delivery handling fee text*: This text will be displayed to the
+  customer in the checkout if the service has been selected. You can use the
+  placeholder ``$1`` in the text which will show the additional handling fee and
+  currency in the checkout.
+* *Enable GoGreen Plus*: The customer can book climate-neutral shipping. Select *Yes*
+  to offer this service in the checkout.
+
+  .. admonition:: Note
+
+     If default commissioning (*Standardbeauftragung*) is enabled in the DHL business
+     customer portal, GoGreen Plus is applied automatically to all shipments regardless
+     of this setting. This is the recommended way to enable GoGreen Plus for all orders.
+
+* *GoGreen Plus handling additional charge (handling fee)*: This amount will be added
+  to the shipping cost if the service is used.
+* *GoGreen Plus handling fee text*: This text will be displayed to the customer in
+  the checkout if the service has been selected. You can use the placeholder ``$1``
+  for the fee amount.
+* *Enable Closest Drop Point (CDP)*: The customer can choose delivery to the nearest
+  DHL drop point instead of home delivery. This service is available for eligible
+  EU countries only (AT, BE, BG, DK, FI, FR, HU, PL, SE). When CDP is selected,
+  the recipient's email address is automatically included in the shipment data.
+* *CDP handling additional charge (handling fee)*: This amount will be added to the
+  shipping cost if the service is used.
+* *CDP handling fee text*: This text will be displayed to the customer in the checkout
+  if the service has been selected. You can use the placeholder ``$1`` for the fee amount.
 
 .. raw:: pdf
 
@@ -325,12 +344,34 @@ automatically.
 The setting *Shipping Product (Domestic)* defines the domestic default shipping product for automated shipment orders.
 The following products are available:
 
-- National Shipment (Paket National) for parcels up to 31.5 kg
-- Merchandise Shipment (Kleinpaket) for smaller/low weight goods
+- V01PAK – DHL Paket (up to 31.5 kg)
+- V62KP – DHL Kleinpaket
+
+For international destinations, the shipping product is selected automatically based on
+the destination country.
 
 Shipment Defaults
 ~~~~~~~~~~~~~~~~~
 The *additional services* which should be booked automatically can be chosen here.
+The following default services can be configured:
+
+* Visual Check of Age (A16 / A18)
+* Return Shipment
+* Additional Insurance
+* Bulky Goods
+* No Neighbour Delivery
+* Named Person Only
+* Signed For By Recipient
+* Endorsement (Return / Abandon)
+* Delivery Type (Economy / Premium / CDP)
+* PDDP
+* Parcel Outlet Routing (with notification email)
+
+.. admonition:: Note
+
+   Cash on Delivery (COD) is determined automatically from the order's payment method
+   and cannot be configured as a shipment default. GoGreen Plus is a customer-facing
+   checkout service only and is not available as a shipment default.
 
 Contact Data
 ~~~~~~~~~~~~
@@ -379,6 +420,10 @@ Additional costs for services
 The service *delivery day* is **enabled by default!**
 Therefore the standard DHL handling fee will be added to the shipping cost.
 
+The services *No Neighbour Delivery*, *GoGreen Plus*, and *Closest Drop Point (CDP)*
+can also be configured with handling fees that are added to the shipping cost when
+booked during checkout (see `Additional Services In Checkout`_).
+
 When using the shipping method *Free Shipping* the additional handling fees will
 always be ignored!
 
@@ -403,7 +448,7 @@ shipments and labels should be created. If the customer now selects one of those
 shipping methods in the checkout, the configured additional services are offered.
 
 .. image:: images/en/checkout_services.png
-   :scale: 45 %
+   :width: 14cm
 
 In the checkout step *Payment information* the Cash On Delivery payment methods
 will be disabled if Cash On Delivery is not available for the selected delivery
@@ -470,7 +515,7 @@ You will get to the page *New shipment for order*. Activate the checkbox
 *Create shipping label* and click the button *Submit shipment...*.
 
 .. image:: images/en/button_submit_shipment.png
-   :scale: 75 %
+   :width: 6cm
 
 Now a popup window for selecting the articles in the package will be opened. Click
 the button *Add products*, select the products, and confirm by clicking
@@ -479,12 +524,12 @@ the button *Add products*, select the products, and confirm by clicking
 .. admonition:: Multipack shipments
 
    Splitting the products / items into multiple packages is currently not supported
-   by the DHL webservice. As an alternative, you can create several shipments for
+   by the DHL REST API. As an alternative, you can create several shipments for
    one order (partial shipment), see also `this tutorial <http://dhl.support.netresearch.de/support/solutions/articles/12000029044>`_.
 
 The button *OK* in the popup window is now enabled. When clicking it, the shipment
 will be transmitted to DHL and (if the transmission was successful) a shipping
-label will be retrieved. If there was an error, the message from the DHL webservice
+label will be retrieved. If there was an error, the message from the DHL REST API
 will be displayed, and you can correct the data accordingly, see also Troubleshooting_.
 
 International shipments
@@ -504,24 +549,70 @@ Everything else is the same as described in the section `National shipments`_.
 Shipping Product
 ~~~~~~~~~~~~~~~~~
 
-For domestic orders, the following products are available:
-* National Shipment (Paket National) for parcels up to 31.5 kg
-* Merchandise Shipment (Kleinpaket) for smaller/low weight goods
+The shipping product is selected automatically based on the destination country
+or can be chosen manually in the packaging popup. The following products are available:
+
+**Domestic (DE → DE):**
+
+* V01PAK – DHL Paket (up to 31.5 kg)
+* V62KP – DHL Kleinpaket
+
+**International (EU + Rest of World):**
+
+* V53WPAK – DHL Paket International
+* V66WPI – DHL Warenpost International
 
 Service selection
 ~~~~~~~~~~~~~~~~~
 
 Aside from the services that can be selected by the customer in the checkout, there
-are other services available for merchants in the DHL Business Portal
-(Geschäftskundenportal). The available services for the current delivery address
-are shown in the popup window for selecting the shipment articles.
+are other services available for merchants in the packaging popup. The available services
+for the current shipping product and delivery address are shown in the popup window
+for selecting the shipment articles.
 
 .. image:: images/en/merchant_services.png
-   :scale: 175 %
+   :width: 16cm
 
 The services selected by the customer in the checkout will already be selected
 here. Also, the service *Address validation* (Print only if codeable) will be
 selected if enabled in the general `Module configuration`_.
+
+.. admonition:: Read-only services
+
+   Services selected by the customer during checkout (e.g. preferred location,
+   preferred neighbour, Closest Drop Point) and payment-derived services (Cash on
+   Delivery) appear as **disabled checkboxes** in the packaging popup. The merchant
+   can see them but cannot change them.
+
+Not all services are available for all shipping products. The packaging popup
+automatically shows only applicable services based on the selected product and route.
+
+**Delivery services:**
+
+* Additional Insurance (checkbox, insured value equals order total)
+* Return Shipment (checkbox)
+* Bulky Goods (checkbox)
+* Visual Check of Age (A16 / A18)
+* Named Person Only (checkbox)
+* No Neighbour Delivery (checkbox)
+* GoGreen Plus (checkbox, only available if booked by customer in checkout)
+
+**Location services:**
+
+* Parcel Outlet Routing (checkbox + email input, pre-filled from order)
+* Preferred Location / Preferred Neighbour (from checkout, if selected)
+
+**International services:**
+
+* Endorsement (Return / Abandon)
+* Delivery Type (Economy / Premium / CDP) — when the customer selects Closest Drop
+  Point (CDP) in the checkout, the Delivery Type is pre-set to CDP and locked
+* PDDP (checkbox, auto-enabled for CH, GB, NO, US destinations)
+
+**Payment services:**
+
+* Cash on Delivery (automatic, read-only — enabled when the order uses a COD payment
+  method as configured in `Shipment Orders`_, hidden otherwise)
 
 Please note that the following inputs are **not** allowed for *drop-off location* and *neighbor*:
 
@@ -550,7 +641,7 @@ For shipments to DHL locations (Packstation, Post Offices, etc.) please use the 
 Mass action
 ~~~~~~~~~~~
 
-National and EU shipments and labels can be created using a mass action in the
+Domestic shipments and labels can be created using a mass action in the
 order grid:
 
 * Sales → Orders → Mass action *Create Shipping Labels*
@@ -563,6 +654,11 @@ The following things apply:
 * Additional services which are selected in the *Automatic Shipment Creation* section
   of the `Module configuration`_ will be added.
 
+.. admonition:: Note
+
+   The mass action only supports domestic shipments (DE → DE). EU and
+   international shipments must be created manually via the order detail page.
+
 Shipment overview
 -----------------
 
@@ -574,7 +670,7 @@ indicate the shipment status.
 * **Gray icon**: transmission to DHL not executed yet.
 
 .. image:: images/en/label_status.png
-   :scale: 100 %
+   :width: 5cm
 
 .. raw:: pdf
 
@@ -591,7 +687,7 @@ of the Admin Panel:
 * Detail page of a shipment → Button *Print shipping label*
 
 Please note that this will not transmit *new* shipments to DHL, but only show
-the DHL labels which are already stored in Magento®.
+the DHL labels which are already stored in OpenMage.
 
 To create *new* DHL shipments and labels, please follow the instructions in the
 section `Mass action`_.
@@ -603,6 +699,9 @@ When shipping within Germany (DE → DE) it is possible to create a return slip 
 the shipping label.
 
 Use the option *Return shipment* when requesting a label in the packaging popup.
+This option is only available when the *Return Shipment* service is enabled in
+*Shipment Defaults*. When *GoGreen Plus* is booked for the outbound shipment, it is
+automatically applied to the return label as well.
 
 To book this service, make sure the participation numbers for returns are properly configured:
 
@@ -612,12 +711,12 @@ Canceling a shipment
 --------------------
 
 As long as a shipment has not been manifested, it can be canceled via the
-DHL webservice. In the Admin Panel, open the detail page of a shipment and click
+DHL REST API. In the Admin Panel, open the detail page of a shipment and click
 the link *Delete* in the box *Shipping and tracking information* next to the
 tracking number.
 
 .. image:: images/en/shipping_and_tracking.png
-   :scale: 75 %
+   :width: 10cm
 
 If the shipment was canceled successfully, the tracking number and the
 shipping label will be deleted from the system.
@@ -632,9 +731,10 @@ Automatic shipment creation
 The process for creating shipments manually can be too time-consuming or
 cumbersome for merchants with a high shipment volume. To make this easier,
 you can automate the process for creating shipments and transmitting them to
-DHL. Enable the automatic shipment creation in the `Module configuration`_ and
-select which services should be booked by default (in addition to those selected
-by the customer in the checkout).
+DHL. Enable the automatic shipment creation in the `Module configuration`_.
+The automatic shipment creation applies the services configured in
+*Shipment Defaults*. If the customer selected additional services during
+checkout, those selections are applied on top.
 
 .. admonition:: Note
 
@@ -645,10 +745,10 @@ by the customer in the checkout).
       # m h dom mon dow user command
       */15 * * * * /bin/sh /absolute/path/to/magento/cron.sh
 
-Every 15 minutes the DHL extension will collect all orders which are ready for
-shipping (according to the configuration), create shipments, and transmit them
-to DHL. The automatic mode will not include shipments that require customs
-declarations.
+Every 15 minutes the DHL extension will collect all domestic orders which are
+ready for shipping (according to the configuration), create shipments, and
+transmit them to DHL. EU and international shipments are not processed
+automatically and must be created manually via the order detail page.
 
 If you want to change the timing for the automatic shipment creation, or you need
 a better monitoring of the execution, you can install the extension `Aoe_Scheduler`_.
@@ -690,7 +790,7 @@ Erroneous shipment requests can be corrected as follows:
   and correct any errors. Use the link *Edit* in the box *Shipping address*.
 
   .. image:: images/en/edit_address_link.png
-     :scale: 60 %
+     :width: 10cm
 
   On this page, you can edit the address fields in the upper part, and the special
   fields for DHL shipping in the lower part:
@@ -702,19 +802,19 @@ Erroneous shipment requests can be corrected as follows:
 
 
 .. image:: images/en/edit_address_form.png
-   :scale: 175 %
+   :width: 12cm
 
 Afterwards, save the address. If the error has been corrected, you can retry
 `Creating a shipment`_.
 
-If a shipment has already been transmitted successfully via the webservice, but
+If a shipment has already been transmitted successfully via the REST API, but
 you want to make changes afterwards, please cancel the shipment first as described
 in the section `Canceling a shipment`_. Then click *Create shipping label...*
 inside the same box *Shipping and tracking information*. From here on, the
 process is the same as described in `Creating a shipment`_.
 
-Addition DHL services
-~~~~~~~~~~~~~~~~~~~~~
+Additional DHL services
+~~~~~~~~~~~~~~~~~~~~~~~
 
 In case of problems with `Additional Services In Checkout`_ (e.g. delivery day), error messages will be
 written to a separate log file. See the notes in chapter `General settings`_. The log contains information

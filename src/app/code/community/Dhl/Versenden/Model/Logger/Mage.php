@@ -13,7 +13,7 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
     protected $_file = 'dhl_versenden.log';
 
     /** @var int[] */
-    protected $_levelMapping = array(
+    protected $_levelMapping = [
         \Psr\Log\LogLevel::EMERGENCY => Zend_Log::EMERG,
         \Psr\Log\LogLevel::ALERT     => Zend_Log::ALERT,
         \Psr\Log\LogLevel::CRITICAL  => Zend_Log::CRIT,
@@ -22,7 +22,7 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
         \Psr\Log\LogLevel::NOTICE    => Zend_Log::NOTICE,
         \Psr\Log\LogLevel::INFO      => Zend_Log::INFO,
         \Psr\Log\LogLevel::DEBUG     => Zend_Log::DEBUG,
-    );
+    ];
 
     /**
      * Dhl_Versenden_Model_Logger_Mage constructor.
@@ -46,10 +46,10 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
      *
      * @return string
      */
-    protected function interpolate($message, array $context = array())
+    protected function interpolate($message, array $context = [])
     {
         // build a replacement array with braces around the context keys
-        $replace = array();
+        $replace = [];
         foreach ($context as $key => $val) {
             // check that the value can be casted to string
             if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
@@ -70,13 +70,25 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
      *
      * @return null
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         if (isset($context['exception'])) {
             $this->_writer->logException($context['exception']);
+            // Remove exception from context to avoid JSON serialization issues
+            unset($context['exception']);
         }
 
+        // Interpolate PSR-3 placeholders: "User {user}" with ['user' => 'John'] → "User John"
         $message = $this->interpolate($message, $context);
-        $this->_writer->log($message, $this->_levelMapping[$level], $this->_file);
+
+        // Append context as JSON if present (for structured logging)
+        if (!empty($context)) {
+            $contextJson = json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $message .= ' ' . $contextJson;
+        }
+
+        // Force log = true to bypass Magento's dev/log/active check
+        // We've already validated configuration in ConfigAware wrapper
+        $this->_writer->log($message, $this->_levelMapping[$level], $this->_file, true);
     }
 }

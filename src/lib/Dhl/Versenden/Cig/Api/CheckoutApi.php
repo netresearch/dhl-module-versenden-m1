@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CheckoutApi
  * PHP version 5
@@ -54,8 +55,8 @@ class CheckoutApi
      * @param HeaderSelector $selector
      */
     public function __construct(
-        Configuration $config = null,
-        HeaderSelector $selector = null
+        ?Configuration $config = null,
+        ?HeaderSelector $selector = null
     ) {
         $this->config = $config ?: new Configuration();
         $this->headerSelector = $selector ?: new HeaderSelector();
@@ -90,7 +91,7 @@ class CheckoutApi
             $xEKP,
             $recipientZip,
             $startDate,
-            $xRequestID
+            $xRequestID,
         );
 
         return $response;
@@ -123,7 +124,7 @@ class CheckoutApi
             $xEKP,
             $recipientZip,
             $startDate,
-            $xRequestID
+            $xRequestID,
         );
 
         try {
@@ -134,7 +135,7 @@ class CheckoutApi
                     "[{$e->getCode()}] {$e->getMessage()}",
                     $e->getCode(),
                     $request->getLastResponse()->getHeaders() ?: null,
-                    $request->getLastResponse()->getBody() ?: null
+                    $request->getLastResponse()->getBody() ?: null,
                 );
             }
 
@@ -145,11 +146,11 @@ class CheckoutApi
                     sprintf(
                         '[%d] Error connecting to the API (%s)',
                         $statusCode,
-                        $request->getUri()
+                        $request->getUri(),
                     ),
                     $statusCode,
                     $request->getLastResponse()->getHeaders(),
-                    $request->getLastResponse()->getBody()
+                    $request->getLastResponse()->getBody(),
                 );
             }
 
@@ -164,7 +165,7 @@ class CheckoutApi
             }
 
             return [
-                ObjectSerializer::deserialize($content, $returnType, array()),
+                ObjectSerializer::deserialize($content, $returnType, []),
                 $statusCode,
                 $request->getLastResponse()->getHeaders(),
             ];
@@ -174,7 +175,7 @@ class CheckoutApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\Dhl\Versenden\Cig\Model\AvailableServicesMap',
-                        $e->getResponseHeaders()
+                        $e->getResponseHeaders(),
                     );
                     $e->setResponseObject($data);
                     break;
@@ -182,7 +183,7 @@ class CheckoutApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\Dhl\Versenden\Cig\Model\Status',
-                        $e->getResponseHeaders()
+                        $e->getResponseHeaders(),
                     );
                     $e->setResponseObject($data);
                     break;
@@ -213,30 +214,30 @@ class CheckoutApi
         // verify the required parameter 'xEKP' is set
         if ($xEKP === null || (is_array($xEKP) && count($xEKP) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $xEKP when calling checkoutRecipientZipAvailableServicesGet'
+                'Missing the required parameter $xEKP when calling checkoutRecipientZipAvailableServicesGet',
             );
         }
         // verify the required parameter 'recipientZip' is set
         if ($recipientZip === null || (is_array($recipientZip) && count($recipientZip) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $recipientZip when calling checkoutRecipientZipAvailableServicesGet'
+                'Missing the required parameter $recipientZip when calling checkoutRecipientZipAvailableServicesGet',
             );
         }
-        if (!preg_match("/^[0-9]{5}$/", $recipientZip)) {
+        if (!preg_match('/^[0-9]{5}$/', $recipientZip)) {
             throw new \InvalidArgumentException(
-                "invalid value for \"recipientZip\" when calling CheckoutApi.checkoutRecipientZipAvailableServicesGet, must conform to the pattern /^[0-9]{5}$/."
+                'invalid value for "recipientZip" when calling CheckoutApi.checkoutRecipientZipAvailableServicesGet, must conform to the pattern /^[0-9]{5}$/.',
             );
         }
 
         // verify the required parameter 'startDate' is set
         if ($startDate === null || (is_array($startDate) && count($startDate) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $startDate when calling checkoutRecipientZipAvailableServicesGet'
+                'Missing the required parameter $startDate when calling checkoutRecipientZipAvailableServicesGet',
             );
         }
 
         $resourcePath = '/checkout/{recipientZip}/availableServices';
-        $queryParams = array();
+        $queryParams = [];
         // query params
         if ($startDate !== null) {
             $queryParams['startDate'] = ObjectSerializer::toQueryValue($startDate);
@@ -255,7 +256,7 @@ class CheckoutApi
             $resourcePath = str_replace(
                 '{' . 'recipientZip' . '}',
                 ObjectSerializer::toPathValue($recipientZip),
-                $resourcePath
+                $resourcePath,
             );
         }
 
@@ -267,7 +268,7 @@ class CheckoutApi
             $request->setHeaders(
                 'Authorization',
                 'Basic ' .
-                base64_encode($this->config->getUsername() . ":" . $this->config->getPassword())
+                base64_encode($this->config->getUsername() . ':' . $this->config->getPassword()),
             );
         }
         // this endpoint requires API key authentication
@@ -312,7 +313,7 @@ class CheckoutApi
             $recipientZip,
             $startParcelCenter,
             $startDate,
-            $xRequestID
+            $xRequestID,
         );
 
         return $response;
@@ -349,7 +350,7 @@ class CheckoutApi
             $recipientZip,
             $startParcelCenter,
             $startDate,
-            $xRequestID
+            $xRequestID,
         );
 
         try {
@@ -360,7 +361,7 @@ class CheckoutApi
                     "[{$e->getCode()}] {$e->getMessage()}",
                     $e->getCode(),
                     $request->getResponseHeader() ?: null,
-                    $request->getResponseBody() ?: null
+                    $request->getResponseBody() ?: null,
                 );
             }
 
@@ -371,11 +372,11 @@ class CheckoutApi
                     sprintf(
                         '[%d] Error connecting to the API (%s)',
                         $statusCode,
-                        $request->getUrl()
+                        $request->getUrl(),
                     ),
                     $statusCode,
                     $request->getResponseHeader(),
-                    $request->getResponseBody()
+                    $request->getResponseBody(),
                 );
             }
 
@@ -400,7 +401,7 @@ class CheckoutApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\Dhl\Versenden\Cig\Model\DeliveryDayEstimation',
-                        $e->getResponseHeaders()
+                        $e->getResponseHeaders(),
                     );
                     $e->setResponseObject($data);
                     break;
@@ -408,7 +409,7 @@ class CheckoutApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\Dhl\Versenden\Cig\Model\Status',
-                        $e->getResponseHeaders()
+                        $e->getResponseHeaders(),
                     );
                     $e->setResponseObject($data);
                     break;
@@ -441,37 +442,37 @@ class CheckoutApi
         // verify the required parameter 'xEKP' is set
         if ($xEKP === null || (is_array($xEKP) && count($xEKP) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $xEKP when calling checkoutRecipientZipDeliveryDayEstimationGet'
+                'Missing the required parameter $xEKP when calling checkoutRecipientZipDeliveryDayEstimationGet',
             );
         }
         // verify the required parameter 'recipientZip' is set
         if ($recipientZip === null || (is_array($recipientZip) && count($recipientZip) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $recipientZip when calling checkoutRecipientZipDeliveryDayEstimationGet'
+                'Missing the required parameter $recipientZip when calling checkoutRecipientZipDeliveryDayEstimationGet',
             );
         }
-        if (!preg_match("/^[0-9]{5}$/", $recipientZip)) {
+        if (!preg_match('/^[0-9]{5}$/', $recipientZip)) {
             throw new \InvalidArgumentException(
-                "invalid value for \"recipientZip\" when calling CheckoutApi.checkoutRecipientZipDeliveryDayEstimationGet, must conform to the pattern /^[0-9]{5}$/."
+                'invalid value for "recipientZip" when calling CheckoutApi.checkoutRecipientZipDeliveryDayEstimationGet, must conform to the pattern /^[0-9]{5}$/.',
             );
         }
 
         // verify the required parameter 'startParcelCenter' is set
         if ($startParcelCenter === null || (is_array($startParcelCenter) && count($startParcelCenter) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $startParcelCenter when calling checkoutRecipientZipDeliveryDayEstimationGet'
+                'Missing the required parameter $startParcelCenter when calling checkoutRecipientZipDeliveryDayEstimationGet',
             );
         }
-        if (!preg_match("/^[0-9]{2}$/", $startParcelCenter)) {
+        if (!preg_match('/^[0-9]{2}$/', $startParcelCenter)) {
             throw new \InvalidArgumentException(
-                "invalid value for \"startParcelCenter\" when calling CheckoutApi.checkoutRecipientZipDeliveryDayEstimationGet, must conform to the pattern /^[0-9]{2}$/."
+                'invalid value for "startParcelCenter" when calling CheckoutApi.checkoutRecipientZipDeliveryDayEstimationGet, must conform to the pattern /^[0-9]{2}$/.',
             );
         }
 
         // verify the required parameter 'startDate' is set
         if ($startDate === null || (is_array($startDate) && count($startDate) === 0)) {
             throw new \InvalidArgumentException(
-                'Missing the required parameter $startDate when calling checkoutRecipientZipDeliveryDayEstimationGet'
+                'Missing the required parameter $startDate when calling checkoutRecipientZipDeliveryDayEstimationGet',
             );
         }
         $request = new \HTTP_Request();
@@ -488,12 +489,12 @@ class CheckoutApi
         }
         // header params
         if ($xRequestID !== null) {
-//            $headerParams['X-Request-ID'] = ObjectSerializer::toHeaderValue($xRequestID);
+            //            $headerParams['X-Request-ID'] = ObjectSerializer::toHeaderValue($xRequestID);
             $request->addHeader('X-Request-ID', $xRequestID);
         }
         // header params
         if ($xEKP !== null) {
-//            $headerParams['X-EKP'] = ObjectSerializer::toHeaderValue($xEKP);
+            //            $headerParams['X-EKP'] = ObjectSerializer::toHeaderValue($xEKP);
             $request->addHeader('X-EKP', ObjectSerializer::toHeaderValue($xEKP));
         }
 
@@ -502,21 +503,21 @@ class CheckoutApi
             $resourcePath = str_replace(
                 '{' . 'recipientZip' . '}',
                 ObjectSerializer::toPathValue($recipientZip),
-                $resourcePath
+                $resourcePath,
             );
         }
 
         // this endpoint requires HTTP basic authentication
         if ($this->config->getUsername() !== null || $this->config->getPassword() !== null) {
             $request->setBasicAuth($this->config->getUsername(), $this->config->getPassword());
-//            $headers['Authorization'] = 'Basic ' . base64_encode(
-//                    $this->config->getUsername() . ":" . $this->config->getPassword()
-//                );
+            //            $headers['Authorization'] = 'Basic ' . base64_encode(
+            //                    $this->config->getUsername() . ":" . $this->config->getPassword()
+            //                );
         }
         // this endpoint requires API key authentication
         $apiKey = $this->config->getApiKeyWithPrefix('DPDHL-User-Authentication-Token');
         if ($apiKey !== null) {
-//            $headers['DPDHL-User-Authentication-Token'] = $apiKey;
+            //            $headers['DPDHL-User-Authentication-Token'] = $apiKey;
             $request->addHeader('DPDHL-User-Authentication-Token', $apiKey);
         }
 

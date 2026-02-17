@@ -6,8 +6,7 @@
 
 require_once Mage::getModuleDir('controllers', 'Mage_Adminhtml') . '/Sales/Order/ShipmentController.php';
 
-class Dhl_Versenden_Adminhtml_Sales_Order_ShipmentController
-    extends Mage_Adminhtml_Sales_Order_ShipmentController
+class Dhl_Versenden_Adminhtml_Sales_Order_ShipmentController extends Mage_Adminhtml_Sales_Order_ShipmentController
 {
     /**
      * Set custom grid block in order to update the grid template
@@ -21,7 +20,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_ShipmentController
             $this->getLayout()
                 ->createBlock('dhl_versenden/adminhtml_sales_order_shipment_packaging_grid')
                 ->setIndex($this->getRequest()->getParam('index'))
-                ->toHtml()
+                ->toHtml(),
         );
     }
 }

@@ -48,7 +48,7 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      * @param string $message
      * @param mixed[] $context
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
         if ($this->_config->isLoggingEnabled(Zend_Log::DEBUG)) {
             $this->_psrLogger->debug($message, $context);
@@ -61,7 +61,7 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      * @param $message
      * @param mixed[] $context
      */
-    public function error($message, array $context = array())
+    public function error($message, array $context = [])
     {
         if ($this->_config->isLoggingEnabled(Zend_Log::ERR)) {
             $this->_psrLogger->error($message, $context);
@@ -74,7 +74,7 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      * @param $message
      * @param mixed[] $context
      */
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = [])
     {
         if ($this->_config->isLoggingEnabled(Zend_Log::WARN)) {
             $this->_psrLogger->warning($message, $context);
