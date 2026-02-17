@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.0.0 - 2026-02-17
+
+Migrate from DHL Geschäftskundenversand-API (SOAP) to DHL Parcel DE Shipping API (REST).
+
+### Added
+
+- The following shipping services can now be booked: Closest Drop Point, Delivery Type,
+  Endorsement, Go Green Plus, Named Person Only, No Neighbour Delivery,
+  Postal Delivery Duty Paid, Signed For By Recipient
+- Shipping services are now filtered by product: only services compatible with the
+  selected shipping product are available in the packaging popup
+- The label print format can now be configured (11 formats including A4, 910-300-700, 100x70mm)
+- Webservice logs now mask personal data (names, addresses, emails) for GDPR compliance
+- Service compatibility rules in checkout and packaging popup
+  (e.g. Preferred Neighbour and No Neighbour Delivery are mutually exclusive)
+
+### Changed
+
+- Requires PHP 8.1 or higher (was PHP 7.0+)
+- The DHL webservice connection now uses the REST API instead of SOAP.
+  An additional app token is required alongside the existing API credentials.
+- Cash on Delivery is now determined automatically from the order's payment method
+  and can no longer be toggled manually in the packaging popup
+- Print Only If Codeable is now a global configuration setting and can no longer be
+  changed per shipment in the packaging popup
+- Automatic shipment creation now saves each shipment individually.
+  A single failed shipment no longer prevents the others from being created.
+- Installation via Magento Connect is no longer supported. Use Composer.
+
+### Removed
+
+- DHL Geschäftskundenversand-API (SOAP) integration
+- Preferred Time service (deprecated since 1.7.0)
+
 ## 1.14.0 - 2025-02-28
 
 Deutsche Post Warenpost becomes DHL Kleinpaket
