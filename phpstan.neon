@@ -96,14 +96,9 @@ parameters:
     ###########################################################################
     # Ignored Errors - Auto-Generated Code
     ###########################################################################
-    # Auto-generated code (WSDL/OpenAPI) analyzed for type information only.
+    # Auto-generated code analyzed for type information only.
     # Internal errors ignored as code cannot be modified.
     ignoreErrors:
-        # Auto-generated WSDL/SOAP code (~460 internal errors)
-        -
-            message: '#.*#'
-            path: %currentWorkingDirectory%/lib/Dhl/Versenden/Bcs/Soap/*
-
         # Auto-generated OpenAPI client code (~34 internal errors)
         -
             message: '#.*#'

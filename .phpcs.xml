@@ -6,7 +6,6 @@
     <config name="testVersion" value="8.1-8.5"/>
     <rule ref="PHPCompatibility"/>
 
-    <exclude-pattern>*/Bcs/Soap/*</exclude-pattern>
     <exclude-pattern>*/Cig/*</exclude-pattern>
     <exclude-pattern>*/Test/*</exclude-pattern>
     <exclude-pattern>*/sql/*</exclude-pattern>
