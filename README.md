@@ -1,40 +1,41 @@
 Dhl Versenden Extension
 =======================
 
-The DHL Versenden extension for Magento 1 integrates the DHL business customer
-shipping API into the order processing workflow.
+The DHL Versenden extension for Magento 1 integrates the
+DHL Parcel DE Shipping API (REST) into the order processing workflow.
 
 Facts
 -----
 - extension key: Dhl_Versenden
 - [extension on GitHub](https://github.com/netresearch/dhl-module-versenden-m1)
-- [direct download link](https://github.com/netresearch/dhl-module-versenden-m1/archive/refs/tags/1.14.0.tar.gz)
 
 Description
 -----------
 This extension enables merchants to request shipping labels for incoming orders
-via the DHL business customer shipping API (DHL Geschäftskundenversand-API).
+via the DHL Parcel DE Shipping API (REST).
 
 Features:
 
-* Request shipping labels for both national and international shipping.
-* Select additional services.
-* Request additional documents such as export documents or return forms.
+* Request shipping labels for national and international shipments.
+* Select additional shipping services.
+* Request additional documents such as export documents or return labels.
 
 Requirements
 ------------
-- PHP >= 7.4.0
+- PHP ^8.1
 
 Compatibility
 -------------
-- Open Magento - Magento LTS >= 19.x
+- OpenMage LTS 20.x
 
 Installation Instructions
 -------------------------
 
-1. Install the extension via Magento Connect with the key shown above or install
-   via composer / modman.
-2. Clear the cache, logout from the admin panel and then login again.
+Install the extension via composer:
+
+    composer require dhl/module-versenden-m1
+
+Clear the cache, logout from the admin panel and then login again.
 
 More information on configuration and integration into custom themes can be found
 in the documentation.
@@ -64,7 +65,7 @@ to <dhl.support@netresearch.de>.
 
 Developer
 ---------
-Christoph Aßmann | [Netresearch DTT GmbH & Co. KG](https://www.netresearch.de/) | [@mam08ixo](https://twitter.com/mam08ixo)
+[Netresearch DTT GmbH](https://www.netresearch.de/)
 
 Licence
 -------
@@ -72,4 +73,4 @@ Licence
 
 Copyright
 ---------
-(c) 2023 DHL Paket GmbH
+(c) 2026 DHL Paket GmbH
