@@ -24,11 +24,10 @@
 #   - Level 5: Maximum strictness compatible with Magento 1
 #   - Bleeding edge: Enabled for latest PHPStan features
 #   - Macopedia: Handles all Magento 1 patterns (factory methods, type aliases)
-#   - Auto-generated code: Analyzed for types, but errors ignored (~494 errors)
-#   - Baseline: Code quality issues to be fixed incrementally (305 errors)
+#   - Auto-generated code: Analyzed for types, but errors ignored
 #
 # Why Analyze Auto-Generated Code:
-#   - Module code references SOAP/OpenAPI types
+#   - Module code references OpenAPI types from Cig client
 #   - Excluding them causes class.notFound errors
 #   - Solution: Analyze for type info, ignore internal errors via ignoreErrors
 #
@@ -42,7 +41,7 @@ includes:
     # Bleeding edge rules for maximum strictness
     - phar://vendor/phpstan/phpstan/phpstan.phar/conf/bleedingEdge.neon
 
-    # Baseline for truly unfixable errors only
+    # Baseline: pre-existing type issues in Magento patterns (16 errors)
     - %currentWorkingDirectory%/vendor/dhl/module-versenden-m1/phpstan-baseline.neon
 
 parameters:

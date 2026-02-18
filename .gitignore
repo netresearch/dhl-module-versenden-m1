@@ -2,19 +2,9 @@
 /doc/Dhl_Versenden/*
 /doc/Intern/*
 
-# Serena MCP metadata and cache
-/.serena/
-
-# PHPStan
 /.phpstan.cache/
 /vendor/
 /composer.lock
+.php-cs-fixer.cache
 .phpunit.result.cache
 coverage-report/
-
-# DDEV auto-generated files
-.ddev/.dbimageBuild/
-.ddev/.webimageBuild/
-.ddev/.ddev-docker-compose-*.yaml
-.ddev/db_snapshots/
-.ddev/xhprof/
