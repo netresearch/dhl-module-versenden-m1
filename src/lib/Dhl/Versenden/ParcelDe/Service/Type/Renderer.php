@@ -117,7 +117,7 @@ HTML;
     {
         if ($this->readOnly) {
             $value = $this->selectedNo;
-            if ($this->service instanceof Text && $this->service->getValue()) {
+            if ($this->service instanceof Text && $this->service->getValue() !== '') {
                 $value = $this->service->getValue();
             } elseif ($this->service->isSelected()) {
                 $value = $this->selectedYes;

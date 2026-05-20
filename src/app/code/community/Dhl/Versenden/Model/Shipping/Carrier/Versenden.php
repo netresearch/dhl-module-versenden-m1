@@ -98,7 +98,7 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden extends Mage_Shipping_Model
      * Return content types of package
      *
      * @param Varien_Object $params
-     * @return array
+     * @return array<string, string>
      */
     public function getContentTypes(Varien_Object $params)
     {

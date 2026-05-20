@@ -25,14 +25,14 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
         $unitOfMeasure = $this->getStoreConfig(self::CONFIG_XML_FIELD_UNITOFMEASURE, $store);
 
         $shippingMethods = $this->getStoreConfig(self::CONFIG_XML_FIELD_DHLMETHODS, $store);
-        if (empty($shippingMethods)) {
+        if ($shippingMethods === null || $shippingMethods === '') {
             $shippingMethods = [];
         } else {
             $shippingMethods = explode(',', $shippingMethods);
         }
 
         $codPaymentMethods = $this->getStoreConfig(self::CONFIG_XML_FIELD_CODMETHODS, $store);
-        if (empty($codPaymentMethods)) {
+        if ($codPaymentMethods === null || $codPaymentMethods === '') {
             $codPaymentMethods = [];
         } else {
             $codPaymentMethods = explode(',', $codPaymentMethods);
@@ -67,7 +67,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
         $printFormat = $this->getStoreConfig(self::CONFIG_XML_FIELD_PRINTFORMAT, $store);
 
         // Default to A4 if not configured
-        if (empty($printFormat)) {
+        if ($printFormat === null || $printFormat === '') {
             return \Dhl\Sdk\ParcelDe\Shipping\Api\Data\OrderConfigurationInterface::PRINT_FORMAT_A4;
         }
 
@@ -83,7 +83,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      */
     public function canProcessMethod($shippingMethod, $store = null)
     {
-        if (empty($shippingMethod)) {
+        if ($shippingMethod === null || $shippingMethod === '') {
             return false;
         }
 
@@ -92,7 +92,7 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
             return false;
         }
 
-        $configuredMethods = array_filter($this->getSettings($store)->getShippingMethods());
+        $configuredMethods = array_filter($this->getSettings($store)->getShippingMethods(), 'boolval');
         foreach ($configuredMethods as $method) {
             if (false !== strpos($shippingMethod, (string) $method)) {
                 return true;
@@ -111,10 +111,10 @@ class Dhl_Versenden_Model_Config_Shipment extends Dhl_Versenden_Model_Config
      */
     public function isCodPaymentMethod($paymentMethod, $store = null)
     {
-        if (empty($paymentMethod)) {
+        if ($paymentMethod === null || $paymentMethod === '') {
             return false;
         }
 
-        return in_array($paymentMethod, $this->getSettings($store)->getCodPaymentMethods());
+        return in_array($paymentMethod, $this->getSettings($store)->getCodPaymentMethods(), true);
     }
 }

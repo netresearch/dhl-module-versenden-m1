@@ -62,7 +62,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
      */
     public function autoCreate(Mage_Sales_Model_Resource_Order_Collection $collection)
     {
-        if (!$collection->getSize()) {
+        if ($collection->getSize() === 0) {
             return 0;
         }
 
@@ -141,7 +141,7 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         }
 
         // Process labels and tracking
-        $labelPages = array_map('base64_decode', array_filter($apiResult->getLabels()));
+        $labelPages = array_map('base64_decode', array_filter($apiResult->getLabels(), 'boolval'));
         $shipment->setShippingLabel($pdfAdapter->merge($labelPages));
 
         $track = Mage::getModel('sales/order_shipment_track')

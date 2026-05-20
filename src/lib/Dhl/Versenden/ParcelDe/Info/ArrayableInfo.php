@@ -77,19 +77,19 @@ abstract class ArrayableInfo extends AbstractInfo implements ArrayableInterface
         $setter = function ($value, $key) use ($camelizeKeys) {
             $key = $camelizeKeys ? static::camelize($key) : $key;
 
-            if (property_exists($this, $key)) {
-                if ($this->{$key} instanceof ArrayableInterface && is_array($value)) {
-                    $method    = 'fromArray';
-                    $params    = [$value, $camelizeKeys];
-                    call_user_func_array([$this->{$key}, $method], $params);
-                } elseif ($this->{$key} instanceof UnserializableInterface && is_object($value)) {
-                    $className = get_class($this->{$key});
-                    $method    = 'fromObject';
-                    $params    = [$value];
-                    $this->{$key} = call_user_func_array([$className, $method], $params);
-                } else {
-                    $this->{$key} = $value;
-                }
+            if (!property_exists($this, $key)) {
+                return;
+            }
+
+            $property = new \ReflectionProperty($this, $key);
+            $existing = $property->getValue($this);
+
+            if ($existing instanceof ArrayableInterface && is_array($value)) {
+                $existing->fromArray($value, $camelizeKeys);
+            } elseif ($existing instanceof UnserializableInterface && is_object($value)) {
+                $property->setValue($this, get_class($existing)::fromObject($value));
+            } else {
+                $property->setValue($this, $value);
             }
         };
 

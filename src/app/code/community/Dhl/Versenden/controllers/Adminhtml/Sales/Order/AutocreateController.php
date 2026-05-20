@@ -42,6 +42,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
             $num = $autocreate->autoCreate($collection);
             $creationMessage = sprintf(self::MESSAGE_LABELS_CREATED, $num, $collection->getSize());
 
+            $failedIncrements = [];
             /** @var Mage_Sales_Model_Order $order */
             foreach ($collection->getItems() as $order) {
                 if (!$order->hasShipments()) {
@@ -50,7 +51,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
                 }
             }
 
-            if (!empty($failedIncrements)) {
+            if ($failedIncrements !== []) {
                 $errorMessage = sprintf(self::MESSAGE_LABELS_FAILED, implode(', ', $failedIncrements));
                 $this->_getSession()->addNotice($creationMessage . ' ' . $errorMessage);
                 $dhlLogger->error($errorMessage);
@@ -64,7 +65,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
         $this->_redirect('adminhtml/sales_order');
     }
 
-    protected function _isAllowed()
+    protected function _isAllowed(): bool
     {
         return Mage::getSingleton('admin/session')->isAllowed('admin/sales/order/actions/ship');
     }

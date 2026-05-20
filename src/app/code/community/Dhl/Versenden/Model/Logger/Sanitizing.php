@@ -68,9 +68,9 @@ class Dhl_Versenden_Model_Logger_Sanitizing extends \Psr\Log\AbstractLogger
      * 2. Context: Recursive array sanitization masks sensitive fields
      * 3. Delegation: Sanitized data passed to ConfigAware → Mage → Writer
      *
-     * @param string  $level   PSR-3 log level (debug, info, warning, error, etc.)
-     * @param string  $message Log message (may contain HTTP messages, error text, etc.)
-     * @param mixed[] $context Associative array of contextual data (headers, response bodies, etc.)
+     * @param mixed              $level   PSR-3 log level (debug, info, warning, error, etc.)
+     * @param string|\Stringable $message Log message (may contain HTTP messages, error text, etc.)
+     * @param mixed[]            $context Associative array of contextual data (headers, response bodies, etc.)
      *
      * @return null
      */

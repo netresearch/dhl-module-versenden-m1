@@ -62,7 +62,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         $station    = $address->getStreetFull();
         $postNumber = $address->getCompany();
 
-        if ($postNumber != '' && !is_numeric($postNumber)) {
+        if ($postNumber !== null && $postNumber !== '' && !is_numeric($postNumber)) {
             // not a valid DHL account number
             return;
         }
@@ -105,13 +105,13 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
             return;
         }
 
-        /** @var Mage_Sales_Model_Quote $quote */
+        /** @var Mage_Sales_Model_Quote|null $quote */
         $quote = $observer->getData('quote');
-        if (!$quote) {
+        if ($quote === null) {
             $quote = Mage::getSingleton('checkout/session')->getQuote();
         }
 
-        if (!$quote) {
+        if ($quote === null) {
             // no quote, cannot check whether cod is allowed or not.
             return;
         }
@@ -224,7 +224,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         }
 
         $address = Mage::registry('order_address');
-        if (!$address || ($address->getAddressType() !== Mage_Customer_Model_Address_Abstract::TYPE_SHIPPING)) {
+        if ($address === null || ($address->getAddressType() !== Mage_Customer_Model_Address_Abstract::TYPE_SHIPPING)) {
             return;
         }
 
@@ -306,8 +306,7 @@ class Dhl_Versenden_Model_Observer extends Dhl_Versenden_Model_Observer_Abstract
         }
 
         if (!$dhlVersendenInfo instanceof \Dhl\Versenden\ParcelDe\Info) {
-            $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
-            $dhlVersendenInfo = $serializer->unserialize($dhlVersendenInfo);
+            $dhlVersendenInfo = \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($dhlVersendenInfo);
         }
 
         $services = $dhlVersendenInfo->getServices();

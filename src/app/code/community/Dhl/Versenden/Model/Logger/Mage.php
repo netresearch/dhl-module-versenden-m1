@@ -32,7 +32,7 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
     public function __construct(Dhl_Versenden_Model_Logger_Writer $writer, $file = '')
     {
         $this->_writer = $writer;
-        if ($file) {
+        if ($file !== '') {
             $this->_file = $file;
         }
     }
@@ -64,8 +64,8 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
     /**
      * Logs with an arbitrary level.
      *
-     * @param string $level
-     * @param string $message
+     * @param mixed $level
+     * @param string|\Stringable $message
      * @param mixed[] $context
      *
      * @return null
@@ -82,7 +82,7 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
         $message = $this->interpolate($message, $context);
 
         // Append context as JSON if present (for structured logging)
-        if (!empty($context)) {
+        if ($context !== []) {
             $contextJson = json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             $message .= ' ' . $contextJson;
         }

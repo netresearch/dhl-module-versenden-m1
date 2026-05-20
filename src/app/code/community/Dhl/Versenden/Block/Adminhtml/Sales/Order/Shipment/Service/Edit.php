@@ -94,9 +94,9 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit extends Dh
 
         // Fall back to order's shipping email for POR if no value was set
         $por = $availableServices->getItem(Service\ParcelOutletRouting::CODE);
-        if ($por instanceof Service\ParcelOutletRouting && !$por->getValue()) {
-            $email = $shippingAddress->getEmail();
-            if ($email) {
+        if ($por instanceof Service\ParcelOutletRouting && ($por->getValue() === '' || $por->getValue() === null)) {
+            $email = (string) $shippingAddress->getEmail();
+            if ($email !== '') {
                 $por->setDefaultValue($email);
             }
         }
@@ -171,7 +171,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit extends Dh
         /** @var Service\Type\Generic $availableService */
         foreach ($availableServices as $availableService) {
             $code = $availableService->getCode();
-            $serviceSelection = $versendenInfo->getServices()->{$code};
+            $serviceSelection = $versendenInfo->getServices()->getByCode($code);
             if ($serviceSelection !== null) {
                 $availableService->setValue($serviceSelection);
             }

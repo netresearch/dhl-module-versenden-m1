@@ -110,8 +110,8 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
         $dhlStationType = $shippingAddress->getData('dhl_station_type');
         $dhlVersendenInfo = $shippingAddress->getData('dhl_versenden_info');
 
-        if (!empty($dhlStationType)
-            || (!empty($dhlVersendenInfo)
+        if (($dhlStationType !== null && $dhlStationType !== '')
+            || ($dhlVersendenInfo !== null && $dhlVersendenInfo !== ''
                 && $this->isReceiverLocationUsed($shippingAddress->getData('dhl_versenden_info')))
         ) {
             return true;
@@ -143,7 +143,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     {
         $msg = self::HEADLINES[$serviceCode] ?? '';
 
-        return $msg ? $this->__($msg) : '';
+        return $msg !== '' ? $this->__($msg) : '';
     }
 
     /**
@@ -156,7 +156,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
     {
         $msg = self::HINTS[$serviceCode] ?? '';
 
-        return $msg ? $this->__($msg) : '';
+        return $msg !== '' ? $this->__($msg) : '';
     }
 
     /**
@@ -186,7 +186,7 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
                 $msg = '';
         }
 
-        return $msg ? $this->__($msg) : '';
+        return $msg !== '' ? $this->__($msg) : '';
     }
 
     /**
@@ -232,13 +232,12 @@ class Dhl_Versenden_Block_Checkout_Onepage_Shipping_Method_Service extends Onepa
      */
     protected function isReceiverLocationUsed($versendenInfo)
     {
-        if ($versendenInfo->getReceiver()->packstation->packstationNumber
-            || $versendenInfo->getReceiver()->postfiliale->postfilialNumber
-            || $versendenInfo->getReceiver()->parcelShop->parcelShopNumber
-        ) {
-            return true;
-        }
+        $packstationNumber = $versendenInfo->getReceiver()->packstation->packstationNumber;
+        $postfilialNumber  = $versendenInfo->getReceiver()->postfiliale->postfilialNumber;
+        $parcelShopNumber  = $versendenInfo->getReceiver()->parcelShop->parcelShopNumber;
 
-        return false;
+        return ($packstationNumber !== null && $packstationNumber !== '')
+            || ($postfilialNumber !== null && $postfilialNumber !== '')
+            || ($parcelShopNumber !== null && $parcelShopNumber !== '');
     }
 }

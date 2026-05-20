@@ -38,7 +38,7 @@ class PreferredDay extends Type\Radio
         $optionsHtml = array_reduce(
             $values,
             function ($carry, $value) use ($options) {
-                $checked      = ($value == $this->getValue()) ? 'checked="checked"' : '';
+                $checked      = ($value === (string) $this->getValue()) ? 'checked="checked"' : '';
                 $disabled     =
                     (isset($options[$value]['disabled']) && $options[$value]['disabled']) ? 'disabled=disabled' : '';
                 $optionValues = explode('-', $options[$value]['value']);

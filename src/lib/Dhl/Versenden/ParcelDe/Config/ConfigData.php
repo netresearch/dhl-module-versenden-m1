@@ -23,7 +23,7 @@ abstract class ConfigData
         // Cast to string to handle null safely for PHP 8.1 compatibility
         $value = (string) $value;
 
-        if (($minLength > 0) && ($value == '')) {
+        if (($minLength > 0) && ($value === '')) {
             throw new ValidationException("$name is a required value.");
         }
 

@@ -32,10 +32,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
         $serviceInfo = $shipmentRequest->getData('services') ?? [];
         $selectedServices = $serviceInfo['shipment_service'] ?? [];
 
-        $hasInsurance = !empty($selectedServices[Service\AdditionalInsurance::CODE]);
-        $hasBulkyGoods = !empty($selectedServices[Service\BulkyGoods::CODE]);
-        $hasPreferredDay = !empty($selectedServices[Service\PreferredDay::CODE]);
-        $hasVisualCheckOfAge = !empty($selectedServices[Service\VisualCheckOfAge::CODE]);
+        $hasInsurance = $this->isServiceSelected($selectedServices, Service\AdditionalInsurance::CODE);
+        $hasBulkyGoods = $this->isServiceSelected($selectedServices, Service\BulkyGoods::CODE);
+        $hasPreferredDay = $this->isServiceSelected($selectedServices, Service\PreferredDay::CODE);
+        $hasVisualCheckOfAge = $this->isServiceSelected($selectedServices, Service\VisualCheckOfAge::CODE);
 
         // COD detection - replicates ServiceBuilder.php:119-123
         // COD is determined by payment method configuration, NOT by service selection
@@ -46,7 +46,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
 
         // Rule 1: Partial shipments cannot have COD or Insurance
         $canShipPartially = !$hasInsurance && !$hasCod;
-        $isPartial = ($orderShipment->getOrder()->getTotalQtyOrdered() != $orderShipment->getTotalQty());
+        $isPartial = ((float) $orderShipment->getOrder()->getTotalQtyOrdered() !== (float) $orderShipment->getTotalQty());
 
         if (!$canShipPartially && $isPartial) {
             $message = 'Cannot do partial shipment with COD or Additional Insurance.';
@@ -59,7 +59,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
             && !$hasCod
             && !$hasPreferredDay
             && !$hasVisualCheckOfAge;
-        $isMerchandiseShipment = ($shippingProduct == Product::CODE_KLEINPAKET);
+        $isMerchandiseShipment = ($shippingProduct === Product::CODE_KLEINPAKET);
 
         if (!$canUseMerchandiseShipment && $isMerchandiseShipment) {
             $message = 'Kleinpaket cannot be booked with the services '
@@ -68,13 +68,23 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
         }
 
         // Rule 3: Mutual exclusion - preferredNeighbour and noNeighbourDelivery
-        $hasPreferredNeighbour = !empty($selectedServices[Service\PreferredNeighbour::CODE]);
-        $hasNoNeighbourDelivery = !empty($selectedServices[Service\NoNeighbourDelivery::CODE]);
+        $hasPreferredNeighbour = $this->isServiceSelected($selectedServices, Service\PreferredNeighbour::CODE);
+        $hasNoNeighbourDelivery = $this->isServiceSelected($selectedServices, Service\NoNeighbourDelivery::CODE);
 
         if ($hasPreferredNeighbour && $hasNoNeighbourDelivery) {
             $message = 'Preferred Neighbour and No Neighbour Delivery services are mutually exclusive. '
                 . 'Please select only one of these options.';
             throw new ValidationException($message);
         }
+    }
+
+    /**
+     * @param array<string, mixed> $selectedServices Service codes mapped to their submitted form value
+     * @param string $code Service code to look up
+     * @return bool true if the service was submitted with a truthy value
+     */
+    private function isServiceSelected(array $selectedServices, $code)
+    {
+        return (bool) ($selectedServices[$code] ?? false);
     }
 }

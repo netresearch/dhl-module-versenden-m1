@@ -47,9 +47,7 @@ class Mal_Holidays
         $date->setTime(0, 0, 0);
 
         foreach ($holidays as $holy => $day) {
-            // returns 0 if date is the same or just compare
-            // http://php.net/manual/en/datetime.diff.php
-            if ($date == $day) {
+            if ($date->format('Y-m-d') === $day->format('Y-m-d')) {
                 return true;
             }
         }

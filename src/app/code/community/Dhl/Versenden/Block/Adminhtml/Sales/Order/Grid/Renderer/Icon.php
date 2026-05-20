@@ -12,18 +12,18 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Grid_Renderer_Icon extends Mage_
      */
     public function render(Varien_Object $row)
     {
-        $status = parent::render($row);
-        if (!$status) {
+        $status = (int) parent::render($row);
+        if ($status === 0) {
             // no status, no status to display.
             return Mage::helper('dhl_versenden/data')->__('Not Available');
         }
 
         $format = '<img src="%s" alt="| %s" title="%s" class="dhl-status-icon"/>';
-        if ($status == \Dhl_Versenden_Model_Label_Status::CODE_PROCESSED) {
+        if ($status === \Dhl_Versenden_Model_Label_Status::CODE_PROCESSED) {
             $src   = $this->getSkinUrl('images/dhl_versenden/icon_complete.png');
             $alt   = Mage::helper('dhl_versenden/data')->__('DHL Label Status (processed)');
             $title = Mage::helper('dhl_versenden/data')->__('Processed');
-        } elseif ($status == \Dhl_Versenden_Model_Label_Status::CODE_FAILED) {
+        } elseif ($status === \Dhl_Versenden_Model_Label_Status::CODE_FAILED) {
             $src   = $this->getSkinUrl('images/dhl_versenden/icon_failed.png');
             $alt   = Mage::helper('dhl_versenden/data')->__('DHL Label Status (failed)');
             $title = Mage::helper('dhl_versenden/data')->__('Status_Failed');
@@ -42,15 +42,15 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Grid_Renderer_Icon extends Mage_
      */
     public function renderExport(Varien_Object $row)
     {
-        $status = parent::render($row);
-        if (!$status) {
+        $status = (int) parent::render($row);
+        if ($status === 0) {
             // no status, no status to display.
             return Mage::helper('dhl_versenden/data')->__('Not Available');
         }
 
-        if ($status == \Dhl_Versenden_Model_Label_Status::CODE_PROCESSED) {
+        if ($status === \Dhl_Versenden_Model_Label_Status::CODE_PROCESSED) {
             $title = Mage::helper('dhl_versenden/data')->__('Processed');
-        } elseif ($status == \Dhl_Versenden_Model_Label_Status::CODE_FAILED) {
+        } elseif ($status === \Dhl_Versenden_Model_Label_Status::CODE_FAILED) {
             $title = Mage::helper('dhl_versenden/data')->__('Failed');
         } else {
             $title = Mage::helper('dhl_versenden/data')->__('Pending');

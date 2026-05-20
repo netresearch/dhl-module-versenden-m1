@@ -16,7 +16,7 @@ class Zend implements Adapter
      */
     public function merge($pages)
     {
-        $pages = array_filter($pages);
+        $pages = array_filter($pages, 'boolval');
         if (count($pages) === 1) {
             return current($pages);
         }

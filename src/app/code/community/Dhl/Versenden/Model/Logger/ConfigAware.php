@@ -48,8 +48,8 @@ class Dhl_Versenden_Model_Logger_ConfigAware extends \Psr\Log\AbstractLogger
      *
      * Checks configuration before delegating to underlying logger.
      *
-     * @param string $level
-     * @param string $message
+     * @param mixed $level
+     * @param string|\Stringable $message
      * @param mixed[] $context
      *
      * @return null

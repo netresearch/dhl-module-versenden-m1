@@ -35,7 +35,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_View extends Dh
         /** @var Service\Generic $availableService */
         foreach ($availableServices as $availableService) {
             $code = $availableService->getCode();
-            $availableService->setValue($versendenInfo->getServices()->{$code});
+            $availableService->setValue($versendenInfo->getServices()->getByCode($code));
             if ($availableService->isSelected()) {
                 $selectedServices[] = $availableService;
             }
