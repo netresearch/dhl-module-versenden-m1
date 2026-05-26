@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 2.0.1 - 2026-05-26
+
+### Added
+
+- Compatibility with OpenMage 20.17 and 20.18 on PHP 8.1 through 8.4.
+
 ### Fixed
 
 - Automatic Parcel Announcement configured as *Disable* no longer transmits
