@@ -125,7 +125,7 @@ class Filter
                 continue;
             }
 
-            if ($this->isPostalFacility && !in_array($service->getCode(), $this->postalFacilityServices)) {
+            if ($this->isPostalFacility && !in_array($service->getCode(), $this->postalFacilityServices, true)) {
                 // skip services that are not meant to be combined with postal facilities
                 continue;
             }
@@ -135,7 +135,7 @@ class Filter
             $productsContainService = array_reduce(
                 $productsServices,
                 function ($carry, $productServices) use ($service) {
-                    return $carry || in_array($service->getCode(), $productServices);
+                    return $carry || in_array($service->getCode(), $productServices, true);
                 },
                 false,
             );
@@ -167,7 +167,7 @@ class Filter
      */
     protected function isServiceAllowedForRoute($serviceCode)
     {
-        $isDomestic = !empty($this->shipperCountry) && !empty($this->recipientCountry)
+        $isDomestic = $this->shipperCountry !== '' && $this->recipientCountry !== ''
             && $this->shipperCountry === $this->recipientCountry;
 
         switch ($serviceCode) {
@@ -175,16 +175,16 @@ class Filter
                 // pDDP for CH, GB, NO, US destinations
                 // US required for Sep 2025 auto-enable (DHLGKP-343)
                 // Requires route information
-                if (empty($this->recipientCountry)) {
+                if ($this->recipientCountry === '') {
                     return false;
                 }
-                return in_array($this->recipientCountry, ['CH', 'GB', 'NO', 'US']);
+                return in_array($this->recipientCountry, ['CH', 'GB', 'NO', 'US'], true);
 
             case Endorsement::CODE:
             case DeliveryType::CODE:
                 // These services only for international shipments (non-domestic)
                 // Requires route information
-                if (empty($this->shipperCountry) || empty($this->recipientCountry)) {
+                if ($this->shipperCountry === '' || $this->recipientCountry === '') {
                     return false;
                 }
                 return !$isDomestic;
@@ -192,7 +192,7 @@ class Filter
             case GoGreenPlus::CODE:
                 // GoGreen Plus available for both domestic and international shipments
                 // Requires DE origin
-                if (empty($this->shipperCountry)) {
+                if ($this->shipperCountry === '') {
                     return false;
                 }
                 return $this->shipperCountry === 'DE';
@@ -201,7 +201,7 @@ class Filter
             case SignedForByRecipient::CODE:
                 // These services only for domestic DE shipments
                 // Requires route information
-                if (empty($this->shipperCountry) || empty($this->recipientCountry)) {
+                if ($this->shipperCountry === '' || $this->recipientCountry === '') {
                     return false;
                 }
                 return $isDomestic && $this->shipperCountry === 'DE';
@@ -209,14 +209,14 @@ class Filter
             case BulkyGoods::CODE:
                 // BulkyGoods requires DE origin
                 // Requires route information
-                if (empty($this->shipperCountry)) {
+                if ($this->shipperCountry === '') {
                     return false;
                 }
                 return $this->shipperCountry === 'DE';
 
             case ClosestDropPoint::CODE:
                 // CDP only for international shipments to eligible EU countries
-                if (empty($this->shipperCountry) || empty($this->recipientCountry)) {
+                if ($this->shipperCountry === '' || $this->recipientCountry === '') {
                     return false;
                 }
                 return !$isDomestic

@@ -54,7 +54,7 @@ abstract class Select extends Text
         $optionsHtml = array_reduce(
             $values,
             function ($carry, $value) use ($options) {
-                $selected = ($value == $this->getValue()) ? 'selected="selected"' : '';
+                $selected = ((string) $value === (string) $this->getValue()) ? 'selected="selected"' : '';
                 $carry .= sprintf('<option %s value="%s">%s</option>', $selected, $value, (string) $options[$value]);
                 return $carry;
             },

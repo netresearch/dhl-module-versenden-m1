@@ -80,6 +80,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit extends Dh
 
         $availableServices = $this->serviceProcessor->processServices($availableServices);
 
+        $this->removeDisabledParcelAnnouncement($availableServices);
         $this->setParcelAnnouncementService($availableServices);
         $this->setCodServiceFromPaymentMethod($availableServices, $storeId);
 
@@ -94,9 +95,9 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit extends Dh
 
         // Fall back to order's shipping email for POR if no value was set
         $por = $availableServices->getItem(Service\ParcelOutletRouting::CODE);
-        if ($por instanceof Service\ParcelOutletRouting && !$por->getValue()) {
-            $email = $shippingAddress->getEmail();
-            if ($email) {
+        if ($por instanceof Service\ParcelOutletRouting && ($por->getValue() === '' || $por->getValue() === null)) {
+            $email = (string) $shippingAddress->getEmail();
+            if ($email !== '') {
                 $por->setDefaultValue($email);
             }
         }
@@ -171,10 +172,31 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit extends Dh
         /** @var Service\Type\Generic $availableService */
         foreach ($availableServices as $availableService) {
             $code = $availableService->getCode();
-            $serviceSelection = $versendenInfo->getServices()->{$code};
+            $serviceSelection = $versendenInfo->getServices()->getByCode($code);
             if ($serviceSelection !== null) {
                 $availableService->setValue($serviceSelection);
             }
+        }
+    }
+
+    /**
+     * Remove parcelAnnouncement from popup when system config is "Disable".
+     *
+     * Matches M2 behavior: when the merchant has disabled the offer entirely,
+     * the service does not appear at all (M2 uses the `available` attribute in
+     * shipping_settings.xml to gate the whole option on the config flag). The
+     * buyer's email address must not be transmitted to DHL in this case.
+     *
+     * Mirrors removeUnselectedCustomerParcelAnnouncement() for the symmetrical
+     * "Customer choice but unselected" case.
+     *
+     * @param Service\Collection $availableServices
+     */
+    protected function removeDisabledParcelAnnouncement(Service\Collection $availableServices)
+    {
+        $pa = $availableServices->getItem(Service\ParcelAnnouncement::CODE);
+        if ($pa instanceof Service\ParcelAnnouncement && !$pa->isEnabled()) {
+            $availableServices->removeItem(Service\ParcelAnnouncement::CODE);
         }
     }
 

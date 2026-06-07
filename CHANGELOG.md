@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.0.1 - 2026-05-26
+
+### Added
+
+- Compatibility with OpenMage 20.17 and 20.18 on PHP 8.1 through 8.4.
+
+### Fixed
+
+- Automatic Parcel Announcement configured as *Disable* no longer transmits
+  the buyer's email address to DHL. The service is now omitted from the
+  packaging popup entirely when disabled in system configuration.
+
 ## 2.0.0 - 2026-02-17
 
 Migrate from DHL Geschäftskundenversand-API (SOAP) to DHL Parcel DE Shipping API (REST).

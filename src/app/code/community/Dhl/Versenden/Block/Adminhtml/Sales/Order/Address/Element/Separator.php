@@ -14,7 +14,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Address_Element_Separator extend
     public function getLabelHtml($_idSuffix = '')
     {
         $value = $this->getData('value');
-        if ($value) {
+        if ($value !== null && $value !== '') {
             $html = $value;
         } else {
             $html = '<hr/>';

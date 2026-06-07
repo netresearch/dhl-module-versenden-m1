@@ -99,17 +99,17 @@ class Product
     public static function getCodesByCountry($shipperCountry, $recipientCountry, $euCountries)
     {
         // domestic
-        if ($shipperCountry == 'DE' && $recipientCountry == 'DE') {
+        if ($shipperCountry === 'DE' && $recipientCountry === 'DE') {
             return static::getCodesDeToDe();
         }
 
         // eu
-        if ($shipperCountry == 'DE' && in_array($recipientCountry, $euCountries)) {
+        if ($shipperCountry === 'DE' && in_array($recipientCountry, $euCountries, true)) {
             return static::getCodesDeToEu();
         }
 
         // row
-        if ($shipperCountry == 'DE') {
+        if ($shipperCountry === 'DE') {
             return static::getCodesDeToRow();
         }
 

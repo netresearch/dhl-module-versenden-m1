@@ -56,7 +56,7 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid extends 
      */
     public function getCountryOfManufacture($productId)
     {
-        if (empty($this->_countriesOfManufacture)) {
+        if ($this->_countriesOfManufacture === []) {
             /** @var Mage_Sales_Model_Resource_Order_Shipment_Item_Collection|Mage_Sales_Model_Order_Shipment_Item[] $items */
             $items = $this->getCollection();
             if (!is_array($items)) {

@@ -148,17 +148,18 @@ class Dhl_Versenden_Model_Services_CheckoutService
     }
 
     /**
-     * @param $service
+     * @param string $service Service code (e.g. preferredDay, preferredLocation)
      * @return bool|\Dhl\Versenden\Cig\Model\ModelInterface
      */
     public function getService($service)
     {
-        $method = 'get' . ucfirst($service);
-        if (is_callable([$this, $method], false)) {
-            return $this->{$method}();
-        }
-
-        return false;
+        return match ($service) {
+            \Dhl\Versenden\ParcelDe\Service\PreferredDay::CODE => $this->getPreferredDay(),
+            \Dhl\Versenden\ParcelDe\Service\PreferredLocation::CODE => $this->getPreferredLocation(),
+            \Dhl\Versenden\ParcelDe\Service\PreferredNeighbour::CODE => $this->getPreferredNeighbour(),
+            \Dhl\Versenden\ParcelDe\Service\NoNeighbourDelivery::CODE => $this->getNoNeighbourDelivery(),
+            default => false,
+        };
     }
 
     /**

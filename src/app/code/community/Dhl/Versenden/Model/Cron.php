@@ -75,7 +75,7 @@ class Dhl_Versenden_Model_Cron
                 },
             );
 
-            if (!empty($failedOrders)) {
+            if ($failedOrders !== []) {
                 $failedIncrements = array_map(
                     function (Mage_Sales_Model_Order $order) {
                         return $order->getIncrementId();

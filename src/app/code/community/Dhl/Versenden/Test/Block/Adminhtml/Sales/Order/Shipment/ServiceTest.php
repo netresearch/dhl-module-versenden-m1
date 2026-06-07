@@ -11,6 +11,9 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest extend
     public const EDIT_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_edit';
     public const VIEW_BLOCK_ALIAS = 'dhl_versenden/adminhtml_sales_order_shipment_service_view';
 
+    /** @var Service\Collection */
+    protected $serviceCollection;
+
     protected function mockEditBlock()
     {
         $editBlockMock = $this->getBlockMock(self::EDIT_BLOCK_ALIAS, ['fetchView']);
@@ -62,13 +65,15 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest extend
                 Service\DeliveryType::CDP => 'Closest Drop Point',
             ]),
         ];
-        $serviceCollection = new Service\Collection($services);
+        $this->serviceCollection = new Service\Collection($services);
 
         $serviceConfigMock = $this->getModelMock('dhl_versenden/config_service', ['getAvailableServices']);
         $serviceConfigMock
             ->expects(static::any())
             ->method('getAvailableServices')
-            ->willReturn($serviceCollection);
+            ->willReturnCallback(function () {
+                return $this->serviceCollection;
+            });
         $this->replaceByMock('model', 'dhl_versenden/config_service', $serviceConfigMock);
 
         // Now create mocks - constructor can safely access registry
@@ -180,6 +185,64 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_ServiceTest extend
         static::assertNull(
             $services->getItem(Service\Cod::CODE),
             'COD must not appear in packaging popup for non-COD orders'
+        );
+    }
+
+    /**
+     * When system config is "Disable" (Yesoptno value '0'), ParcelAnnouncement
+     * must be removed from the admin packaging popup entirely. The buyer's
+     * email address must not be transmitted to DHL in this case.
+     *
+     * @test
+     */
+    public function disabledParcelAnnouncementMustNotBeAutoSelected()
+    {
+        // $isEnabled='0' mirrors Config\Service::initParcelAnnouncement() output
+        // when the merchant chose "Disable" — customerService=false, enabled=false.
+        $this->serviceCollection->removeItem(Service\ParcelAnnouncement::CODE);
+        $this->serviceCollection->addItem(new Service\ParcelAnnouncement('Parcel Announcement', '0', false));
+
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $resultServices */
+        $resultServices = $block->getServices();
+
+        static::assertNull(
+            $resultServices->getItem(Service\ParcelAnnouncement::CODE),
+            'ParcelAnnouncement must be removed from popup when system config is "Disable"'
+        );
+    }
+
+    /**
+     * When the merchant has configured ParcelAnnouncement as "Enable" ('1'),
+     * the service must remain in the popup and be auto-selected.
+     *
+     * @test
+     */
+    public function enabledParcelAnnouncementMustBeAutoSelected()
+    {
+        // $isEnabled='1' mirrors Config\Service::initParcelAnnouncement() output
+        // when the merchant chose "Enable" — customerService=false, enabled=true.
+        $this->serviceCollection->removeItem(Service\ParcelAnnouncement::CODE);
+        $this->serviceCollection->addItem(new Service\ParcelAnnouncement('Parcel Announcement', '1', false));
+
+        /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Service_Edit $block */
+        $block = Mage::app()->getLayout()->createBlock(self::EDIT_BLOCK_ALIAS);
+        $block->getShipment()->getOrder()->setShippingMethod('dhlversenden_flatrate');
+
+        /** @var \Dhl\Versenden\ParcelDe\Service\Collection $resultServices */
+        $resultServices = $block->getServices();
+
+        $pa = $resultServices->getItem(Service\ParcelAnnouncement::CODE);
+        static::assertNotNull(
+            $pa,
+            'ParcelAnnouncement must remain in popup when system config is "Enable"'
+        );
+        static::assertTrue(
+            $pa->isSelected(),
+            'ParcelAnnouncement must be auto-selected when system config is "Enable"'
         );
     }
 

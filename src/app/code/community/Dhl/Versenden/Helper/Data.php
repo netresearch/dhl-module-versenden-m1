@@ -72,7 +72,7 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
 
         if (isset($nonDutiableRoutes[$recipientCountry])) {
             $pattern = implode('|', $nonDutiableRoutes[$recipientCountry]);
-            if ($pattern && preg_match("/$pattern/", (string) $recipientPostalCode)) {
+            if ($pattern !== '' && preg_match("/$pattern/", (string) $recipientPostalCode) === 1) {
                 // given postal code matches a non-dutiable destination area
                 return false;
             }
@@ -80,14 +80,14 @@ class Dhl_Versenden_Helper_Data extends Mage_Core_Helper_Abstract
 
         if (isset($dutiableRoutes[$recipientCountry])) {
             $pattern = implode('|', $dutiableRoutes[$recipientCountry]);
-            if ($pattern && preg_match("/$pattern/", (string) $recipientPostalCode)) {
+            if ($pattern !== '' && preg_match("/$pattern/", (string) $recipientPostalCode) === 1) {
                 // given postal code matches a dutiable destination area
                 return true;
             }
         }
 
         // are shipper and receiver located in different countries?
-        $diffCountry = ($shipperCountry != $recipientCountry);
+        $diffCountry = ($shipperCountry !== $recipientCountry);
 
         // are shipper and receiver both located in EU country?
         $bothEu = Mage::helper('core/data')->isCountryInEU($shipperCountry)

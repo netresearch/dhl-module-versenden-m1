@@ -17,7 +17,7 @@ class Dhl_Versenden_Model_Resource_Label_Status_Collection extends Mage_Core_Mod
     /**
      * Save all the entities in the collection, wrap in transaction
      *
-     * @return Mage_Core_Model_Resource_Db_Collection_Abstract
+     * @return $this
      */
     public function save()
     {

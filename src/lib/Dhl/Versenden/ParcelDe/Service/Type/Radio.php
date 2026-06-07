@@ -35,7 +35,7 @@ abstract class Radio extends Text
     }
 
     /**
-     * @return string[]
+     * @return array<int|string, mixed>
      */
     public function getOptions()
     {
@@ -53,7 +53,7 @@ abstract class Radio extends Text
         $optionsHtml = array_reduce(
             $values,
             function ($carry, $value) use ($options) {
-                $checked = ($value == $this->getValue()) ? 'checked="checked"' : '';
+                $checked = ((string) $value === (string) $this->getValue()) ? 'checked="checked"' : '';
                 $carry .= sprintf(
                     '<div>' .
                     '<input type="radio" name="service_setting[%s]" id="shipment_service_%s" %s value="%s">' .

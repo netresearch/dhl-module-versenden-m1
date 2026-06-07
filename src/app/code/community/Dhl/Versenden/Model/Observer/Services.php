@@ -137,7 +137,8 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
         ];
 
         // Set the billing address mail address as fallback if the shipping address has none
-        if (!$shippingAddress->getData('email')) {
+        $email = $shippingAddress->getData('email');
+        if ($email === null || $email === '') {
             $shippingAddress->setData('email', $quote->getBillingAddress()->getData('email'));
         }
 
@@ -158,7 +159,7 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
             $services = $request->getData('services');
 
             // Skip validation if no services or service settings provided
-            if (!$services || !isset($services['service_setting'])) {
+            if (!is_array($services) || !isset($services['service_setting'])) {
                 continue;
             }
 
@@ -190,7 +191,7 @@ class Dhl_Versenden_Model_Observer_Services extends Dhl_Versenden_Model_Observer
         preg_match($pattern, $value, $matchWords);
         preg_match($patternSpec, $value, $matchSpecialChars);
 
-        if (!empty($matchWords) || !empty($matchSpecialChars)) {
+        if ($matchWords !== [] || $matchSpecialChars !== []) {
             $hint = ucfirst(strtolower(preg_replace('/(?=[A-Z])/', '$1 $2', $key)));
             $msg = $this->helper->__($hint);
             $msg .= ': ' . $this->helper->__('Your input is invalid');

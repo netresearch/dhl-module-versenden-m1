@@ -112,4 +112,23 @@ class Services extends ArrayableInfo
      * @var bool false or true
      */
     public $signedForByRecipient;
+
+    /**
+     * Return the stored value for a service identified by its code.
+     *
+     * Service properties match service code names, so this method centralizes
+     * the by-code lookup behind a typed API.
+     *
+     * @param string $code Service code matching a property name on this object
+     * @return mixed The stored value, or null when no such property exists
+     */
+    public function getByCode($code)
+    {
+        if (!property_exists($this, $code)) {
+            return null;
+        }
+
+        /** @phpstan-ignore-next-line property.dynamicName */
+        return $this->{$code};
+    }
 }

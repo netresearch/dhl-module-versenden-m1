@@ -20,12 +20,11 @@ class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observe
         }
 
         $info = $address->getData('dhl_versenden_info');
-        if (!$info || !$info instanceof \Dhl\Versenden\ParcelDe\Info) {
+        if (!$info instanceof \Dhl\Versenden\ParcelDe\Info) {
             return;
         }
 
-        $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
-        $address->setData('dhl_versenden_info', $serializer->serialize($info));
+        $address->setData('dhl_versenden_info', \Dhl\Versenden\ParcelDe\Info\Serializer::serialize($info));
     }
 
     /**
@@ -43,12 +42,11 @@ class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observe
         }
 
         $info = $address->getData('dhl_versenden_info');
-        if (!$info || !is_string($info)) {
+        if (!is_string($info) || $info === '') {
             return;
         }
 
-        $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
-        $address->setData('dhl_versenden_info', $serializer->unserialize($info));
+        $address->setData('dhl_versenden_info', \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($info));
     }
 
     /**
@@ -68,12 +66,11 @@ class Dhl_Versenden_Model_Observer_Serialize extends Dhl_Versenden_Model_Observe
 
         $unserializeInfo = function (Mage_Customer_Model_Address_Abstract $address) {
             $info = $address->getData('dhl_versenden_info');
-            if (!$info || !is_string($info)) {
+            if (!is_string($info) || $info === '') {
                 return;
             }
 
-            $serializer = new \Dhl\Versenden\ParcelDe\Info\Serializer();
-            $address->setData('dhl_versenden_info', $serializer->unserialize($info));
+            $address->setData('dhl_versenden_info', \Dhl\Versenden\ParcelDe\Info\Serializer::unserialize($info));
         };
 
         $collection->walk($unserializeInfo);

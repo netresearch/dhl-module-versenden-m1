@@ -19,7 +19,7 @@ class Dhl_Versenden_Block_Adminhtml_Form_Field_Participation extends Mage_Adminh
      */
     protected function _getTemplateRenderer()
     {
-        if (!$this->_templateRenderer) {
+        if ($this->_templateRenderer === null) {
             $this->_templateRenderer = $this->getLayout()->createBlock(
                 'dhl_versenden/adminhtml_form_field_procedure_select',
                 '',

@@ -46,7 +46,7 @@ class Dhl_Versenden_Model_Services_Processor
         } else {
             $this->removeOfflineServices($availableServices);
         }
-        if ($this->hasBackOrderedProducts() && $availableServices->getItem(Service\PreferredDay::CODE)) {
+        if ($this->hasBackOrderedProducts() && $availableServices->getItem(Service\PreferredDay::CODE) !== null) {
             $availableServices->removeItem(Service\PreferredDay::CODE);
         }
 
@@ -153,7 +153,7 @@ class Dhl_Versenden_Model_Services_Processor
                 $children = $item->getChildrenItems();
             }
 
-            if (empty($children) &&
+            if (($children === null || $children === []) &&
                 ((float) $stockItem->getQty() === 0.0 || $qty >= (float) $stockItem->getQty())
             ) {
                 $result = true;

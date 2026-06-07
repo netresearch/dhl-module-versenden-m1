@@ -15,7 +15,7 @@ class Dhl_Versenden_Block_Adminhtml_System_Config_Info extends Mage_Adminhtml_Bl
     {
         parent::_prepareLayout();
 
-        if (!$this->getTemplate()) {
+        if ($this->getTemplate() === '' || $this->getTemplate() === null) {
             $this->setTemplate('dhl_versenden/system/config/info.phtml');
         }
 

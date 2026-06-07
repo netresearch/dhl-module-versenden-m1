@@ -54,7 +54,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
      */
     public function build(\Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder, $invoiceNumber, array $customsInfo, array $packageInfo)
     {
-        if (empty($customsInfo)) {
+        if ($customsInfo === []) {
             return;
         }
 
@@ -81,14 +81,14 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                 $invoiceNumber,
                 $customsInfo['permit_number'] ?? '',
                 $customsInfo['attestation_number'] ?? '',
-                isset($customsInfo['export_notification']) && $customsInfo['export_notification'],
+                isset($customsInfo['export_notification']) && (bool) $customsInfo['export_notification'],
                 null,  // sendersCustomsReference (not currently used)
                 null,  // addresseesCustomsReference (not currently used)
                 $customsInfo['master_reference_number'] ?? null,  // MRN
             );
 
             // Validate items exist
-            if (!isset($package['items']) || empty($package['items'])) {
+            if (!isset($package['items']) || $package['items'] === []) {
                 throw new \InvalidArgumentException('Items required for customs declaration');
             }
 
@@ -111,10 +111,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                 $itemCustoms = $item['customs'];
 
                 // Validate required customs fields
-                if (!isset($itemCustoms['description']) || empty($itemCustoms['description'])) {
+                if (!isset($itemCustoms['description']) || $itemCustoms['description'] === '') {
                     throw new \InvalidArgumentException("Item description required for customs declaration (item $itemId)");
                 }
-                if (!isset($itemCustoms['tariff_number']) || empty($itemCustoms['tariff_number'])) {
+                if (!isset($itemCustoms['tariff_number']) || $itemCustoms['tariff_number'] === '') {
                     throw new \InvalidArgumentException("Item tariff number required for customs declaration (item $itemId)");
                 }
 
@@ -125,7 +125,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                     throw new \InvalidArgumentException("HS code must be between 6 and 11 digits (item $itemId)");
                 }
 
-                if (!isset($itemCustoms['country_of_origin']) || empty($itemCustoms['country_of_origin'])) {
+                if (!isset($itemCustoms['country_of_origin']) || $itemCustoms['country_of_origin'] === '') {
                     throw new \InvalidArgumentException("Item country of origin required for customs declaration (item $itemId)");
                 }
 
@@ -137,7 +137,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                 }
 
                 $weightInKG = $item['weight'];
-                if ($this->_unitOfMeasure == 'G') {
+                if ($this->_unitOfMeasure === 'G') {
                     $weightInKG *= 0.001;
                 }
 
