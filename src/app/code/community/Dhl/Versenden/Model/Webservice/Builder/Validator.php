@@ -28,6 +28,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Validator
         $orderShipment = $shipmentRequest->getOrderShipment();
         $shippingProduct = $shipmentRequest->getData('gk_api_product');
 
+        if (empty($shippingProduct)) {
+            throw new ValidationException("GK API Product is not set" . $orderShipment?->getOrder()?->getIncrementId() ?? "n/a");
+        }
+
         // Extract services from Magento request data (matches ServiceBuilder structure)
         $serviceInfo = $shipmentRequest->getData('services') ?? [];
         $selectedServices = $serviceInfo['shipment_service'] ?? [];
