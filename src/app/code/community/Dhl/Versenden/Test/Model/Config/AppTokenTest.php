@@ -73,7 +73,7 @@ class Dhl_Versenden_Test_Model_Config_AppTokenTest extends EcomDev_PHPUnit_Test_
         $version = (string) Mage::getConfig()->getNode('modules/Dhl_Versenden/version');
 
         static::assertEquals(
-            '2.0.1',
+            '2.1.0',
             $version,
             'Module version must match the current release',
         );
