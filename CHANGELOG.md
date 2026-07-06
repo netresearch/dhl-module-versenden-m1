@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Closest Drop Point delivery is now available for shipments to Italy and all
+  other destinations supported by DHL (added CY, CZ, EE, IT, LT, LV, NL;
+  removed HU).
+
 ## 2.0.1 - 2026-05-26
 
 ### Added

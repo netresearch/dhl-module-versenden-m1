@@ -4,7 +4,8 @@
  * Unit tests for Service Filter.
  *
  * Tests the product-service matrix filtering logic, particularly
- * for V66WPI (Warenpost International) which was added in DHLGKP-337.
+ * for V66WPI (Warenpost International) which was added in DHLGKP-337,
+ * and route validation for Closest Drop Point (DHLGKP-383).
  *
  * @see Dhl\Versenden\ParcelDe\Service\Filter
  */
@@ -259,5 +260,135 @@ class Dhl_Versenden_Test_Unit_Lib_ParcelDe_Service_FilterTest extends EcomDev_PH
                 "Product $productCode must have an entry in productsServices - ParcelAnnouncement should work"
             );
         }
+    }
+
+    /**
+     * Build a filter for a DE-origin Weltpaket shipment to the given destination.
+     *
+     * @param string $recipientCountry
+     * @return \Dhl\Versenden\ParcelDe\Service\Filter
+     */
+    private function createCdpRouteFilter($recipientCountry)
+    {
+        return new \Dhl\Versenden\ParcelDe\Service\Filter(
+            [\Dhl\Versenden\ParcelDe\Product::CODE_WELTPAKET],
+            false,
+            false,
+            'DE',
+            $recipientCountry
+        );
+    }
+
+    /**
+     * All destinations DHL allows for Closest Drop Point.
+     *
+     * @return string[][]
+     */
+    public function cdpEligibleCountriesDataProvider()
+    {
+        return [
+            'AT' => ['AT'], 'BE' => ['BE'], 'BG' => ['BG'], 'CY' => ['CY'], 'CZ' => ['CZ'],
+            'DK' => ['DK'], 'EE' => ['EE'], 'FI' => ['FI'], 'FR' => ['FR'], 'IT' => ['IT'],
+            'LT' => ['LT'], 'LV' => ['LV'], 'NL' => ['NL'], 'PL' => ['PL'], 'SE' => ['SE'],
+        ];
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function cdpIneligibleCountriesDataProvider()
+    {
+        return [
+            'HU (removed, never officially supported)' => ['HU'],
+            'CH' => ['CH'],
+            'GB' => ['GB'],
+            'US' => ['US'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider cdpEligibleCountriesDataProvider
+     * @testdox ClosestDropPoint is allowed for eligible destination $recipientCountry
+     * @param string $recipientCountry
+     */
+    public function cdpAllowedForEligibleDestinations($recipientCountry)
+    {
+        $filter = $this->createCdpRouteFilter($recipientCountry);
+
+        $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
+            'closestDropPoint',
+            true,
+            false
+        );
+
+        $result = $filter->filterService($service);
+        static::assertNotNull(
+            $result,
+            "ClosestDropPoint should be allowed for DE -> $recipientCountry"
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider cdpIneligibleCountriesDataProvider
+     * @testdox ClosestDropPoint is blocked for ineligible destination $recipientCountry
+     * @param string $recipientCountry
+     */
+    public function cdpBlockedForIneligibleDestinations($recipientCountry)
+    {
+        $filter = $this->createCdpRouteFilter($recipientCountry);
+
+        $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
+            'closestDropPoint',
+            true,
+            false
+        );
+
+        $result = $filter->filterService($service);
+        static::assertNull(
+            $result,
+            "ClosestDropPoint should be blocked for DE -> $recipientCountry"
+        );
+    }
+
+    /**
+     * @test
+     * @testdox ClosestDropPoint is blocked for domestic shipments
+     */
+    public function cdpBlockedForDomesticShipments()
+    {
+        $filter = $this->createCdpRouteFilter('DE');
+
+        $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
+            'closestDropPoint',
+            true,
+            false
+        );
+
+        $result = $filter->filterService($service);
+        static::assertNull($result, 'ClosestDropPoint should be blocked for domestic DE -> DE shipments');
+    }
+
+    /**
+     * @test
+     * @testdox ClosestDropPoint is blocked when route information is missing
+     */
+    public function cdpBlockedWithoutRouteInformation()
+    {
+        $filter = new \Dhl\Versenden\ParcelDe\Service\Filter(
+            [\Dhl\Versenden\ParcelDe\Product::CODE_WELTPAKET],
+            false,
+            false
+        );
+
+        $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
+            'closestDropPoint',
+            true,
+            false
+        );
+
+        $result = $filter->filterService($service);
+        static::assertNull($result, 'ClosestDropPoint should be blocked when shipper/recipient country is unknown');
     }
 }
