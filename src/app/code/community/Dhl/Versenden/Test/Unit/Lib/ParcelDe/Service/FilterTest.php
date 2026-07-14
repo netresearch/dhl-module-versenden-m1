@@ -5,7 +5,8 @@
  *
  * Tests the product-service matrix filtering logic, particularly
  * for V66WPI (Warenpost International) which was added in DHLGKP-337,
- * and route validation for Closest Drop Point (DHLGKP-383).
+ * route validation for Closest Drop Point (DHLGKP-383) and pDDP
+ * destination eligibility (DHLGKP-386).
  *
  * @see Dhl\Versenden\ParcelDe\Service\Filter
  */
@@ -268,7 +269,7 @@ class Dhl_Versenden_Test_Unit_Lib_ParcelDe_Service_FilterTest extends EcomDev_PH
      * @param string $recipientCountry
      * @return \Dhl\Versenden\ParcelDe\Service\Filter
      */
-    private function createCdpRouteFilter($recipientCountry)
+    private function createRouteFilter($recipientCountry)
     {
         return new \Dhl\Versenden\ParcelDe\Service\Filter(
             [\Dhl\Versenden\ParcelDe\Product::CODE_WELTPAKET],
@@ -314,7 +315,7 @@ class Dhl_Versenden_Test_Unit_Lib_ParcelDe_Service_FilterTest extends EcomDev_PH
      */
     public function cdpAllowedForEligibleDestinations($recipientCountry)
     {
-        $filter = $this->createCdpRouteFilter($recipientCountry);
+        $filter = $this->createRouteFilter($recipientCountry);
 
         $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
             'closestDropPoint',
@@ -337,7 +338,7 @@ class Dhl_Versenden_Test_Unit_Lib_ParcelDe_Service_FilterTest extends EcomDev_PH
      */
     public function cdpBlockedForIneligibleDestinations($recipientCountry)
     {
-        $filter = $this->createCdpRouteFilter($recipientCountry);
+        $filter = $this->createRouteFilter($recipientCountry);
 
         $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
             'closestDropPoint',
@@ -358,7 +359,7 @@ class Dhl_Versenden_Test_Unit_Lib_ParcelDe_Service_FilterTest extends EcomDev_PH
      */
     public function cdpBlockedForDomesticShipments()
     {
-        $filter = $this->createCdpRouteFilter('DE');
+        $filter = $this->createRouteFilter('DE');
 
         $service = new \Dhl\Versenden\ParcelDe\Service\ClosestDropPoint(
             'closestDropPoint',
@@ -390,5 +391,62 @@ class Dhl_Versenden_Test_Unit_Lib_ParcelDe_Service_FilterTest extends EcomDev_PH
 
         $result = $filter->filterService($service);
         static::assertNull($result, 'ClosestDropPoint should be blocked when shipper/recipient country is unknown');
+    }
+
+    /**
+     * All destinations DHL allows for Postal Delivery Duty Paid.
+     *
+     * @return string[][]
+     */
+    public function pddpEligibleCountriesDataProvider()
+    {
+        return [
+            'CH' => ['CH'],
+            'GB' => ['GB'],
+            'NO' => ['NO'],
+            'US' => ['US'],
+            'PR' => ['PR'],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider pddpEligibleCountriesDataProvider
+     * @testdox PostalDeliveryDutyPaid is allowed for eligible destination $recipientCountry
+     * @param string $recipientCountry
+     */
+    public function pddpAllowedForEligibleDestinations($recipientCountry)
+    {
+        $filter = $this->createRouteFilter($recipientCountry);
+
+        $service = new \Dhl\Versenden\ParcelDe\Service\PostalDeliveryDutyPaid(
+            'postalDeliveryDutyPaid',
+            true,
+            false
+        );
+
+        $result = $filter->filterService($service);
+        static::assertNotNull(
+            $result,
+            "PostalDeliveryDutyPaid should be allowed for DE -> $recipientCountry"
+        );
+    }
+
+    /**
+     * @test
+     * @testdox PostalDeliveryDutyPaid is blocked for ineligible destination DE
+     */
+    public function pddpBlockedForIneligibleDestination()
+    {
+        $filter = $this->createRouteFilter('DE');
+
+        $service = new \Dhl\Versenden\ParcelDe\Service\PostalDeliveryDutyPaid(
+            'postalDeliveryDutyPaid',
+            true,
+            false
+        );
+
+        $result = $filter->filterService($service);
+        static::assertNull($result, 'PostalDeliveryDutyPaid should be blocked for DE -> DE');
     }
 }

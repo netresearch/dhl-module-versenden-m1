@@ -207,20 +207,29 @@ var DhlServiceCompatibility = Class.create({
      * @param {Element} dd
      */
     enableServiceRow: function (dt, dd) {
-        dt.removeClassName('disabled');
-        dd.removeClassName('disabled');
+        var locked = false;
 
         dt.select('input, select').each(function (input) {
-            if (!input.readAttribute('data-locked')) {
+            if (input.readAttribute('data-locked')) {
+                locked = true;
+            } else {
                 input.disabled = false;
             }
         });
 
         dd.select('input, select').each(function (input) {
-            if (!input.readAttribute('data-locked')) {
+            if (input.readAttribute('data-locked')) {
+                locked = true;
+            } else {
                 input.disabled = false;
             }
         });
+
+        // Rows with a locked input keep their visual disabled state
+        if (!locked) {
+            dt.removeClassName('disabled');
+            dd.removeClassName('disabled');
+        }
     },
 
     /**
@@ -278,8 +287,9 @@ var DhlServiceCompatibility = Class.create({
     },
 
     /**
-     * Handle pDDP auto-enable logic for USA shipments.
-     * Pre-checks the pDDP checkbox when order value is under threshold.
+     * Handle pDDP auto-enable logic for USA/Puerto Rico shipments.
+     * Pre-checks the pDDP checkbox when order value is up to the threshold,
+     * disables it above — mirrors the server-side guard.
      */
     enforcePddpRules: function () {
         var pddp = this.rules.pddp;
@@ -292,7 +302,7 @@ var DhlServiceCompatibility = Class.create({
             return;
         }
 
-        if (pddp.recipientCountry !== 'US') {
+        if (pddp.usTerritoryCountries.indexOf(pddp.recipientCountry) === -1) {
             return;
         }
 
@@ -319,12 +329,26 @@ var DhlServiceCompatibility = Class.create({
             }
         }
 
-        if (pddp.orderValue < threshold) {
+        if (pddp.orderValue <= threshold) {
             // Auto-check pDDP
             checkbox.checked = true;
             if (dt && pddp.tooltipTemplate) {
                 var tooltip = pddp.tooltipTemplate.replace('%s', threshold).replace('%s', pddp.currency);
                 dt.insert(new Element('span', {'class': 'dhl-tooltip'}).update(tooltip));
+            }
+        } else {
+            // Above the limit pDDP is not bookable. Locking keeps the checkbox
+            // disabled through enableServiceRow re-runs on product/service changes.
+            if (dt && dd) {
+                this.disableServiceRow(dt, dd);
+            } else {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+            }
+            checkbox.writeAttribute('data-locked', '1');
+            if (dt && pddp.limitTooltipTemplate) {
+                var limitTooltip = pddp.limitTooltipTemplate.replace('%s', threshold).replace('%s', pddp.currency);
+                dt.insert(new Element('span', {'class': 'dhl-tooltip'}).update(limitTooltip));
             }
         }
     }

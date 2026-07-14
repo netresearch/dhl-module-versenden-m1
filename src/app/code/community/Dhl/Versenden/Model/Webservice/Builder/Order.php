@@ -120,6 +120,7 @@ class Dhl_Versenden_Model_Webservice_Builder_Order
             $invoice->getIncrementId(),
             $customsInfo,
             $packageInfo,
+            $shipment->getShippingAddress()->getCountryId(),
         );
 
         // 6. Set shipment details (product code, date, reference)

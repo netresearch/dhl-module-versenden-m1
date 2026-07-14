@@ -279,8 +279,9 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_OrderTest extends EcomDev_PHPU
 
         $address = $this->getMockBuilder(Mage_Sales_Model_Order_Address::class)
             ->disableOriginalConstructor()
-            ->setMethods([])
+            ->setMethods(['getCountryId'])
             ->getMock();
+        $address->method('getCountryId')->willReturn('US');
 
         $shipment = $this->getMockBuilder(Mage_Sales_Model_Order_Shipment::class)
             ->disableOriginalConstructor()
@@ -371,7 +372,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_OrderTest extends EcomDev_PHPU
             ->getMock();
         $customsBuilder->expects(static::once())
             ->method('build')
-            ->with($sdkBuilder, '200000001', $customsInfo, $packageInfo);
+            ->with($sdkBuilder, '200000001', $customsInfo, $packageInfo, 'US');
 
         $settingsBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Settings::class)
             ->disableOriginalConstructor()

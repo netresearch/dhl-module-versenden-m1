@@ -189,6 +189,13 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden extends Mage_Shipping_Model
 
             // Validate results
             if (empty($shipments)) {
+                // Surface the specific, already-translated builder validation message
+                // (HTSUS, pDDP guard, etc.) stored by Client\Shipment::_convertToSdkShipments()
+                // instead of the generic fallback, if one was stored on the request.
+                if ($request->hasData('request_data_exception')) {
+                    Mage::throwException($request->getData('request_data_exception'));
+                }
+
                 Mage::throwException('The shipment request had errors.');
             }
 
@@ -215,7 +222,11 @@ class Dhl_Versenden_Model_Shipping_Carrier_Versenden extends Mage_Shipping_Model
             // convert to Mage_Core_Exception for proper message display in frontend
             Mage::throwException('Web service request failed.');
         } catch (\InvalidArgumentException $e) {
-            // Builder validation errors (from CustomsBuilder when international shipment data is incomplete)
+            // Builder validation errors (from CustomsBuilder when international shipment data is
+            // incomplete, HTSUS, pDDP guard, etc.) are now caught and stored per item inside
+            // Client\Shipment::_convertToSdkShipments(), then surfaced above via the empty-result
+            // guard's request_data_exception check. This catch remains a safety net for any
+            // InvalidArgumentException raised outside that per-item conversion path.
             // convert to Mage_Core_Exception for proper message display in frontend
             Mage::throwException($e->getMessage());
         }

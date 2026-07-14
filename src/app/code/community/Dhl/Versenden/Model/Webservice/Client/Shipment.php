@@ -126,7 +126,7 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
      *
      * @param Mage_Shipping_Model_Shipment_Request[] $magentoRequests Magento shipment requests
      * @param OrderConfigurationInterface|null $orderConfig Order configuration
-     * @return array Array of shipment responses indexed by sequence number
+     * @return array Shipment responses keyed like the input requests (missing key = item failed)
      * @throws DetailedServiceException When detailed error information is available
      * @throws ServiceException When a generic service error occurs
      */
@@ -147,15 +147,24 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
                 return [];
             }
 
-            // Call REST SDK
-            $shipments = $this->_service->createShipments($sdkShipments, $orderConfig);
+            // Normalize to a list: gap keys after per-item drops would serialize
+            // as a JSON object and be rejected by the API schema
+            $sequenceNumbers = array_keys($sdkShipments);
+            $shipments = $this->_service->createShipments(array_values($sdkShipments), $orderConfig);
+
+            // Key responses like the input requests. The response mapper skips
+            // failed items and reindexes, so only the request index is reliable.
+            $keyedShipments = [];
+            foreach ($shipments as $shipment) {
+                $keyedShipments[$sequenceNumbers[$shipment->getRequestIndex()]] = $shipment;
+            }
 
             // Dispatch AFTER event with ORIGINAL Magento requests (not SDK objects!)
             // This maintains backward compatibility with existing observers
-            $eventData = ['request_data' => $magentoRequests, 'result' => $shipments];
+            $eventData = ['request_data' => $magentoRequests, 'result' => $keyedShipments];
             Mage::dispatchEvent('dhl_versenden_create_shipment_order_after', $eventData);
 
-            return $shipments;
+            return $keyedShipments;
         } catch (DetailedServiceException $e) {
             $this->_logger->error(
                 'Detailed shipment creation error: ' . $e->getMessage(),
@@ -182,6 +191,8 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
      *
      * Validation happens BEFORE SDK build (fail fast) because REST SDK objects
      * are write-only DTOs with no getters for inspection.
+     *
+     * Builder InvalidArgumentExceptions (e.g. HTSUS or pDDP limits) degrade per item as well.
      *
      * @param Mage_Shipping_Model_Shipment_Request[] $magentoRequests
      * @return array SDK Shipment objects
@@ -221,7 +232,7 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
                 // Create SDK shipment object
                 $sdkShipments[$sequenceNumber] = $sdkBuilder->create();
 
-            } catch (ValidationException $e) {
+            } catch (ValidationException | \InvalidArgumentException $e) {
                 // Graceful error storage - Restore SOAP Gateway pattern (Gateway/Abstract.php:87-92)
                 // Stores validation error in request for later display to merchant
                 $magentoRequest->setData(
@@ -259,7 +270,8 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
      *
      * @param array $magentoRequests Array of Mage_Shipping_Model_Shipment_Request objects
      * @param OrderConfigurationInterface|null $orderConfig Optional order configuration
-     * @return array Array of validation responses
+     * @return array Validation responses keyed like the input requests (missing key = item dropped
+     *               locally before the API call; DHL-side failures come back with isValid() false)
      * @throws DetailedServiceException When detailed error information is available
      * @throws ServiceException When a generic service error occurs
      */
@@ -279,14 +291,25 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
         }
 
         try {
-            // Validate shipments using SDK's validateShipments method
-            $validationResults = $this->_service->validateShipments($sdkRequests, $orderConfig);
+            // Validate shipments using SDK's validateShipments method. Normalize to
+            // a list: gap keys after per-item drops would serialize as a JSON
+            // object and be rejected by the API schema
+            $sequenceNumbers = array_keys($sdkRequests);
+            $validationResults = $this->_service->validateShipments(array_values($sdkRequests), $orderConfig);
+
+            // Key results like the input requests. Unlike the create mapper, the
+            // validate mapper returns a result for EVERY item (failed ones with
+            // isValid() false); re-keying reverses the list normalization above.
+            $keyedResults = [];
+            foreach ($validationResults as $validationResult) {
+                $keyedResults[$sequenceNumbers[$validationResult->getRequestIndex()]] = $validationResult;
+            }
 
             // Dispatch AFTER event (for logging and other post-processing)
-            $eventData = ['request_data' => $magentoRequests, 'result' => $validationResults];
+            $eventData = ['request_data' => $magentoRequests, 'result' => $keyedResults];
             Mage::dispatchEvent('dhl_versenden_validate_shipment_order_after', $eventData);
 
-            return $validationResults;
+            return $keyedResults;
         } catch (DetailedServiceException $e) {
             $this->_logger->error(
                 'Detailed validation error: ' . $e->getMessage(),

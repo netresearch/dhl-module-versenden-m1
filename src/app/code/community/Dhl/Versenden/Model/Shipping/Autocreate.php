@@ -70,14 +70,12 @@ class Dhl_Versenden_Model_Shipping_Autocreate
 
         // Filter out requests with validation errors
         $validRequests = [];
-        $requestMap = [];
 
         foreach ($shipmentRequests as $orderId => $request) {
             if ($request->hasData('request_data_exception')) {
                 continue;
             }
             $validRequests[] = $request;
-            $requestMap[] = $orderId;
         }
 
         // Call REST client
@@ -101,9 +99,11 @@ class Dhl_Versenden_Model_Shipping_Autocreate
         $pdfAdapter = new \Dhl\Versenden\ParcelDe\Pdf\Adapter\Zend();
 
         $shipments = [];
-        foreach ($createdShipments as $index => $apiResult) {
-            $orderId = $requestMap[$index];
-            $request = $shipmentRequests[$orderId];
+        foreach ($validRequests as $index => $request) {
+            // absent key = item failed locally (request_data_exception) or at DHL;
+            // processShipmentResult() surfaces the stored message / a generic error
+            // into the order status history via logError()
+            $apiResult = $createdShipments[$index] ?? null;
 
             $shipment = $this->processShipmentResult($request, $apiResult, $carrier, $pdfAdapter);
             if ($shipment !== null) {

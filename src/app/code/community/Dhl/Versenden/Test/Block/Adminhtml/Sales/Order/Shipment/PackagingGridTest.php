@@ -95,4 +95,40 @@ class Dhl_Versenden_Test_Block_Adminhtml_Sales_Order_Shipment_PackagingGridTest 
         static::assertEquals('TR', $block->getCountryOfManufacture('100'));
         static::assertEquals('DE', $block->getCountryOfManufacture('200'));
     }
+
+    /**
+     * @test
+     */
+    public function isUsCustomsTerritory()
+    {
+        static::assertTrue($this->createBlockWithDestination('US')->isUsCustomsTerritory());
+        static::assertTrue($this->createBlockWithDestination('PR')->isUsCustomsTerritory());
+        static::assertFalse($this->createBlockWithDestination('CH')->isUsCustomsTerritory());
+    }
+
+    /**
+     * Create a grid block whose shipment ships to the given destination country.
+     *
+     * @param string $countryId
+     * @return Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid|PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function createBlockWithDestination($countryId)
+    {
+        $shippingAddress = Mage::getModel('sales/order_address');
+        $shippingAddress->setCountryId($countryId);
+
+        $order = Mage::getModel('sales/order');
+        $order->setShippingAddress($shippingAddress);
+
+        $shipment = Mage::getModel('sales/order_shipment');
+        $shipment->setOrder($order);
+
+        $blockMock = $this->getBlockMock(self::BLOCK_ALIAS, ['getShipment', 'displayCustomsValue']);
+        $blockMock
+            ->expects(static::any())
+            ->method('getShipment')
+            ->willReturn($shipment);
+
+        return $blockMock;
+    }
 }

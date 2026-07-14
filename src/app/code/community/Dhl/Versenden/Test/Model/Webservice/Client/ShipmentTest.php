@@ -73,13 +73,15 @@ class Dhl_Versenden_Test_Model_Webservice_Client_ShipmentTest extends EcomDev_PH
             ],
         ]);
 
-        $expectedResponse = ['shipment1', 'shipment2'];
+        // SDK returns ShipmentInterface objects carrying the request index;
+        // the client re-keys them to the input request keys
+        $expectedShipment = new \Dhl\Sdk\ParcelDe\Shipping\Service\ShipmentService\Shipment(0, 'SHIP-1', '', 'bGFiZWw=', '', '', '');
 
         // Mock SDK to return successful response
         $this->_serviceMock
             ->expects(static::once())
             ->method('createShipments')
-            ->willReturn($expectedResponse);
+            ->willReturn([$expectedShipment]);
 
         // Create client with mocked service via constructor DI
         $client = new Dhl_Versenden_Model_Webservice_Client_Shipment($this->_serviceMock);
@@ -88,7 +90,7 @@ class Dhl_Versenden_Test_Model_Webservice_Client_ShipmentTest extends EcomDev_PH
         $result = $client->createShipments([$request]);
 
         // Assert
-        static::assertSame($expectedResponse, $result);
+        static::assertSame([0 => $expectedShipment], $result);
     }
 
     /**
@@ -362,5 +364,245 @@ class Dhl_Versenden_Test_Model_Webservice_Client_ShipmentTest extends EcomDev_PH
         static::assertEmpty($result, 'No shipments created when all invalid');
         static::assertNotEmpty($request1->getData('request_data_exception'));
         static::assertNotEmpty($request2->getData('request_data_exception'));
+    }
+
+    /**
+     * A builder InvalidArgumentException (HTSUS, pDDP guard) must degrade to a
+     * per-item request_data_exception instead of aborting the whole batch.
+     *
+     * No fixtures: the order builder is swapped for a mock via the client stub,
+     * and the validator singleton is replaced with a no-op mock so that plain,
+     * fixture-less shipment requests reach the builder stage.
+     *
+     * @test
+     */
+    public function convertStoresBuilderExceptionPerItem()
+    {
+        $this->mockValidatorAsNoOp();
+
+        $failingMessage = 'PDDP is not allowed for USA/Puerto Rico shipments with value > 800.00 USD.';
+
+        $orderBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Order::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['build'])
+            ->getMock();
+        $orderBuilder->expects(static::exactly(2))
+            ->method('build')
+            ->willReturnOnConsecutiveCalls(
+                static::throwException(new \InvalidArgumentException($failingMessage)),
+                // Healthy path: the client's own new ShipmentOrderRequestBuilder() is not
+                // injectable, so create() runs for real afterwards. populateSdkBuilder()
+                // fills the minimum fields it requires so create() succeeds instead of
+                // throwing RequestValidatorException, letting us assert the batch really
+                // continues past the failing item.
+                static::returnCallback([$this, 'populateSdkBuilder']),
+            );
+
+        $failingRequest = $this->createShipmentRequest();
+        $healthyRequest = $this->createShipmentRequest();
+
+        $client = $this->createClientStub($orderBuilder);
+        $sdkShipments = $client->convertToSdkShipments([1 => $failingRequest, 2 => $healthyRequest]);
+
+        static::assertSame($failingMessage, $failingRequest->getData('request_data_exception'));
+        static::assertNull($healthyRequest->getData('request_data_exception'));
+        static::assertArrayHasKey(2, $sdkShipments);
+        static::assertArrayNotHasKey(1, $sdkShipments);
+    }
+
+    /**
+     * A middle-item drop must not corrupt the API payload (gap keys serialize
+     * as JSON object) nor the response-to-request mapping.
+     *
+     * @test
+     */
+    public function createShipmentsNormalizesPayloadAndKeepsRequestKeys()
+    {
+        $this->mockValidatorAsNoOp();
+
+        $failingMessage = 'HS code must be between 6 and 11 digits (item 1)';
+
+        // order builder: first request fails, second and third succeed
+        $orderBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Order::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['build'])
+            ->getMock();
+        $orderBuilder->expects(static::exactly(3))
+            ->method('build')
+            ->willReturnOnConsecutiveCalls(
+                static::throwException(new \InvalidArgumentException($failingMessage)),
+                static::returnCallback([$this, 'populateSdkBuilder']),
+                static::returnCallback([$this, 'populateSdkBuilder']),
+            );
+
+        // SDK service: assert the payload arrives as a LIST (sequential keys),
+        // answer with Shipment objects carrying the payload positions 0 and 1
+        $sdkService = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentServiceInterface::class)
+            ->getMock();
+        $sdkService->expects(static::once())
+            ->method('createShipments')
+            ->with(static::callback(function (array $payload) {
+                return array_keys($payload) === range(0, count($payload) - 1);
+            }))
+            ->willReturnCallback(function (array $payload) {
+                return [
+                    new \Dhl\Sdk\ParcelDe\Shipping\Service\ShipmentService\Shipment(0, 'SHIP-A', '', 'bGFiZWw=', '', '', ''),
+                    new \Dhl\Sdk\ParcelDe\Shipping\Service\ShipmentService\Shipment(1, 'SHIP-B', '', 'bGFiZWw=', '', '', ''),
+                ];
+            });
+
+        $requests = [
+            7 => $this->createShipmentRequest(),
+            8 => $this->createShipmentRequest(),
+            9 => $this->createShipmentRequest(),
+        ];
+
+        $client = $this->createClientStub($orderBuilder, $sdkService);
+        $shipments = $client->createShipments($requests);
+
+        // request 7 dropped locally; 8 and 9 map back to their ORIGINAL keys
+        static::assertArrayNotHasKey(7, $shipments);
+        static::assertSame('SHIP-A', $shipments[8]->getShipmentNumber());
+        static::assertSame('SHIP-B', $shipments[9]->getShipmentNumber());
+        static::assertSame($failingMessage, $requests[7]->getData('request_data_exception'));
+    }
+
+    /**
+     * When DHL rejects an item, the SDK's create response mapper skips it and
+     * only returns Shipment objects for the accepted request indices. The
+     * surviving items must come back under their ORIGINAL request keys with
+     * the rejected item's key absent - the DHL-side half of the contract.
+     *
+     * @test
+     */
+    public function createShipmentsOmitsDhlRejectedItemsUnderOriginalKeys()
+    {
+        $this->mockValidatorAsNoOp();
+
+        // order builder: all three requests convert successfully
+        $orderBuilder = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Order::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['build'])
+            ->getMock();
+        $orderBuilder->expects(static::exactly(3))
+            ->method('build')
+            ->willReturnCallback([$this, 'populateSdkBuilder']);
+
+        // SDK service: DHL rejects the middle item of the 3-item payload, so
+        // the mapper only returns Shipments for request indices 0 and 2
+        $sdkService = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentServiceInterface::class)
+            ->getMock();
+        $sdkService->expects(static::once())
+            ->method('createShipments')
+            ->willReturnCallback(function (array $payload) {
+                return [
+                    new \Dhl\Sdk\ParcelDe\Shipping\Service\ShipmentService\Shipment(0, 'SHIP-A', '', 'bGFiZWw=', '', '', ''),
+                    new \Dhl\Sdk\ParcelDe\Shipping\Service\ShipmentService\Shipment(2, 'SHIP-C', '', 'bGFiZWw=', '', '', ''),
+                ];
+            });
+
+        $requests = [
+            7 => $this->createShipmentRequest(),
+            8 => $this->createShipmentRequest(),
+            9 => $this->createShipmentRequest(),
+        ];
+
+        $client = $this->createClientStub($orderBuilder, $sdkService);
+        $shipments = $client->createShipments($requests);
+
+        // middle item failed at DHL; first and third keep their ORIGINAL keys
+        static::assertSame('SHIP-A', $shipments[7]->getShipmentNumber());
+        static::assertArrayNotHasKey(8, $shipments);
+        static::assertSame('SHIP-C', $shipments[9]->getShipmentNumber());
+    }
+
+    /**
+     * Minimal Magento shipment request that reaches the builder stage.
+     *
+     * The order shipment only needs to satisfy Order::build()'s type hint - the
+     * mocked order builder never touches its data - so an unloaded model instance
+     * is enough and no sales fixtures are required.
+     *
+     * @return Mage_Shipping_Model_Shipment_Request
+     */
+    private function createShipmentRequest()
+    {
+        $request = new Mage_Shipping_Model_Shipment_Request();
+        $request->setOrderShipment(Mage::getModel('sales/order_shipment'));
+        $request->setData('gk_api_product', 'V01PAK');
+        $request->setData('services', ['shipment_service' => [], 'service_setting' => []]);
+
+        return $request;
+    }
+
+    /**
+     * Populate a minimal-but-valid SDK builder so create() succeeds.
+     *
+     * The client's own new ShipmentOrderRequestBuilder() is not injectable, so
+     * builder mocks that want the "healthy path" to reach a real create() call
+     * need the minimum fields filled in (shipper reference/account, recipient
+     * address, shipment details, package weight) or create() throws
+     * RequestValidatorException.
+     *
+     * Public so it can be referenced as [$this, 'populateSdkBuilder'] from
+     * PHPUnit's willReturnCallback(), which invokes it outside class scope.
+     *
+     * @param \Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder $sdkBuilder
+     */
+    public function populateSdkBuilder($sdkBuilder)
+    {
+        $sdkBuilder->setShipperReference('shipper-ref')
+            ->setShipperAccount('123456789')
+            ->setRecipientAddress('Recipient', 'DE', '12345', 'Berlin', 'Teststreet')
+            ->setShipmentDetails('V01PAK', new \DateTime())
+            ->setPackageDetails(1.0);
+    }
+
+    /**
+     * Replace the validator singleton with a no-op mock.
+     *
+     * The requests built by createShipmentRequest() carry no real order/payment data,
+     * so the real validator (which inspects order totals and payment method) would
+     * fatal rather than validate. This test is about the builder catch/continue
+     * behavior, not validation, so validation is short-circuited.
+     */
+    private function mockValidatorAsNoOp()
+    {
+        $validatorMock = $this->getMockBuilder(Dhl_Versenden_Model_Webservice_Builder_Validator::class)
+            ->getMock();
+        $this->replaceByMock('singleton', 'dhl_versenden/webservice_builder_validator', $validatorMock);
+    }
+
+    /**
+     * @param Dhl_Versenden_Model_Webservice_Builder_Order $orderBuilder
+     * @param \Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentServiceInterface|null $service Defaults to the class-level service mock
+     * @return Dhl_Versenden_Test_Model_Webservice_Client_ShipmentStub
+     */
+    private function createClientStub($orderBuilder, $service = null)
+    {
+        $client = new Dhl_Versenden_Test_Model_Webservice_Client_ShipmentStub($service ?? $this->_serviceMock);
+        $client->orderBuilder = $orderBuilder;
+
+        return $client;
+    }
+}
+
+/**
+ * Stub exposing _convertToSdkShipments with an injectable order builder
+ * (no reflection in tests — override the protected members instead).
+ */
+class Dhl_Versenden_Test_Model_Webservice_Client_ShipmentStub extends Dhl_Versenden_Model_Webservice_Client_Shipment
+{
+    /** @var Dhl_Versenden_Model_Webservice_Builder_Order */
+    public $orderBuilder;
+
+    public function convertToSdkShipments(array $magentoRequests)
+    {
+        return $this->_convertToSdkShipments($magentoRequests);
+    }
+
+    protected function _createOrderBuilder()
+    {
+        return $this->orderBuilder;
     }
 }

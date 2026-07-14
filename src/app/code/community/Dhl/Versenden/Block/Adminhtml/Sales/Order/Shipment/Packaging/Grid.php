@@ -41,6 +41,20 @@ class Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid extends 
     }
 
     /**
+     * Check if the shipment destination is in the US customs territory (USA, Puerto Rico).
+     *
+     * These destinations require a 10-digit HTSUS tariff number per item.
+     *
+     * @return bool
+     */
+    public function isUsCustomsTerritory()
+    {
+        $recipientCountry = $this->getShipment()->getOrder()->getShippingAddress()->getCountryId();
+
+        return in_array($recipientCountry, Dhl_Versenden_Model_Util_UsCustomsTerritory::COUNTRY_CODES, true);
+    }
+
+    /**
      * @return string[]
      */
     public function getCountries()

@@ -63,6 +63,33 @@ class Dhl_Versenden_Model_Resource_Autocreate_Collection extends Mage_Sales_Mode
     }
 
     /**
+     * Remove loaded orders whose delivery destination is not in the given country list.
+     *
+     * Bulk label creation cannot collect customs data, so orders with
+     * destinations outside the given (EU) list must not be processed.
+     * Orders without a shipping address are removed as well.
+     *
+     * @param string[] $countries List of allowed country codes
+     * @return Mage_Sales_Model_Order[] the removed orders
+     */
+    public function removeNonDeliveryCountryItems(array $countries)
+    {
+        $removed = [];
+
+        /** @var Mage_Sales_Model_Order $order */
+        foreach ($this->getItems() as $key => $order) {
+            $shippingAddress = $order->getShippingAddress();
+            $countryId = $shippingAddress ? $shippingAddress->getCountryId() : '';
+            if (!in_array($countryId, $countries, true)) {
+                $removed[] = $order;
+                $this->removeItemByKey($key);
+            }
+        }
+
+        return $removed;
+    }
+
+    /**
      * @param string[] $status
      * @return $this
      */

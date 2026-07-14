@@ -172,13 +172,13 @@ class Filter
 
         switch ($serviceCode) {
             case PostalDeliveryDutyPaid::CODE:
-                // pDDP for CH, GB, NO, US destinations
-                // US required for Sep 2025 auto-enable (DHLGKP-343)
+                // pDDP for CH, GB, NO and the US customs territory (US, PR)
+                // US/PR required for the 2026 US customs changes (DHLGKP-384)
                 // Requires route information
                 if ($this->recipientCountry === '') {
                     return false;
                 }
-                return in_array($this->recipientCountry, ['CH', 'GB', 'NO', 'US'], true);
+                return in_array($this->recipientCountry, ['CH', 'GB', 'NO', 'US', 'PR'], true);
 
             case Endorsement::CODE:
             case DeliveryType::CODE:

@@ -115,7 +115,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         $sdkBuilder->expects(static::never())->method('addExportItem');
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, $invoiceNumber, $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, $invoiceNumber, $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -235,7 +235,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
             );
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, $invoiceNumber, $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, $invoiceNumber, $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -258,7 +258,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         $packageInfo = ['1' => ['items' => []]]; // Missing 'params'
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -280,7 +280,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         $packageInfo = ['1' => ['params' => ['weight' => 1.0]]]; // Missing 'content_type'
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -303,7 +303,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         $packageInfo = ['1' => ['params' => ['content_type' => 'OTHER']]]; // Missing 'items'
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -328,7 +328,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -353,7 +353,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -378,7 +378,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -403,7 +403,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -433,7 +433,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -463,7 +463,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -493,7 +493,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -544,7 +544,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
             );
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -581,7 +581,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
             ->with(1, 'Test', 10.0, $minWeight, '123456', 'DEU');
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -616,7 +616,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
             ->with(1, 'Test', 10.0, 1.0, '123456', 'DEU');
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -651,7 +651,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
             ->with(1, 'Test', 10.0, 1.0, '12345678901', 'DEU');
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -683,7 +683,7 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
     }
 
     /**
@@ -715,6 +715,105 @@ class Dhl_Versenden_Test_Model_Webservice_Builder_CustomsTest extends EcomDev_PH
         ]];
 
         $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
-        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, 'CH');
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function getUsTerritoryDataProvider()
+    {
+        return [
+            'usa' => ['US'],
+            'puerto_rico' => ['PR'],
+        ];
+    }
+
+    /**
+     * Assert that a 10-digit HTSUS code is accepted for US customs territory destinations.
+     *
+     * @test
+     * @dataProvider getUsTerritoryDataProvider
+     *
+     * @param string $recipientCountryId
+     */
+    public function hsCodeAccepts10DigitsForUsTerritory($recipientCountryId)
+    {
+        $args = ['unit_of_measure' => 'KG', 'min_weight' => $this->minWeightInKG];
+
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setCustomsDetails', 'addExportItem'])
+            ->getMock();
+
+        $customsInfo = ['terms_of_trade' => 'DDP'];
+        $packageInfo = ['1' => [
+            'params' => ['content_type' => 'OTHER'],
+            'items' => ['item1' => [
+                'qty' => 1,
+                'weight' => 1.0,
+                'customs_value' => 10.0,
+                'customs' => ['description' => 'Test', 'tariff_number' => '6109909000', 'country_of_origin' => 'DE'],
+            ]],
+        ]];
+
+        // Should succeed without exception
+        $sdkBuilder->expects(static::once())
+            ->method('addExportItem')
+            ->with(1, 'Test', 10.0, 1.0, '6109909000', 'DEU');
+
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, $recipientCountryId);
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function getInvalidUsTerritoryTariffNumberDataProvider()
+    {
+        return [
+            'us_6_digits'    => ['US', '610990'],
+            'us_8_digits'    => ['US', '61099090'],
+            'us_11_digits'   => ['US', '61099090001'],
+            'us_non_numeric' => ['US', '6109A0900B'],
+            'pr_8_digits'    => ['PR', '61099090'],
+        ];
+    }
+
+    /**
+     * Assert that HTSUS codes other than exactly 10 digits are rejected
+     * for US customs territory destinations.
+     *
+     * @test
+     * @dataProvider getInvalidUsTerritoryTariffNumberDataProvider
+     *
+     * @param string $recipientCountryId
+     * @param string $tariffNumber
+     */
+    public function hsCodeRejectsNon10DigitsForUsTerritory($recipientCountryId, $tariffNumber)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('10-digit HTSUS');
+
+        $args = ['unit_of_measure' => 'KG', 'min_weight' => $this->minWeightInKG];
+
+        $sdkBuilder = $this->getMockBuilder(\Dhl\Sdk\ParcelDe\Shipping\RequestBuilder\ShipmentOrderRequestBuilder::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['setCustomsDetails'])
+            ->getMock();
+
+        $customsInfo = ['terms_of_trade' => 'DDP'];
+        $packageInfo = ['1' => [
+            'params' => ['content_type' => 'OTHER'],
+            'items' => ['item1' => [
+                'qty' => 1,
+                'weight' => 1.0,
+                'customs_value' => 10.0,
+                'customs' => ['description' => 'Test', 'tariff_number' => $tariffNumber, 'country_of_origin' => 'DE'],
+            ]],
+        ]];
+
+        $builder = Mage::getModel('dhl_versenden/webservice_builder_customs', $args);
+        $builder->build($sdkBuilder, '123', $customsInfo, $packageInfo, $recipientCountryId);
     }
 }

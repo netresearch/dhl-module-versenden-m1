@@ -9,6 +9,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
     public const MESSAGE_NO_APPLICABLE_ORDERS = 'Orders could not be processed with DHL Versenden.';
     public const MESSAGE_LABELS_CREATED = '%d labels were created for %d orders.';
     public const MESSAGE_LABELS_FAILED = 'The following orders had errors: %s.';
+    public const MESSAGE_ORDERS_SKIPPED = 'The following orders were skipped, destinations outside the EU are not supported by bulk label creation: %s.';
 
     /**
      * MassAction for Label Creation
@@ -28,6 +29,29 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
             return;
         }
 
+        $euCountries = explode(',', Mage::getStoreConfig(Mage_Core_Helper_Data::XML_PATH_EU_COUNTRIES_LIST));
+        $skippedOrders = $collection->removeNonDeliveryCountryItems($euCountries);
+        if ($skippedOrders !== []) {
+            $skippedIncrements = array_map(
+                function (Mage_Sales_Model_Order $order) {
+                    return $order->getIncrementId();
+                },
+                $skippedOrders,
+            );
+            $this->_getSession()->addNotice(
+                sprintf(
+                    Mage::helper('dhl_versenden/data')->__(self::MESSAGE_ORDERS_SKIPPED),
+                    implode(', ', $skippedIncrements),
+                ),
+            );
+        }
+
+        if (count($collection->getItems()) < 1) {
+            $this->_getSession()->addError(self::MESSAGE_NO_APPLICABLE_ORDERS);
+            $this->_redirect('adminhtml/sales_order');
+            return;
+        }
+
         $writer = Mage::getSingleton('dhl_versenden/logger_writer');
         $psrLogger = new Dhl_Versenden_Model_Logger_Mage($writer);
         $config = Mage::getModel('dhl_versenden/config');
@@ -40,7 +64,7 @@ class Dhl_Versenden_Adminhtml_Sales_Order_AutocreateController extends Mage_Admi
 
         try {
             $num = $autocreate->autoCreate($collection);
-            $creationMessage = sprintf(self::MESSAGE_LABELS_CREATED, $num, $collection->getSize());
+            $creationMessage = sprintf(self::MESSAGE_LABELS_CREATED, $num, count($collection->getItems()));
 
             $failedIncrements = [];
             /** @var Mage_Sales_Model_Order $order */

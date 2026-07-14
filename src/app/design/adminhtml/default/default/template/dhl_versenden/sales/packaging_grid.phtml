@@ -6,6 +6,18 @@
 <?php /** @var Dhl_Versenden_Block_Adminhtml_Sales_Order_Shipment_Packaging_Grid $this */ ?>
 <div>
     <div class="grid">
+        <?php $isUsTerritory = $this->isUsCustomsTerritory(); ?>
+        <?php if ($isUsTerritory): ?>
+            <p class="note">
+                <?php echo $this->__(
+                    'Shipments to the USA and Puerto Rico require the 10-digit, US-specific HTSUS code per item. Look it up in the official %sHarmonized Tariff Schedule%s. See also %sdhl.de/us-versand%s.',
+                    '<a href="https://hts.usitc.gov/" target="_blank" rel="noopener">',
+                    '</a>',
+                    '<a href="https://www.dhl.de/us-versand" target="_blank" rel="noopener">',
+                    '</a>'
+                ) ?>
+            </p>
+        <?php endif; ?>
         <div class="hor-scroll">
             <table cellspacing="0" class="data">
                 <thead>
@@ -81,8 +93,8 @@
                         </td>
                         <td class="tariff-number">
                             <input name="customs_tariff_number"
-                                   type="text" class="input-text required-entry validate-length minimum-length-6 maximum-length-11"
-                                   title="<?php echo $this->escapeHtml($this->__('Tariff Number')) ?>" maxlength="11" />
+                                   type="text" class="input-text required-entry validate-length <?php echo $isUsTerritory ? 'minimum-length-10 maximum-length-10 validate-digits' : 'minimum-length-6 maximum-length-11' ?>"
+                                   title="<?php echo $this->escapeHtml($this->__('Tariff Number')) ?>" maxlength="<?php echo $isUsTerritory ? '10' : '11' ?>" />
                         </td>
                         <td class="a-center weight ">
                             <?php echo $this->escapeHtml($item->getWeight()); ?>

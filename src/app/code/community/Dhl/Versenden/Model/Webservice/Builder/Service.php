@@ -8,16 +8,6 @@ use Dhl\Versenden\ParcelDe\Service;
 
 class Dhl_Versenden_Model_Webservice_Builder_Service
 {
-    /**
-     * PDDP auto-enable threshold for USD (US shipments)
-     */
-    public const PDDP_THRESHOLD_USD = 800;
-
-    /**
-     * PDDP auto-enable threshold for EUR (US shipments from EUR stores)
-     */
-    public const PDDP_THRESHOLD_EUR = 680;
-
     /** @var Dhl_Versenden_Model_Config_Shipper */
     protected $_shipperConfig;
 
@@ -139,10 +129,14 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
             $sdkBuilder->setShipmentEndorsementType($serviceDetails[Service\Endorsement::CODE]);
         }
 
-        // Postal Delivery Duty Paid (pDDP) - required for US shipments under 800 USD
-        // Auto-enable for USA shipments < $800 if configured
-        $shouldEnablePddp = !empty($selectedServices[Service\PostalDeliveryDutyPaid::CODE])
-            || $this->_shouldAutoEnablePddp($salesEntity);
+        // Postal Delivery Duty Paid (pDDP) — required for US/PR shipments up to
+        // the active value limit, forbidden above it (limit switches 2026-07-24)
+        $pddpSelected = !empty($selectedServices[Service\PostalDeliveryDutyPaid::CODE]);
+        if ($pddpSelected) {
+            $this->_assertPddpAllowed($salesEntity);
+        }
+
+        $shouldEnablePddp = $pddpSelected || $this->_shouldAutoEnablePddp($salesEntity);
 
         if ($shouldEnablePddp) {
             $sdkBuilder->setDeliveryDutyPaid();
@@ -223,53 +217,122 @@ class Dhl_Versenden_Model_Webservice_Builder_Service
     /**
      * Check if PDDP should be auto-enabled for this shipment
      *
-     * PDDP is automatically enabled for USA shipments with customs value under the
-     * applicable threshold, when the auto-enable feature is configured.
-     * Thresholds: 800 USD or 680 EUR (approximate equivalent).
+     * PDDP is automatically enabled for shipments into the US customs territory
+     * (USA, Puerto Rico) with customs value up to and including the active
+     * threshold. The threshold switches on 2026-07-24 (see PddpThresholds).
      *
      * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
      * @return bool
      */
     protected function _shouldAutoEnablePddp(Mage_Core_Model_Abstract $salesEntity)
     {
-        // Get shipping address
+        $threshold = $this->_getPddpThreshold($salesEntity);
+        if ($threshold === null) {
+            // not a US territory destination or unsupported base currency
+            return false;
+        }
+
+        // DHL: up to and including the limit (bis einschließlich)
+        $customsValue = (float) $salesEntity->getBaseGrandTotal();
+        return $customsValue <= $threshold;
+    }
+
+    /**
+     * Reject manually selected pDDP that the DHL API would refuse anyway.
+     *
+     * Above the active limit the API rejects pDDP shipments with an unhelpful
+     * error; failing here gives the admin an actionable message instead.
+     *
+     * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    protected function _assertPddpAllowed(Mage_Core_Model_Abstract $salesEntity)
+    {
+        if (!$this->_isUsTerritoryDestination($salesEntity)) {
+            // thresholds only apply to the US customs territory
+            return;
+        }
+
+        $currencyCode = $this->_getBaseCurrencyCode($salesEntity);
+        $threshold = Dhl_Versenden_Model_Util_PddpThresholds::forCurrency(
+            $currencyCode,
+            $this->_getCurrentTimestamp(),
+        );
+        if ($threshold === null) {
+            throw new \InvalidArgumentException(
+                Mage::helper('dhl_versenden/data')->__('PDDP is only available for stores with EUR or USD as base currency.')
+            );
+        }
+
+        $customsValue = (float) $salesEntity->getBaseGrandTotal();
+        if ($customsValue > $threshold) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    Mage::helper('dhl_versenden/data')->__('PDDP is not allowed for USA/Puerto Rico shipments with value > %s %s. The DHL API will reject shipments with PDDP enabled.'),
+                    number_format($threshold, 2),
+                    $currencyCode,
+                ),
+            );
+        }
+    }
+
+    /**
+     * Check if the shipment destination is in the US customs territory (USA, Puerto Rico)
+     *
+     * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
+     * @return bool
+     */
+    protected function _isUsTerritoryDestination(Mage_Core_Model_Abstract $salesEntity)
+    {
         $shippingAddress = $salesEntity->getShippingAddress();
         if (!$shippingAddress) {
             return false;
         }
 
-        // Check if destination is USA
-        $destCountry = $shippingAddress->getCountryId();
-        if ($destCountry !== 'US') {
-            return false;
-        }
-
-        // Determine threshold based on store's base currency
-        $baseCurrency = Mage::app()->getStore($salesEntity->getStoreId())->getBaseCurrencyCode();
-        $threshold = $this->_getPddpThresholdForCurrency($baseCurrency);
-        if ($threshold === null) {
-            // Unsupported base currency - do not auto-enable
-            return false;
-        }
-
-        // Check if customs value is under the threshold
-        $customsValue = (float) $salesEntity->getBaseGrandTotal();
-        return $customsValue < $threshold;
+        return in_array(
+            $shippingAddress->getCountryId(),
+            Dhl_Versenden_Model_Util_UsCustomsTerritory::COUNTRY_CODES,
+            true,
+        );
     }
 
     /**
-     * Get PDDP auto-enable threshold for the given currency
+     * Resolve the active pDDP threshold for this shipment, if applicable
      *
-     * @param string $currencyCode
-     * @return float|null Threshold value or null if currency not supported
+     * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
+     * @return float|null threshold or null (not US territory / unsupported currency)
      */
-    protected function _getPddpThresholdForCurrency($currencyCode)
+    protected function _getPddpThreshold(Mage_Core_Model_Abstract $salesEntity)
     {
-        $thresholds = [
-            'USD' => self::PDDP_THRESHOLD_USD,
-            'EUR' => self::PDDP_THRESHOLD_EUR,
-        ];
+        if (!$this->_isUsTerritoryDestination($salesEntity)) {
+            return null;
+        }
 
-        return $thresholds[$currencyCode] ?? null;
+        return Dhl_Versenden_Model_Util_PddpThresholds::forCurrency(
+            $this->_getBaseCurrencyCode($salesEntity),
+            $this->_getCurrentTimestamp(),
+        );
+    }
+
+    /**
+     * Obtain the current unix timestamp (accessor for testability)
+     *
+     * @return int
+     */
+    protected function _getCurrentTimestamp()
+    {
+        return time();
+    }
+
+    /**
+     * Obtain the store's base currency code (accessor for testability)
+     *
+     * @param Mage_Sales_Model_Order|Mage_Sales_Model_Quote $salesEntity
+     * @return string
+     */
+    protected function _getBaseCurrencyCode(Mage_Core_Model_Abstract $salesEntity)
+    {
+        return Mage::app()->getStore($salesEntity->getStoreId())->getBaseCurrencyCode();
     }
 }

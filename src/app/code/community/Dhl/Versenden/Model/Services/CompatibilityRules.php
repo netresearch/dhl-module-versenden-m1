@@ -64,9 +64,9 @@ class Dhl_Versenden_Model_Services_CompatibilityRules
     }
 
     /**
-     * PDDP auto-enable configuration for US shipments.
+     * PDDP auto-enable configuration for US/Puerto Rico shipments.
      *
-     * JS uses this to pre-check the pDDP checkbox when order value is under threshold.
+     * JS uses this to pre-check the pDDP checkbox when order value is up to and including the active threshold.
      *
      * @return array
      */
@@ -76,10 +76,14 @@ class Dhl_Versenden_Model_Services_CompatibilityRules
             'recipientCountry' => $this->order->getShippingAddress()->getCountryId(),
             'orderValue' => (float) $this->order->getBaseGrandTotal(),
             'currency' => Mage::app()->getStore($this->storeId)->getBaseCurrencyCode(),
-            'thresholdEur' => Dhl_Versenden_Model_Webservice_Builder_Service::PDDP_THRESHOLD_EUR,
-            'thresholdUsd' => Dhl_Versenden_Model_Webservice_Builder_Service::PDDP_THRESHOLD_USD,
+            'thresholdEur' => Dhl_Versenden_Model_Util_PddpThresholds::forCurrency('EUR', time()),
+            'thresholdUsd' => Dhl_Versenden_Model_Util_PddpThresholds::forCurrency('USD', time()),
+            'usTerritoryCountries' => Dhl_Versenden_Model_Util_UsCustomsTerritory::COUNTRY_CODES,
             'tooltipTemplate' => Mage::helper('dhl_versenden/data')->__(
-                'Auto-enabled for US orders under %s %s',
+                'Auto-enabled for USA/Puerto Rico orders up to %s %s',
+            ),
+            'limitTooltipTemplate' => Mage::helper('dhl_versenden/data')->__(
+                'Not available for USA/Puerto Rico orders above %s %s',
             ),
         ];
     }

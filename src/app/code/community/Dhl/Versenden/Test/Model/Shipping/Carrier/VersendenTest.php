@@ -515,6 +515,68 @@ class Dhl_Versenden_Test_Model_Shipping_Carrier_VersendenTest extends EcomDev_PH
     }
 
     /**
+     * Test requestToShipment() surfaces the SPECIFIC stored builder exception message
+     * (e.g. HTSUS/pDDP guard) instead of the generic fallback when the client degraded
+     * a per-item builder exception into request_data_exception on the request.
+     *
+     * No fixtures: the client is fully mocked, so the request only needs an order
+     * shipment for getStoreId() and a pre-selected DHL product.
+     *
+     * @test
+     */
+    public function requestToShipmentThrowsStoredBuilderExceptionMessage()
+    {
+        $specificMessage = 'PDDP is not allowed for USA/Puerto Rico shipments with value > 800.00 USD.';
+
+        $this->expectException(\Mage_Core_Exception::class);
+        $this->expectExceptionMessage($specificMessage);
+
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
+        $request = new Mage_Shipping_Model_Shipment_Request();
+        $request->setOrderShipment(Mage::getModel('sales/order_shipment'));
+        $request->setData('gk_api_product', 'V01PAK');
+        $request->setData('request_data_exception', $specificMessage);
+
+        // Mock REST client to return an empty array, as it does when
+        // Client\Shipment::_convertToSdkShipments() degraded a builder
+        // exception per item instead of aborting the whole batch.
+        $clientMock = $this->getModelMock('dhl_versenden/webservice_client_shipment', ['createShipments']);
+        $clientMock
+            ->expects(static::once())
+            ->method('createShipments')
+            ->willReturn([]);
+        $this->replaceByMock('model', 'dhl_versenden/webservice_client_shipment', $clientMock);
+
+        $carrier->requestToShipment($request);
+    }
+
+    /**
+     * Test requestToShipment() falls back to the generic message when the empty
+     * result is not accompanied by a stored builder exception.
+     *
+     * @test
+     */
+    public function requestToShipmentThrowsGenericExceptionWithoutStoredBuilderException()
+    {
+        $this->expectException(\Mage_Core_Exception::class);
+        $this->expectExceptionMessage('The shipment request had errors.');
+
+        $carrier = new Dhl_Versenden_Model_Shipping_Carrier_Versenden();
+        $request = new Mage_Shipping_Model_Shipment_Request();
+        $request->setOrderShipment(Mage::getModel('sales/order_shipment'));
+        $request->setData('gk_api_product', 'V01PAK');
+
+        $clientMock = $this->getModelMock('dhl_versenden/webservice_client_shipment', ['createShipments']);
+        $clientMock
+            ->expects(static::once())
+            ->method('createShipments')
+            ->willReturn([]);
+        $this->replaceByMock('model', 'dhl_versenden/webservice_client_shipment', $clientMock);
+
+        $carrier->requestToShipment($request);
+    }
+
+    /**
      * Test requestToShipment() handles InvalidArgumentException from builders
      *
      * This covers the exception handling for validation errors thrown by builders

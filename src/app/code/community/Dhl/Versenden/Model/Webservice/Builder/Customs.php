@@ -50,9 +50,10 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
      * @param string $invoiceNumber
      * @param string[] $customsInfo
      * @param string[] $packageInfo
+     * @param string $recipientCountryId destination country (ISO-2)
      * @return void
      */
-    public function build(\Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder, $invoiceNumber, array $customsInfo, array $packageInfo)
+    public function build(\Dhl\Sdk\ParcelDe\Shipping\Api\ShipmentOrderRequestBuilderInterface $sdkBuilder, $invoiceNumber, array $customsInfo, array $packageInfo, $recipientCountryId)
     {
         if ($customsInfo === []) {
             return;
@@ -118,11 +119,23 @@ class Dhl_Versenden_Model_Webservice_Builder_Customs
                     throw new \InvalidArgumentException("Item tariff number required for customs declaration (item $itemId)");
                 }
 
-                // Validate HS code (tariff number) length - API requires 6-11 digits
+                // Validate HS code (tariff number) length
                 $tariffNumber = $itemCustoms['tariff_number'];
-                $tariffLength = strlen($tariffNumber);
-                if ($tariffLength < 6 || $tariffLength > 11) {
-                    throw new \InvalidArgumentException("HS code must be between 6 and 11 digits (item $itemId)");
+                if (in_array($recipientCountryId, Dhl_Versenden_Model_Util_UsCustomsTerritory::COUNTRY_CODES, true)) {
+                    // US CBP requires a 10-digit HTSUS code per item for USA/Puerto Rico.
+                    // The DHL API accepts shorter codes without error, but such shipments
+                    // risk import rejection in the US — block label creation here instead.
+                    if (!preg_match('/^\d{10}$/', $tariffNumber)) {
+                        throw new \InvalidArgumentException(
+                            "Shipments to the USA and Puerto Rico require a 10-digit HTSUS customs tariff number for every item (item $itemId)"
+                        );
+                    }
+                } else {
+                    // API requires 6-11 digits for all other destinations
+                    $tariffLength = strlen($tariffNumber);
+                    if ($tariffLength < 6 || $tariffLength > 11) {
+                        throw new \InvalidArgumentException("HS code must be between 6 and 11 digits (item $itemId)");
+                    }
                 }
 
                 if (!isset($itemCustoms['country_of_origin']) || $itemCustoms['country_of_origin'] === '') {
