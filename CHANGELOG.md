@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 2.2.0 - 2026-08-17
+
+### Changed
+
+- US shipments require a 10-digit HTSUS code per customs item
+  (CBP mandate since July 24, 2026).
+- The pDDP service is available up to a customs value of 2,500 USD /
+  2,125 EUR (previously 800 USD / 680 EUR).
+
+### Fixed
+
+- The Autocreate mass action skips destinations that require customs
+  declarations instead of aborting the batch. Label creation errors of
+  single orders no longer stop the remaining orders.
+
 ## 2.1.0 - 2026-07-06
 
 ### Changed
