@@ -8,7 +8,6 @@ src/app/etc/modules/Dhl_Versenden.xml app/etc/modules/Dhl_Versenden.xml
 src/app/locale/de_DE/Dhl_Versenden.csv app/locale/de_DE/Dhl_Versenden.csv
 src/app/locale/en_US/Dhl_Versenden.csv app/locale/en_US/Dhl_Versenden.csv
 
-src/lib/Dhl/Versenden/Psr/ lib/Dhl/Versenden/Psr/
 src/lib/Dhl/Versenden/Cig/ lib/Dhl/Versenden/Cig/
 src/lib/Dhl/Versenden/ParcelDe/ lib/Dhl/Versenden/ParcelDe/
 src/lib/Mal/ lib/Mal/

@@ -49,8 +49,8 @@ class Dhl_Versenden_Model_Webservice_Client_Shipment
      */
     public function __construct(
         $serviceOrArgs = null,
-        LoggerInterface $logger = null,
-        Dhl_Versenden_Model_Config_Shipper $config = null
+        ?LoggerInterface $logger = null,
+        ?Dhl_Versenden_Model_Config_Shipper $config = null
     ) {
         // Handle Magento model pattern (array passed as first arg) vs DI pattern (service passed)
         $service = null;

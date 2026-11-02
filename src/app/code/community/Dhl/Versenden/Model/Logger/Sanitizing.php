@@ -71,10 +71,8 @@ class Dhl_Versenden_Model_Logger_Sanitizing extends \Psr\Log\AbstractLogger
      * @param mixed              $level   PSR-3 log level (debug, info, warning, error, etc.)
      * @param string|\Stringable $message Log message (may contain HTTP messages, error text, etc.)
      * @param mixed[]            $context Associative array of contextual data (headers, response bodies, etc.)
-     *
-     * @return null
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         // Sanitize message string (handles HTTP messages with inline credentials)
         $sanitizedMessage = $this->_sanitizer->sanitizeString($message);

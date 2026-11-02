@@ -71,15 +71,3 @@ parameters:
 			identifier: variable.undefined
 			count: 3
 			path: ../../../app/code/community/Dhl/Versenden/data/dhl_versenden_setup/data-upgrade-1.1.2-1.1.3.php
-
-		-
-			rawMessage: Trait Psr\Log\LoggerAwareTrait is used zero times and is not analysed.
-			identifier: trait.unused
-			count: 1
-			path: ../../../lib/Dhl/Versenden/Psr/Log/LoggerAwareTrait.php
-
-		-
-			rawMessage: Trait Psr\Log\LoggerTrait is used zero times and is not analysed.
-			identifier: trait.unused
-			count: 1
-			path: ../../../lib/Dhl/Versenden/Psr/Log/LoggerTrait.php

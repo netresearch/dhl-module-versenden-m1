@@ -527,8 +527,16 @@ class Dhl_Versenden_Test_Model_Webservice_Client_ShipmentTest extends EcomDev_PH
      */
     private function createShipmentRequest()
     {
+        static $orderId = 0;
+
+        // label status observer maps requests by order id, real orders always have one
+        $order = Mage::getModel('sales/order');
+        $order->setId(++$orderId);
+        $shipment = Mage::getModel('sales/order_shipment');
+        $shipment->setOrder($order);
+
         $request = new Mage_Shipping_Model_Shipment_Request();
-        $request->setOrderShipment(Mage::getModel('sales/order_shipment'));
+        $request->setOrderShipment($shipment);
         $request->setData('gk_api_product', 'V01PAK');
         $request->setData('services', ['shipment_service' => [], 'service_setting' => []]);
 

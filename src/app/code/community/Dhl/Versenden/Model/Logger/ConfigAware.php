@@ -51,10 +51,8 @@ class Dhl_Versenden_Model_Logger_ConfigAware extends \Psr\Log\AbstractLogger
      * @param mixed $level
      * @param string|\Stringable $message
      * @param mixed[] $context
-     *
-     * @return null
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         // Check if logging is enabled for this level
         $zendLevel = $this->_levelMapping[$level] ?? Zend_Log::DEBUG;

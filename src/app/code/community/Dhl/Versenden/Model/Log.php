@@ -34,10 +34,8 @@ class Dhl_Versenden_Model_Log implements Psr\Log\LoggerAwareInterface
      * Sets a logger instance on the object.
      *
      * @param \Psr\Log\LoggerInterface $logger
-     *
-     * @return null
      */
-    public function setLogger(\Psr\Log\LoggerInterface $logger)
+    public function setLogger(\Psr\Log\LoggerInterface $logger): void
     {
         $this->_psrLogger = $logger;
     }

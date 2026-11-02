@@ -67,10 +67,8 @@ class Dhl_Versenden_Model_Logger_Mage extends \Psr\Log\AbstractLogger
      * @param mixed $level
      * @param string|\Stringable $message
      * @param mixed[] $context
-     *
-     * @return null
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = []): void
     {
         if (isset($context['exception'])) {
             $this->_writer->logException($context['exception']);
