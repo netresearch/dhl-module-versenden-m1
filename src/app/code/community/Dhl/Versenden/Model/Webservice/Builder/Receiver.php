@@ -7,6 +7,8 @@
 
 class Dhl_Versenden_Model_Webservice_Builder_Receiver
 {
+    public const STATE_MAX_LENGTH = 20;
+
     /** @var Mage_Directory_Model_Country */
     protected $_countryDirectory;
 
@@ -58,7 +60,11 @@ class Dhl_Versenden_Model_Webservice_Builder_Receiver
         // Convert country code from ISO-2 to ISO-3 for REST API
         // The legacy BCS/SOAP receiver uses ISO-2, but REST SDK requires ISO-3
         $countryISOCode = $this->_countryDirectory->getIso3Code();
-        $state          = $address->getRegion();
+        // REST API accepts 1-20 characters; free-text regions are returned as code unchanged
+        $state          = $address->getRegionCode();
+        if (!$state || mb_strlen($state) > self::STATE_MAX_LENGTH) {
+            $state = null;
+        }
 
         $street = $this->_helper->splitStreet($address->getStreetFull());
         $streetName      = $street['street_name'];
