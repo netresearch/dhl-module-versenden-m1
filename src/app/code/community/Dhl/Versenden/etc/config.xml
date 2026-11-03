@@ -7,7 +7,7 @@
 <config>
     <modules>
         <Dhl_Versenden>
-            <version>2.2.0</version>
+            <version>2.2.1</version>
         </Dhl_Versenden>
     </modules>
     <global>
